@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Veropred Analytics</title>
+
+<style>
+:root {
+    --bg-0: #080706;
+    --bg-1: #15100d;
+    --bg-2: #24160f;
+    --copper: #c9783a;
+    --copper-soft: #e0a064;
+    --gold: #d8b06a;
+    --cream: #f6efe3;
+    --muted: #b9aa96;
+    --graphite: #141414;
+    --line: rgba(255,255,255,.14);
+    --glass: rgba(255,255,255,.075);
+    --glass-2: rgba(255,255,255,.11);
+    --shadow: 0 28px 80px rgba(0,0,0,.45);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    background:
+        radial-gradient(circle at 20% 5%, rgba(201,120,58,.24), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(216,176,106,.13), transparent 36%),
+        linear-gradient(135deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+    color: var(--cream);
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 80%);
+}
+
+a {
+    color: inherit;
+}
+
+.page {
+    width: min(1220px, calc(100% - 36px));
+    margin: 0 auto;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(18px);
+    background: rgba(8,7,6,.72);
+    border-bottom: 1px solid var(--line);
+}
+
+.nav {
+    width: min(1220px, calc(100% - 36px));
+    margin: 0 auto;
+    min-height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 38% 30%, #fff1cf, #d59a55 28%, #7b3b18 62%, #24110a);
+    box-shadow: 0 0 30px rgba(216,176,106,.32);
+    position: relative;
+}
+
+.logo-mark::after {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(255,255,255,.45);
+    border-radius: 50%;
+}
+
+.brand strong {
+    display: block;
+    font-size: 15px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+.brand span {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.nav-links button {
+    border: 1px solid transparent;
+    color: var(--muted);
+    background: transparent;
+    padding: 9px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: .22s ease;
+}
+
+.nav-links button:hover,
+.nav-links button.active {
+    color: var(--cream);
+    background: rgba(255,255,255,.08);
+    border-color: var(--line);
+}
+
+.hero {
+    padding: 86px 0 42px;
+    display: grid;
+    grid-template-columns: 1.04fr .96fr;
+    gap: 46px;
+    align-items: center;
+}
+
+.kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--copper-soft);
+    border: 1px solid rgba(224,160,100,.3);
+    background: rgba(224,160,100,.07);
+    padding: 9px 13px;
+    border-radius: 999px;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.kicker::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 18px var(--gold);
+}
+
+h1 {
+    font-size: clamp(42px, 6vw, 78px);
+    line-height: .96;
+    letter-spacing: -0.055em;
+    margin: 24px 0 22px;
+    max-width: 800px;
+}
+
+.hero p {
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 1.55;
+    color: #d7cbb9;
+    max-width: 760px;
+    margin: 0;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 34px;
+}
+
+.btn {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-weight: 650;
+    color: var(--cream);
+    background: rgba(255,255,255,.06);
+    transition: .25s ease;
+}
+
+.btn.primary {
+    color: #1a0f09;
+    background: linear-gradient(135deg, #f0bf7a, #c9783a);
+    border-color: rgba(255,255,255,.18);
+    box-shadow: 0 16px 40px rgba(201,120,58,.25);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 44px rgba(0,0,0,.32);
+}
+
+.hero-panel {
+    position: relative;
+    min-height: 520px;
+    border-radius: 36px;
+    background:
+        radial-gradient(circle at center, rgba(224,160,100,.18), transparent 43%),
+        linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.035));
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border: 1px solid rgba(216,176,106,.28);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(var(--r));
+}
+
+.orbit.o1 { width: 78%; height: 34%; --r: 0deg; }
+.orbit.o2 { width: 78%; height: 34%; --r: 58deg; }
+.orbit.o3 { width: 78%; height: 34%; --r: -58deg; }
+
+.hero-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 205px;
+    height: 205px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 35% 25%, #fff3d7, #d69b57 38%, #7b3918 74%, #24100a);
+    box-shadow:
+        0 0 70px rgba(216,176,106,.28),
+        inset 0 0 0 1px rgba(255,255,255,.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 22px;
+}
+
+.hero-core strong {
+    font-size: 24px;
+    letter-spacing: -.03em;
+    line-height: 1.05;
+    color: #fff8ef;
+}
+
+.hero-node {
+    position: absolute;
+    width: 152px;
+    min-height: 82px;
+    border-radius: 20px;
+    background: rgba(246,239,227,.93);
+    color: #22140c;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,.4);
+    box-shadow: 0 18px 44px rgba(0,0,0,.35);
+    cursor: pointer;
+    transition: .24s ease;
+}
+
+.hero-node:hover {
+    transform: translateY(-5px) scale(1.03);
+}
+
+.hero-node b {
+    display: block;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.hero-node span {
+    display: block;
+    margin-top: 5px;
+    font-size: 11px;
+    color: #7e5a3d;
+}
+
+.n1 { left: 50%; top: 32px; transform: translateX(-50%); }
+.n2 { left: 28px; top: 178px; }
+.n3 { right: 28px; top: 178px; }
+.n4 { left: 54px; bottom: 76px; }
+.n5 { right: 54px; bottom: 76px; }
+.n6 { left: 50%; bottom: 26px; transform: translateX(-50%); }
+
+.section {
+    padding: 34px 0;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.section-title h2 {
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1;
+    letter-spacing: -.045em;
+    margin: 0;
+}
+
+.section-title p {
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.map-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 24px;
+}
+
+.map {
+    min-height: 640px;
+    position: sticky;
+    top: 96px;
+    border: 1px solid var(--line);
+    border-radius: 34px;
+    background:
+        radial-gradient(circle at 50% 42%, rgba(216,176,106,.14), transparent 40%),
+        rgba(255,255,255,.045);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.map-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 172px;
+    height: 172px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2a1810, #0f0c0a);
+    border: 1px solid rgba(216,176,106,.55);
+    box-shadow: 0 0 70px rgba(201,120,58,.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 3;
+}
+
+.map-core b {
+    font-size: 20px;
+    line-height: 1.05;
+}
+
+.map-core span {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 8px;
+    max-width: 130px;
+}
+
+.map-btn {
+    position: absolute;
+    width: 150px;
+    min-height: 88px;
+    border: 1px solid rgba(216,176,106,.22);
+    background: rgba(246,239,227,.92);
+    color: #20120b;
+    border-radius: 20px;
+    padding: 13px;
+    cursor: pointer;
+    box-shadow: 0 16px 42px rgba(0,0,0,.3);
+    transition: .25s ease;
+    z-index: 4;
+}
+
+.map-btn:hover,
+.map-btn.active {
+    transform: translateY(-4px);
+    background: #fff6e7;
+    border-color: rgba(216,176,106,.8);
+}
+
+.map-btn em {
+    font-style: normal;
+    display: block;
+    color: #aa6430;
+    font-size: 19px;
+    margin-bottom: 6px;
+}
+
+.map-btn b {
+    display: block;
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+.map-btn span {
+    display: block;
+    color: #75563c;
+    font-size: 10.5px;
+    margin-top: 5px;
+}
+
+.m1 { left: 50%; top: 30px; transform: translateX(-50%); }
+.m2 { left: 24px; top: 162px; }
+.m3 { right: 24px; top: 162px; }
+.m4 { left: 24px; bottom: 162px; }
+.m5 { right: 24px; bottom: 162px; }
+.m6 { left: 50%; bottom: 30px; transform: translateX(-50%); }
+.m7 { left: 50%; top: 50%; transform: translate(-50%, 145px); }
+
+.content-panel {
+    border: 1px solid var(--line);
+    border-radius: 34px;
+    background: rgba(255,255,255,.055);
+    box-shadow: var(--shadow);
+    min-height: 640px;
+    overflow: hidden;
+}
+
+.area-card {
+    display: none;
+    padding: clamp(24px, 4vw, 42px);
+    animation: fadeUp .35s ease both;
+}
+
+.area-card.active {
+    display: block;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.area-card h3 {
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -.04em;
+    line-height: 1;
+    margin: 0 0 16px;
+}
+
+.lead {
+    color: #d9cdbb;
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0 0 26px;
+    max-width: 790px;
+}
+
+.insight {
+    border-left: 3px solid var(--copper-soft);
+    padding: 18px 20px;
+    background: rgba(224,160,100,.08);
+    border-radius: 0 18px 18px 0;
+    color: #f3e4ce;
+    margin: 24px 0;
+    line-height: 1.55;
+}
+
+.grid {
+    display: grid;
+    gap: 16px;
+}
+
+.grid.two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mini-card {
+    background: rgba(255,255,255,.07);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px;
+    transition: .24s ease;
+}
+
+.mini-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,.1);
+    border-color: rgba(216,176,106,.3);
+}
+
+.mini-card small {
+    display: inline-flex;
+    color: var(--copper-soft);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.mini-card h4 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.mini-card p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.48;
+    font-size: 14px;
+}
+
+.credit-cycle {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    gap: 22px;
+    align-items: center;
+}
+
+.cycle-stage {
+    fill: rgba(201,120,58,.78);
+    stroke: rgba(255,245,224,.34);
+    stroke-width: 2;
+    cursor: pointer;
+    transition: .22s ease;
+}
+
+.cycle-stage:hover,
+.cycle-stage.active {
+    fill: rgba(224,160,100,.95);
+    filter: drop-shadow(0 0 16px rgba(224,160,100,.65));
+}
+
+.cycle-text,
+.cycle-num {
+    pointer-events: none;
+    fill: #fff8ef;
+    font-weight: 800;
+}
+
+.cycle-text {
+    font-size: 13px;
+}
+
+.cycle-num {
+    font-size: 15px;
+    fill: #241008;
+}
+
+.contact-box {
+    grid-template-columns: 1fr 420px;
+}
+
+.contact-form {
+    display: grid;
+    gap: 14px;
+}
+
+.contact-form label {
+    display: grid;
+    gap: 7px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(255,255,255,.08);
+    color: var(--cream);
+    padding: 14px 15px;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: rgba(216,176,106,.55);
+    box-shadow: 0 0 0 3px rgba(216,176,106,.12);
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.credit-detail {
+    border-radius: 28px;
+    background: linear-gradient(145deg, rgba(246,239,227,.97), rgba(226,204,174,.94));
+    color: #24140c;
+    padding: 26px;
+    box-shadow: 0 26px 64px rgba(0,0,0,.32);
+    min-height: 310px;
+}
+
+.credit-detail .tag {
+    display: inline-flex;
+    background: #24140c;
+    color: var(--gold);
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.credit-detail h4 {
+    font-size: 24px;
+    margin: 16px 0 12px;
+    line-height: 1.05;
+}
+
+.credit-detail ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.credit-detail li {
+    margin-bottom: 9px;
+    line-height: 1.38;
+}
+
+.llm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.llm-card {
+    min-height: 190px;
+    perspective: 900px;
+}
+
+.llm-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 190px;
+    transition: transform .5s ease;
+    transform-style: preserve-3d;
+}
+
+.llm-card:hover .llm-inner {
+    transform: rotateY(180deg);
+}
+
+.llm-front,
+.llm-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 18px;
+}
+
+.llm-front {
+    background: rgba(255,255,255,.075);
+}
+
+.llm-back {
+    transform: rotateY(180deg);
+    background: linear-gradient(145deg, rgba(246,239,227,.96), rgba(224,160,100,.92));
+    color: #1f120b;
+}
+
+.llm-front small {
+    color: var(--copper-soft);
+    font-weight: 800;
+}
+
+.llm-front h4,
+.llm-back h4 {
+    margin: 12px 0 8px;
+    line-height: 1.1;
+}
+
+.llm-front p,
+.llm-back p {
+    margin: 0;
+    line-height: 1.45;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.llm-back p {
+    color: #3f2717;
+}
+
+.stack-list {
+    display: grid;
+    gap: 14px;
+}
+
+.stack-row {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.06);
+}
+
+.stack-row b {
+    color: var(--copper-soft);
+}
+
+.stack-row span {
+    color: #d8c9b4;
+    line-height: 1.5;
+}
+
+.footer {
+    padding: 58px 0 70px;
+}
+
+.footer-box {
+    border-radius: 34px;
+    border: 1px solid rgba(216,176,106,.28);
+    background:
+        radial-gradient(circle at 20% 20%, rgba(216,176,106,.14), transparent 36%),
+        rgba(255,255,255,.055);
+    box-shadow: var(--shadow);
+    padding: clamp(26px, 5vw, 48px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 28px;
+    align-items: center;
+}
+
+.footer-box h2 {
+    font-size: clamp(30px, 5vw, 54px);
+    line-height: 1;
+    letter-spacing: -.05em;
+    margin: 0 0 14px;
+}
+
+.footer-box p {
+    color: var(--muted);
+    max-width: 760px;
+    line-height: 1.55;
+    margin: 0;
+}
+
+@media (max-width: 1050px) {
+    .hero,
+    .map-layout,
+    .credit-cycle,
+    .footer-box {
+        grid-template-columns: 1fr;
+    }
+
+    .map {
+        position: relative;
+        top: auto;
+    }
+
+    .llm-grid,
+    .grid.three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+    }
+
+    .hero {
+        padding-top: 50px;
+    }
+
+    .hero-panel {
+        min-height: 620px;
+    }
+
+    .hero-node {
+        width: 138px;
+    }
+
+    .n2 { left: 12px; }
+    .n3 { right: 12px; }
+    .n4 { left: 12px; }
+    .n5 { right: 12px; }
+
+    .map {
+        min-height: 760px;
+    }
+
+    .map-btn {
+        width: 138px;
+    }
+
+    .m2 { left: 12px; }
+    .m3 { right: 12px; }
+    .m4 { left: 12px; }
+    .m5 { right: 12px; }
+
+    .grid.two,
+    .grid.three,
+    .llm-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stack-row {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <nav class="nav">
+        <div class="brand">
+            <div class="logo-mark"></div>
+            <div>
+                <strong>Veropred Analytics</strong>
+                <span>Ciência de Dados & IA aplicada à decisão</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <button onclick="scrollToId('abordagem')">Abordagem</button>
+            <button onclick="scrollToId('mapa')">Áreas</button>
+            <button onclick="scrollToId('contato')">Contato</button>
+        </div>
+    </nav>
+</header>
+
+<main class="page">
+
+<section class="hero" id="abordagem">
+    <div>
+        <div class="kicker">Consultoria boutique em dados, risco e IA</div>
+
+        <h1>Dados não tomam decisões.</h1>
+
+        <p>
+            Decisões melhores exigem método, contexto e profundidade analítica.
+            A Veropred Analytics atua junto à liderança para transformar dados,
+            modelos e indicadores em decisões práticas, especialmente em crédito,
+            risco e estratégia.
+        </p>
+
+        <div class="hero-actions">
+            <button class="btn primary" onclick="scrollToId('mapa')">Explorar áreas de atuação</button>
+            <button class="btn" onclick="activateArea('credito'); scrollToId('mapa')">Ver risco de crédito</button>
+        </div>
+    </div>
+
+    <div class="hero-panel">
+        <div class="orbit o1"></div>
+        <div class="orbit o2"></div>
+        <div class="orbit o3"></div>
+
+        <div class="hero-core">
+            <strong>Veropred<br>Analytics</strong>
+        </div>
+
+        <div class="hero-node n1" onclick="activateArea('credito'); scrollToId('mapa')">
+            <b>Risco de Crédito</b>
+            <span>score, inadimplência e decisão</span>
+        </div>
+
+        <div class="hero-node n2" onclick="activateArea('modelagem'); scrollToId('mapa')">
+            <b>Modelagem Preditiva</b>
+            <span>previsão aplicada ao negócio</span>
+        </div>
+
+        <div class="hero-node n3" onclick="activateArea('ia'); scrollToId('mapa')">
+            <b>IA Generativa</b>
+            <span>LLMs, RAG e automação</span>
+        </div>
+
+        <div class="hero-node n4" onclick="activateArea('operacional'); scrollToId('mapa')">
+            <b>Risco Operacional</b>
+            <span>LDA, VaR, RAS e ICAAP</span>
+        </div>
+
+        <div class="hero-node n5" onclick="activateArea('estrategia'); scrollToId('mapa')">
+            <b>Decisão Estratégica</b>
+            <span>diagnóstico e cenários</span>
+        </div>
+
+        <div class="hero-node n6" onclick="activateArea('tech'); scrollToId('mapa')">
+            <b>Tecnologias</b>
+            <span>arquitetura e stack analítico</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-title">
+        <h2>Problemas complexos pedem arquitetura de decisão.</h2>
+        <p>
+            A proposta não é vender tecnologia. É estruturar problemas,
+            modelar riscos, interpretar sinais e apoiar decisões executivas
+            com rigor quantitativo e clareza de negócio.
+        </p>
+    </div>
+
+    <div class="grid three">
+        <div class="mini-card">
+            <small>Dor central</small>
+            <h4>Dados sem decisão</h4>
+            <p>Empresas acumulam bases, dashboards e indicadores, mas ainda enfrentam dificuldade para converter informação em ação.</p>
+        </div>
+
+        <div class="mini-card">
+            <small>Método</small>
+            <h4>Modelos com contexto</h4>
+            <p>Modelagem, validação e interpretação precisam estar ligadas ao uso real: aprovação, cobrança, priorização, risco e crescimento.</p>
+        </div>
+
+        <div class="mini-card">
+            <small>Atuação</small>
+            <h4>Advisory próximo da liderança</h4>
+            <p>Modelo híbrido de projeto inicial e acompanhamento contínuo, com proximidade de diretores, heads e times estratégicos.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="mapa">
+    <div class="section-title">
+        <h2>Núcleo analítico de atuação</h2>
+        <p>
+            Navegue pelas áreas. Cada frente parte do mesmo princípio:
+            tecnologia é meio; decisão, risco e resultado são o fim.
+        </p>
+    </div>
+
+    <div class="map-layout">
+        <div class="map">
+            <div class="orbit o1"></div>
+            <div class="orbit o2"></div>
+            <div class="orbit o3"></div>
+
+            <div class="map-core">
+                <b>Veropred<br>Analytics</b>
+                <span>Ciência de Dados & IA aplicada à decisão</span>
+            </div>
+
+            <button class="map-btn m1 active" data-area="ds" onclick="activateArea('ds')">
+                <em>◆</em><b>Ciência de Dados</b><span>núcleo integrador</span>
+            </button>
+
+            <button class="map-btn m2" data-area="credito" onclick="activateArea('credito')">
+                <em>◈</em><b>Risco de Crédito</b><span>score e decisão</span>
+            </button>
+
+            <button class="map-btn m3" data-area="modelagem" onclick="activateArea('modelagem')">
+                <em>⌁</em><b>Modelagem Preditiva</b><span>previsão aplicada</span>
+            </button>
+
+            <button class="map-btn m4" data-area="ia" onclick="activateArea('ia')">
+                <em>◎</em><b>IA Generativa</b><span>RAG, LLMs e automação</span>
+            </button>
+
+            <button class="map-btn m5" data-area="operacional" onclick="activateArea('operacional')">
+                <em>▣</em><b>Risco Operacional</b><span>perdas e capital</span>
+            </button>
+
+            <button class="map-btn m6" data-area="cases" onclick="activateArea('cases')">
+                <em>✦</em><b>Projetos Aplicados</b><span>cases e pesquisa</span>
+            </button>
+
+            <button class="map-btn m7" data-area="tech" onclick="activateArea('tech')">
+                <em>⚙</em><b>Tecnologias</b><span>arquitetura e stack</span>
+            </button>
+        </div>
+
+        <div class="content-panel">
+
+            <article class="area-card active" id="area-ds">
+                <h3>Ciência de Dados como núcleo integrador</h3>
+                <p class="lead">
+                    Ciência de Dados funciona como núcleo integrador: conecta risco, tecnologia,
+                    IA generativa, dashboards e projetos analíticos em soluções orientadas à decisão.
+                </p>
+
+                <div class="insight">
+                    A diferença está menos no algoritmo isolado e mais na capacidade de organizar
+                    dados, hipóteses, validação, interpretação e governança em um sistema decisório coerente.
+                </div>
+
+                <div class="grid two">
+                    <div class="mini-card">
+                        <small>Decisão</small>
+                        <h4>Da métrica ao critério</h4>
+                        <p>Modelos e indicadores são traduzidos em cortes, políticas, regras, priorizações e ações executáveis.</p>
+                    </div>
+                    <div class="mini-card">
+                        <small>Profundidade</small>
+                        <h4>Diagnóstico antes da solução</h4>
+                        <p>Problemas complexos são decompostos antes da modelagem para evitar respostas tecnicamente corretas e estrategicamente inúteis.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-credito">
+                <h3>Risco de Crédito</h3>
+                <p class="lead">
+                    Estruturação de modelos de inadimplência, score, decisão de crédito,
+                    aprovação e monitoramento, com foco em robustez, interpretação e uso executivo.
+                </p>
+
+                <div class="credit-cycle">
+                    <svg id="creditSvg" viewBox="-470 -470 940 940" width="100%" height="100%"></svg>
+
+                    <div class="credit-detail" id="creditDetail">
+                        <span class="tag">01</span>
+                        <h4>Seleção de público e variável resposta</h4>
+                        <ul>
+                            <li>Definição do público elegível.</li>
+                            <li>Horizonte e janela de observação.</li>
+                            <li>Coerência com a decisão de crédito.</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-modelagem">
+                <h3>Modelagem Preditiva</h3>
+                <p class="lead">
+                    Modelos preditivos orientados à decisão, construídos com clareza de objetivo,
+                    controle de qualidade, validação adequada e interpretação aplicável ao negócio.
+                </p>
+
+                <div class="grid two">
+                    <div class="mini-card">
+                        <small>Construção</small>
+                        <h4>Variável resposta, amostra e features</h4>
+                        <p>O desenho da base é tratado como parte crítica do modelo, não como etapa operacional secundária.</p>
+                    </div>
+                    <div class="mini-card">
+                        <small>Validação</small>
+                        <h4>Performance, estabilidade e uso real</h4>
+                        <p>Avaliação por métricas, safras, segmentos, drift, aderência temporal e impacto na decisão.</p>
+                    </div>
+                    <div class="mini-card">
+                        <small>Interpretação</small>
+                        <h4>Drivers e explicabilidade</h4>
+                        <p>Importância de variáveis, direção de efeito, coerência econômica e leitura executiva dos resultados.</p>
+                    </div>
+                    <div class="mini-card">
+                        <small>Produção</small>
+                        <h4>Monitoramento contínuo</h4>
+                        <p>Versionamento, documentação, recalibragem e acompanhamento da performance após implantação.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-ia">
+                <h3>IA Generativa & Automação</h3>
+                <p class="lead">
+                    IA generativa aparece como extensão da inteligência analítica: automação,
+                    RAG, copilotos, avaliação de qualidade e uso controlado em processos corporativos.
+                </p>
+
+                <div class="llm-grid">
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>01</small><h4>AI Enablement Office</h4><p>Adoção corporativa com método.</p></div><div class="llm-back"><h4>AI Enablement Office</h4><p>Biblioteca de prompts, capacitação por área, boas práticas e padronização do uso de IA.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>02</small><h4>LLM Product Studio</h4><p>Produtos inteligentes aplicados.</p></div><div class="llm-back"><h4>LLM Product Studio</h4><p>Copilotos, chatbots, apps internos, MVPs e interfaces operacionais com IA.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>03</small><h4>Enterprise RAG Factory</h4><p>Conhecimento corporativo navegável.</p></div><div class="llm-back"><h4>Enterprise RAG Factory</h4><p>Embeddings, busca semântica, BM25, documentos, rastreabilidade e respostas contextualizadas.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>04</small><h4>LLM Quality & Guardrails</h4><p>Qualidade, teste e controle.</p></div><div class="llm-back"><h4>LLM Quality & Guardrails</h4><p>Avaliação semântica, redução de alucinação, critérios de aceitação e governança.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>05</small><h4>Model Strategy Lab</h4><p>Escolha racional de modelos.</p></div><div class="llm-back"><h4>Model Strategy Lab</h4><p>Comparação entre GPT, Claude, Llama, Gemini, Mistral, custo, latência e qualidade.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>06</small><h4>AI Cloud Architecture</h4><p>Arquitetura para escala.</p></div><div class="llm-back"><h4>AI Cloud Architecture</h4><p>Azure OpenAI, AWS Bedrock, Vertex AI, pipelines e integração com sistemas internos.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>07</small><h4>Prompt Engineering System</h4><p>Prompts como ativos reutilizáveis.</p></div><div class="llm-back"><h4>Prompt Engineering System</h4><p>Templates, padrões, instruções controladas e redução de variância nas respostas.</p></div></div></div>
+                    <div class="llm-card"><div class="llm-inner"><div class="llm-front"><small>08</small><h4>AI Transformation Roadmap</h4><p>Roteiro executivo de IA.</p></div><div class="llm-back"><h4>AI Transformation Roadmap</h4><p>Priorização de casos, maturidade, quick wins, riscos e plano de escala.</p></div></div></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-operacional">
+                <h3>Risco Operacional</h3>
+                <p class="lead">
+                    Mensuração quantitativa de perdas, capital econômico e cenários extremos,
+                    conectando estatística, governança e tomada de decisão.
+                </p>
+
+                <div class="grid three">
+                    <div class="mini-card"><small>LDA</small><h4>Distribuição de perdas</h4><p>Frequência, severidade e agregação de perdas operacionais.</p></div>
+                    <div class="mini-card"><small>Monte Carlo</small><h4>Simulações</h4><p>Geração de cenários e distribuição agregada de risco.</p></div>
+                    <div class="mini-card"><small>VaR</small><h4>Capital econômico</h4><p>Estimativas em cauda, níveis de confiança e horizontes de risco.</p></div>
+                    <div class="mini-card"><small>Stress</small><h4>Stress testing</h4><p>Cenários extremos, sensibilidade e robustez das estimativas.</p></div>
+                    <div class="mini-card"><small>RAS</small><h4>Apetite a risco</h4><p>Indicadores, limites e leitura executiva da exposição.</p></div>
+                    <div class="mini-card"><small>ICAAP</small><h4>Governança de capital</h4><p>Suporte quantitativo para mensuração, documentação e discussão de capital.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-estrategia">
+                <h3>Decisão Estratégica</h3>
+                <p class="lead">
+                    Apoio a diretores e heads na leitura de problemas complexos,
+                    priorização de oportunidades, construção de indicadores e simulação de cenários.
+                </p>
+
+                <div class="grid two">
+                    <div class="mini-card"><small>Diagnóstico</small><h4>Leitura analítica do problema</h4><p>Separação entre sintoma, causa, indicador, restrição operacional e decisão necessária.</p></div>
+                    <div class="mini-card"><small>Priorização</small><h4>Oportunidades com critério</h4><p>Priorização baseada em impacto, risco, viabilidade, custo e maturidade dos dados.</p></div>
+                    <div class="mini-card"><small>Indicadores</small><h4>Painéis executivos</h4><p>Indicadores que esclarecem decisões, e não apenas acumulam visualizações.</p></div>
+                    <div class="mini-card"><small>Cenários</small><h4>Simulação e trade-offs</h4><p>Projeções, sensibilidades e cenários para decisões com incerteza.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-cases">
+                <h3>Projetos Aplicados / Cases</h3>
+                <p class="lead">
+                    Experiência aplicada em crédito, fraude, ativos, saúde, pesquisa científica
+                    e produtos analíticos com foco em decisão.
+                </p>
+
+                <div class="grid two">
+                    <div class="mini-card"><small>Open Finance</small><h4>Credit Demand Intelligence</h4><p>Identificação de demanda latente por crédito, antecipação e capital de giro a partir de dados transacionais.</p></div>
+                    <div class="mini-card"><small>B2B / PJ</small><h4>Credit & Fraud Risk Modeling</h4><p>Modelos preditivos para inadimplência e fraude em clientes corporativos, com suporte à decisão de crédito e gestão de risco.</p></div>
+                    <div class="mini-card"><small>Industrial Analytics</small><h4>Predictive Asset Intelligence</h4><p>Modelagem de desgaste de ativos, previsão de custos e apoio ao planejamento financeiro e operacional.</p></div>
+                    <div class="mini-card"><small>Saúde</small><h4>Predição em saúde</h4><p>Modelos aplicados a desfechos clínicos e apoio à leitura quantitativa em problemas de saúde.</p></div>
+                    <div class="mini-card"><small>Pesquisa</small><h4>Pesquisa científica internacional</h4><p>Atuação em projeto científico com desenvolvimento e validação de modelo preditivo em contexto hospitalar.</p></div>
+                    <div class="mini-card"><small>Dashboards</small><h4>Produtos analíticos navegáveis</h4><p>Dashboards, simuladores e interfaces web para exploração executiva de dados e cenários.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-tech">
+                <h3>Tecnologias & Arquitetura</h3>
+                <p class="lead">
+                    Stack técnico utilizado como meio para construir sistemas analíticos,
+                    modelos preditivos, automações e arquiteturas de decisão.
+                </p>
+
+                <div class="stack-list">
+                    <div class="stack-row"><b>Linguagens</b><span>Python, R, SQL, SAS, VBA</span></div>
+                    <div class="stack-row"><b>Machine Learning & Estatística</b><span>Regressão Logística, Random Forest, XGBoost, Clustering, Feature Engineering, Backtesting, Monte Carlo, VaR, LDA, Stress Testing</span></div>
+                    <div class="stack-row"><b>IA Generativa</b><span>Prompt Engineering, RAG, Fine-tuning, LangChain, Agentes, Avaliação de Alucinação, Semantic Similarity</span></div>
+                    <div class="stack-row"><b>Modelos e Plataformas</b><span>GPT, Claude, Llama, Gemini, Mistral</span></div>
+                    <div class="stack-row"><b>Cloud</b><span>AWS, Azure, GCP, Microsoft Fabric, AWS SageMaker, Azure OpenAI, Vertex AI</span></div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>
+
+
+</section>
+
+<section class="section" id="experiencia">
+    <div class="section-title">
+        <h2>Experiência aplicada</h2>
+        <p>
+            Profundidade construída em projetos analíticos, risco, crédito,
+            modelagem e tecnologia aplicada à decisão.
+        </p>
+    </div>
+
+    <div class="insight">
+        <strong>Experiência construída ao longo da atuação em projetos analíticos desenvolvidos em instituições financeiras, fintechs e empresas de grande porte, incluindo Banco Itaú, Banco Safra, Banco Omni, Cartão Elo, ACT Digital e Cielo.</strong>
+    </div>
+</section>
+
+<section class="footer" id="contato">
+
+    <div class="footer-box contact-box">
+        <div>
+            <h2>Discutir um problema analítico.</h2>
+            <p>
+                Descreva brevemente a dor da empresa. A Veropred Analytics avaliará
+                o contexto e retornará para uma conversa estratégica.
+            </p>
+        </div>
+
+        <form class="contact-form" action="https://formsubmit.co/pedrosale@hotmail.com" method="POST">
+
+            <!-- Config -->
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_subject" value="Lead - Veropred Analytics">
+            <input type="hidden" name="_next" value="https://seusite.com/obrigado.html">
+
+            <label>
+                Nome
+                <input type="text" name="nome" placeholder="Seu nome" required>
+            </label>
+
+            <label>
+                E-mail
+                <input type="email" name="email" placeholder="seu@email.com" required>
+            </label>
+
+            <label>
+                Dor da empresa
+                <textarea name="dor_da_empresa" rows="5"
+                    placeholder="Ex: dificuldade em aprovar crédito com segurança, aumento de inadimplência, ausência de critério claro de decisão..."
+                    required></textarea>
+            </label>
+
+            <button class="btn primary" type="submit">
+                Discutir problema
+            </button>
+
+        </form>
+    </div>
+</section>
+
+    <div class="footer-box">
+        <div>
+            <h2>Advisory analítico para decisões de alto impacto.</h2>
+            <p>
+                Para instituições que já possuem dados, mas precisam de método,
+                arquitetura e profundidade para transformar informação em decisão.
+            </p>
+        </div>
+        <button class="btn primary" onclick="scrollToId('abordagem')">Voltar ao início</button>
+    </div>
+</section>
+
+
+
+
+</main>
+
+<script>
+const areas = ["ds", "credito", "modelagem", "ia", "operacional", "estrategia", "cases", "tech"];
+
+function scrollToId(id) {
+    document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function activateArea(area) {
+    areas.forEach(a => {
+        const card = document.getElementById("area-" + a);
+        if (card) card.classList.remove("active");
+    });
+
+    const selected = document.getElementById("area-" + area);
+    if (selected) selected.classList.add("active");
+
+    document.querySelectorAll(".map-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.area === area);
+    });
+}
+const creditStages = [
+    {
+        num: "01",
+        title: "Objetivo, público e uso da decisão",
+        bullets: [
+            "Produto, canal, momento decisório e público elegível.",
+            "Exclusões, regras obrigatórias e restrições regulatórias.",
+            "Papel do modelo: aprovação, limite, preço, revisão ou cobrança."
+        ]
+    },
+    {
+        num: "02",
+        title: "Definição de inadimplência e janelas",
+        bullets: [
+            "Definição de bad, good e indeterminado.",
+            "Janela de observação, performance window e vintage.",
+            "Coerência entre horizonte de risco e decisão de crédito."
+        ]
+    },
+    {
+        num: "03",
+        title: "Base de desenvolvimento e amostragem",
+        bullets: [
+            "Base accepted, rejected e população operacional real (viés de seleção).",
+            "Amostras de treino, validação, teste e out-of-time.",
+            "Representatividade por safra, produto, canal e segmento."
+        ]
+    },
+    {
+        num: "04",
+        title: "Tratamento e engenharia de variáveis",
+        bullets: [
+            "Missing, outliers, inconsistências e regras de negócio.",
+            "Recência, frequência, utilização, comportamento e capacidade de pagamento.",
+            "Prevenção de leakage e variáveis indisponíveis no momento da decisão."
+        ]
+    },
+    {
+        num: "05",
+        title: "Binning, WOE e análise de características",
+        bullets: [
+            "Agrupamento supervisionado com monotonicidade quando aplicável.",
+            "WOE, IV, distribuição de bons/maus e estabilidade.",
+            "Estabilidade temporal, suavidade e robustez dos bins.",
+            "Coerência econômica, operacional e interpretabilidade."
+        ]
+    },
+    {
+        num: "06",
+        title: "Seleção de variáveis e segmentação",
+        bullets: [
+            "Poder preditivo, estabilidade e baixa redundância.",
+            "Colinearidade, correlação e contribuição marginal.",
+            "Segmentos com comportamento de risco estruturalmente diferente."
+        ]
+    },
+    {
+        num: "07",
+        title: "Reject inference e vieses de seleção",
+        bullets: [
+            "Avaliação do viés causado por clientes recusados.",
+            "Técnicas de inferência para rejected quando aplicável.",
+            "Comparação entre modelo com e sem ajuste de seleção."
+        ]
+    },
+    {
+        num: "08",
+        title: "Modelagem e scorecard",
+        bullets: [
+            "Scorecard (regressão logística + WOE) como baseline interpretável.",
+            "Modelos avançados (XGBoost, árvores, ensembles) como challengers.",
+            "Controle de overfitting, regularização e validação cruzada.",
+            "Avaliação por AUC, KS, Gini, lift, logloss, calibração e estabilidade.",
+            "Parcimônia, robustez, explicabilidade e generalização."
+        ]
+    },
+    {
+        num: "09",
+        title: "Escala, calibração e PD",
+        bullets: [
+            "Conversão de log-odds em pontos de score.",
+            "Score, odds, faixas, PD e bad rate esperado.",
+            "Calibração e backtesting em amostras out-of-time."
+        ]
+    },
+    {
+        num: "10",
+        title: "Estratégia de crédito e apetite a risco",
+        bullets: [
+            "Cutoffs, zonas cinzentas, overrides e políticas complementares.",
+            "Definição baseada em risco esperado (EL) e retorno ajustado.",
+            "Cenários de aprovação, perda esperada, margem e retorno.",
+            "Camadas decisórias: regras duras, score, limite, preço e revisão."
+        ]
+    },
+    {
+        num: "11",
+        title: "Validação independente e pré-implantação",
+        bullets: [
+            "Validação estatística, conceitual, operacional e documental.",
+            "Teste de estabilidade, sensibilidade, fairness e limitações de uso.",
+            "Homologação antes da entrada em produção."
+        ]
+    },
+    {
+        num: "12",
+        title: "Produção, monitoramento e governança",
+        bullets: [
+            "Deploy, versionamento, trilha de auditoria e documentação.",
+            "PSI, CSI, drift, overrides e estabilidade.",
+            "Recalibração, revisão periódica, challenger e melhoria contínua."
+        ]
+    }
+];
+const svg = document.getElementById("creditSvg");
+const detail = document.getElementById("creditDetail");
+
+function polar(radius, angle) {
+    const rad = (angle - 90) * Math.PI / 180;
+    return [radius * Math.cos(rad), radius * Math.sin(rad)];
+}
+
+function arcPath(rOuter, rInner, startAngle, endAngle) {
+    const [x1, y1] = polar(rOuter, startAngle);
+    const [x2, y2] = polar(rOuter, endAngle);
+    const [x3, y3] = polar(rInner, endAngle);
+    const [x4, y4] = polar(rInner, startAngle);
+    const large = endAngle - startAngle > 180 ? 1 : 0;
+
+    return [
+        `M ${x1} ${y1}`,
+        `A ${rOuter} ${rOuter} 0 ${large} 1 ${x2} ${y2}`,
+        `L ${x3} ${y3}`,
+        `A ${rInner} ${rInner} 0 ${large} 0 ${x4} ${y4}`,
+        "Z"
+    ].join(" ");
+}
+
+function updateCreditDetail(stage) {
+    detail.innerHTML = `
+        <span class="tag">${stage.num}</span>
+        <h4>${stage.title}</h4>
+        <ul>${stage.bullets.map(b => `<li>${b}</li>`).join("")}</ul>
+    `;
+}
+
+function drawCreditCycle() {
+    if (!svg) return;
+
+    const n = creditStages.length;
+    const step = 360 / n;
+    const outer = 410;
+    const inner = 205;
+    const textR = 305;
+    const numR = 370;
+    const gap = 3;
+
+    svg.innerHTML = `
+        <circle r="196" fill="rgba(255,255,255,.06)" stroke="rgba(216,176,106,.35)" stroke-width="2"></circle>
+        <circle r="150" fill="rgba(12,8,6,.92)" stroke="rgba(216,176,106,.55)" stroke-width="2"></circle>
+        <text x="0" y="-16" text-anchor="middle" fill="#fff8ef" font-size="28" font-weight="800">Crédito</text>
+        <text x="0" y="18" text-anchor="middle" fill="#fff8ef" font-size="28" font-weight="800">Decisão</text>
+        <text x="0" y="50" text-anchor="middle" fill="#b9aa96" font-size="13">score • risco • monitoramento</text>
+    `;
+
+    creditStages.forEach((stage, i) => {
+        const a1 = i * step + gap / 2;
+        const a2 = (i + 1) * step - gap / 2;
+        const mid = (a1 + a2) / 2;
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", arcPath(outer, inner, a1, a2));
+        path.setAttribute("class", "cycle-stage");
+        path.style.opacity = String(.64 + i * .035);
+        path.addEventListener("mouseenter", () => {
+            document.querySelectorAll(".cycle-stage").forEach(p => p.classList.remove("active"));
+            path.classList.add("active");
+            updateCreditDetail(stage);
+        });
+        path.addEventListener("click", () => updateCreditDetail(stage));
+        svg.appendChild(path);
+
+        const [nx, ny] = polar(numR, mid);
+        const numCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        numCircle.setAttribute("cx", nx);
+        numCircle.setAttribute("cy", ny);
+        numCircle.setAttribute("r", "19");
+        numCircle.setAttribute("fill", "#f1c17b");
+        numCircle.setAttribute("stroke", "rgba(255,255,255,.45)");
+        svg.appendChild(numCircle);
+
+        const num = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        num.setAttribute("x", nx);
+        num.setAttribute("y", ny + 5);
+        num.setAttribute("text-anchor", "middle");
+        num.setAttribute("class", "cycle-num");
+        num.textContent = stage.num;
+        svg.appendChild(num);
+
+        const [tx, ty] = polar(textR, mid);
+        const words = stage.title.split(" ");
+        const line1 = words.slice(0, Math.ceil(words.length / 2)).join(" ");
+        const line2 = words.slice(Math.ceil(words.length / 2)).join(" ");
+
+        [line1, line2].filter(Boolean).forEach((line, idx) => {
+            const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x", tx);
+            txt.setAttribute("y", ty + (idx * 16) - 5);
+            txt.setAttribute("text-anchor", "middle");
+            txt.setAttribute("class", "cycle-text");
+            txt.textContent = line;
+            svg.appendChild(txt);
+        });
+    });
+}
+
+drawCreditCycle();
+</script>
+
+</body>
+</html>
