@@ -983,7 +983,7 @@ h1 {
             </button>
 
             <button class="map-btn m2" data-area="credito" onclick="activateArea('credito')">
-                <em>◈</em><b>Risco de Crédito</b><span>originação, comportamento e decisão</span>
+                <em>◈</em><b>Risco de Crédito</b><span>framework de decisão de crédito</span>
             </button>
 
             <button class="map-btn m3" data-area="modelagem" onclick="activateArea('modelagem')">
@@ -1035,27 +1035,83 @@ h1 {
                 </div>
             </article>
 
-            <article class="area-card" id="area-credito">
-                <h3>Risco de Crédito</h3>
-                <p class="lead">
-                    Estruturação de modelos de inadimplência, score, decisão de crédito,
-                    aprovação e monitoramento, com foco em robustez, interpretação e uso executivo.
-                </p>
+<article class="area-card" id="area-credito">
+    <h3>Veropred Credit Decision Framework</h3>
 
-                <div class="credit-cycle">
-                    <svg id="creditSvg" viewBox="-470 -470 940 940" width="100%" height="100%"></svg>
+    <p class="lead">
+        Sistema estruturado para construção, validação e aplicação de decisões de crédito,
+        integrando modelagem preditiva, estratégia de risco e governança em um único fluxo decisório.
+    </p>
 
-                    <div class="credit-detail" id="creditDetail">
-                        <span class="tag">01</span>
-                        <h4>Seleção de público e variável resposta</h4>
-                        <ul>
-                            <li>Definição do público elegível.</li>
-                            <li>Horizonte e janela de observação.</li>
-                            <li>Coerência com a decisão de crédito.</li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
+    <div class="insight">
+        Mais do que um modelo de inadimplência, o framework organiza como instituições
+        definem, quantificam e executam decisões de crédito com consistência,
+        controle de risco e alinhamento a retorno.
+    </div>
+
+    <div class="grid three">
+
+        <div class="mini-card">
+            <small>Pilar 01</small>
+            <h4>Definição do problema</h4>
+            <p>
+                Estruturação do objetivo, definição de inadimplência, janelas de análise
+                e construção da base representativa do problema de crédito.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <small>Pilar 02</small>
+            <h4>Estrutura de informação</h4>
+            <p>
+                Engenharia, análise e seleção de variáveis com foco em poder preditivo,
+                estabilidade temporal e coerência econômica.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <small>Pilar 03</small>
+            <h4>Modelagem e mensuração</h4>
+            <p>
+                Construção de modelos, estimação de risco (PD) e avaliação com base em
+                performance, calibração e impacto na decisão.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <small>Pilar 04</small>
+            <h4>Decisão e estratégia</h4>
+            <p>
+                Definição de cutoffs, políticas, limites e preço,
+                com base em perda esperada e retorno ajustado ao risco.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <small>Pilar 05</small>
+            <h4>Governança e evolução</h4>
+            <p>
+                Validação independente, monitoramento contínuo, gestão de drift
+                e evolução estruturada do sistema de decisão.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="credit-cycle">
+        <svg id="creditSvg" viewBox="-470 -470 940 940" width="100%" height="100%"></svg>
+
+        <div class="credit-detail" id="creditDetail">
+            <span class="tag">01</span>
+            <h4>Definição do problema</h4>
+            <ul>
+                <li>Objetivo, público e uso da decisão.</li>
+                <li>Definição de inadimplência e janelas.</li>
+                <li>Base de desenvolvimento e representatividade.</li>
+            </ul>
+        </div>
+    </div>
+</article>
 
             <article class="area-card" id="area-modelagem">
                 <h3>Modelagem Preditiva</h3>
@@ -1300,64 +1356,148 @@ h1 {
                     e produtos analíticos com foco em decisão.
                 </p>
 
-               <div class="grid two">
+              <div class="grid two">
 
+    <!-- 1. ARQUITETURA (TOPO ABSOLUTO) -->
+    <div class="mini-card">
+        <small>Decisão</small>
+        <h4>Decision Systems Design</h4>
+        <p>
+            Estruturação de sistemas de decisão integrando modelos preditivos,
+            regras de negócio, políticas e estratégia de risco,
+            conectando dados à execução real em crédito, fraude e operações.
+        </p>
+    </div>
+
+    <!-- 2. CRÉDITO CORE -->
+    <div class="mini-card">
+        <small>Crédito</small>
+        <h4>Credit & Fraud Risk Modeling</h4>
+        <p>
+            Modelos preditivos para inadimplência e fraude,
+            com suporte à decisão de crédito, gestão de risco e controle de perdas.
+        </p>
+    </div>
+
+    <!-- 3. ESTRATÉGIA DE CRÉDITO -->
+    <div class="mini-card">
+        <small>Estratégia</small>
+        <h4>Credit Strategy & Portfolio Optimization</h4>
+        <p>
+            Definição de estratégias de crédito com base em perda esperada,
+            retorno ajustado ao risco e simulação de cenários,
+            conectando modelagem à rentabilidade do portfólio.
+        </p>
+    </div>
+
+    <!-- 4. OPEN FINANCE -->
+    <div class="mini-card">
+        <small>Open Finance</small>
+        <h4>Credit Demand Intelligence</h4>
+        <p>
+            Identificação de demanda latente por crédito, antecipação e capital de giro
+            a partir de dados transacionais e comportamento financeiro.
+        </p>
+    </div>
+
+    <!-- 5. IA / LLM (SEU DIFERENCIAL MODERNO) -->
+    <div class="mini-card">
+        <small>IA</small>
+        <h4>LLM & RAG Systems</h4>
+        <p>
+            Construção de sistemas baseados em LLMs com RAG, avaliação de respostas,
+            controle de alucinação e uso estruturado em processos corporativos.
+        </p>
+    </div>
+
+    <!-- 6. VALIDAÇÃO (NÍVEL BANCO GRANDE) -->
+    <div class="mini-card">
+        <small>Risco</small>
+        <h4>Model Risk & Validation</h4>
+        <p>
+            Estruturação de processos de validação independente,
+            análise de estabilidade, drift e governança de modelos em produção.
+        </p>
+    </div>
+
+    <!-- 7. TRADUÇÃO PARA DECISÃO -->
+    <div class="mini-card">
+        <small>Execução</small>
+        <h4>Data-to-Decision Translation</h4>
+        <p>
+            Tradução de modelos e indicadores em decisões práticas,
+            como cutoffs, políticas, priorização e ações operacionais.
+        </p>
+    </div>
+
+    <!-- 8. SIMULAÇÃO -->
+    <div class="mini-card">
+        <small>Cenários</small>
+        <h4>Scenario Simulation & Stress Analysis</h4>
+        <p>
+            Simulação de cenários, análise de sensibilidade e impacto
+            para suporte à decisão sob incerteza em crédito e estratégia.
+        </p>
+    </div>
+
+    <!-- 9. INVESTIMENTOS -->
     <div class="mini-card">
         <small>Investimentos</small>
         <h4>Factor Investing</h4>
         <p>
-            Desenvolvimento de estratégias sistemáticas de alocação baseadas em fatores
-            clássicos — Valor, Qualidade, Momentum, Alto Rendimento e Baixa Volatilidade —
-            combinados em estruturas multifatoriais, com fundamentação na Teoria Moderna
-            de Portfólio de Harry Markowitz e avaliação por métricas como Sharpe Ratio e CAGR,
-            garantindo eficiência risco-retorno e consistência no longo prazo.
+            Estratégias sistemáticas baseadas em fatores (Valor, Qualidade, Momentum),
+            combinadas em estruturas multifatoriais com foco em eficiência risco-retorno.
         </p>
     </div>
 
-    <div class="mini-card">
-        <small>B2B / PJ</small>
-        <h4>Credit & Fraud Risk Modeling</h4>
-        <p>Modelos preditivos para inadimplência e fraude em clientes corporativos, com suporte à decisão de crédito e gestão de risco.</p>
-    </div>
-
-    <div class="mini-card">
-        <small>Open Finance</small>
-        <h4>Credit Demand Intelligence</h4>
-        <p>Identificação de demanda latente por crédito, antecipação e capital de giro a partir de dados transacionais.</p>
-    </div>
-
+    <!-- 10. RETENÇÃO -->
     <div class="mini-card">
         <small>Retenção</small>
         <h4>Churn Prediction & Prevention</h4>
         <p>
-            Modelagem preditiva de churn baseada em comportamento transacional,
-            com detecção antecipada de risco de evasão e estratégias de retenção
-            orientadas por propensão e impacto em receita.
+            Modelagem preditiva de churn com detecção antecipada
+            e estratégias de retenção orientadas por impacto em receita.
         </p>
     </div>
 
+    <!-- 11. INDUSTRIAL -->
     <div class="mini-card">
-        <small>Industrial Analytics</small>
+        <small>Industrial</small>
         <h4>Predictive Asset Intelligence</h4>
-        <p>Modelagem de desgaste de ativos, previsão de custos e apoio ao planejamento financeiro e operacional.</p>
+        <p>
+            Modelagem de desgaste de ativos, previsão de custos
+            e apoio ao planejamento financeiro e operacional.
+        </p>
     </div>
 
+    <!-- 12. SAÚDE -->
     <div class="mini-card">
         <small>Saúde</small>
-        <h4>Predição em saúde</h4>
-        <p>Modelos aplicados a desfechos clínicos e apoio à leitura quantitativa em problemas de saúde.</p>
+        <h4>Healthcare Predictive Modeling</h4>
+        <p>
+            Modelos aplicados a desfechos clínicos
+            e apoio à análise quantitativa em contextos hospitalares.
+        </p>
     </div>
 
+    <!-- 13. PRODUTOS -->
     <div class="mini-card">
-        <small>Dashboards</small>
-        <h4>Produtos analíticos navegáveis</h4>
-        <p>Dashboards, simuladores e interfaces web para exploração executiva de dados e cenários.</p>
+        <small>Produtos</small>
+        <h4>Analytical Products & Dashboards</h4>
+        <p>
+            Desenvolvimento de dashboards, simuladores e interfaces analíticas
+            para exploração executiva de dados e cenários.
+        </p>
     </div>
 
+    <!-- 14. PESQUISA -->
     <div class="mini-card">
         <small>Pesquisa</small>
-        <h4>Pesquisa científica internacional</h4>
-        <p>Atuação em projeto científico com desenvolvimento e validação de modelo preditivo em contexto hospitalar.</p>
+        <h4>Scientific Research</h4>
+        <p>
+            Desenvolvimento e validação de modelos preditivos
+            em contexto científico com rigor estatístico.
+        </p>
     </div>
 
 </div>
@@ -1620,8 +1760,15 @@ function drawCreditCycle() {
     svg.innerHTML = `
         <circle r="196" fill="rgba(255,255,255,.06)" stroke="rgba(216,176,106,.35)" stroke-width="2"></circle>
         <circle r="150" fill="rgba(12,8,6,.92)" stroke="rgba(216,176,106,.55)" stroke-width="2"></circle>
-        <text x="0" y="-16" text-anchor="middle" fill="#fff8ef" font-size="28" font-weight="800">Crédito</text>
-        <text x="0" y="18" text-anchor="middle" fill="#fff8ef" font-size="28" font-weight="800">Decisão</text>
+<text x="0" y="-20" text-anchor="middle" fill="#fff8ef" font-size="26" font-weight="800">
+VCD Framework
+</text>
+
+<text x="0" y="10" text-anchor="middle" fill="#fff8ef" font-size="22" font-weight="700">
+Credit Decision
+</text>
+
+
         <text x="0" y="50" text-anchor="middle" fill="#b9aa96" font-size="13">originação, comportamento e decisão</text>
     `;
 
