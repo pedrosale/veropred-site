@@ -1466,9 +1466,9 @@ const creditStages = [
         num: "01",
         title: "Objetivo, público e uso da decisão",
         bullets: [
-            "Produto, canal, momento decisório e público elegível.",
-            "Exclusões, regras obrigatórias e restrições regulatórias.",
-            "Papel do modelo: aprovação, limite, preço, revisão ou cobrança."
+            "Definição de produto, canal, momento decisório e público elegível.",
+            "Restrições regulatórias, exclusões e regras obrigatórias.",
+            "Papel do modelo na decisão: aprovação, limite, preço, revisão ou cobrança."
         ]
     },
     {
@@ -1476,73 +1476,72 @@ const creditStages = [
         title: "Definição de inadimplência e janelas",
         bullets: [
             "Definição de bad, good e indeterminado.",
-            "Janela de observação, performance window e vintage.",
-            "Coerência entre horizonte de risco e decisão de crédito."
+            "Janela de observação, performance window e análise por safra (vintage).",
+            "Coerência entre horizonte de risco e uso na decisão de crédito."
         ]
     },
     {
         num: "03",
         title: "Base de desenvolvimento e amostragem",
         bullets: [
-            "Base accepted, rejected e população operacional real (viés de seleção).",
-            "Amostras de treino, validação, teste e out-of-time.",
-            "Representatividade por safra, produto, canal e segmento."
+            "Uso de bases accepted, rejected e população operacional real (viés de seleção).",
+            "Separação em treino, validação, teste e out-of-time.",
+            "Garantia de representatividade por safra, produto, canal e segmento."
         ]
     },
     {
         num: "04",
         title: "Tratamento e engenharia de variáveis",
         bullets: [
-            "Missing, outliers, inconsistências e regras de negócio.",
-            "Recência, frequência, utilização, comportamento e capacidade de pagamento.",
-            "Prevenção de leakage e variáveis indisponíveis no momento da decisão."
+            "Tratamento de dados com foco em qualidade, consistência e aderência ao uso na decisão.",
+            "Construção de variáveis comportamentais: recência, frequência, utilização e capacidade de pagamento.",
+            "Prevenção de leakage e exclusão de variáveis indisponíveis no momento da decisão."
         ]
     },
     {
         num: "05",
-        title: "Binning, WOE e análise de características",
+        title: "Análise de variáveis e estrutura de informação",
         bullets: [
-            "Agrupamento supervisionado com monotonicidade quando aplicável.",
-            "WOE, IV, distribuição de bons/maus e estabilidade.",
-            "Estabilidade temporal, suavidade e robustez dos bins.",
-            "Coerência econômica, operacional e interpretabilidade."
+            "Estruturação de variáveis com agrupamentos supervisionados e monotonicidade quando aplicável.",
+            "Avaliação baseada em poder preditivo, estabilidade temporal e coerência econômica.",
+            "Suporte a métricas consagradas de risco como WOE, IV e distribuição de bons/maus.",
+            "Robustez, suavidade e interpretabilidade alinhadas ao uso executivo e regulatório."
         ]
     },
     {
         num: "06",
         title: "Seleção de variáveis e segmentação",
         bullets: [
-            "Poder preditivo, estabilidade e baixa redundância.",
-            "Colinearidade, correlação e contribuição marginal.",
-            "Segmentos com comportamento de risco estruturalmente diferente."
+            "Seleção baseada em poder preditivo, estabilidade e contribuição marginal.",
+            "Controle de redundância, colinearidade e robustez do conjunto de variáveis.",
+            "Segmentação quando há diferenças estruturais de comportamento de risco."
         ]
     },
     {
         num: "07",
         title: "Reject inference e vieses de seleção",
         bullets: [
-            "Avaliação do viés causado por clientes recusados.",
-            "Técnicas de inferência para rejected quando aplicável.",
-            "Comparação entre modelo com e sem ajuste de seleção."
+            "Avaliação do viés decorrente de clientes recusados.",
+            "Aplicação de técnicas de inferência quando necessário.",
+            "Comparação entre abordagens com e sem ajuste de seleção."
         ]
     },
     {
         num: "08",
         title: "Modelagem e scorecard",
         bullets: [
-            "Scorecard (regressão logística + WOE) como baseline interpretável.",
-            "Modelos avançados (XGBoost, árvores, ensembles) como challengers.",
-            "Controle de overfitting, regularização e validação cruzada.",
-            "Avaliação por AUC, KS, Gini, lift, logloss, calibração e estabilidade.",
-            "Parcimônia, robustez, explicabilidade e generalização."
+            "Modelos interpretáveis como baseline (ex: scorecard) e modelos avançados como challengers.",
+            "Avaliação por performance, estabilidade, calibração e impacto na decisão.",
+            "Controle de overfitting, regularização e validação robusta.",
+            "Parcimônia, generalização e aderência ao uso em crédito."
         ]
     },
     {
         num: "09",
         title: "Escala, calibração e PD",
         bullets: [
-            "Conversão de log-odds em pontos de score.",
-            "Score, odds, faixas, PD e bad rate esperado.",
+            "Conversão de log-odds em score e estruturação de faixas de risco.",
+            "Estimativa de PD e bad rate esperado por segmento.",
             "Calibração e backtesting em amostras out-of-time."
         ]
     },
@@ -1550,10 +1549,10 @@ const creditStages = [
         num: "10",
         title: "Estratégia de crédito e apetite a risco",
         bullets: [
-            "Cutoffs, zonas cinzentas, overrides e políticas complementares.",
-            "Definição baseada em risco esperado (EL) e retorno ajustado.",
-            "Cenários de aprovação, perda esperada, margem e retorno.",
-            "Camadas decisórias: regras duras, score, limite, preço e revisão."
+            "Definição de cutoffs, zonas cinzentas, overrides e políticas complementares.",
+            "Decisão baseada em perda esperada (EL) e retorno ajustado ao risco.",
+            "Simulação de cenários de aprovação, perda, margem e rentabilidade.",
+            "Integração de regras, score, limite, preço e revisão em camadas decisórias."
         ]
     },
     {
@@ -1561,7 +1560,7 @@ const creditStages = [
         title: "Validação independente e pré-implantação",
         bullets: [
             "Validação estatística, conceitual, operacional e documental.",
-            "Teste de estabilidade, sensibilidade, fairness e limitações de uso.",
+            "Testes de estabilidade, sensibilidade, fairness e limitações de uso.",
             "Homologação antes da entrada em produção."
         ]
     },
@@ -1569,9 +1568,9 @@ const creditStages = [
         num: "12",
         title: "Produção, monitoramento e governança",
         bullets: [
-            "Deploy, versionamento, trilha de auditoria e documentação.",
-            "PSI, CSI, drift, overrides e estabilidade.",
-            "Recalibração, revisão periódica, challenger e melhoria contínua."
+            "Deploy com versionamento, documentação e trilha de auditoria.",
+            "Monitoramento por PSI, CSI, drift, overrides e estabilidade.",
+            "Recalibração, revisão periódica e gestão de challengers."
         ]
     }
 ];
