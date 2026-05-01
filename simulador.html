@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Simulador de Crédito - Veropred</title>
+
+<style>
+:root {
+    --bg:#080706;
+    --gold:#d8b06a;
+    --copper:#c9783a;
+    --text:#f6efe3;
+    --muted:#b9aa96;
+    --line:rgba(255,255,255,.14);
+}
+
+body{
+    margin:0;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(201,120,58,.24), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(216,176,106,.13), transparent 36%),
+        linear-gradient(135deg, #080706, #15100d 45%, #24160f);
+    color:var(--text);
+    font-family:Inter, Arial, sans-serif;
+    padding:40px;
+}
+
+.container{ max-width:1200px; margin:auto; }
+
+h1{
+    font-size:38px;
+    letter-spacing:-.04em;
+    margin:0 0 12px;
+}
+
+.subtitle{
+    color:var(--muted);
+    max-width:760px;
+    line-height:1.55;
+    margin-bottom:30px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+}
+
+.card, .decision-box, .glossary .item{
+    background:rgba(255,255,255,.055);
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:24px;
+    box-shadow:0 24px 70px rgba(0,0,0,.32);
+}
+
+h3{ margin-top:0; }
+
+label{
+    color:var(--gold);
+    font-size:13px;
+    display:block;
+    margin-top:16px;
+    margin-bottom:6px;
+}
+
+input[type=range], select{
+    width:100%;
+}
+
+select{
+    background:rgba(255,255,255,.08);
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px;
+}
+
+.metric{
+    margin-top:10px;
+    font-size:14px;
+    color:var(--muted);
+}
+
+.metric b, .decision-box b, .glossary b{ color:var(--gold); }
+
+canvas{
+    margin-top:34px;
+    width:100%;
+    border-radius:20px;
+    background:rgba(255,255,255,.035);
+    border:1px solid var(--line);
+}
+
+.actions{
+    margin-top:24px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.btn-optimal{
+    border:1px solid rgba(216,176,106,.4);
+    border-radius:999px;
+    padding:14px 18px;
+    cursor:pointer;
+    font-weight:650;
+    color:#1a0f09;
+    background:linear-gradient(135deg, #f0bf7a, #c9783a);
+    box-shadow:0 16px 40px rgba(201,120,58,.25);
+}
+
+.decision-box{
+    margin-top:22px;
+    color:var(--muted);
+    line-height:1.55;
+}
+
+.glossary{
+    margin-top:28px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+}
+
+.glossary p{
+    margin:8px 0 0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.45;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+
+
+<h1>Simulação de decisões orientadas por risco</h1>
+<p class="subtitle">
+Compare políticas de cutoff, visualize a curva de PD por segmento e observe o impacto
+em perda esperada, retorno e zona cinza de decisão.
+<br><br>
+<span style="color: var(--gold); font-weight:600;">
+Aplicável a crédito, fraude, marketing, operações e IA.
+</span>
+</p>
+<div class="grid">
+
+<div class="card">
+<h3>Cenário A</h3>
+
+<label>Segmento</label>
+<select id="a_segment" onchange="simulate()">
+    <option value="prime">Prime</option>
+    <option value="medio" selected>Médio risco</option>
+    <option value="alto">Alto risco</option>
+</select>
+
+<label>Cutoff</label>
+<input type="range" id="a_cutoff" min="300" max="900" value="600" oninput="simulate()">
+
+<label>Juros (%)</label>
+<input type="range" id="a_rate" min="2" max="15" value="8" oninput="simulate()">
+
+<label>Ticket médio</label>
+<input type="range" id="a_ticket" min="1000" max="20000" value="8000" step="500" oninput="simulate()">
+
+<div class="metric"><b>PD:</b> <span id="a_pd"></span></div>
+<div class="metric"><b>Aprovação estimada:</b> <span id="a_approval"></span></div>
+<div class="metric"><b>EL:</b> <span id="a_el"></span></div>
+<div class="metric"><b>ROI ajustado:</b> <span id="a_roi"></span></div>
+</div>
+
+<div class="card">
+<h3>Cenário B</h3>
+
+<label>Segmento</label>
+<select id="b_segment" onchange="simulate()">
+    <option value="prime">Prime</option>
+    <option value="medio">Médio risco</option>
+    <option value="alto" selected>Alto risco</option>
+</select>
+
+<label>Cutoff</label>
+<input type="range" id="b_cutoff" min="300" max="900" value="700" oninput="simulate()">
+
+<label>Juros (%)</label>
+<input type="range" id="b_rate" min="2" max="15" value="10" oninput="simulate()">
+
+<label>Ticket médio</label>
+<input type="range" id="b_ticket" min="1000" max="20000" value="10000" step="500" oninput="simulate()">
+
+<div class="metric"><b>PD:</b> <span id="b_pd"></span></div>
+<div class="metric"><b>Aprovação estimada:</b> <span id="b_approval"></span></div>
+<div class="metric"><b>EL:</b> <span id="b_el"></span></div>
+<div class="metric"><b>ROI ajustado:</b> <span id="b_roi"></span></div>
+</div>
+
+</div>
+
+<div class="actions">
+    <button class="btn-optimal" onclick="suggestOptimalPolicy('a')">
+        Sugerir política ótima para Cenário A
+    </button>
+
+    <button class="btn-optimal" onclick="suggestOptimalPolicy('b')">
+        Sugerir política ótima para Cenário B
+    </button>
+</div>
+
+<div id="decision_text" class="decision-box">
+    Ajuste os parâmetros ou solicite uma política ótima para gerar uma leitura executiva.
+</div>
+
+<canvas id="chart" width="1000" height="390"></canvas>
+
+<div class="glossary">
+    <div class="item"><b>PD</b><p>Probabilidade estimada de inadimplência para o score/cutoff analisado.</p></div>
+    <div class="item"><b>Aprovação estimada</b><p>Percentual aproximado de clientes aprovados após aplicação do cutoff.</p></div>
+    <div class="item"><b>EL</b><p>Perda esperada. Calculada como PD × LGD × exposição aprovada.</p></div>
+    <div class="item"><b>ROI ajustado</b><p>Retorno após descontar a perda esperada estimada da carteira aprovada.</p></div>
+    <div class="item"><b>Cutoff</b><p>Ponto mínimo de score utilizado para aprovar, rejeitar ou encaminhar para análise.</p></div>
+    <div class="item"><b>Zona cinza</b><p>Faixa intermediária onde a decisão exige análise complementar, regra adicional ou revisão.</p></div>
+    <div class="item"><b>Segmento</b><p>Curvas diferentes para perfis de risco distintos: Prime, Médio risco e Alto risco.</p></div>
+    <div class="item"><b>Taxa de juros</b><p>Remuneração aplicada sobre o crédito concedido, principal fonte de receita da operação.</p></div>
+    <div class="item"><b>Ticket médio</b><p>Valor médio concedido por cliente aprovado, determinando o tamanho da exposição e da receita potencial.</p></div>
+</div>
+
+</div>
+
+<script>
+const segments = {
+    prime: { x0: 560, k: -0.018, color: "#d8b06a", label: "Prime" },
+    medio: { x0: 620, k: -0.014, color: "#c9783a", label: "Médio risco" },
+    alto:  { x0: 690, k: -0.011, color: "#ff4d4d", label: "Alto risco" }
+};
+
+function pdFromScore(score, seg){
+    const s = segments[seg];
+    return 1 / (1 + Math.exp(-s.k * (score - s.x0)));
+}
+
+function approvalFromCutoff(cutoff){
+    return Math.max(0, Math.min(1, 1 - ((cutoff - 300) / 600)));
+}
+
+function calc(prefix){
+    const cutoff = +document.getElementById(prefix+"_cutoff").value;
+    const rate = +document.getElementById(prefix+"_rate").value / 100;
+    const ticket = +document.getElementById(prefix+"_ticket").value;
+    const segment = document.getElementById(prefix+"_segment").value;
+
+    const clients = 1000;
+    const approval = approvalFromCutoff(cutoff);
+    const approved = clients * approval;
+
+    const pd = pdFromScore(cutoff, segment);
+    const lgd = 0.5;
+    const exposure = approved * ticket;
+    const el = pd * lgd * exposure;
+    const revenue = exposure * rate;
+    const roi = exposure > 0 ? (revenue - el) / exposure : 0;
+
+    document.getElementById(prefix+"_pd").innerText = (pd*100).toFixed(2)+"%";
+    document.getElementById(prefix+"_approval").innerText = (approval*100).toFixed(1)+"%";
+    document.getElementById(prefix+"_el").innerText = "R$ "+el.toFixed(0);
+    document.getElementById(prefix+"_roi").innerText = (roi*100).toFixed(2)+"%";
+
+    return {cutoff, pd, segment, approval, el, roi};
+}
+
+function findOptimalCutoff(segment, rate, ticket){
+
+    let best = {
+        cutoff: 300,
+        profit: -Infinity,
+        pd: 0,
+        el: 0,
+        roi: 0,
+        approval: 0
+    };
+
+    for(let cutoff = 300; cutoff <= 900; cutoff += 5){
+
+        const pd = pdFromScore(cutoff, segment);
+        const approval = approvalFromCutoff(cutoff);
+        const exposure = 1000 * approval * ticket;
+
+        const el = pd * 0.5 * exposure;
+        const revenue = exposure * rate;
+
+        const profit = revenue - el;
+        const roi = exposure > 0 ? profit / exposure : -Infinity;
+
+        if(profit > best.profit){
+            best = {cutoff, profit, pd, el, roi, approval};
+        }
+    }
+
+    return best;
+}
+
+function suggestOptimalPolicy(prefix){
+    const segment = document.getElementById(prefix+"_segment").value;
+    const rate = +document.getElementById(prefix+"_rate").value / 100;
+    const ticket = +document.getElementById(prefix+"_ticket").value;
+
+    const best = findOptimalCutoff(segment, rate, ticket);
+
+    document.getElementById(prefix+"_cutoff").value = best.cutoff;
+
+    const A = calc("a");
+    const B = calc("b");
+    drawChart(A, B);
+
+    const scenarioName = prefix === "a" ? "Cenário A" : "Cenário B";
+    const segmentLabel = segments[segment].label;
+
+    document.getElementById("decision_text").innerHTML = `
+        <b>Política sugerida para ${scenarioName}:</b> cutoff ${best.cutoff}.<br>
+        Para o segmento <b>${segmentLabel}</b>, esse ponto maximiza o resultado econômico ajustado ao risco,
+        considerando taxa de juros, ticket médio, PD estimada, perda esperada e aprovação estimada.<br><br>
+        Aplicável a diferentes contextos de decisão, como crédito, fraude, marketing e operações.<br><br>
+        <b>Leitura:</b> o cutoff sugerido reduz a exposição a risco sem eliminar totalmente
+        o potencial de geração de receita da carteira aprovada.
+    `;
+}
+
+
+
+
+function simulate(){
+    const A = calc("a");
+    const B = calc("b");
+    drawChart(A, B);
+}
+
+function drawChart(A, B){
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const leftPad = 58;
+    const rightPad = 28;
+    const topPad = 24;
+    const bottomPad = 48;
+    const plotW = w - leftPad - rightPad;
+    const plotH = h - topPad - bottomPad;
+
+    function xScale(score){
+        return leftPad + (score - 300) * (plotW / 600);
+    }
+
+    function yScale(pd){
+        return topPad + (1 - pd) * plotH;
+    }
+
+    ctx.fillStyle = "rgba(255,255,255,0.025)";
+    ctx.fillRect(leftPad, topPad, plotW, plotH);
+
+    const cutoffMin = Math.max(300, Math.min(A.cutoff, B.cutoff) - 50);
+    const cutoffMax = Math.min(900, Math.max(A.cutoff, B.cutoff) + 50);
+    const x1 = xScale(cutoffMin);
+    const x2 = xScale(cutoffMax);
+
+    ctx.fillStyle = "rgba(255,215,0,0.08)";
+    ctx.fillRect(x1, topPad, x2-x1, plotH);
+
+    ctx.fillStyle = "#d8b06a";
+    ctx.font = "12px Arial";
+    ctx.fillText("Zona cinza", x1 + 8, topPad + 18);
+
+    Object.keys(segments).forEach(seg => {
+        ctx.beginPath();
+
+        for(let score=300; score<=900; score++){
+            const pd = pdFromScore(score, seg);
+            const px = xScale(score);
+            const py = yScale(pd);
+
+            if(score === 300) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+
+        ctx.strokeStyle = segments[seg].color;
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+    });
+
+    ctx.strokeStyle = "rgba(255,255,255,.55)";
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    ctx.moveTo(leftPad, topPad);
+    ctx.lineTo(leftPad, topPad + plotH);
+    ctx.lineTo(leftPad + plotW, topPad + plotH);
+    ctx.stroke();
+
+    ctx.fillStyle = "#d8b06a";
+    ctx.font = "13px Arial";
+    ctx.fillText("Score / Cutoff", leftPad + plotW/2 - 44, h - 12);
+
+    ctx.save();
+    ctx.translate(18, topPad + plotH/2 + 45);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText("PD estimada (%)", 0, 0);
+    ctx.restore();
+
+    ctx.fillStyle = "rgba(246,239,227,.75)";
+    ctx.font = "11px Arial";
+
+    [300, 450, 600, 750, 900].forEach(score => {
+        const x = xScale(score);
+        ctx.fillText(score, x - 10, topPad + plotH + 18);
+
+        ctx.strokeStyle = "rgba(255,255,255,.08)";
+        ctx.beginPath();
+        ctx.moveTo(x, topPad);
+        ctx.lineTo(x, topPad + plotH);
+        ctx.stroke();
+    });
+
+    [0, .25, .50, .75, 1].forEach(pd => {
+        const y = yScale(pd);
+        ctx.fillStyle = "rgba(246,239,227,.75)";
+        ctx.fillText((pd*100).toFixed(0)+"%", 22, y + 4);
+
+        ctx.strokeStyle = "rgba(255,255,255,.08)";
+        ctx.beginPath();
+        ctx.moveTo(leftPad, y);
+        ctx.lineTo(leftPad + plotW, y);
+        ctx.stroke();
+    });
+
+    const legendX = w - 190;
+    let legendY = 34;
+
+    Object.keys(segments).forEach(seg => {
+        ctx.strokeStyle = segments[seg].color;
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+        ctx.moveTo(legendX, legendY);
+        ctx.lineTo(legendX + 30, legendY);
+        ctx.stroke();
+
+        ctx.fillStyle = "#f6efe3";
+        ctx.font = "12px Arial";
+        ctx.fillText(segments[seg].label, legendX + 40, legendY + 4);
+
+        legendY += 22;
+    });
+
+    function plotScenario(p, label){
+        const px = xScale(p.cutoff);
+        const py = yScale(p.pd);
+        const color = segments[p.segment].color;
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(px, py, 8, 0, Math.PI*2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#f6efe3";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = "#f6efe3";
+        ctx.font = "12px Arial";
+        ctx.fillText(label, px + 10, py - 8);
+    }
+
+    plotScenario(A, "Cenário A");
+    plotScenario(B, "Cenário B");
+}
+
+simulate();
+</script>
+
+</body>
+</html>
