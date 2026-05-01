@@ -1915,7 +1915,7 @@ function highlightStack(area) {
         ds: ["core", "ml", "ia"]
     };
 
-    const active = map[area] || [];
+    const active = map[area] || ["core", "ml", "risk", "ia", "llm", "infra", "business"];
 
     document.querySelectorAll(".stack-row").forEach(row => {
         const type = row.dataset.stack;
@@ -1930,8 +1930,6 @@ function highlightStack(area) {
     });
 }
 </script>
-
-
 
 </body>
 </html>
