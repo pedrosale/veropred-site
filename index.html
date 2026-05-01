@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Veropred Analytics</title>
+<title>Veropred Analytics | Arquitetura de Decisão com Dados, Risco e IA</title>
+<meta name="description" content="Consultoria boutique em arquitetura de decisão para crédito, risco, crescimento e IA. Dados, modelos e sinais convertidos em decisões executáveis." />
 
 <style>
 :root {
@@ -16,8 +17,9 @@
     --cream: #f6efe3;
     --muted: #b9aa96;
     --line: rgba(255,255,255,.14);
-    --glass: rgba(255,255,255,.075);
     --shadow: 0 28px 80px rgba(0,0,0,.45);
+    --radius-xl: 34px;
+    --radius-lg: 24px;
 }
 
 * { box-sizing: border-box; }
@@ -43,7 +45,7 @@ body::before {
         linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
     background-size: 44px 44px;
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 82%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.72), transparent 82%);
 }
 
 a { color: inherit; }
@@ -59,32 +61,28 @@ a { color: inherit; }
     top: 0;
     z-index: 50;
     backdrop-filter: blur(18px);
-    background: rgba(8,7,6,.74);
+    background: rgba(8,7,6,.76);
     border-bottom: 1px solid var(--line);
 }
 
 .nav {
-    min-height: 72px;
+    min-height: 74px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 24px;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
+.brand { display: flex; align-items: center; gap: 14px; }
 
 .logo-mark {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background:
-        radial-gradient(circle at 38% 30%, #fff1cf, #d59a55 28%, #7b3b18 62%, #24110a);
+    background: radial-gradient(circle at 38% 30%, #fff1cf, #d59a55 28%, #7b3b18 62%, #24110a);
     box-shadow: 0 0 30px rgba(216,176,106,.32);
     position: relative;
+    flex: 0 0 auto;
 }
 
 .logo-mark::after {
@@ -95,29 +93,12 @@ a { color: inherit; }
     border-radius: 50%;
 }
 
-.brand strong {
-    display: block;
-    font-size: 15px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-}
+.brand strong { display: block; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; }
+.brand span { display: block; font-size: 12px; color: var(--muted); margin-top: 2px; }
 
-.brand span {
-    display: block;
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-}
+.nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
-.nav-links {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
-.nav-links button,
-.nav-links a {
+.nav-links button {
     border: 1px solid transparent;
     color: var(--muted);
     background: transparent;
@@ -125,23 +106,17 @@ a { color: inherit; }
     border-radius: 999px;
     cursor: pointer;
     transition: .22s ease;
-    text-decoration: none;
     font: inherit;
     font-size: 14px;
 }
 
-.nav-links button:hover,
-.nav-links a:hover {
-    color: var(--cream);
-    background: rgba(255,255,255,.08);
-    border-color: var(--line);
-}
+.nav-links button:hover { color: var(--cream); background: rgba(255,255,255,.08); border-color: var(--line); }
 
 .hero {
-    padding: 86px 0 44px;
+    padding: 88px 0 48px;
     display: grid;
-    grid-template-columns: 1.03fr .97fr;
-    gap: 46px;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 48px;
     align-items: center;
 }
 
@@ -150,7 +125,7 @@ a { color: inherit; }
     align-items: center;
     gap: 10px;
     color: var(--copper-soft);
-    border: 1px solid rgba(224,160,100,.3);
+    border: 1px solid rgba(224,160,100,.32);
     background: rgba(224,160,100,.07);
     padding: 9px 13px;
     border-radius: 999px;
@@ -169,27 +144,22 @@ a { color: inherit; }
 }
 
 h1 {
-    font-size: clamp(42px, 6vw, 78px);
-    line-height: .96;
-    letter-spacing: -0.055em;
+    font-size: clamp(42px, 6.2vw, 82px);
+    line-height: .94;
+    letter-spacing: -0.06em;
     margin: 24px 0 22px;
-    max-width: 830px;
+    max-width: 900px;
 }
 
 .hero p {
     font-size: clamp(17px, 2vw, 22px);
     line-height: 1.55;
     color: #d7cbb9;
-    max-width: 770px;
+    max-width: 800px;
     margin: 0;
 }
 
-.hero-actions {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 34px;
-}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
 
 .btn {
     display: inline-flex;
@@ -199,7 +169,7 @@ h1 {
     border-radius: 999px;
     padding: 14px 18px;
     cursor: pointer;
-    font-weight: 650;
+    font-weight: 700;
     color: var(--cream);
     background: rgba(255,255,255,.06);
     transition: .25s ease;
@@ -215,35 +185,29 @@ h1 {
     box-shadow: 0 16px 40px rgba(201,120,58,.25);
 }
 
-.btn.secondary {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(216,176,106,.4);
-    color: var(--gold);
-}
+.btn.secondary { background: rgba(255,255,255,.055); border: 1px solid rgba(216,176,106,.42); color: var(--gold); }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 18px 44px rgba(0,0,0,.32); }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 44px rgba(0,0,0,.32);
-}
-
-.hero-note {
-    margin-top: 18px;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 680px;
-}
+.hero-note { margin-top: 18px; color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 760px; }
 
 .hero-panel {
     position: relative;
-    min-height: 520px;
-    border-radius: 36px;
+    min-height: 540px;
+    border-radius: 38px;
     background:
         radial-gradient(circle at center, rgba(224,160,100,.18), transparent 43%),
-        linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.035));
+        linear-gradient(145deg, rgba(255,255,255,.1), rgba(255,255,255,.034));
     border: 1px solid var(--line);
     box-shadow: var(--shadow);
     overflow: hidden;
+}
+
+.hero-panel::before {
+    content: "";
+    position: absolute;
+    inset: 26px;
+    border: 1px solid rgba(216,176,106,.12);
+    border-radius: 30px;
 }
 
 .orbit {
@@ -263,41 +227,35 @@ h1 {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 210px;
-    height: 210px;
+    width: 220px;
+    height: 220px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
-    background:
-        radial-gradient(circle at 35% 25%, #fff3d7, #d69b57 38%, #7b3918 74%, #24100a);
-    box-shadow:
-        0 0 70px rgba(216,176,106,.28),
-        inset 0 0 0 1px rgba(255,255,255,.35);
+    background: radial-gradient(circle at 35% 25%, #fff3d7, #d69b57 38%, #7b3918 74%, #24100a);
+    box-shadow: 0 0 72px rgba(216,176,106,.28), inset 0 0 0 1px rgba(255,255,255,.35);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 22px;
+    padding: 24px;
+    z-index: 2;
 }
 
-.hero-core strong {
-    font-size: 23px;
-    letter-spacing: -.03em;
-    line-height: 1.05;
-    color: #fff8ef;
-}
+.hero-core strong { font-size: 24px; letter-spacing: -.035em; line-height: 1.05; color: #fff8ef; }
 
 .hero-node {
     position: absolute;
-    width: 158px;
-    min-height: 86px;
+    width: 164px;
+    min-height: 88px;
     border-radius: 20px;
-    background: rgba(246,239,227,.93);
+    background: rgba(246,239,227,.94);
     color: #22140c;
     padding: 14px;
-    border: 1px solid rgba(255,255,255,.4);
+    border: 1px solid rgba(255,255,255,.42);
     box-shadow: 0 18px 44px rgba(0,0,0,.35);
     cursor: pointer;
     transition: .24s ease;
+    z-index: 3;
 }
 
 .hero-node:hover { transform: translateY(-5px) scale(1.03); }
@@ -305,67 +263,36 @@ h1 {
 .hero-node span { display: block; margin-top: 5px; font-size: 11px; color: #7e5a3d; }
 
 .n1 { left: 50%; top: 32px; transform: translateX(-50%); }
-.n2 { left: 28px; top: 178px; }
-.n3 { right: 28px; top: 178px; }
-.n4 { left: 54px; bottom: 76px; }
-.n5 { right: 54px; bottom: 76px; }
-.n6 { left: 50%; bottom: 26px; transform: translateX(-50%); }
+.n2 { left: 26px; top: 184px; }
+.n3 { right: 26px; top: 184px; }
+.n4 { left: 54px; bottom: 80px; }
+.n5 { right: 54px; bottom: 80px; }
+.n6 { left: 50%; bottom: 28px; transform: translateX(-50%); }
 
-.section { padding: 38px 0; }
+.section { padding: 42px 0; }
 
-.section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    gap: 24px;
-    margin-bottom: 24px;
-}
-
-.section-title h2 {
-    font-size: clamp(30px, 4vw, 48px);
-    line-height: 1;
-    letter-spacing: -.045em;
-    margin: 0;
-}
-
-.section-title p {
-    color: var(--muted);
-    max-width: 590px;
-    line-height: 1.55;
-    margin: 0;
-}
+.section-title { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 24px; }
+.section-title h2 { font-size: clamp(30px, 4.2vw, 50px); line-height: 1; letter-spacing: -.048em; margin: 0; }
+.section-title p { color: var(--muted); max-width: 620px; line-height: 1.55; margin: 0; }
 
 .grid { display: grid; gap: 16px; }
 .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-.mini-card {
-    background: rgba(255,255,255,.07);
+.mini-card, .proof-card, .offer-card {
+    background: rgba(255,255,255,.065);
     border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 20px;
+    border-radius: var(--radius-lg);
+    padding: 22px;
     transition: .24s ease;
 }
 
-.mini-card:hover {
-    transform: translateY(-4px);
-    background: rgba(255,255,255,.1);
-    border-color: rgba(216,176,106,.3);
-}
-
-.mini-card small {
-    display: inline-flex;
-    color: var(--copper-soft);
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.mini-card h4 { margin: 0 0 8px; font-size: 18px; }
-.mini-card p { margin: 0 0 10px; color: var(--muted); line-height: 1.48; font-size: 14px; }
-.mini-card p:last-child { margin-bottom: 0; }
+.mini-card:hover, .offer-card:hover, .proof-card:hover { transform: translateY(-4px); background: rgba(255,255,255,.095); border-color: rgba(216,176,106,.34); }
+.mini-card small, .offer-card small { display: inline-flex; color: var(--copper-soft); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; font-size: 12px; }
+.mini-card h4, .offer-card h4 { margin: 0 0 9px; font-size: 19px; letter-spacing: -.02em; }
+.mini-card p, .offer-card p { margin: 0 0 10px; color: var(--muted); line-height: 1.5; font-size: 14px; }
+.mini-card p:last-child, .offer-card p:last-child { margin-bottom: 0; }
 
 .insight {
     border-left: 3px solid var(--copper-soft);
@@ -377,87 +304,36 @@ h1 {
     line-height: 1.55;
 }
 
-.method-card {
-    min-height: 240px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.method-card .num {
-    color: var(--gold);
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -.05em;
-}
-
-.map-layout {
-    display: grid;
-    grid-template-columns: 400px 1fr;
-    gap: 24px;
-}
-
-.map {
-    min-height: 620px;
-    position: sticky;
-    top: 96px;
-    border: 1px solid var(--line);
-    border-radius: 34px;
-    background:
-        radial-gradient(circle at 50% 42%, rgba(216,176,106,.14), transparent 40%),
-        rgba(255,255,255,.045);
+.thesis {
+    border: 1px solid rgba(216,176,106,.28);
+    border-radius: var(--radius-xl);
+    background: radial-gradient(circle at 18% 22%, rgba(216,176,106,.12), transparent 36%), rgba(255,255,255,.052);
     box-shadow: var(--shadow);
-    overflow: hidden;
+    padding: clamp(28px, 5vw, 48px);
 }
 
-.map-core {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 172px;
-    height: 172px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background: linear-gradient(145deg, #2a1810, #0f0c0a);
-    border: 1px solid rgba(216,176,106,.55);
-    box-shadow: 0 0 70px rgba(201,120,58,.18);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 3;
-}
+.thesis h2 { font-size: clamp(34px, 5vw, 60px); line-height: .98; letter-spacing: -.055em; margin: 0 0 16px; }
+.thesis p { color: #d7cbb9; font-size: 19px; line-height: 1.55; max-width: 940px; margin: 0; }
 
+.method-card { min-height: 250px; display: flex; flex-direction: column; justify-content: space-between; }
+.method-card .num { color: var(--gold); font-size: 34px; font-weight: 900; letter-spacing: -.055em; }
+.method-card .decision-output { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; color: #f0d8b4; font-size: 13px; line-height: 1.45; }
+
+.fit-list { display: grid; gap: 12px; }
+.fit-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.055); border-radius: 18px; color: var(--muted); line-height: 1.5; }
+.fit-item b { color: var(--gold); }
+.fit-item::before { content: "◆"; color: var(--copper-soft); margin-top: 1px; flex: 0 0 auto; }
+
+.map-layout { display: grid; grid-template-columns: 400px 1fr; gap: 24px; }
+.map { min-height: 620px; position: sticky; top: 96px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: radial-gradient(circle at 50% 42%, rgba(216,176,106,.14), transparent 40%), rgba(255,255,255,.045); box-shadow: var(--shadow); overflow: hidden; }
+.map-core { position: absolute; left: 50%; top: 50%; width: 172px; height: 172px; transform: translate(-50%, -50%); border-radius: 50%; background: linear-gradient(145deg, #2a1810, #0f0c0a); border: 1px solid rgba(216,176,106,.55); box-shadow: 0 0 70px rgba(201,120,58,.18); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 3; }
 .map-core b { font-size: 20px; line-height: 1.05; }
 .map-core span { color: var(--muted); font-size: 12px; margin-top: 8px; max-width: 130px; }
-
-.map-btn {
-    position: absolute;
-    width: 150px;
-    min-height: 88px;
-    border: 1px solid rgba(216,176,106,.22);
-    background: rgba(246,239,227,.92);
-    color: #20120b;
-    border-radius: 20px;
-    padding: 13px;
-    cursor: pointer;
-    box-shadow: 0 16px 42px rgba(0,0,0,.3);
-    transition: .25s ease;
-    z-index: 4;
-}
-
-.map-btn:hover,
-.map-btn.active {
-    transform: translateY(-4px);
-    background: #fff6e7;
-    border-color: rgba(216,176,106,.8);
-}
-
+.map-btn { position: absolute; width: 150px; min-height: 88px; border: 1px solid rgba(216,176,106,.24); background: rgba(246,239,227,.92); color: #20120b; border-radius: 20px; padding: 13px; cursor: pointer; box-shadow: 0 16px 42px rgba(0,0,0,.3); transition: .25s ease; z-index: 4; }
+.map-btn:hover, .map-btn.active { transform: translateY(-4px); background: #fff6e7; border-color: rgba(216,176,106,.8); }
 .map-btn em { font-style: normal; display: block; color: #aa6430; font-size: 19px; margin-bottom: 6px; }
 .map-btn b { display: block; font-size: 12px; line-height: 1.2; }
 .map-btn span { display: block; color: #75563c; font-size: 10.5px; margin-top: 5px; }
-
 .m1 { left: 50%; top: 30px; transform: translateX(-50%); }
 .m2 { left: 24px; top: 162px; }
 .m3 { right: 24px; top: 162px; }
@@ -465,197 +341,63 @@ h1 {
 .m5 { right: 24px; bottom: 162px; }
 .m6 { left: 50%; bottom: 30px; transform: translateX(-50%); }
 
-.content-panel {
-    border: 1px solid var(--line);
-    border-radius: 34px;
-    background: rgba(255,255,255,.055);
-    box-shadow: var(--shadow);
-    min-height: 620px;
-    overflow: hidden;
-}
-
-.area-card {
-    display: none;
-    padding: clamp(24px, 4vw, 42px);
-    animation: fadeUp .35s ease both;
-}
-
+.content-panel { border: 1px solid var(--line); border-radius: var(--radius-xl); background: rgba(255,255,255,.055); box-shadow: var(--shadow); min-height: 620px; overflow: hidden; }
+.area-card { display: none; padding: clamp(24px, 4vw, 42px); animation: fadeUp .35s ease both; }
 .area-card.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.area-card h3 { font-size: clamp(28px, 4vw, 44px); letter-spacing: -.04em; line-height: 1; margin: 0 0 16px; }
+.lead { color: #d9cdbb; font-size: 18px; line-height: 1.6; margin: 0 0 26px; max-width: 820px; }
 
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.proof-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.proof-card { min-height: 150px; }
+.proof-card strong { display: block; color: var(--gold); font-size: 25px; margin-bottom: 8px; letter-spacing: -.03em; }
+.proof-card span { display: block; color: var(--muted); line-height: 1.45; font-size: 14px; }
 
-.area-card h3 {
-    font-size: clamp(28px, 4vw, 44px);
-    letter-spacing: -.04em;
-    line-height: 1;
-    margin: 0 0 16px;
-}
-
-.lead {
-    color: #d9cdbb;
-    font-size: 18px;
-    line-height: 1.6;
-    margin: 0 0 26px;
-    max-width: 820px;
-}
-
-.case-label {
-    grid-column: 1 / -1;
-    margin-top: 18px;
-}
-
-.case-label h4 {
-    color: var(--gold);
-    margin: 10px 0 4px;
-    font-size: 18px;
-}
-
-.case-label p {
-    color: var(--muted);
-    margin: 0 0 10px;
-    line-height: 1.5;
-}
+.case-grid { display: grid; gap: 18px; }
+.case-card { border: 1px solid var(--line); border-radius: var(--radius-lg); background: rgba(255,255,255,.062); padding: 24px; }
+.case-card h4 { margin: 0 0 10px; color: var(--cream); font-size: 21px; letter-spacing: -.025em; }
+.case-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.case-meta span { border: 1px solid rgba(216,176,106,.28); color: var(--gold); background: rgba(216,176,106,.07); border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 700; }
+.case-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.case-cols div { border-top: 1px solid var(--line); padding-top: 12px; }
+.case-cols b { display: block; color: var(--copper-soft); margin-bottom: 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .07em; }
+.case-cols p { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0; }
 
 .stack-list { display: grid; gap: 14px; }
-.stack-row {
-    display: grid;
-    grid-template-columns: 230px 1fr;
-    gap: 16px;
-    align-items: start;
-    padding: 18px;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.06);
-}
+.stack-row { display: grid; grid-template-columns: 230px 1fr; gap: 16px; align-items: start; padding: 18px; border-radius: 20px; border: 1px solid var(--line); background: rgba(255,255,255,.06); }
 .stack-row b { color: var(--copper-soft); }
 .stack-row span { color: #d8c9b4; line-height: 1.5; }
 
-.proof-strip {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.proof-card {
-    border: 1px solid rgba(216,176,106,.22);
-    background: rgba(255,255,255,.06);
-    border-radius: 22px;
-    padding: 20px;
-}
-
-.proof-card strong {
-    display: block;
-    color: var(--gold);
-    font-size: 24px;
-    margin-bottom: 8px;
-}
-
-.proof-card span {
-    display: block;
-    color: var(--muted);
-    line-height: 1.45;
-    font-size: 14px;
-}
+.simulator-callout { border-radius: var(--radius-xl); border: 1px solid rgba(216,176,106,.28); background: radial-gradient(circle at 18% 25%, rgba(201,120,58,.14), transparent 36%), rgba(255,255,255,.052); box-shadow: var(--shadow); padding: clamp(26px, 4.4vw, 42px); display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+.simulator-callout h2 { margin: 0 0 12px; font-size: clamp(28px, 4.5vw, 48px); line-height: 1; letter-spacing: -.045em; }
+.simulator-callout p { margin: 0; max-width: 790px; color: var(--muted); line-height: 1.55; }
 
 .footer { padding: 58px 0 70px; }
-
-.footer-box {
-    border-radius: 34px;
-    border: 1px solid rgba(216,176,106,.28);
-    background:
-        radial-gradient(circle at 20% 20%, rgba(216,176,106,.14), transparent 36%),
-        rgba(255,255,255,.055);
-    box-shadow: var(--shadow);
-    padding: clamp(26px, 5vw, 48px);
-    display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 28px;
-    align-items: start;
-}
-
-.footer-box h2 {
-    font-size: clamp(30px, 5vw, 54px);
-    line-height: 1;
-    letter-spacing: -.05em;
-    margin: 0 0 14px;
-}
-
-.footer-box p {
-    color: var(--muted);
-    max-width: 760px;
-    line-height: 1.55;
-    margin: 0;
-}
-
-.contact-form {
-    display: grid;
-    gap: 14px;
-}
-
-.contact-form label {
-    display: grid;
-    gap: 7px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    background: rgba(255,255,255,.08);
-    color: var(--cream);
-    padding: 14px 15px;
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-    border-color: rgba(216,176,106,.55);
-    box-shadow: 0 0 0 3px rgba(216,176,106,.12);
-}
-
+.footer-box { border-radius: var(--radius-xl); border: 1px solid rgba(216,176,106,.28); background: radial-gradient(circle at 20% 20%, rgba(216,176,106,.14), transparent 36%), rgba(255,255,255,.055); box-shadow: var(--shadow); padding: clamp(26px, 5vw, 48px); display: grid; grid-template-columns: 1fr 420px; gap: 28px; align-items: start; }
+.footer-box h2 { font-size: clamp(30px, 5vw, 54px); line-height: 1; letter-spacing: -.05em; margin: 0 0 14px; }
+.footer-box p { color: var(--muted); max-width: 760px; line-height: 1.55; margin: 0; }
+.contact-form { display: grid; gap: 14px; }
+.contact-form label { display: grid; gap: 7px; color: var(--muted); font-size: 13px; }
+.contact-form input, .contact-form select, .contact-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.08); color: var(--cream); padding: 14px 15px; font-family: inherit; font-size: 14px; outline: none; }
+.contact-form select option { background: #15100d; color: var(--cream); }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: rgba(216,176,106,.55); box-shadow: 0 0 0 3px rgba(216,176,106,.12); }
 .contact-form textarea { resize: vertical; }
-
-.final-bar {
-    margin-top: 22px;
-    border-radius: 28px;
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.045);
-    padding: 28px;
-    display: flex;
-    justify-content: space-between;
-    gap: 18px;
-    align-items: center;
-}
-
-.final-bar p { margin: 0; color: var(--muted); line-height: 1.5; max-width: 760px; }
+.final-bar { margin-top: 22px; border-radius: 28px; border: 1px solid var(--line); background: rgba(255,255,255,.045); padding: 28px; display: flex; justify-content: space-between; gap: 18px; align-items: center; }
+.final-bar p { margin: 0; color: var(--muted); line-height: 1.5; max-width: 780px; }
 
 @media (max-width: 1050px) {
-    .hero,
-    .map-layout,
-    .footer-box,
-    .final-bar {
-        grid-template-columns: 1fr;
-    }
-    .final-bar { align-items: flex-start; }
+    .hero, .map-layout, .footer-box, .simulator-callout { grid-template-columns: 1fr; }
+    .final-bar { flex-direction: column; align-items: flex-start; }
     .map { position: relative; top: auto; }
-    .grid.three,
-    .grid.four,
-    .proof-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three, .grid.four, .proof-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .case-cols { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 720px) {
     .nav { align-items: flex-start; flex-direction: column; padding: 16px 0; }
     .hero { padding-top: 50px; }
-    .hero-panel { min-height: 620px; }
-    .hero-node { width: 138px; }
+    .hero-panel { min-height: 630px; }
+    .hero-node { width: 140px; }
     .n2 { left: 12px; }
     .n3 { right: 12px; }
     .n4 { left: 12px; }
@@ -666,10 +408,7 @@ h1 {
     .m3 { right: 12px; }
     .m4 { left: 12px; }
     .m5 { right: 12px; }
-    .grid.two,
-    .grid.three,
-    .grid.four,
-    .proof-strip { grid-template-columns: 1fr; }
+    .grid.two, .grid.three, .grid.four, .proof-strip { grid-template-columns: 1fr; }
     .stack-row { grid-template-columns: 1fr; }
     .section-title { align-items: flex-start; flex-direction: column; }
 }
@@ -683,13 +422,14 @@ h1 {
             <div class="logo-mark"></div>
             <div>
                 <strong>Veropred Analytics</strong>
-                <span>Ciência de Dados & IA aplicada à decisão</span>
+                <span>Arquitetura de decisão com dados, risco e IA</span>
             </div>
         </div>
         <div class="nav-links">
+            <button onclick="scrollToId('tese')">Tese</button>
             <button onclick="scrollToId('metodo')">Método</button>
+            <button onclick="scrollToId('quando')">Quando envolver</button>
             <button onclick="scrollToId('areas')">Áreas</button>
-            <button onclick="scrollToId('provas')">Experiência</button>
             <button onclick="scrollToId('contato')">Contato</button>
         </div>
     </nav>
@@ -699,65 +439,157 @@ h1 {
 
 <section class="hero" id="inicio">
     <div>
-        <div class="kicker">Consultoria boutique em dados, risco e IA</div>
-        <h1>Modelos não tomam decisões.</h1>
+        <div class="kicker">Advisory boutique para decisões de alto impacto</div>
+
+        <h1>Empresas com bons dados ainda tomam decisões ruins.</h1>
+
         <p>
-            Decisões melhores exigem método, contexto e profundidade analítica.
-            A Veropred Analytics atua junto à liderança para transformar dados,
-            modelos e indicadores em critérios práticos de decisão, especialmente em crédito,
-            risco, crescimento e IA aplicada ao negócio.
+            O problema raramente é falta de informação.
+            É ausência de estrutura para decidir sob risco, incerteza e trade-offs reais.
+            A Veropred Analytics atua onde decisões críticas precisam ser formalizadas:
+            crédito, risco, crescimento e uso de IA — com rigor quantitativo e responsabilidade executiva.
         </p>
+
         <div class="hero-actions">
-            <button class="btn primary" onclick="scrollToId('contato')">Solicitar leitura estratégica</button>
-            <button class="btn secondary" onclick="scrollToId('areas')">Explorar áreas de atuação</button>
+            <button class="btn primary" onclick="scrollToId('contato')">Submeter cenário para avaliação estratégica</button>
+            <button class="btn secondary" onclick="scrollToId('metodo')">Ver a estrutura de decisão</button>
         </div>
+
         <div class="hero-note">
-            Para empresas que já possuem dados, modelos ou indicadores, mas precisam converter informação em política, priorização, risco controlado e decisão executiva.
+            Atuação direcionada a empresas com operação relevante, decisões sensíveis a risco
+            e impacto financeiro suficiente para exigir critério acima de intuição, urgência ou opinião.
         </div>
     </div>
 
     <div class="hero-panel">
-        <div class="orbit o1"></div>
-        <div class="orbit o2"></div>
-        <div class="orbit o3"></div>
-        <div class="hero-core"><strong>Arquitetura<br>de Decisão</strong></div>
-        <div class="hero-node n1" onclick="activateArea('credito'); scrollToId('areas')"><b>Risco de Crédito</b><span>score, política, limite e preço</span></div>
-        <div class="hero-node n2" onclick="activateArea('modelagem'); scrollToId('areas')"><b>Modelagem Preditiva</b><span>previsão aplicada ao negócio</span></div>
-        <div class="hero-node n3" onclick="activateArea('ia'); scrollToId('areas')"><b>IA Generativa</b><span>LLMs, RAG, agentes e controle</span></div>
+        <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+        <div class="hero-core"><strong>Decision<br>Architecture</strong></div>
+        <div class="hero-node n1" onclick="activateArea('credito'); scrollToId('areas')"><b>Crédito</b><span>aprovação, limite, preço e risco</span></div>
+        <div class="hero-node n2" onclick="activateArea('modelagem'); scrollToId('areas')"><b>Modelagem</b><span>evidência para decidir</span></div>
+        <div class="hero-node n3" onclick="activateArea('ia'); scrollToId('areas')"><b>IA Controlada</b><span>LLMs, RAG, agentes e guardrails</span></div>
         <div class="hero-node n4" onclick="activateArea('operacional'); scrollToId('areas')"><b>Risco Operacional</b><span>perdas, capital e governança</span></div>
-        <div class="hero-node n5" onclick="activateArea('estrategia'); scrollToId('areas')"><b>Decisão Estratégica</b><span>diagnóstico e cenários</span></div>
-        <div class="hero-node n6" onclick="activateArea('tech'); scrollToId('areas')"><b>Stack Analítico</b><span>tecnologia como meio</span></div>
+        <div class="hero-node n5" onclick="activateArea('estrategia'); scrollToId('areas')"><b>Estratégia</b><span>priorização e cenários</span></div>
+        <div class="hero-node n6" onclick="activateArea('tech'); scrollToId('areas')"><b>Base Técnica</b><span>tecnologia como meio</span></div>
+    </div>
+</section>
+
+<section class="section" id="tese">
+    <div class="thesis">
+        <h2>Dados não decidem. Modelos não decidem. Estrutura decide.</h2>
+        <p>
+            A Veropred Analytics existe para uma lacuna específica:
+            empresas com capacidade analítica instalada, mas sem estrutura decisória suficiente
+            para converter sinais, modelos e indicadores em políticas, cortes, prioridades,
+            limites, governança e ação executável.
+        </p>
+    </div>
+
+    <div class="insight">
+        <strong>O custo de uma decisão mal estruturada raramente aparece no dashboard. Aparece na inadimplência, na margem perdida, no risco assumido sem consciência e em iniciativas de IA que não escalam com segurança.</strong>
     </div>
 </section>
 
 <section class="section">
     <div class="section-title">
-        <h2>Problemas complexos pedem arquitetura de decisão.</h2>
+        <h2>A maioria das empresas já tem capacidade analítica suficiente.</h2>
         <p>
-            A proposta não é vender tecnologia. É estruturar problemas, modelar riscos,
-            interpretar sinais e apoiar decisões executivas com rigor quantitativo e clareza de negócio.
+            Modelos existem. Dashboards existem. Dados existem.
+            O que falta é clareza sobre o que decidir, quando decidir, sob quais critérios e com qual risco aceitável.
         </p>
     </div>
+
     <div class="grid three">
-        <div class="mini-card"><small>Dor central</small><h4>Dados sem decisão</h4><p>Empresas acumulam bases, dashboards e indicadores, mas ainda enfrentam dificuldade para converter informação em ação.</p></div>
-        <div class="mini-card"><small>Método</small><h4>Modelos com contexto</h4><p>Modelagem, validação e interpretação conectadas ao uso real: aprovação, cobrança, priorização, risco, crescimento e automação.</p></div>
-        <div class="mini-card"><small>Atuação</small><h4>Advisory próximo da liderança</h4><p>Modelo boutique de diagnóstico, projeto e acompanhamento, com proximidade de diretores, heads e times estratégicos.</p></div>
+        <div class="mini-card"><small>Decisão</small><h4>Critérios fracos custam caro</h4><p>Regras pouco calibradas, cortes arbitrários e prioridades mal definidas distorcem risco, margem e execução.</p></div>
+        <div class="mini-card"><small>Risco</small><h4>Modelo sem política não muda resultado</h4><p>Um score, dashboard ou alerta só cria valor quando altera uma decisão relevante dentro da operação.</p></div>
+        <div class="mini-card"><small>Liderança</small><h4>Execução sem estrutura vira opinião</h4><p>Quando a decisão não está formalizada, a empresa oscila entre intuição, urgência, pressão comercial e conveniência.</p></div>
     </div>
 </section>
 
 <section class="section" id="metodo">
     <div class="section-title">
-        <h2>Método Veropred de decisão analítica</h2>
+        <h2>Veropred Decision Architecture™</h2>
         <p>
-            O diferencial está em organizar dados, hipóteses, modelos, validação e governança em um sistema decisório coerente.
+            Estrutura para decisões que precisam ser defendidas tecnicamente,
+            compreendidas pela liderança e executadas pela operação.
         </p>
     </div>
-    <div class="grid five"></div>
+
     <div class="grid four">
-        <div class="mini-card method-card"><div class="num">01</div><div><h4>Diagnóstico da decisão</h4><p>Separação entre sintoma, causa, indicador, restrição operacional e decisão necessária.</p></div></div>
-        <div class="mini-card method-card"><div class="num">02</div><div><h4>Estruturação analítica</h4><p>Definição de base, variável resposta, janelas, métricas, hipóteses e critérios de avaliação.</p></div></div>
-        <div class="mini-card method-card"><div class="num">03</div><div><h4>Modelagem e validação</h4><p>Construção de modelos, testes, estabilidade, explicabilidade, calibração e leitura de impacto.</p></div></div>
-        <div class="mini-card method-card"><div class="num">04</div><div><h4>Tradução em ação</h4><p>Conversão de outputs em política, corte, prioridade, limite, preço, alerta, recomendação ou rotina.</p></div></div>
+        <div class="mini-card method-card">
+            <div class="num">01</div>
+            <div>
+                <h4>Diagnóstico da decisão</h4>
+                <p>Definição do que realmente está sendo decidido — e do que está sendo ignorado.</p>
+                <div class="decision-output">Saída: decisão, atores, restrições, riscos e critérios mínimos.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">02</div>
+            <div>
+                <h4>Estruturação analítica</h4>
+                <p>Separação entre variável relevante, ruído estatístico e narrativa conveniente.</p>
+                <div class="decision-output">Saída: desenho analítico, hipóteses, métricas e limites de análise.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">03</div>
+            <div>
+                <h4>Modelagem e validação</h4>
+                <p>Evidência quantitativa suficiente para sustentar uma decisão — não apenas um modelo.</p>
+                <div class="decision-output">Saída: leitura de risco, robustez, estabilidade e recomendação.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">04</div>
+            <div>
+                <h4>Tradução em ação</h4>
+                <p>Conversão direta em política, limite, corte, prioridade, regra ou governança.</p>
+                <div class="decision-output">Saída: decisão executável, acompanhamento e próximos ajustes.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="quando">
+    <div class="section-title">
+        <h2>Quando faz sentido envolver a Veropred</h2>
+        <p>
+            A atuação não é desenhada para demandas operacionais comuns.
+            Faz sentido quando erro de decisão custa mais do que custo analítico.
+        </p>
+    </div>
+
+    <div class="grid two">
+        <div class="fit-list">
+            <div class="fit-item"><span><b>Quando a decisão é relevante demais para ser baseada em aproximação.</b><br>Crédito, risco, margem, crescimento, retenção ou IA com impacto financeiro direto.</span></div>
+            <div class="fit-item"><span><b>Quando já existe análise, mas ela não muda comportamento.</b><br>Modelos, dashboards e relatórios existem, mas não alteram política, prioridade ou rotina.</span></div>
+            <div class="fit-item"><span><b>Quando a liderança precisa de leitura independente.</b><br>A decisão exige visão externa, rigor quantitativo e separação entre evidência e narrativa.</span></div>
+        </div>
+
+        <div class="fit-list">
+            <div class="fit-item"><span><b>Quando risco e crescimento estão em tensão.</b><br>Aprovar mais sem perder controle, crescer sem destruir margem, automatizar sem perder governança.</span></div>
+            <div class="fit-item"><span><b>Quando a IA precisa sair do experimento.</b><br>LLMs, RAG e agentes precisam de controle, rastreabilidade, avaliação e limites claros de uso.</span></div>
+            <div class="fit-item"><span><b>Quando tecnologia não é suficiente.</b><br>O problema não é apenas construir. É decidir o que deve ser construído, por quê, com qual risco e qual critério.</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="section-title">
+        <h2>Formatos de atuação</h2>
+        <p>
+            Estruturas enxutas para problemas relevantes. Sem inflar escopo. Sem vender operação como estratégia.
+        </p>
+    </div>
+
+    <div class="grid four">
+        <div class="offer-card"><small>01</small><h4>Diagnóstico Executivo de Decisão</h4><p>Leitura independente do problema, da decisão envolvida, dos riscos, dos dados disponíveis e dos caminhos analíticos possíveis.</p></div>
+        <div class="offer-card"><small>02</small><h4>Projeto Analítico Sob Medida</h4><p>Construção de modelos, critérios, políticas ou sistemas de decisão quando a decisão exige sustentação quantitativa.</p></div>
+        <div class="offer-card"><small>03</small><h4>Validação e Governança de Modelos</h4><p>Avaliação de performance, estabilidade, explicabilidade, drift, limites de uso e aderência da modelagem à decisão real.</p></div>
+        <div class="offer-card"><small>04</small><h4>Advisory Analítico Recorrente</h4><p>Acompanhamento estratégico para decisões recorrentes em crédito, risco, IA, crescimento, priorização e governança.</p></div>
     </div>
 </section>
 
@@ -765,94 +597,99 @@ h1 {
     <div class="section-title">
         <h2>Núcleo analítico de atuação</h2>
         <p>
-            Cada frente parte do mesmo princípio: tecnologia é meio; decisão, risco e resultado são o fim.
+            Poucas frentes, alta consequência: crédito, risco, IA controlada, modelagem e estratégia analítica.
         </p>
     </div>
 
     <div class="map-layout">
         <div class="map">
-            <div class="orbit o1"></div>
-            <div class="orbit o2"></div>
-            <div class="orbit o3"></div>
+            <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
             <div class="map-core"><b>Veropred<br>Analytics</b><span>dados, risco e IA aplicados à decisão</span></div>
+
             <button class="map-btn m1 active" data-area="credito" onclick="activateArea('credito')"><em>◈</em><b>Crédito</b><span>decisão e risco</span></button>
-            <button class="map-btn m2" data-area="modelagem" onclick="activateArea('modelagem')"><em>⌁</em><b>Modelagem</b><span>previsão aplicada</span></button>
-            <button class="map-btn m3" data-area="ia" onclick="activateArea('ia')"><em>◎</em><b>IA Generativa</b><span>LLMs e RAG</span></button>
+            <button class="map-btn m2" data-area="modelagem" onclick="activateArea('modelagem')"><em>⌁</em><b>Modelagem</b><span>evidência decisória</span></button>
+            <button class="map-btn m3" data-area="ia" onclick="activateArea('ia')"><em>◎</em><b>IA Controlada</b><span>LLMs e RAG</span></button>
             <button class="map-btn m4" data-area="operacional" onclick="activateArea('operacional')"><em>▣</em><b>Risco Operacional</b><span>perdas e capital</span></button>
             <button class="map-btn m5" data-area="estrategia" onclick="activateArea('estrategia')"><em>✦</em><b>Estratégia</b><span>cenários e priorização</span></button>
-            <button class="map-btn m6" data-area="tech" onclick="activateArea('tech')"><em>⚙</em><b>Base Técnica</b><span>arquitetura analítica</span></button>
+            <button class="map-btn m6" data-area="tech" onclick="activateArea('tech')"><em>⚙</em><b>Base Técnica</b><span>tecnologia como meio</span></button>
         </div>
 
         <div class="content-panel">
             <article class="area-card active" id="area-credito">
                 <h3>Veropred Credit Decision Framework</h3>
-                <p class="lead">Sistema estruturado para construção, validação e aplicação de decisões de crédito, integrando modelagem preditiva, estratégia de risco, retorno esperado e governança.</p>
-                <div class="insight">Mais do que um modelo de inadimplência, o framework organiza como instituições definem, quantificam e executam decisões de crédito com consistência, controle de risco e alinhamento econômico.</div>
+                <p class="lead">Crédito não é apenas previsão de inadimplência. É decisão sobre risco, margem, volume e responsabilidade.</p>
+                <div class="insight">O objetivo é definir como a instituição decide, em quais condições, com qual risco aceitável e com qual retorno esperado.</div>
+
                 <div class="grid three">
-                    <div class="mini-card"><small>01</small><h4>Problema e população</h4><p>Definição de produto, público, momento decisório, bad rate, janelas e base representativa.</p></div>
-                    <div class="mini-card"><small>02</small><h4>Informação e estabilidade</h4><p>Engenharia e seleção de variáveis com foco em poder preditivo, coerência econômica e estabilidade temporal.</p></div>
-                    <div class="mini-card"><small>03</small><h4>Modelagem e PD</h4><p>Construção de modelos, estimação de risco, calibração e avaliação por safra, segmento e uso real.</p></div>
-                    <div class="mini-card"><small>04</small><h4>Política e retorno</h4><p>Definição de cutoffs, limites, preço, zonas cinzentas e regras com base em perda esperada e retorno ajustado ao risco.</p></div>
-                    <div class="mini-card"><small>05</small><h4>Validação e governança</h4><p>Monitoramento de drift, PSI, overrides, documentação, challengers e revisão periódica do sistema decisório.</p></div>
-                    <div class="mini-card"><small>06</small><h4>Execução executiva</h4><p>Tradução do modelo em critérios compreensíveis para comitês, liderança, operação, auditoria e áreas de negócio.</p></div>
+                    <div class="mini-card"><small>Problema</small><h4>População e decisão</h4><p>Produto, público, momento decisório, bad rate, janelas, canal, restrições e responsabilidade de uso.</p></div>
+                    <div class="mini-card"><small>Informação</small><h4>Variáveis e estabilidade</h4><p>Poder preditivo, coerência econômica, estabilidade temporal e disponibilidade no momento da decisão.</p></div>
+                    <div class="mini-card"><small>Risco</small><h4>PD, score e calibração</h4><p>Modelagem, estimação, safras, segmentos, out-of-time, calibração e limites de generalização.</p></div>
+                    <div class="mini-card"><small>Decisão</small><h4>Cutoff, limite e preço</h4><p>Políticas baseadas em perda esperada, retorno ajustado ao risco, margem, aprovação e apetite.</p></div>
+                    <div class="mini-card"><small>Controle</small><h4>Governança e monitoramento</h4><p>Drift, PSI, overrides, documentação, auditoria, challengers, recalibração e revisão periódica.</p></div>
+                    <div class="mini-card"><small>Executivo</small><h4>Comitês e recomendação</h4><p>Tradução do modelo em decisão defensável para liderança, risco, negócio, operação e auditoria.</p></div>
                 </div>
             </article>
 
             <article class="area-card" id="area-modelagem">
                 <h3>Modelagem Preditiva orientada à decisão</h3>
-                <p class="lead">Modelos preditivos construídos com clareza de objetivo, controle de qualidade, validação temporal e interpretação aplicável ao negócio.</p>
+                <p class="lead">Métrica boa não basta. Modelo útil é o que altera uma decisão relevante com estabilidade e clareza.</p>
+
                 <div class="grid two">
-                    <div class="mini-card"><small>Construção</small><h4>Variável resposta, amostra e features</h4><p>O desenho da base é tratado como parte crítica do modelo, não como etapa operacional secundária.</p></div>
-                    <div class="mini-card"><small>Validação</small><h4>Performance, estabilidade e uso real</h4><p>Avaliação por métricas, safras, segmentos, drift, aderência temporal e impacto na decisão.</p></div>
-                    <div class="mini-card"><small>Interpretação</small><h4>Drivers e explicabilidade</h4><p>Importância de variáveis, direção de efeito, coerência econômica e leitura executiva dos resultados.</p></div>
-                    <div class="mini-card"><small>Produção</small><h4>Monitoramento contínuo</h4><p>Versionamento, documentação, recalibragem e acompanhamento da performance após implantação.</p></div>
+                    <div class="mini-card"><small>Desenho</small><h4>Evento, amostra e horizonte</h4><p>Definição rigorosa do evento, janela, população, vieses, leakage, representatividade e uso operacional.</p></div>
+                    <div class="mini-card"><small>Validação</small><h4>Generalização e estabilidade</h4><p>Sérries temporais, safras, segmentos, out-of-time, drift, sensibilidade e impacto prático na decisão.</p></div>
+                    <div class="mini-card"><small>Interpretação</small><h4>Drivers e explicabilidade</h4><p>Leitura de variáveis, coerência econômica, direção de efeito, limites de interpretação e comunicação executiva.</p></div>
+                    <div class="mini-card"><small>Uso real</small><h4>Política e monitoramento</h4><p>Conversão do output em critério, regra, prioridade, alerta, rotina, dashboard ou mecanismo de governança.</p></div>
                 </div>
             </article>
 
             <article class="area-card" id="area-ia">
                 <h3>IA Generativa com controle executivo</h3>
-                <p class="lead">IA generativa aplicada como camada de decisão, automação e inteligência operacional, com foco em controle, rastreabilidade, qualidade e impacto real em processos corporativos.</p>
+                <p class="lead">IA corporativa não escala por entusiasmo. Escala por caso certo, controle, avaliação e limite de uso.</p>
+
                 <div class="grid two">
-                    <div class="mini-card"><small>Operating Model</small><h4>Modelo de adoção de IA</h4><p>AI Office, governança, capacitação, priorização de casos e integração com áreas de negócio.</p></div>
-                    <div class="mini-card"><small>RAG</small><h4>Enterprise Knowledge Systems</h4><p>RAG com embeddings, busca híbrida, versionamento, rastreabilidade, grounding e controle de fontes.</p></div>
-                    <div class="mini-card"><small>Produtos</small><h4>Copilotos e agentes</h4><p>Copilotos, agentes e automações integrados ao fluxo operacional, com critérios de uso e limites claros.</p></div>
-                    <div class="mini-card"><small>Confiabilidade</small><h4>Evaluation & Guardrails</h4><p>Métricas, testes semânticos, redução de alucinação, critérios de aceitação, fallback e compliance.</p></div>
+                    <div class="mini-card"><small>Estratégia</small><h4>AI Operating Model</h4><p>Priorização de casos, AI Office, maturidade organizacional, papéis, riscos, políticas de uso e roadmap.</p></div>
+                    <div class="mini-card"><small>Conhecimento</small><h4>Enterprise Knowledge Systems</h4><p>RAG com embeddings, busca híbrida, controle de fontes, versionamento, grounding, rastreabilidade e auditoria.</p></div>
+                    <div class="mini-card"><small>Produto</small><h4>Copilotos e agentes</h4><p>Sistemas integrados ao fluxo de trabalho, com limites claros, intervenção humana e critérios de segurança.</p></div>
+                    <div class="mini-card"><small>Confiabilidade</small><h4>Evaluation & Guardrails</h4><p>Testes semânticos, redução de alucinação, critérios de aceitação, fallback, monitoramento e compliance.</p></div>
                 </div>
             </article>
 
             <article class="area-card" id="area-operacional">
                 <h3>Risco Operacional e capital econômico</h3>
-                <p class="lead">Quantificação de perdas operacionais, cenários extremos e capital econômico, conectando estatística, dependência entre eventos, governança e tomada de decisão.</p>
+                <p class="lead">Risco operacional exige leitura de cauda, dependência, cenários extremos e governança compatível com decisão de capital.</p>
+
                 <div class="grid three">
-                    <div class="mini-card"><small>LDA</small><h4>Frequência e severidade</h4><p>Modelagem de perdas, heavy tails, truncamento, viés de coleta e agregação por simulação.</p></div>
-                    <div class="mini-card"><small>Dependência</small><h4>Estrutura de risco</h4><p>Correlação entre eventos, cópulas, clustering de perdas e dependência entre unidades de negócio.</p></div>
-                    <div class="mini-card"><small>Capital</small><h4>VaR e Expected Shortfall</h4><p>Estimativas de cauda, estabilidade de capital, sensibilidade a eventos raros e incerteza paramétrica.</p></div>
-                    <div class="mini-card"><small>Stress</small><h4>Cenários severos</h4><p>Reverse stress testing, cenários plausíveis e análise de impacto em capital, liquidez e operação.</p></div>
-                    <div class="mini-card"><small>Governança</small><h4>ICAAP & RAS</h4><p>Integração com apetite a risco, limites operacionais, documentação regulatória e gestão de capital.</p></div>
-                    <div class="mini-card"><small>Gestão</small><h4>Indicadores e controles</h4><p>Monitoramento de perdas, controles internos, KRIs e evolução gradual da maturidade de risco operacional.</p></div>
+                    <div class="mini-card"><small>LDA</small><h4>Frequência e severidade</h4><p>Perdas, heavy tails, truncamento, viés de coleta, agregação e incerteza paramétrica.</p></div>
+                    <div class="mini-card"><small>Dependência</small><h4>Estrutura de risco</h4><p>Correlação entre eventos, cópulas, clustering de perdas e dependência entre linhas de negócio.</p></div>
+                    <div class="mini-card"><small>Capital</small><h4>VaR e Expected Shortfall</h4><p>Cauda, estabilidade, sensibilidade a eventos raros e interpretação de capital econômico.</p></div>
+                    <div class="mini-card"><small>Stress</small><h4>Cenários severos</h4><p>Reverse stress testing, cenários plausíveis e impacto em capital, liquidez e operação.</p></div>
+                    <div class="mini-card"><small>Governança</small><h4>ICAAP & RAS</h4><p>Apetite a risco, limites, indicadores, documentação regulatória e suporte à gestão de capital.</p></div>
+                    <div class="mini-card"><small>Gestão</small><h4>KRIs e controles</h4><p>Perdas, controles internos, indicadores e evolução gradual da maturidade de risco operacional.</p></div>
                 </div>
             </article>
 
             <article class="area-card" id="area-estrategia">
                 <h3>Decisão Estratégica</h3>
-                <p class="lead">Apoio a diretores e heads na leitura de problemas complexos, priorização de oportunidades, construção de indicadores e simulação de cenários.</p>
+                <p class="lead">Nem toda decisão precisa de mais dados. Algumas precisam de melhor formulação.</p>
+
                 <div class="grid two">
-                    <div class="mini-card"><small>Diagnóstico</small><h4>Leitura analítica do problema</h4><p>Separação entre sintoma, causa, indicador, restrição operacional e decisão necessária.</p></div>
-                    <div class="mini-card"><small>Priorização</small><h4>Oportunidades com critério</h4><p>Priorização baseada em impacto, risco, viabilidade, custo e maturidade dos dados.</p></div>
-                    <div class="mini-card"><small>Indicadores</small><h4>Painéis executivos</h4><p>Indicadores que esclarecem decisões, em vez de apenas acumular visualizações.</p></div>
-                    <div class="mini-card"><small>Cenários</small><h4>Simulação e trade-offs</h4><p>Projeções, sensibilidades e cenários para decisões sob incerteza.</p></div>
+                    <div class="mini-card"><small>Diagnóstico</small><h4>Leitura analítica do problema</h4><p>Separação entre sintoma, causa, indicador, restrição operacional, risco e decisão necessária.</p></div>
+                    <div class="mini-card"><small>Priorização</small><h4>Oportunidades com critério</h4><p>Priorização baseada em impacto, risco, viabilidade, custo, maturidade dos dados e retorno esperado.</p></div>
+                    <div class="mini-card"><small>Indicadores</small><h4>Painéis executivos de decisão</h4><p>Indicadores que esclarecem trade-offs, e não apenas acumulam visualizações.</p></div>
+                    <div class="mini-card"><small>Cenários</small><h4>Simulação e trade-offs</h4><p>Projeções, sensibilidades, cenários e políticas alternativas para decisões sob incerteza.</p></div>
                 </div>
             </article>
 
             <article class="area-card" id="area-tech">
                 <h3>Infraestrutura analítica a serviço da decisão</h3>
-                <p class="lead">A tecnologia aparece como meio para sustentar sistemas de decisão, mensuração de risco, produtos analíticos e aplicações de IA em ambientes corporativos.</p>
+                <p class="lead">Tecnologia é requisito. Não é posicionamento. A stack existe para sustentar decisões auditáveis, monitoráveis e executáveis.</p>
+
                 <div class="stack-list">
-                    <div class="stack-row"><b>Base Analítica</b><span>Python, R, SQL, SAS e ambientes corporativos usados para construir modelos, pipelines, análises e sistemas de decisão.</span></div>
+                    <div class="stack-row"><b>Base Analítica</b><span>Python, R, SQL, SAS e ambientes corporativos usados para modelos, pipelines, análises e sistemas de decisão.</span></div>
                     <div class="stack-row"><b>Modelagem & ML</b><span>Regressão logística, árvores, ensemble methods, clustering, engenharia de variáveis, validação temporal, backtesting e estabilidade.</span></div>
                     <div class="stack-row"><b>Risco & Capital</b><span>VaR, LDA, Monte Carlo, stress testing, risco de crédito, risco operacional, governança e documentação executiva.</span></div>
                     <div class="stack-row"><b>LLM Systems</b><span>Prompt engineering, RAG, fine-tuning, agentes, avaliação de respostas, redução de alucinação e controle de qualidade.</span></div>
-                    <div class="stack-row"><b>Cloud & Produção</b><span>AWS, Azure, Google Cloud e Microsoft Fabric para pipelines, deploy, monitoramento e integração com processos de negócio.</span></div>
+                    <div class="stack-row"><b>Cloud & Produção</b><span>AWS, Azure, Google Cloud e Microsoft Fabric para deploy, monitoramento e integração com processos de negócio.</span></div>
                 </div>
             </article>
         </div>
@@ -861,58 +698,112 @@ h1 {
 
 <section class="section" id="provas">
     <div class="section-title">
-        <h2>Experiência aplicada</h2>
-        <p>Profundidade construída em projetos analíticos, risco, crédito, modelagem, IA e produtos de decisão em ambientes corporativos.</p>
+        <h2>Autoridade aplicada, não decorativa</h2>
+        <p>
+            Relevância não vem de ferramenta. Vem da qualidade das decisões que a estrutura analítica permite sustentar.
+        </p>
     </div>
+
     <div class="proof-strip">
-        <div class="proof-card"><strong>Crédito</strong><span>Modelos, políticas, limites, preço, fraude, originação e comportamento.</span></div>
-        <div class="proof-card"><strong>Risco</strong><span>Perdas operacionais, capital econômico, governança, stress e monitoramento.</span></div>
-        <div class="proof-card"><strong>IA</strong><span>LLMs, RAG, agentes, avaliação semântica, automação e controle de respostas.</span></div>
-        <div class="proof-card"><strong>Decisão</strong><span>Tradução de modelos em critérios, indicadores, prioridades e ações executáveis.</span></div>
+        <div class="proof-card"><strong>+10 anos</strong><span>em ciência de dados, analytics, risco, crédito e decisão corporativa.</span></div>
+        <div class="proof-card"><strong>Decisões críticas</strong><span>Atuação em aprovação de crédito, política, risco, priorização, retenção e governança analítica.</span></div>
+        <div class="proof-card"><strong>IA com controle</strong><span>LLMs, RAG, agentes e automações com critérios de confiabilidade, rastreabilidade e limite de uso.</span></div>
+        <div class="proof-card"><strong>12,5%</strong><span>Conversão em identificação de demanda latente fora dos canais tradicionais, com impacto potencial em originação.</span></div>
     </div>
 
     <div class="insight">
-        <strong>Experiência construída em projetos analíticos desenvolvidos em instituições financeiras, fintechs, meios de pagamento, empresas de tecnologia e consultorias corporativas.</strong>
+        <strong>Experiência construída em instituições financeiras, fintechs, meios de pagamento, empresas de tecnologia e consultorias corporativas — ambientes onde decisão, risco e execução não são abstrações.</strong>
     </div>
 </section>
 
 <section class="section" id="cases">
     <div class="section-title">
-        <h2>Projetos aplicados</h2>
-        <p>Exemplos de frentes onde a modelagem foi conectada a decisão, risco, crescimento ou produto.</p>
+        <h2>Decisões apoiadas</h2>
+        <p>
+            Os exemplos abaixo não são uma lista de técnicas. São tipos de decisão onde método analítico muda consequência.
+        </p>
     </div>
 
-    <div class="grid two">
-        <div class="case-label"><h4>Núcleo de decisão e risco</h4><p>Estruturação de sistemas decisórios em crédito, risco e estratégia.</p></div>
-        <div class="mini-card"><small>Crédito</small><h4>Credit & Fraud Risk Modeling</h4><p>Modelos preditivos para inadimplência e fraude, conectando score, política, decisão e monitoramento.</p></div>
-        <div class="mini-card"><small>Estratégia</small><h4>Credit Strategy & Portfolio Optimization</h4><p>Definição de estratégia com base em risco, retorno, aprovação, perda esperada e apetite a risco.</p></div>
-        <div class="mini-card"><small>Pricing</small><h4>Risk-Based Pricing</h4><p>Taxas e condições orientadas por risco individual, margem esperada e sensibilidade de aprovação.</p></div>
-        <div class="mini-card"><small>Validação</small><h4>Model Risk & Validation</h4><p>Validação de modelos, estabilidade, documentação, limites de uso e governança executiva.</p></div>
+    <div class="case-grid">
+        <div class="case-card">
+            <div class="case-meta"><span>Crédito</span><span>Risco</span><span>Política</span></div>
+            <h4>Redefinição de decisão de crédito</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Aprovar, limitar, precificar ou revisar crédito com controle de inadimplência e margem.</p></div>
+                <div><b>Estrutura</b><p>Score, cutoffs, política, variáveis, estabilidade, perda esperada, retorno e monitoramento.</p></div>
+                <div><b>Valor</b><p>Menos arbitrariedade na concessão e maior clareza sobre risco assumido.</p></div>
+            </div>
+        </div>
 
-        <div class="case-label"><h4>IA e sistemas inteligentes</h4><p>Camada de automação, copilotos e inteligência operacional baseada em LLMs.</p></div>
-        <div class="mini-card"><small>IA</small><h4>LLM & RAG Systems</h4><p>Sistemas com LLMs, RAG, busca híbrida, avaliação de respostas, rastreabilidade e redução de alucinação.</p></div>
-        <div class="mini-card"><small>Controle</small><h4>Prompt & Evaluation Systems</h4><p>Templates controlados, critérios de aceitação, testes semânticos e padronização de comportamento.</p></div>
+        <div class="case-card">
+            <div class="case-meta"><span>Open Finance</span><span>Originação</span><span>Growth</span></div>
+            <h4>Credit Demand Intelligence</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Quem abordar, quando abordar e com qual sinal de necessidade financeira.</p></div>
+                <div><b>Estrutura</b><p>Sinais transacionais, priorização, demanda latente e leitura de oportunidade comercial.</p></div>
+                <div><b>Evidência</b><p>Teste direcionado com conversão de 12,5% fora dos fluxos tradicionais.</p></div>
+            </div>
+        </div>
 
-        <div class="case-label"><h4>Expansão e crescimento</h4><p>Aplicações analíticas conectadas a aquisição, retenção, originação e crescimento.</p></div>
-        <div class="mini-card"><small>Open Finance</small><h4>Credit Demand Intelligence</h4><p>Identificação de demanda latente por crédito a partir de dados transacionais, com foco em antecipação de necessidade financeira e originação.</p><p>Teste direcionado apresentou conversão de 12,5%, indicando potencial de demanda não capturada pelos fluxos tradicionais.</p></div>
-        <div class="mini-card"><small>Growth</small><h4>Acquisition & Growth Analytics</h4><p>Critérios de seleção, priorização de leads e abordagem comercial com foco em eficiência, qualidade e retorno econômico.</p></div>
-        <div class="mini-card"><small>Retenção</small><h4>Churn Intelligence Framework</h4><p>Modelagem preditiva para drivers de churn e tradução dos outputs em roadmap de produto orientado à retenção.</p></div>
+        <div class="case-card">
+            <div class="case-meta"><span>IA</span><span>RAG</span><span>Governança</span></div>
+            <h4>Sistemas corporativos com LLMs e controle de qualidade</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Quais processos automatizar, com qual grau de autonomia e quais limites de uso.</p></div>
+                <div><b>Estrutura</b><p>RAG, busca híbrida, prompts controlados, avaliação semântica, rastreabilidade e guardrails.</p></div>
+                <div><b>Valor</b><p>Uso de IA com menor risco de alucinação, menor variância e maior confiabilidade operacional.</p></div>
+            </div>
+        </div>
 
-        <div class="case-label"><h4>Experiência complementar</h4><p>Aplicações que reforçam repertório estatístico, modelagem e produtos analíticos.</p></div>
-        <div class="mini-card"><small>Investimentos</small><h4>Factor Investing</h4><p>Algoritmo multifatorial para seleção sistemática de ações, combinando valor, qualidade, momentum, dividendos, liquidez e controle de risco.</p><p>Incluiu Economatica, z-score, backtesting, Sharpe, Sortino, drawdown, volatilidade e comparação contra IBOV e SELIC.</p></div>
-        <div class="mini-card"><small>Produtos</small><h4>Analytical Products & Dashboards</h4><p>Dashboards, simuladores e produtos analíticos voltados à leitura executiva e apoio à decisão.</p></div>
+        <div class="case-card">
+            <div class="case-meta"><span>Retenção</span><span>Produto</span><span>Modelagem</span></div>
+            <h4>Churn Intelligence & Decision Framework</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Quais clientes, drivers e iniciativas devem receber prioridade para reduzir churn.</p></div>
+                <div><b>Estrutura</b><p>Modelagem preditiva, leitura de drivers, segmentação e tradução em roadmap de produto.</p></div>
+                <div><b>Valor</b><p>Menos reação genérica e mais priorização orientada por evidência.</p></div>
+            </div>
+        </div>
+
+        <div class="case-card">
+            <div class="case-meta"><span>Investimentos</span><span>Pesquisa aplicada</span><span>Backtesting</span></div>
+            <h4>Factor Investing como repertório quantitativo</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Selecionar ativos de forma sistemática, reduzindo subjetividade e disciplina fraca de validação.</p></div>
+                <div><b>Estrutura</b><p>Fatores, z-score, Economatica, backtesting, risco-retorno, Sharpe, Sortino e drawdown.</p></div>
+                <div><b>Leitura</b><p>Repertório complementar em validação quantitativa, alocação, risco e consistência temporal.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="simulator-callout">
+        <div>
+            <h2>Explorar a lógica de decisão</h2>
+            <p>
+                O simulador é apenas uma representação simplificada: cutoff, PD, aprovação, perda esperada e retorno ajustado ao risco.
+                Não substitui diagnóstico. Ilustra a diferença entre cálculo e decisão estruturada.
+            </p>
+        </div>
+
+        <a href="simulador.html" class="btn secondary" style="opacity:.88;">Explorar lógica de decisão</a>
     </div>
 </section>
 
 <section class="footer" id="contato">
     <div class="footer-box">
         <div>
-            <h2>Solicitar leitura estratégica.</h2>
+            <h2>Submeter cenário para avaliação estratégica.</h2>
             <p>
-                Descreva o cenário da empresa. A Veropred Analytics avalia o contexto e retorna com uma leitura orientada à decisão: problema provável, hipóteses analíticas e caminhos possíveis de atuação.
+                Descreva a decisão em questão.
+                A resposta inicial não será uma proposta comercial.
+                Será uma leitura: qual decisão parece estar em jogo, quais hipóteses precisam ser testadas
+                e onde a estrutura analítica pode ou não gerar valor.
             </p>
+
             <div class="insight">
-                Indicado para empresas que enfrentam dúvidas sobre aprovação de crédito, inadimplência, risco, priorização comercial, retenção, indicadores executivos ou uso controlado de IA.
+                <strong>Não atuamos como fornecedor operacional genérico. A atuação é limitada a problemas onde a decisão é parte central do valor.</strong>
             </div>
         </div>
 
@@ -926,43 +817,41 @@ h1 {
             <label>E-mail<input type="email" name="email" placeholder="seu@email.com" required></label>
             <label>Empresa<input type="text" name="empresa" placeholder="Nome da empresa"></label>
             <label>Cargo<input type="text" name="cargo" placeholder="Ex: Diretor, Head, Gerente, Founder"></label>
-            <label>Dor da empresa
-                <textarea name="dor_da_empresa" rows="6" placeholder="Ex: queremos aprovar mais crédito sem aumentar inadimplência; temos dados, mas falta critério de decisão; queremos usar IA em processos internos com mais controle..." required></textarea>
+            <label>Principal decisão em jogo
+                <select name="tema">
+                    <option value="">Selecione uma frente</option>
+                    <option>Crédito, aprovação, limite ou preço</option>
+                    <option>Risco, inadimplência ou fraude</option>
+                    <option>IA generativa, RAG ou automação</option>
+                    <option>Risco operacional ou capital</option>
+                    <option>Prioridade comercial, retenção ou crescimento</option>
+                    <option>Ainda não sei formular</option>
+                </select>
             </label>
-            <button class="btn primary" type="submit">Enviar cenário para análise</button>
+            <label>Cenário
+                <textarea name="dor_da_empresa" rows="6" placeholder="Descreva a decisão, o risco envolvido, o impacto esperado e por que a estrutura atual não é suficiente." required></textarea>
+            </label>
+            <button class="btn primary" type="submit">Enviar cenário para avaliação estratégica</button>
         </form>
     </div>
 
     <div class="final-bar">
-        <p><strong>Advisory analítico para decisões de alto impacto.</strong><br>Para instituições que já possuem dados, mas precisam de método, arquitetura e profundidade para transformar informação em decisão.</p>
-<p style="color: var(--muted); font-size:13px; margin-bottom:8px;">
-    Alternativamente, explore uma versão simplificada da lógica aplicada em projetos reais.
-</p>
-<div style="display:flex; gap:12px; flex-wrap:wrap;">
-
-    <button class="btn primary" onclick="scrollToId('contato')">
-        Solicitar análise do cenário
-    </button>
-
-    <a href="simulador.html" class="btn secondary">
-        Simular cenários de decisão
-    </a>
-
-    <a href="https://www.instagram.com/veropred" target="_blank" class="btn secondary">
-        Ver análises aplicadas
-    </a>
-
-</div>
+        <p><strong>Advisory analítico para decisões de alto impacto.</strong><br>Para instituições que já possuem dados, mas precisam de estrutura para transformar informação em decisão defensável.</p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn primary" onclick="scrollToId('contato')">Submeter cenário</button>
+            <a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
+            <a href="https://www.instagram.com/veropred" target="_blank" class="btn secondary">Ver análises aplicadas</a>
+        </div>
     </div>
 </section>
-
 </main>
 
 <script>
 const areas = ["credito", "modelagem", "ia", "operacional", "estrategia", "tech"];
 
 function scrollToId(id) {
-    document.getElementById(id).scrollIntoView({ behavior: "smooth", block: "start" });
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function activateArea(area) {
@@ -970,8 +859,10 @@ function activateArea(area) {
         const card = document.getElementById("area-" + a);
         if (card) card.classList.remove("active");
     });
+
     const selected = document.getElementById("area-" + area);
     if (selected) selected.classList.add("active");
+
     document.querySelectorAll(".map-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.area === area);
     });
