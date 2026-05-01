@@ -14,6 +14,25 @@
     --line:rgba(255,255,255,.14);
 }
 
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:24px;
+    border:1px solid rgba(216,176,106,.35);
+    border-radius:999px;
+    padding:10px 16px;
+    color:var(--gold);
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s;
+}
+
+.btn-back:hover{
+    background:rgba(216,176,106,.12);
+    transform:translateY(-1px);
+}
+
 body{
     margin:0;
     background:
@@ -137,6 +156,9 @@ canvas{
 <div class="container">
 
 
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
 
 <h1>Simulação de decisões orientadas por risco</h1>
 <p class="subtitle">
