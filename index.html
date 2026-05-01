@@ -198,6 +198,9 @@ h1 {
 }
 
 .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 14px 18px;
@@ -206,6 +209,9 @@ h1 {
     color: var(--cream);
     background: rgba(255,255,255,.06);
     transition: .25s ease;
+    text-decoration: none;
+    font-family: inherit;
+    line-height: 1;
 }
 
 .btn.primary {
@@ -216,7 +222,7 @@ h1 {
 }
 
 .btn.secondary {
-    background: transparent;
+    background: rgba(255,255,255,.06);
     border: 1px solid rgba(216,176,106,.4);
     color: var(--gold);
 }
@@ -895,19 +901,19 @@ h1 {
         Testar simulador de decisão
     </a>
 
-    <button class="btn secondary" onclick="scrollToId('mapa')">
+    <button class="btn primary" onclick="scrollToId('mapa')">
         Explorar áreas de atuação
     </button>
 
-    <button class="btn secondary" onclick="activateArea('credito'); scrollToId('mapa')">
+    <button class="btn primary" onclick="activateArea('credito'); scrollToId('mapa')">
         Ver risco de crédito
     </button>
 
-    <button class="btn secondary" onclick="activateArea('cases'); scrollToId('mapa')">
+    <button class="btn primary" onclick="activateArea('cases'); scrollToId('mapa')">
         Ver projetos aplicados
     </button>
 
-    <a href="https://www.instagram.com/veropred" target="_blank" class="btn secondary">
+    <a href="https://www.instagram.com/veropred" target="_blank" class="btn primary">
         Acompanhar decisões reais
     </a>
 
