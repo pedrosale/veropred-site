@@ -1008,6 +1008,7 @@ h1 {
         </div>
 
         <div class="content-panel">
+        
 
             <article class="area-card active" id="area-ds">
                 <h3>Ciência de Dados como núcleo integrador</h3>
@@ -1501,9 +1502,84 @@ h1 {
     </div>
 
 </div>
-</section>
+</article>
+
+<article class="area-card" id="area-tech">
+    <h3>Arquitetura Analítica & Tecnologia</h3>
+
+    <p class="lead">
+        Infraestrutura técnica e metodológica utilizada para estruturar sistemas de decisão,
+        mensuração de risco e aplicações de inteligência artificial em ambientes corporativos.
+    </p>
+
+    <div class="stack-list">
+
+        <div class="stack-row" data-stack="core">
+            <b>Base Analítica</b>
+            <span>
+                Linguagens e ambientes utilizados na construção de modelos e soluções:
+                Python, R, SQL, SAS e VBA.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="ml">
+            <b>Modelagem Estatística & Machine Learning</b>
+            <span>
+                Desenvolvimento de modelos preditivos e estruturas quantitativas com foco em decisão:
+                regressão logística, árvores, ensemble methods, clustering, engenharia de variáveis,
+                validação temporal, backtesting e controle de estabilidade.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="risk">
+            <b>Mensuração de Risco & Capital</b>
+            <span>
+                Modelagem de risco em crédito e operações utilizando técnicas como
+                Value at Risk (VaR), Loss Distribution Approach (LDA),
+                simulações de Monte Carlo e stress testing regulatório.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="ia">
+            <b>Inteligência Artificial & LLM Systems</b>
+            <span>
+                Construção de sistemas baseados em modelos de linguagem com controle de qualidade:
+                prompt engineering, RAG, fine-tuning, agentes, avaliação de respostas e redução de alucinação.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="llm">
+            <b>Ecossistema de Modelos</b>
+            <span>
+                Avaliação e utilização de diferentes modelos de linguagem (GPT, Claude, Llama, Gemini, Mistral),
+                considerando trade-offs entre custo, latência, qualidade e contexto.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="infra">
+            <b>Arquitetura & Infraestrutura</b>
+            <span>
+                Implementação de soluções em cloud e ambientes produtivos:
+                AWS, Azure, Google Cloud e Microsoft Fabric,
+                incluindo pipelines, deploy e monitoramento de modelos.
+            </span>
+        </div>
+
+        <div class="stack-row" data-stack="business">
+            <b>Aplicação em Negócio</b>
+            <span>
+                Uso integrado da tecnologia em sistemas de decisão para crédito,
+                prevenção de fraude, risco operacional, otimização de portfólio
+                e construção de produtos analíticos.
+            </span>
+        </div>
+
+    </div>
+</article>
 
 
+</div>
+</div>
 </section>
 
 <section class="section" id="experiencia">
@@ -1526,7 +1602,7 @@ h1 {
         <div>
             <h2>Discutir um problema analítico.</h2>
             <p>
-                Descreva brevemente a dor da empresa. A Veropred Analytics avaliará
+                Se você tem dúvida sobre aprovação, risco ou estratégia — descreva o cenário. A Veropred Analytics avaliará
                 o contexto e retornará para uma conversa estratégica.
             </p>
         </div>
@@ -1600,6 +1676,8 @@ function activateArea(area) {
     document.querySelectorAll(".map-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.area === area);
     });
+
+    highlightStack(area); 
 }
 const creditStages = [
     {
@@ -1744,6 +1822,8 @@ function updateCreditDetail(stage) {
         <h4>${stage.title}</h4>
         <ul>${stage.bullets.map(b => `<li>${b}</li>`).join("")}</ul>
     `;
+	
+
 }
 
 function drawCreditCycle() {
@@ -1824,7 +1904,34 @@ Credit Decision
 }
 
 drawCreditCycle();
+
+function highlightStack(area) {
+    const map = {
+        credito: ["risk", "ml", "core"],
+        modelagem: ["ml", "core"],
+        ia: ["ia", "llm", "infra"],
+        operacional: ["risk", "ml"],
+        estrategia: ["ml", "risk"],
+        ds: ["core", "ml", "ia"]
+    };
+
+    const active = map[area] || [];
+
+    document.querySelectorAll(".stack-row").forEach(row => {
+        const type = row.dataset.stack;
+
+        if (active.includes(type)) {
+            row.style.opacity = "1";
+            row.style.borderColor = "rgba(216,176,106,.7)";
+        } else {
+            row.style.opacity = ".25";
+            row.style.borderColor = "var(--line)";
+        }
+    });
+}
 </script>
+
+
 
 </body>
 </html>
