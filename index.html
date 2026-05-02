@@ -348,7 +348,11 @@ h1 {
 .area-card h3 { font-size: clamp(28px, 4vw, 44px); letter-spacing: -.04em; line-height: 1; margin: 0 0 16px; }
 .lead { color: #d9cdbb; font-size: 18px; line-height: 1.6; margin: 0 0 26px; max-width: 820px; }
 
-.proof-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.proof-strip { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+    gap: 16px; 
+}
 .proof-card { min-height: 150px; }
 .proof-card strong { display: block; color: var(--gold); font-size: 25px; margin-bottom: 8px; letter-spacing: -.03em; }
 .proof-card span { display: block; color: var(--muted); line-height: 1.45; font-size: 14px; }
@@ -441,24 +445,26 @@ h1 {
     <div>
         <div class="kicker">Advisory boutique para decisões de alto impacto</div>
 
-        <h1>Empresas com bons dados ainda tomam decisões ruins.</h1>
+        <h1>Decisão não falha por falta de dado.
+Falha por falta de estrutura.</h1>
 
-        <p>
-            O problema raramente é falta de informação.
-            É ausência de estrutura para decidir sob risco, incerteza e trade-offs reais.
-            A Veropred Analytics atua onde decisões críticas precisam ser formalizadas:
-            crédito, risco, crescimento e uso de IA — com rigor quantitativo e responsabilidade executiva.
-        </p>
+<p>
+    O problema não é dado.
+    Nem modelo.
+
+    É decisão sem estrutura.
+
+    Crédito, risco e IA.
+</p>
 
         <div class="hero-actions">
-            <button class="btn primary" onclick="scrollToId('contato')">Submeter cenário para avaliação estratégica</button>
-            <button class="btn secondary" onclick="scrollToId('metodo')">Ver a estrutura de decisão</button>
+            <button class="btn primary" onclick="scrollToId('contato')">Discutir decisão</button>
+            <a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
         </div>
 
-        <div class="hero-note">
-            Atuação direcionada a empresas com operação relevante, decisões sensíveis a risco
-            e impacto financeiro suficiente para exigir critério acima de intuição, urgência ou opinião.
-        </div>
+<div class="hero-note">
+    Para decisões com impacto real em risco, margem ou crescimento.
+</div>
     </div>
 
     <div class="hero-panel">
@@ -573,6 +579,24 @@ h1 {
             <div class="fit-item"><span><b>Quando risco e crescimento estão em tensão.</b><br>Aprovar mais sem perder controle, crescer sem destruir margem, automatizar sem perder governança.</span></div>
             <div class="fit-item"><span><b>Quando a IA precisa sair do experimento.</b><br>LLMs, RAG e agentes precisam de controle, rastreabilidade, avaliação e limites claros de uso.</span></div>
             <div class="fit-item"><span><b>Quando tecnologia não é suficiente.</b><br>O problema não é apenas construir. É decidir o que deve ser construído, por quê, com qual risco e qual critério.</span></div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="simulator-callout">
+        <div>
+            <h2>Existe uma decisão crítica sendo tomada hoje?</h2>
+            <p>
+                Se envolve crédito, risco, IA, margem ou crescimento,
+                vale estruturar antes de escalar ou automatizar.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn primary" onclick="scrollToId('contato')">Discutir decisão</button>
+<a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
         </div>
     </div>
 </section>
@@ -711,13 +735,12 @@ h1 {
         <div class="proof-card"><strong>Risco operacional</strong><span>Estruturação de modelagem de perdas e critérios analíticos para decisões de risco em ambiente institucional.</span></div>
 
         
+    <div class="proof-card">
+        <strong>Ambiente regulado</strong>
+        <span>Experiência em decisões sujeitas a BCB, CVM e SUSEP, com exigência de rastreabilidade e consistência.</span>
     </div>
-
-    <div class="insight">
-        <strong>Experiência construída em instituições financeiras, fintechs, meios de pagamento, empresas de tecnologia e consultorias corporativas — ambientes onde decisão, risco e execução não são abstrações.</strong>
-    </div>
+</div>
 </section>
-
 <section class="section" id="cases">
     <div class="section-title">
         <h2>Decisões apoiadas</h2>
@@ -812,20 +835,21 @@ h1 {
             </p>
         </div>
 
-        <a href="simulador.html" class="btn secondary" style="opacity:.88;">Explorar lógica de decisão</a>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+<button class="btn primary" onclick="scrollToId('contato')">Discutir decisão</button>
+<a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
+        </div>
     </div>
 </section>
 
 <section class="footer" id="contato">
     <div class="footer-box">
         <div>
-            <h2>Submeter cenário para avaliação estratégica.</h2>
-            <p>
-                Descreva a decisão em questão.
-                A resposta inicial não será uma proposta comercial.
-                Será uma leitura: qual decisão parece estar em jogo, quais hipóteses precisam ser testadas
-                e onde a estrutura analítica pode ou não gerar valor.
-            </p>
+            <h2>Discutir decisão.</h2>
+<div class="hero-note">
+    Descreva o contexto da decisão.
+    Retorno com leitura inicial em até 24h.
+</div>
 
             <div class="insight">
                 <strong>Não atuamos como fornecedor operacional genérico. A atuação é limitada a problemas onde a decisão é parte central do valor.</strong>
@@ -863,9 +887,11 @@ h1 {
     <div class="final-bar">
         <p><strong>Advisory analítico para decisões de alto impacto.</strong><br>Para instituições que já possuem dados, mas precisam de estrutura para transformar informação em decisão defensável.</p>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
-            <button class="btn primary" onclick="scrollToId('contato')">Submeter cenário</button>
-            <a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
-            <a href="https://www.instagram.com/veropred" target="_blank" class="btn secondary">Ver análises aplicadas</a>
+<button class="btn primary" onclick="scrollToId('contato')">Discutir decisão</button>
+<a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
+            <a href="https://www.instagram.com/veropred" target="_blank" class="btn secondary">
+    Ver aplicações reais
+</a>
         </div>
     </div>
 </section>
