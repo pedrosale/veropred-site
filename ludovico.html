@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ludovico IA | Veropred Analytics</title>
+
+<style>
+:root {
+    --bg:#080706;
+    --gold:#d8b06a;
+    --copper:#c9783a;
+    --cream:#f6efe3;
+    --muted:#b9aa96;
+    --line:rgba(255,255,255,.14);
+}
+
+* { box-sizing:border-box; }
+
+body {
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(201,120,58,.22), transparent 34%),
+        radial-gradient(circle at 80% 18%, rgba(216,176,106,.12), transparent 34%),
+        linear-gradient(135deg,#080706,#15100d 48%,#24160f);
+    color:var(--cream);
+    font-family:Inter, Arial, sans-serif;
+    padding:40px;
+}
+
+.page {
+    max-width:1100px;
+    margin:auto;
+}
+
+.header {
+    margin-bottom:36px;
+}
+
+.kicker {
+    display:inline-flex;
+    color:var(--gold);
+    border:1px solid rgba(216,176,106,.35);
+    border-radius:999px;
+    padding:9px 13px;
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:rgba(216,176,106,.06);
+}
+
+h1 {
+    font-size:clamp(40px,6vw,76px);
+    line-height:.95;
+    letter-spacing:-.06em;
+    margin:22px 0 14px;
+}
+
+.subtitle {
+    color:var(--muted);
+    max-width:760px;
+    font-size:18px;
+    line-height:1.55;
+}
+
+.layout {
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:28px;
+    align-items:start;
+}
+
+.panel {
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.055);
+    border-radius:32px;
+    padding:28px;
+    box-shadow:0 28px 80px rgba(0,0,0,.42);
+}
+
+.panel h2 {
+    margin:0 0 14px;
+    font-size:30px;
+    letter-spacing:-.04em;
+}
+
+.panel p {
+    color:var(--muted);
+    line-height:1.55;
+}
+
+.examples {
+    display:grid;
+    gap:12px;
+    margin-top:22px;
+}
+
+.example {
+    border:1px solid rgba(216,176,106,.25);
+    border-radius:18px;
+    padding:14px;
+    color:#d7cbb9;
+    background:rgba(216,176,106,.055);
+    cursor:pointer;
+    transition:.2s;
+}
+
+.example:hover {
+    border-color:rgba(216,176,106,.5);
+    transform:translateY(-2px);
+}
+
+.chat {
+    height:620px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+.chat-head {
+    padding:18px 20px;
+    border-bottom:1px solid var(--line);
+}
+
+.chat-head strong {
+    color:var(--gold);
+    display:block;
+    font-size:18px;
+}
+
+.chat-head span {
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.messages {
+    flex:1;
+    overflow-y:auto;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.msg {
+    max-width:86%;
+    padding:13px 15px;
+    border-radius:18px;
+    font-size:14px;
+    line-height:1.45;
+    white-space:pre-wrap;
+}
+
+.bot {
+    align-self:flex-start;
+    background:rgba(255,255,255,.075);
+    color:#d7cbb9;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.user {
+    align-self:flex-end;
+    background:rgba(216,176,106,.18);
+    color:var(--cream);
+    border:1px solid rgba(216,176,106,.22);
+}
+
+.input-area {
+    display:flex;
+    gap:10px;
+    padding:16px;
+    border-top:1px solid var(--line);
+}
+
+.input-area input {
+    flex:1;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.08);
+    color:var(--cream);
+    border-radius:999px;
+    padding:13px 15px;
+    outline:none;
+}
+
+.input-area button {
+    border:0;
+    border-radius:999px;
+    padding:13px 18px;
+    background:linear-gradient(135deg,#f0bf7a,#c9783a);
+    color:#1a0f09;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.back {
+    display:inline-flex;
+    margin-top:24px;
+    color:var(--gold);
+    text-decoration:none;
+    border:1px solid rgba(216,176,106,.35);
+    border-radius:999px;
+    padding:12px 16px;
+}
+
+@media(max-width:900px) {
+    .layout {
+        grid-template-columns:1fr;
+    }
+
+    .chat {
+        height:560px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="header">
+        <div class="kicker">Ludovico IA</div>
+        <h1>Qualificação estratégica de decisões.</h1>
+        <p class="subtitle">
+            O Ludovico IA não resolve problemas por chat.
+            Ele ajuda a entender se sua situação tem aderência com a atuação da Veropred Analytics.
+        </p>
+    </div>
+
+    <div class="layout">
+
+        <section class="panel">
+            <h2>Como usar</h2>
+            <p>
+                Descreva uma decisão, tensão ou contexto.
+                O Ludovico vai enquadrar a situação, avaliar aderência e fazer uma pergunta objetiva.
+            </p>
+
+            <div class="examples">
+                <div class="example" onclick="fillExample('Tenho dados, dashboards e relatórios, mas a diretoria ainda decide no feeling.')">
+                    Tenho dados e dashboards, mas a diretoria ainda decide no feeling.
+                </div>
+
+                <div class="example" onclick="fillExample('Tenho um modelo de crédito, mas as áreas discordam sobre como usar o resultado.')">
+                    Tenho um modelo de crédito, mas as áreas discordam sobre o uso.
+                </div>
+
+                <div class="example" onclick="fillExample('Quero automatizar atendimento interno com IA.')">
+                    Quero automatizar atendimento interno com IA.
+                </div>
+
+                <div class="example" onclick="fillExample('Preciso de alguém para desenvolver uma tela em React.')">
+                    Preciso desenvolver uma tela em React.
+                </div>
+            </div>
+
+            <a href="index.html" class="back">← Voltar ao site</a>
+        </section>
+
+        <section class="panel chat">
+            <div class="chat-head">
+                <strong>Ludovico IA</strong>
+                <span>Agente institucional da Veropred Analytics</span>
+            </div>
+
+            <div class="messages" id="messages">
+                <div class="msg bot">
+                    Descreva uma decisão ou contexto. Vou avaliar se há aderência com a Veropred.
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input id="userInput" placeholder="Ex: Quero usar IA para melhorar uma decisão..." onkeydown="handleEnter(event)">
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </section>
+
+    </div>
+
+</div>
+
+<script>
+const API_URL = ""; 
+// Depois vamos colocar aqui a URL do backend, exemplo:
+// const API_URL = "https://seu-backend.vercel.app/api/ludovico";
+
+function fillExample(text) {
+    document.getElementById("userInput").value = text;
+}
+
+function addMessage(text, type) {
+    const messages = document.getElementById("messages");
+    const div = document.createElement("div");
+    div.className = "msg " + type;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function mockLudovico(text) {
+    const lower = text.toLowerCase();
+
+    if (lower.includes("react") || lower.includes("frontend") || lower.includes("tela")) {
+        return "Isso, isoladamente, não é atuação típica da Veropred.\nSó há aderência se a interface estiver vinculada a uma decisão crítica.\nEssa tela apoia qual decisão executiva relevante?";
+    }
+
+    if (lower.includes("ia") || lower.includes("automatizar")) {
+        return "Pode haver aderência, mas o tema ainda precisa ser delimitado.\nA Veropred atua quando IA afeta decisões relevantes em risco, margem, crescimento ou governança.\nQual decisão concreta você quer melhorar?";
+    }
+
+    if (lower.includes("crédito") || lower.includes("modelo")) {
+        return "Há possível aderência com a Veropred.\nO ponto parece estar na estrutura da decisão, não apenas na capacidade analítica.\nQual decisão concreta está sendo afetada?";
+    }
+
+    return "Pode haver aderência, se houver uma decisão crítica envolvida.\nA Veropred atua quando risco, margem, crescimento ou governança exigem estrutura decisória.\nQual decisão concreta está em jogo?";
+}
+
+async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    addMessage("Analisando aderência...", "bot");
+
+    const messages = document.getElementById("messages");
+    const loadingMsg = messages.lastChild;
+
+    try {
+        let reply;
+
+        if (!API_URL) {
+            reply = mockLudovico(text);
+        } else {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ message: text })
+            });
+
+            const data = await response.json();
+            reply = data.reply || "Não foi possível gerar uma resposta agora.";
+        }
+
+        loadingMsg.textContent = reply;
+
+    } catch (error) {
+        loadingMsg.textContent = "Não foi possível conectar ao Ludovico agora.";
+    }
+}
+
+function handleEnter(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+}
+</script>
+
+</body>
+</html>
