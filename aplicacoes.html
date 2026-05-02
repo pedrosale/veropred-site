@@ -1,1 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Aplicações reais de decisão | Veropred Analytics</title>
+
+<style>
+body {
+    margin:0;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(201,120,58,.20), transparent 36%),
+        linear-gradient(135deg, #080706, #15100d 48%, #24160f);
+    color:#f6efe3;
+    font-family:Arial, sans-serif;
+    padding:40px;
+}
+
+.section-title h2 {
+    font-size:40px;
+    margin:0 0 10px;
+    letter-spacing:-0.05em;
+}
+
+.section-title p {
+    color:#b9aa96;
+    max-width:720px;
+    line-height:1.5;
+}
+
+.showcase {
+    display:grid;
+    grid-template-columns: 560px minmax(360px, 520px);
+    gap:56px;
+    align-items:start;
+    margin-top:38px;
+    margin-bottom:90px;
+}
+
+.carousel-wrap {
+    position:relative;
+    max-width:560px;
+}
+
+.carousel {
+    overflow:hidden;
+    border-radius:30px;
+}
+
+.track {
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide {
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img {
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.42);
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.slide img:hover {
+    transform:translateY(-5px) scale(1.01);
+    border-color:rgba(216,176,106,.48);
+}
+
+.text-panel {
+    min-height:560px;
+    max-height:560px;
+    overflow-y:auto;
+    border-left:1px solid rgba(216,176,106,.28);
+    padding-left:42px;
+    padding-right:18px;
+    display:flex;
+    align-items:flex-start;
+}
+
+.text-panel::-webkit-scrollbar {
+    width:6px;
+}
+
+.text-panel::-webkit-scrollbar-track {
+    background:rgba(255,255,255,.04);
+    border-radius:999px;
+}
+
+.text-panel::-webkit-scrollbar-thumb {
+    background:rgba(216,176,106,.42);
+    border-radius:999px;
+}
+
+.text-content {
+    font-size:17px;
+    line-height:1.48;
+    color:#d7cbb9;
+    max-width:520px;
+}
+
+.text-content p {
+    margin:0 0 15px;
+}
+
+.text-content .highlight {
+    color:#f6efe3;
+    font-weight:700;
+}
+
+.text-content .dash {
+    color:#d8b06a;
+    margin:2px 0 14px;
+}
+
+.arrow {
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    border:1px solid rgba(216,176,106,.42);
+    background:rgba(8,7,6,.78);
+    color:#d8b06a;
+    font-size:26px;
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+}
+
+.arrow.left { left:-58px; }
+.arrow.right { right:-58px; }
+
+.dots {
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:24px;
+}
+
+.dot {
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active {
+    width:28px;
+    border-radius:999px;
+    background:#d8b06a;
+}
+
+.lightbox {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img {
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(216,176,106,.32);
+    box-shadow:0 30px 90px rgba(0,0,0,.65);
+}
+
+.close {
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+@media (max-width:1050px) {
+    .showcase {
+        grid-template-columns:1fr;
+        gap:34px;
+    }
+
+    .carousel-wrap {
+        max-width:620px;
+        margin:auto;
+    }
+
+    .text-panel {
+        min-height:auto;
+        max-height:none;
+        overflow-y:visible;
+        border-left:0;
+        border-top:1px solid rgba(216,176,106,.28);
+        padding-left:0;
+        padding-top:32px;
+        padding-right:0;
+    }
+}
+
+@media (max-width:720px) {
+    body { padding:24px; }
+
+    .section-title h2 {
+        font-size:32px;
+    }
+
+    .arrow.left { left:8px; }
+    .arrow.right { right:8px; }
+
+    .text-content {
+        font-size:16px;
+        line-height:1.5;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<section>
+    <div class="section-title">
+        <h2>Aplicações reais de decisão</h2>
+        <p>
+            Leituras aplicadas sobre decisão, risco, IA e estrutura analítica.
+            Conteúdo proprietário, sem depender de embed externo.
+        </p>
+    </div>
+
+    <!-- POST 1 -->
+    <div class="showcase">
+        <div class="carousel-column">
+            <div class="carousel-wrap">
+                <button class="arrow left" onclick="c1_prevSlide()">‹</button>
+                <div class="carousel">
+                    <div class="track" id="c1_track">
+                        <div class="slide"><img src="assets/posts/post1/imagem1.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post1/imagem2.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post1/imagem3.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post1/imagem4.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post1/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+                <button class="arrow right" onclick="c1_nextSlide()">›</button>
+            </div>
+
+            <div class="dots" id="c1_dots">
+                <button class="dot" onclick="c1_goToSlide(0)"></button>
+                <button class="dot" onclick="c1_goToSlide(1)"></button>
+                <button class="dot" onclick="c1_goToSlide(2)"></button>
+                <button class="dot" onclick="c1_goToSlide(3)"></button>
+                <button class="dot" onclick="c1_goToSlide(4)"></button>
+            </div>
+        </div>
+
+        <div class="text-panel">
+            <div class="text-content">
+                <p class="highlight">Decisão não é dado.<br>Nem modelo.</p>
+                <p>Dados mostram.<br>Modelos estimam.</p>
+                <p>Mas a decisão não está aí.</p>
+                <p class="dash">—</p>
+                <p>Está no corte que define a ação.<br>No risco que você aceita assumir.<br>No retorno que você exige para compensar.</p>
+                <p class="dash">—</p>
+                <p>Sem estrutura, cada decisão depende de interpretação.<br>E interpretação varia.</p>
+                <p class="dash">—</p>
+                <p>Com estrutura, decisão vira sistema.<br>E sistema gera consistência.</p>
+                <p class="dash">—</p>
+                <p class="highlight">A diferença não está no modelo.<br>Está na arquitetura da decisão.</p>
+                <p class="dash">—</p>
+                <p>Se o seu processo ainda depende mais de leitura do que de critério,<br>o problema não é informação.</p>
+                <p class="highlight">É definição.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST 2 -->
+    <div class="showcase">
+        <div class="carousel-column">
+            <div class="carousel-wrap">
+                <button class="arrow left" onclick="c2_prevSlide()">‹</button>
+                <div class="carousel">
+                    <div class="track" id="c2_track">
+                        <div class="slide"><img src="assets/posts/post2/imagem1.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post2/imagem2.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post2/imagem3.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post2/imagem4.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post2/imagem5.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post2/imagem6.png" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+                <button class="arrow right" onclick="c2_nextSlide()">›</button>
+            </div>
+
+            <div class="dots" id="c2_dots">
+                <button class="dot" onclick="c2_goToSlide(0)"></button>
+                <button class="dot" onclick="c2_goToSlide(1)"></button>
+                <button class="dot" onclick="c2_goToSlide(2)"></button>
+                <button class="dot" onclick="c2_goToSlide(3)"></button>
+                <button class="dot" onclick="c2_goToSlide(4)"></button>
+                <button class="dot" onclick="c2_goToSlide(5)"></button>
+            </div>
+        </div>
+
+        <div class="text-panel">
+            <div class="text-content">
+                <p class="highlight">Risco operacional não aparece no dashboard.<br>Mas impacta.</p>
+                <p class="dash">—</p>
+                <p>A maioria das empresas mede o que acontece com frequência.</p>
+                <p>Os maiores impactos não estão aí.</p>
+                <p class="dash">—</p>
+                <p>Estão em eventos raros.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Risco não está na média.<br>Está na cauda.</p>
+                <p class="dash">—</p>
+                <p>Ausência de dados não é ausência de risco.</p>
+                <p class="dash">—</p>
+                <p>Sem estrutura, estimativa vira opinião.</p>
+                <p class="dash">—</p>
+                <p>Com estrutura, incerteza pode ser modelada.</p>
+                <p class="dash">—</p>
+                <p>E isso muda a decisão.</p>
+                <p class="dash">—</p>
+                <p>Porque perda não cresce linearmente.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Um único evento pode redefinir o resultado.</p>
+                <p class="dash">—</p>
+                <p>No fim, não é sobre controle.</p>
+                <p class="highlight">É sobre estrutura.</p>
+                <p class="dash">—</p>
+                <p>Identificar.<br>Mensurar.<br>Modelar.<br>Decidir.</p>
+                <p class="dash">—</p>
+                <p>Risco existe.</p>
+                <p class="highlight">Gestão exige estrutura.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST 3 -->
+    <div class="showcase">
+        <div class="carousel-column">
+            <div class="carousel-wrap">
+                <button class="arrow left" onclick="c3_prevSlide()">‹</button>
+                <div class="carousel">
+                    <div class="track" id="c3_track">
+                        <div class="slide"><img src="assets/posts/post3/imagem1.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post3/imagem2.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post3/imagem3.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post3/imagem4.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post3/imagem5.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post3/imagem6.png" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+                <button class="arrow right" onclick="c3_nextSlide()">›</button>
+            </div>
+
+            <div class="dots" id="c3_dots">
+                <button class="dot" onclick="c3_goToSlide(0)"></button>
+                <button class="dot" onclick="c3_goToSlide(1)"></button>
+                <button class="dot" onclick="c3_goToSlide(2)"></button>
+                <button class="dot" onclick="c3_goToSlide(3)"></button>
+                <button class="dot" onclick="c3_goToSlide(4)"></button>
+                <button class="dot" onclick="c3_goToSlide(5)"></button>
+            </div>
+        </div>
+
+        <div class="text-panel">
+            <div class="text-content">
+                <p class="highlight">Quando uma decisão falha,<br>o modelo costuma ser o culpado.</p>
+                <p>Mas raramente é o problema.</p>
+                <p class="dash">—</p>
+                <p>O erro começa antes.</p>
+                <p class="dash">—</p>
+                <p class="highlight">A decisão não está definida.</p>
+                <p class="dash">—</p>
+                <p>O modelo entrega score.<br>Mas score não é decisão.</p>
+                <p class="dash">—</p>
+                <p>Sem regra, cada caso vira exceção.</p>
+                <p>Sem decisão, cada área puxa para um lado.</p>
+                <p class="dash">—</p>
+                <p class="highlight">E a decisão vira ruído.</p>
+                <p class="dash">—</p>
+                <p>A mesma situação gera respostas diferentes.</p>
+                <p>Isso não é flexibilidade.</p>
+                <p class="highlight">É ausência de sistema.</p>
+                <p class="dash">—</p>
+                <p>O problema não está no dado.<br>Nem no modelo.</p>
+                <p class="highlight">Está na estrutura.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Decisão não é um ponto.<br>É uma arquitetura.</p>
+                <p class="dash">—</p>
+                <p>Definição.<br>Modelo.<br>Regra.<br>Execução.</p>
+                <p class="dash">—</p>
+                <p>Sem isso, tudo parece certo.<br>Mas nada é consistente.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Decisão não é intuição.<br>É estrutura, método e consistência.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST 4 -->
+    <div class="showcase">
+        <div class="carousel-column">
+            <div class="carousel-wrap">
+                <button class="arrow left" onclick="c4_prevSlide()">‹</button>
+                <div class="carousel">
+                    <div class="track" id="c4_track">
+                        <div class="slide"><img src="assets/posts/post4/imagem1.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post4/imagem2.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post4/imagem3.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post4/imagem4.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post4/imagem5.png" onclick="openLightbox(this.src)"></div>
+                        <div class="slide"><img src="assets/posts/post4/imagem6.png" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+                <button class="arrow right" onclick="c4_nextSlide()">›</button>
+            </div>
+
+            <div class="dots" id="c4_dots">
+                <button class="dot" onclick="c4_goToSlide(0)"></button>
+                <button class="dot" onclick="c4_goToSlide(1)"></button>
+                <button class="dot" onclick="c4_goToSlide(2)"></button>
+                <button class="dot" onclick="c4_goToSlide(3)"></button>
+                <button class="dot" onclick="c4_goToSlide(4)"></button>
+                <button class="dot" onclick="c4_goToSlide(5)"></button>
+            </div>
+        </div>
+
+        <div class="text-panel">
+            <div class="text-content">
+                <p class="highlight">IA não resolve problema.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Resolve problema bem definido.</p>
+                <p class="dash">—</p>
+                <p>A maioria não falha por tecnologia.<br>Falha por decisão.</p>
+                <p class="dash">—</p>
+                <p>Sem clareza de objetivo, a IA processa ruído.</p>
+                <p class="dash">—</p>
+                <p>Sem decisão, vira demo.</p>
+                <p class="dash">—</p>
+                <p>Interface bonita.<br>Modelo sofisticado.<br>Apresentação impecável.</p>
+                <p>Mas nada muda.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Porque não há ação.</p>
+                <p class="dash">—</p>
+                <p>Automação não substitui critério.</p>
+                <p class="dash">—</p>
+                <p>Executa mais rápido.<br>Não decide melhor.</p>
+                <p class="dash">—</p>
+                <p>Erro mal estruturado não é corrigido.<br>É amplificado.</p>
+                <p class="dash">—</p>
+                <p class="highlight">Modelo bom com decisão ruim<br>gera resultado ruim.</p>
+                <p class="dash">—</p>
+                <p>Tecnologia não compensa ausência de estrutura.</p>
+                <p class="dash">—</p>
+                <p class="highlight">No fim, não é sobre IA.<br>É sobre decisão.</p>
+                <p class="dash">—</p>
+                <p>IA só gera valor dentro de um sistema.</p>
+                <p class="dash">—</p>
+                <p>Dados.<br>Modelo.<br>Regra.<br>Execução.</p>
+                <p class="dash">—</p>
+                <p>Sem isso, é capacidade desperdiçada.</p>
+                <p class="highlight">Com isso, vira vantagem.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c1", 5);
+setupCarousel("c2", 6);
+setupCarousel("c3", 6);
+setupCarousel("c4", 6);
+</script>
+
+</body>
+</html>
