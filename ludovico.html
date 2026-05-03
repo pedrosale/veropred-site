@@ -40,6 +40,16 @@ body {
     color:#f6efe3;
 }
 
+.watermark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 32px; /* Ajuste o tamanho da fonte conforme necessário */
+    color: rgba(216, 176, 106, 0.3); /* Altere a opacidade da cor para dar o efeito de marca d'água */
+    font-family: "Arial", sans-serif;
+    font-weight: bold;
+}
+
 
 .input-area input {
     flex:1;
@@ -185,7 +195,7 @@ body {
 </head>
 
 <body>
-
+<div class="watermark">方法</div>
 <section class="chat">
     
     <div class="chat-head">
