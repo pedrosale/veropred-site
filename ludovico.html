@@ -22,119 +22,63 @@ body {
     margin:0;
     min-height:100vh;
     background:
-        radial-gradient(circle at 20% 10%, rgba(201,120,58,.22), transparent 34%),
-        radial-gradient(circle at 80% 18%, rgba(216,176,106,.12), transparent 34%),
+        radial-gradient(circle at 20% 10%, rgba(201,120,58,.20), transparent 34%),
+        radial-gradient(circle at 80% 18%, rgba(216,176,106,.10), transparent 34%),
         linear-gradient(135deg,#080706,#15100d 48%,#24160f);
     color:var(--cream);
     font-family:Inter, Arial, sans-serif;
-    padding:40px;
-}
-
-.page {
-    max-width:1100px;
-    margin:auto;
-}
-
-.header {
-    margin-bottom:36px;
-}
-
-.kicker {
-    display:inline-flex;
-    color:var(--gold);
-    border:1px solid rgba(216,176,106,.35);
-    border-radius:999px;
-    padding:9px 13px;
-    font-size:13px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    background:rgba(216,176,106,.06);
-}
-
-h1 {
-    font-size:clamp(40px,6vw,76px);
-    line-height:.95;
-    letter-spacing:-.06em;
-    margin:22px 0 14px;
-}
-
-.subtitle {
-    color:var(--muted);
-    max-width:760px;
-    font-size:18px;
-    line-height:1.55;
-}
-
-.layout {
-    display:grid;
-    grid-template-columns: 1fr 420px;
-    gap:28px;
-    align-items:start;
-}
-
-.panel {
-    border:1px solid var(--line);
-    background:rgba(255,255,255,.055);
-    border-radius:32px;
-    padding:28px;
-    box-shadow:0 28px 80px rgba(0,0,0,.42);
-}
-
-.panel h2 {
-    margin:0 0 14px;
-    font-size:30px;
-    letter-spacing:-.04em;
-}
-
-.panel p {
-    color:var(--muted);
-    line-height:1.55;
-}
-
-.examples {
-    display:grid;
-    gap:12px;
-    margin-top:22px;
-}
-
-.example {
-    border:1px solid rgba(216,176,106,.25);
-    border-radius:18px;
-    padding:14px;
-    color:#d7cbb9;
-    background:rgba(216,176,106,.055);
-    cursor:pointer;
-    transition:.2s;
-}
-
-.example:hover {
-    border-color:rgba(216,176,106,.5);
-    transform:translateY(-2px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
 }
 
 .chat {
+    width:min(420px,100%);
     height:620px;
     display:flex;
     flex-direction:column;
     overflow:hidden;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.055);
+    border-radius:32px;
+    box-shadow:0 28px 80px rgba(0,0,0,.42);
 }
 
 .chat-head {
-    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:22px;
     border-bottom:1px solid var(--line);
+    background:
+        radial-gradient(circle at 18% 22%, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.035);
 }
 
-.chat-head strong {
+.ludovico-avatar img {
+    width:104px;
+    height:104px;
+    border-radius:28px;
+    object-fit:cover;
+    border:1px solid rgba(216,176,106,.38);
+    box-shadow:
+        0 0 34px rgba(216,176,106,.18),
+        0 18px 42px rgba(0,0,0,.45);
+}
+
+.ludovico-info strong {
     color:var(--gold);
     display:block;
     font-size:18px;
 }
 
-.chat-head span {
+.ludovico-info span {
     display:block;
-    margin-top:4px;
+    margin-top:6px;
     color:var(--muted);
-    font-size:13px;
+    font-size:12px;
+    line-height:1.35;
 }
 
 .messages {
@@ -178,12 +122,17 @@ h1 {
 
 .input-area input {
     flex:1;
+    min-width:0;
     border:1px solid var(--line);
     background:rgba(255,255,255,.08);
     color:var(--cream);
     border-radius:999px;
     padding:13px 15px;
     outline:none;
+}
+
+.input-area input::placeholder {
+    color:rgba(246,239,227,.42);
 }
 
 .input-area button {
@@ -196,164 +145,76 @@ h1 {
     cursor:pointer;
 }
 
+.chat-footer {
+    padding:0 16px 18px;
+}
+
 .back {
-    display:inline-flex;
-    margin-top:24px;
+    width:100%;
+    display:flex;
+    justify-content:center;
     color:var(--gold);
     text-decoration:none;
     border:1px solid rgba(216,176,106,.35);
     border-radius:999px;
     padding:12px 16px;
+    background:rgba(216,176,106,.045);
+    font-size:13px;
 }
 
-@media(max-width:900px) {
-    .layout {
-        grid-template-columns:1fr;
+@media(max-width:520px) {
+    body {
+        padding:18px;
     }
 
     .chat {
-        height:560px;
+        height:calc(100vh - 36px);
+        border-radius:26px;
+    }
+
+    .ludovico-avatar img {
+        width:82px;
+        height:82px;
+        border-radius:22px;
     }
 }
-
-.chat-head {
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:18px 20px;
-    border-bottom:1px solid var(--line);
-}
-
-.ludovico-avatar img {
-    width:104px;
-    height:104px;
-    border-radius:28px;
-    object-fit:cover;
-    border:1px solid rgba(216,176,106,.38);
-    box-shadow:
-        0 0 34px rgba(216,176,106,.18),
-        0 18px 42px rgba(0,0,0,.45);
-}
-
-.chat-head {
-    display:flex;
-    align-items:center;
-    gap:18px;
-    padding:22px;
-    border-bottom:1px solid var(--line);
-    background:
-        radial-gradient(circle at 18% 22%, rgba(216,176,106,.12), transparent 38%),
-        rgba(255,255,255,.035);
-}
-
-.ludovico-info strong {
-    color:var(--gold);
-    display:block;
-    font-size:20px;
-}
-
-.ludovico-info span {
-    display:block;
-    margin-top:6px;
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.35;
-}
-
-.ludovico-info strong {
-    color:var(--gold);
-    display:block;
-    font-size:16px;
-}
-
-.ludovico-info span {
-    display:block;
-    margin-top:2px;
-    color:var(--muted);
-    font-size:12px;
-}
-    
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<section class="chat">
+    <div class="chat-head">
+        <div class="ludovico-avatar">
+            <img src="assets/ludovico_2.png" alt="Ludovico IA">
+        </div>
 
-    <div class="header">
-        <div class="kicker">Ludovico IA</div>
-<h1>Refine seu cenário antes de enviar.</h1>
-<p class="subtitle">
-    O Ludovico IA ajuda a organizar sua ideia em termos de decisão, risco, impacto e contexto — sem substituir a avaliação da Veropred.
-</p>
+        <div class="ludovico-info">
+            <strong>Ludovico IA</strong>
+            <span>Refinador de cenários para avaliação estratégica</span>
+        </div>
     </div>
 
-    <div class="layout">
-
-        <section class="panel">
-<h2>Prepare melhor sua mensagem</h2>
-<p>
-    Escreva sua ideia ainda que esteja incompleta.
-    O Ludovico ajuda a transformar isso em um cenário mais claro para enviar à Veropred.
-</p>
-
-<div class="examples">
-    <div class="example" onclick="fillExample('Temos dados e dashboards, mas a decisão final ainda depende muito da interpretação da diretoria.')">
-        Tenho dados, mas a decisão ainda depende muito de interpretação.
+    <div class="messages" id="messages">
+        <div class="msg bot">
+            Descreva sua ideia como ela está hoje. Vou ajudar a deixá-la mais clara para envio do cenário.
+        </div>
     </div>
 
-    <div class="example" onclick="fillExample('Queremos usar IA em uma área interna, mas ainda não está claro qual decisão ela deveria melhorar.')">
-        Queremos usar IA, mas a decisão ainda não está clara.
+    <div class="input-area">
+        <input id="userInput" placeholder="Descreva sua ideia ou cenário inicial..." onkeydown="handleEnter(event)">
+        <button onclick="sendMessage()">Enviar</button>
     </div>
 
-    <div class="example" onclick="fillExample('Temos um modelo de crédito, mas diferentes áreas usam o resultado de formas distintas.')">
-        Temos um modelo, mas as áreas usam o resultado de formas distintas.
+    <div class="chat-footer">
+        <a href="index.html" class="back">← Voltar ao site</a>
     </div>
-
-    <div class="example" onclick="fillExample('Quero descrever melhor um cenário para avaliação estratégica da Veropred.')">
-        Quero organizar melhor meu cenário antes de enviar.
-    </div>
-</div>
-
-            <a href="index.html" class="back">← Voltar ao site</a>
-        </section>
-
-        <section class="panel chat">
-<div class="chat-head">
-    <div class="ludovico-avatar">
-        <img src="assets/ludovico_2.png" alt="Ludovico IA">
-    </div>
-
-    <div class="ludovico-info">
-        <strong>Ludovico IA</strong>
-        <span>Refinador de cenários para avaliação estratégica</span>
-    </div>
-</div>
-
-            <div class="messages" id="messages">
-<div class="msg bot">
-    Descreva sua ideia como ela está hoje. Vou ajudar a deixá-la mais clara para envio no cenário.
-</div>
-            </div>
-
-            <div class="input-area">
-                <input id="userInput" placeholder="Descreva sua ideia ou cenário inicial..." onkeydown="handleEnter(event)">
-                <button onclick="sendMessage()">Enviar</button>
-            </div>
-        </section>
-
-    </div>
-
-</div>
+</section>
 
 <script>
 const API_URL = ""; 
 // Depois vamos colocar aqui a URL do backend, exemplo:
 // const API_URL = "https://seu-backend.vercel.app/api/ludovico";
-
-function fillExample(text) {
-    document.getElementById("userInput").value = text;
-}
 
 function addMessage(text, type) {
     const messages = document.getElementById("messages");
@@ -365,20 +226,6 @@ function addMessage(text, type) {
 }
 
 function mockLudovico(text) {
-    const lower = text.toLowerCase();
-
-    if (lower.includes("react") || lower.includes("frontend") || lower.includes("tela")) {
-        return "Ainda estou em desenvolvimento, em breve terei essa capacidade de refinamento de cenários.";
-    }
-
-    if (lower.includes("ia") || lower.includes("automatizar")) {
-        return "Ainda estou em desenvolvimento, em breve terei essa capacidade de refinamento de cenários.";
-    }
-
-    if (lower.includes("crédito") || lower.includes("modelo")) {
-        return "Ainda estou em desenvolvimento, em breve terei essa capacidade de refinamento de cenários.";
-    }
-
     return "Ainda estou em desenvolvimento, em breve terei essa capacidade de refinamento de cenários.";
 }
 
