@@ -225,11 +225,39 @@ h1 {
 }
 
 .ludovico-avatar img {
-    width:46px;
-    height:46px;
-    border-radius:50%;
+    width:104px;
+    height:104px;
+    border-radius:28px;
     object-fit:cover;
-    border:1px solid rgba(216,176,106,.35);
+    border:1px solid rgba(216,176,106,.38);
+    box-shadow:
+        0 0 34px rgba(216,176,106,.18),
+        0 18px 42px rgba(0,0,0,.45);
+}
+
+.chat-head {
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:22px;
+    border-bottom:1px solid var(--line);
+    background:
+        radial-gradient(circle at 18% 22%, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.035);
+}
+
+.ludovico-info strong {
+    color:var(--gold);
+    display:block;
+    font-size:20px;
+}
+
+.ludovico-info span {
+    display:block;
+    margin-top:6px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.35;
 }
 
 .ludovico-info strong {
