@@ -23,8 +23,9 @@ body {
     background:transparent;
     color:var(--cream);
     font-family:Inter, Arial, sans-serif;
-}.chat
+}
 
+/* CONTAINER */
 .chat {
     width:100%;
     max-width:420px;
@@ -36,6 +37,7 @@ body {
     overflow:hidden;
 }
 
+/* HEADER */
 .chat-head {
     display:flex;
     align-items:center;
@@ -72,8 +74,9 @@ body {
     line-height:1.35;
 }
 
+/* MESSAGES */
 .messages {
-    flex:1;
+    max-height:260px;
     overflow-y:auto;
     padding:18px;
     display:flex;
@@ -104,6 +107,7 @@ body {
     border:1px solid rgba(216,176,106,.22);
 }
 
+/* INPUT */
 .input-area {
     display:flex;
     gap:10px;
@@ -136,36 +140,9 @@ body {
     cursor:pointer;
 }
 
-.chat-footer {
-    padding:0 16px 18px;
-}
-
-.back {
-    width:100%;
-    display:flex;
-    justify-content:center;
-    color:var(--gold);
-    text-decoration:none;
-    border:1px solid rgba(216,176,106,.35);
-    border-radius:999px;
-    padding:12px 16px;
-    background:rgba(216,176,106,.045);
-    font-size:13px;
-}
-
+/* MOBILE */
 @media(max-width:520px) {
     .chat {
-        border-radius:26px;
-    }
-
-    .ludovico-avatar img {
-        width:82px;
-        height:82px;
-        border-radius:22px;
-    }
-}
-    .chat {
-        height:calc(100vh - 36px);
         border-radius:26px;
     }
 
@@ -181,6 +158,7 @@ body {
 <body>
 
 <section class="chat">
+    
     <div class="chat-head">
         <div class="ludovico-avatar">
             <img src="assets/ludovico_2.png" alt="Ludovico IA">
@@ -200,16 +178,13 @@ body {
 
     <div class="input-area">
         <input id="userInput" placeholder="Descreva sua ideia ou cenário inicial..." onkeydown="handleEnter(event)">
-        <button onclick="sendMessage()">Enviar</button>
+        <button onclick="sendMessage()">Refinar</button>
     </div>
-
 
 </section>
 
 <script>
-const API_URL = ""; 
-// Depois vamos colocar aqui a URL do backend, exemplo:
-// const API_URL = "https://seu-backend.vercel.app/api/ludovico";
+const API_URL = ""; // depois você coloca seu backend aqui
 
 function addMessage(text, type) {
     const messages = document.getElementById("messages");
@@ -221,7 +196,16 @@ function addMessage(text, type) {
 }
 
 function mockLudovico(text) {
-    return "Ainda estou em desenvolvimento, em breve terei essa capacidade de refinamento de cenários.";
+    return `Cenário inicial:
+${text}
+
+Ponto a avaliar:
+A situação parece envolver uma decisão que ainda não está estruturada em termos de impacto, risco e critério.
+
+Mensagem sugerida:
+Gostaria de avaliar um cenário onde a decisão ainda não está suficientemente clara. O contexto envolve: ${text}
+
+Busco uma leitura inicial sobre a aderência desse problema à atuação da Veropred.`;
 }
 
 async function sendMessage() {
@@ -233,7 +217,7 @@ async function sendMessage() {
     addMessage(text, "user");
     input.value = "";
 
-    addMessage("Analisando aderência...", "bot");
+    addMessage("Refinando cenário...", "bot");
 
     const messages = document.getElementById("messages");
     const loadingMsg = messages.lastChild;
@@ -257,7 +241,7 @@ async function sendMessage() {
         loadingMsg.textContent = reply;
 
     } catch (error) {
-        loadingMsg.textContent = "Não foi possível conectar ao Ludovico agora.";
+        loadingMsg.textContent = "Erro ao conectar com o Ludovico.";
     }
 }
 
