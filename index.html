@@ -98,6 +98,27 @@ a { color: inherit; }
 
 .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
+.nav-links a.nav-link {
+    border: 1px solid transparent;
+    color: var(--muted);
+    background: transparent;
+    padding: 9px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: .22s ease;
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-links a.nav-link:hover {
+    color: var(--cream);
+    background: rgba(255,255,255,.08);
+    border-color: var(--line);
+}
+
 .nav-links button {
     border: 1px solid transparent;
     color: var(--muted);
@@ -538,6 +559,7 @@ h1 {
         <div class="nav-links">
             <button onclick="scrollToId('tese')">Tese</button>
             <button onclick="scrollToId('metodo')">Método</button>
+			<a href="aplicacoes.html" target="_blank" class="nav-link">Arquitetura de Decisão</a>
             <button onclick="scrollToId('quando')">Quando envolver</button>
             <button onclick="scrollToId('areas')">Áreas</button>
             <button onclick="scrollToId('contato')">Contato</button>
@@ -566,7 +588,6 @@ Falha por falta de estrutura.</h1>
         <div class="hero-actions">
             <button class="btn primary" onclick="scrollToId('contato')">Discutir decisão</button>
             <a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
-			<a href="aplicacoes.html" class="btn secondary">Ver aplicações reais</a>
         </div>
 
 <div class="hero-note">
