@@ -340,6 +340,68 @@ h1 {
 .method-card .num { color: var(--gold); font-size: 34px; font-weight: 900; letter-spacing: -.055em; }
 .method-card .decision-output { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; color: #f0d8b4; font-size: 13px; line-height: 1.45; }
 
+
+.process-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 220px;
+}
+
+.process-card::before {
+    content: "";
+    position: absolute;
+    inset: -70px -70px auto auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(216,176,106,.22), transparent 68%);
+    opacity: .9;
+}
+
+.process-card .num {
+    color: var(--gold);
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -.04em;
+    margin-bottom: 16px;
+}
+
+.process-line {
+    margin-top: 22px;
+    border: 1px solid rgba(216,176,106,.24);
+    border-radius: var(--radius-xl);
+    background:
+        radial-gradient(circle at 14% 50%, rgba(216,176,106,.16), transparent 32%),
+        rgba(255,255,255,.045);
+    padding: clamp(24px, 4vw, 36px);
+}
+
+.process-line p {
+    margin: 0;
+    color: #d9cdbb;
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 980px;
+}
+
+.process-truths {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.process-truths span {
+    border: 1px solid rgba(216,176,106,.26);
+    color: var(--gold);
+    background: rgba(216,176,106,.07);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .03em;
+}
+
 .fit-list { display: grid; gap: 12px; }
 .fit-item { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 1px solid var(--line); background: rgba(255,255,255,.055); border-radius: 18px; color: var(--muted); line-height: 1.5; }
 .fit-item b { color: var(--gold); }
@@ -559,6 +621,7 @@ h1 {
         <div class="nav-links">
             <button onclick="scrollToId('tese')">Tese</button>
             <button onclick="scrollToId('metodo')">Método</button>
+            <button onclick="scrollToId('processo')">Processo</button>
 			<a href="aplicacoes.html" target="_blank" class="nav-link">Arquitetura de Decisão</a>
             <button onclick="scrollToId('quando')">Quando envolver</button>
             <button onclick="scrollToId('areas')">Áreas</button>
@@ -577,12 +640,10 @@ h1 {
 Falha por falta de estrutura.</h1>
 
 <p>
-    O problema não é dado.
-    Nem modelo.
+    Modelos geram sinal. Dashboards mostram sintomas.
+    Decisão exige processo: critério, consistência, governança e ajuste ao longo do tempo.
 
-    É decisão sem estrutura.
-
-    Crédito, risco e IA.
+    Crédito, risco e IA — estruturados para virar ação defensável.
 </p>
 
         <div class="hero-actions">
@@ -591,7 +652,7 @@ Falha por falta de estrutura.</h1>
         </div>
 
 <div class="hero-note">
-    Para decisões com impacto real em risco, margem ou crescimento.
+    Para decisões com impacto real em risco, margem ou crescimento — onde improviso, ruído e desalinhamento custam caro.
 </div>
     </div>
 
@@ -609,17 +670,67 @@ Falha por falta de estrutura.</h1>
 
 <section class="section" id="tese">
     <div class="thesis">
-        <h2>Dados não decidem. Modelos não decidem. Estrutura decide.</h2>
+        <h2>Decisão não é evento. É processo estruturado.</h2>
         <p>
             A Veropred Analytics existe para uma lacuna específica:
-            empresas com capacidade analítica instalada, mas sem estrutura decisória suficiente
-            para converter sinais, modelos e indicadores em políticas, cortes, prioridades,
-            limites, governança e ação executável.
+            empresas com capacidade analítica instalada, mas sem processo decisório suficiente
+            para converter sinais, modelos e indicadores em critérios, políticas, cortes,
+            prioridades, limites, governança e ação executável.
         </p>
     </div>
 
     <div class="insight">
         <strong>O custo de uma decisão mal estruturada raramente aparece no dashboard. Aparece na inadimplência, na margem perdida, no risco assumido sem consciência e em iniciativas de IA que não escalam com segurança.</strong>
+    </div>
+</section>
+
+<section class="section" id="processo">
+    <div class="section-title">
+        <h2>Como a decisão é construída</h2>
+        <p>
+            O valor não está apenas no modelo. Está no processo que transforma sinal em critério,
+            critério em ação e ação em aprendizado acumulado.
+        </p>
+    </div>
+
+    <div class="grid four">
+        <div class="mini-card process-card">
+            <div class="num">01</div>
+            <h4>Sinal</h4>
+            <p>Dados, modelos e indicadores organizam a leitura do cenário, separando evidência de ruído.</p>
+        </div>
+
+        <div class="mini-card process-card">
+            <div class="num">02</div>
+            <h4>Critério</h4>
+            <p>O sinal só ganha valor quando vira regra, corte, prioridade, limite ou política defensável.</p>
+        </div>
+
+        <div class="mini-card process-card">
+            <div class="num">03</div>
+            <h4>Consistência</h4>
+            <p>Processo reduz variação entre pessoas, áreas, momentos e pressões comerciais.</p>
+        </div>
+
+        <div class="mini-card process-card">
+            <div class="num">04</div>
+            <h4>Evolução</h4>
+            <p>A decisão melhora quando resultado real retroalimenta política, modelo e governança.</p>
+        </div>
+    </div>
+
+    <div class="process-line">
+        <p>
+            A atuação da Veropred segue essa lógica: menos pressa em parecer sofisticado,
+            mais rigor em construir uma decisão que resista ao uso real. Processo profundo,
+            resultado consistente.
+        </p>
+        <div class="process-truths">
+            <span>Processo reduz ruído</span>
+            <span>Critério sustenta escala</span>
+            <span>Governança protege valor</span>
+            <span>Consistência vira vantagem</span>
+        </div>
     </div>
 </section>
 
@@ -643,8 +754,8 @@ Falha por falta de estrutura.</h1>
     <div class="section-title">
         <h2>Veropred Decision Architecture™</h2>
         <p>
-            Estrutura para decisões que precisam ser defendidas tecnicamente,
-            compreendidas pela liderança e executadas pela operação.
+            Estrutura para decisões que precisam amadurecer com método:
+            defendidas tecnicamente, compreendidas pela liderança e executadas pela operação.
         </p>
     </div>
 
@@ -689,36 +800,51 @@ Falha por falta de estrutura.</h1>
 
 <section class="section" id="quando">
     <div class="section-title">
-        <h2>Quando faz sentido envolver a Veropred</h2>
+        <h2>Quando envolver</h2>
         <p>
-            A atuação não é desenhada para demandas operacionais comuns.
-            Faz sentido quando erro de decisão custa mais do que custo analítico.
+            A Veropred entra quando a decisão já existe — mas ainda não está suficientemente estruturada
+            para sustentar escala, automação, risco ou crescimento.
         </p>
     </div>
 
     <div class="grid two">
         <div class="fit-list">
-            <div class="fit-item"><span><b>Quando a decisão é relevante demais para ser baseada em aproximação.</b><br>Crédito, risco, margem, crescimento, retenção ou IA com impacto financeiro direto.</span></div>
-            <div class="fit-item"><span><b>Quando já existe análise, mas ela não muda comportamento.</b><br>Modelos, dashboards e relatórios existem, mas não alteram política, prioridade ou rotina.</span></div>
-            <div class="fit-item"><span><b>Quando a liderança precisa de leitura independente.</b><br>A decisão exige visão externa, rigor quantitativo e separação entre evidência e narrativa.</span></div>
+            <div class="fit-item"><span><b>Você tem dados, mas a decisão ainda depende de interpretação.</b><br>O problema não é ausência de informação. É ausência de critério estável para agir.</span></div>
+            <div class="fit-item"><span><b>Existe um modelo, mas áreas diferentes usam o resultado de formas distintas.</b><br>Score, alerta ou dashboard existem, mas a tradução em política não está padronizada.</span></div>
+            <div class="fit-item"><span><b>Você quer usar IA, mas ainda não está claro onde ela entra na decisão.</b><br>Antes de automatizar, é preciso definir autonomia, risco, limite de uso e rastreabilidade.</span></div>
         </div>
 
         <div class="fit-list">
-            <div class="fit-item"><span><b>Quando risco e crescimento estão em tensão.</b><br>Aprovar mais sem perder controle, crescer sem destruir margem, automatizar sem perder governança.</span></div>
-            <div class="fit-item"><span><b>Quando a IA precisa sair do experimento.</b><br>LLMs, RAG e agentes precisam de controle, rastreabilidade, avaliação e limites claros de uso.</span></div>
-            <div class="fit-item"><span><b>Quando tecnologia não é suficiente.</b><br>O problema não é apenas construir. É decidir o que deve ser construído, por quê, com qual risco e qual critério.</span></div>
+            <div class="fit-item"><span><b>O problema não é previsão — é transformar sinal em ação consistente.</b><br>A decisão precisa virar regra, corte, prioridade, limite, política ou rotina de governança.</span></div>
+            <div class="fit-item"><span><b>Há esforço analítico, mas pouca clareza sobre impacto real.</b><br>A empresa mede muito, mas ainda não sabe quais decisões devem mudar por causa disso.</span></div>
+            <div class="fit-item"><span><b>As decisões variam mais do que deveriam.</b><br>Quando a execução oscila entre áreas, pessoas e momentos, o risco começa a ficar invisível.</span></div>
+        </div>
+    </div>
+
+    <div class="process-line">
+        <p>
+            Descreva seu cenário em poucas linhas. Se fizer sentido, a próxima conversa começa pela decisão —
+            não pela ferramenta.
+        </p>
+        <div class="process-truths">
+            <span>Sem estrutura, modelo vira opinião</span>
+            <span>Sem critério, IA vira experimento</span>
+            <span>Sem processo, decisão vira ruído</span>
+        </div>
+        <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn primary" onclick="scrollToId('contato')">Descrever cenário</button>
+            <a href="simulador.html" class="btn secondary">Explorar lógica de decisão</a>
         </div>
     </div>
 </section>
 
-
 <section class="section">
     <div class="simulator-callout">
         <div>
-            <h2>Existe uma decisão crítica sendo tomada hoje?</h2>
+            <h2>Existe uma decisão crítica amadurecendo agora?</h2>
             <p>
                 Se envolve crédito, risco, IA, margem ou crescimento,
-                vale estruturar antes de escalar ou automatizar.
+                vale estruturar o processo antes de escalar ou automatizar.
             </p>
         </div>
 
@@ -733,7 +859,7 @@ Falha por falta de estrutura.</h1>
     <div class="section-title">
         <h2>Formatos de atuação</h2>
         <p>
-            Estruturas enxutas para problemas relevantes. Sem inflar escopo. Sem vender operação como estratégia.
+            Estruturas enxutas para decisões relevantes. Sem inflar escopo. Sem vender ferramenta como processo.
         </p>
     </div>
 
@@ -873,7 +999,7 @@ Falha por falta de estrutura.</h1>
     <div class="section-title">
         <h2>Decisões apoiadas</h2>
         <p>
-            Os exemplos abaixo não são uma lista de técnicas. São tipos de decisão onde método analítico muda consequência.
+            Os exemplos abaixo não são uma lista de técnicas. São processos decisórios onde método analítico muda consequência.
         </p>
     </div>
 
@@ -976,7 +1102,7 @@ Falha por falta de estrutura.</h1>
             <h2>Discutir decisão.</h2>
 <div class="hero-note">
     Descreva o contexto da decisão.
-    Retorno com leitura inicial em até 24h.
+    A leitura inicial parte do processo decisório: sinal, critério, risco, governança e ação.
 </div>
 
             <div class="insight">
@@ -994,7 +1120,7 @@ Falha por falta de estrutura.</h1>
 
     <div class="ludovico-messages" id="ludovicoMessages">
         <div class="ludovico-msg bot">
-            Descreva sua ideia como ela está hoje. Vou ajudar a deixá-la mais clara para envio do cenário.
+            Descreva sua ideia como ela está hoje. Vou ajudar a organizar o cenário em decisão, sinal, critério, risco e próximo passo.
         </div>
     </div>
 
@@ -1084,9 +1210,9 @@ function mockLudovico(text) {
 ${text}
 
 Mensagem sugerida:
-Gostaria de avaliar um cenário onde a decisão ainda não está suficientemente clara. O contexto envolve: ${text}
+Gostaria de avaliar um cenário onde a decisão ainda não está suficientemente estruturada. O contexto envolve: ${text}
 
-Busco uma leitura inicial sobre a aderência desse problema à atuação da Veropred.`;
+Busco uma leitura inicial sobre o processo decisório envolvido, os critérios necessários, os riscos de execução e a aderência desse problema à atuação da Veropred.`;
 }
 
 function sendLudovicoMessage() {
