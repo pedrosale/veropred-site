@@ -282,39 +282,38 @@ h1 {
 
     <div class="header">
         <div class="kicker">Ludovico IA</div>
-        <h1>Qualificação estratégica de decisões.</h1>
-        <p class="subtitle">
-            O Ludovico IA não resolve problemas por chat.
-            Ele ajuda a entender se sua situação tem aderência com a atuação da Veropred Analytics.
-        </p>
+<h1>Refine seu cenário antes de enviar.</h1>
+<p class="subtitle">
+    O Ludovico IA ajuda a organizar sua ideia em termos de decisão, risco, impacto e contexto — sem substituir a avaliação da Veropred.
+</p>
     </div>
 
     <div class="layout">
 
         <section class="panel">
-            <h2>Como usar</h2>
-            <p>
-                Descreva uma decisão, tensão ou contexto.
-                O Ludovico vai enquadrar a situação, avaliar aderência e fazer uma pergunta objetiva.
-            </p>
+<h2>Prepare melhor sua mensagem</h2>
+<p>
+    Escreva sua ideia ainda que esteja incompleta.
+    O Ludovico ajuda a transformar isso em um cenário mais claro para enviar à Veropred.
+</p>
 
-            <div class="examples">
-                <div class="example" onclick="fillExample('Tenho dados, dashboards e relatórios, mas a diretoria ainda decide no feeling.')">
-                    Tenho dados e dashboards, mas a diretoria ainda decide no feeling.
-                </div>
+<div class="examples">
+    <div class="example" onclick="fillExample('Temos dados e dashboards, mas a decisão final ainda depende muito da interpretação da diretoria.')">
+        Tenho dados, mas a decisão ainda depende muito de interpretação.
+    </div>
 
-                <div class="example" onclick="fillExample('Tenho um modelo de crédito, mas as áreas discordam sobre como usar o resultado.')">
-                    Tenho um modelo de crédito, mas as áreas discordam sobre o uso.
-                </div>
+    <div class="example" onclick="fillExample('Queremos usar IA em uma área interna, mas ainda não está claro qual decisão ela deveria melhorar.')">
+        Queremos usar IA, mas a decisão ainda não está clara.
+    </div>
 
-                <div class="example" onclick="fillExample('Quero automatizar atendimento interno com IA.')">
-                    Quero automatizar atendimento interno com IA.
-                </div>
+    <div class="example" onclick="fillExample('Temos um modelo de crédito, mas diferentes áreas usam o resultado de formas distintas.')">
+        Temos um modelo, mas as áreas usam o resultado de formas distintas.
+    </div>
 
-                <div class="example" onclick="fillExample('Preciso de alguém para desenvolver uma tela em React.')">
-                    Preciso desenvolver uma tela em React.
-                </div>
-            </div>
+    <div class="example" onclick="fillExample('Quero descrever melhor um cenário para avaliação estratégica da Veropred.')">
+        Quero organizar melhor meu cenário antes de enviar.
+    </div>
+</div>
 
             <a href="index.html" class="back">← Voltar ao site</a>
         </section>
@@ -327,18 +326,18 @@ h1 {
 
     <div class="ludovico-info">
         <strong>Ludovico IA</strong>
-        <span>Agente institucional da Veropred Analytics</span>
+        <span>Refinador de cenários para avaliação estratégica</span>
     </div>
 </div>
 
             <div class="messages" id="messages">
-                <div class="msg bot">
-                    Descreva uma decisão ou contexto. Vou avaliar se há aderência com a Veropred.
-                </div>
+<div class="msg bot">
+    Descreva sua ideia como ela está hoje. Vou ajudar a deixá-la mais clara para envio no cenário.
+</div>
             </div>
 
             <div class="input-area">
-                <input id="userInput" placeholder="Ex: Quero usar IA para melhorar uma decisão..." onkeydown="handleEnter(event)">
+                <input id="userInput" placeholder="Descreva sua ideia ou cenário inicial..." onkeydown="handleEnter(event)">
                 <button onclick="sendMessage()">Enviar</button>
             </div>
         </section>
