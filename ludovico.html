@@ -215,6 +215,36 @@ h1 {
         height:560px;
     }
 }
+
+.chat-head {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:18px 20px;
+    border-bottom:1px solid var(--line);
+}
+
+.ludovico-avatar img {
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    object-fit:cover;
+    border:1px solid rgba(216,176,106,.35);
+}
+
+.ludovico-info strong {
+    color:var(--gold);
+    display:block;
+    font-size:16px;
+}
+
+.ludovico-info span {
+    display:block;
+    margin-top:2px;
+    color:var(--muted);
+    font-size:12px;
+}
+    
 </style>
 </head>
 
@@ -262,10 +292,16 @@ h1 {
         </section>
 
         <section class="panel chat">
-            <div class="chat-head">
-                <strong>Ludovico IA</strong>
-                <span>Agente institucional da Veropred Analytics</span>
-            </div>
+<div class="chat-head">
+    <div class="ludovico-avatar">
+        <img src="assets/ludovico.png" alt="Ludovico IA">
+    </div>
+
+    <div class="ludovico-info">
+        <strong>Ludovico IA</strong>
+        <span>Agente institucional da Veropred Analytics</span>
+    </div>
+</div>
 
             <div class="messages" id="messages">
                 <div class="msg bot">
