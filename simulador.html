@@ -148,6 +148,8 @@ canvas{
     margin-top:22px;
     color:var(--muted);
     line-height:1.55;
+    border:1px solid rgba(216,176,106,.4);
+    background:rgba(216,176,106,.08);
 }
 
 .glossary{
@@ -206,14 +208,48 @@ canvas{
 
 <a href="index.html" class="btn-back">← Voltar ao site</a>
 
-<h1>Viabilidade Econômica do Produto</h1>
+<h1>Simulador de Decisão de Crédito</h1>
 <p class="subtitle">
-Avaliação baseada em RAROC, risco e custo de oportunidade do capital.<br><br>
-Compare diferentes políticas de decisão, visualize a curva de PD por segmento e avalie o impacto em perda esperada, retorno, capital econômico, RAROC e spread contra CDI.
+Simulação executiva para comparar políticas de crédito com base em cutoff, PD, aprovação, perda esperada, capital econômico e retorno ajustado ao risco.<br><br>
+O objetivo não é prever uma carteira real, mas demonstrar como pequenas mudanças de critério alteram risco, margem, capital alocado e viabilidade econômica da decisão.
 </p>
 
 <div class="global-box">
-    <h3>Premissas econômicas</h3>
+    <h3>Modo guiado</h3>
+
+    <p class="subtitle" style="margin-bottom:18px;">
+        Siga a sequência: primeiro defina o custo de oportunidade e o capital,
+        depois compare os cenários e, por fim, solicite a política ótima.
+    </p>
+
+    <div class="glossary" style="margin-top:0;">
+<div class="item" style="border:1px solid rgba(216,176,106,.35);">
+    <b>1. Defina as premissas</b>
+            <p>Escolha CDI e fator de capital econômico.</p>
+        </div>
+
+        <div class="item">
+            <b>2. Compare cenários</b>
+            <p>Ajuste segmento, cutoff, juros e ticket médio.</p>
+        </div>
+
+        <div class="item">
+            <b>3. Leia o impacto</b>
+            <p>Observe PD, aprovação, EL, RAROC e spread vs CDI.</p>
+        </div>
+
+        <div class="item">
+            <b>4. Otimize a política</b>
+            <p>Clique em sugerir política ótima para encontrar o melhor ponto.</p>
+        </div>
+    </div>
+</div>
+
+<div class="global-box">
+    <h3>1. Premissas econômicas</h3>
+	<p class="subtitle" style="margin-bottom:10px;">
+Comece por aqui: ajuste o custo de capital e a aversão ao risco.
+</p>
 
     <div class="global-grid">
         <div>
@@ -230,13 +266,17 @@ Compare diferentes políticas de decisão, visualize a curva de PD por segmento 
     </div>
 
     <p class="subtitle" style="margin:18px 0 0;">
-O capital econômico representa a reserva necessária para absorver perdas além do cenário esperado,
-incorporando incerteza e eventos adversos.<br>
-<b>Capital Econômico = EL × Fator de Capital</b>.
-        O RAROC compara o resultado ajustado ao risco contra esse capital alocado.
+Nesta simulação, o capital econômico é representado por uma aproximação simplificada:
+um múltiplo da perda esperada, usado para refletir incerteza, volatilidade e cenários adversos.<br>
+<b>Capital Econômico aproximado = EL × Fator de Capital</b>.<br>
+O RAROC compara o resultado ajustado ao risco contra esse capital alocado.
     </p>
 </div>
+<h3 style="margin-top:0;">2. Simulação de cenários</h3>
 
+<p class="subtitle" style="margin-bottom:10px;">
+Ajuste os parâmetros de cada cenário para comparar decisões diferentes.
+</p>
 <div class="grid">
 
 <div class="card">
@@ -303,6 +343,10 @@ incorporando incerteza e eventos adversos.<br>
 
 </div>
 
+<p class="subtitle" style="margin-bottom:10px;">
+Clique abaixo para identificar automaticamente o melhor ponto de decisão.
+</p>
+
 <div class="actions">
     <button class="btn-optimal" onclick="suggestOptimalPolicy('a')">
         Sugerir política ótima para Cenário A
@@ -314,10 +358,59 @@ incorporando incerteza e eventos adversos.<br>
 </div>
 
 <div id="decision_text" class="decision-box">
+    <b>Leitura da decisão</b><br><br>
     Ajuste os parâmetros ou solicite uma política ótima para gerar uma leitura executiva.
 </div>
 
+<p class="subtitle">
+O gráfico mostra como o risco varia com o score.
+Os pontos indicam os cenários atuais e ajudam a visualizar o impacto do cutoff.
+</p>
+
 <canvas id="chart" width="1000" height="390"></canvas>
+
+<div class="global-box">
+    <h3>Sobre a modelagem de risco</h3>
+
+    <p class="subtitle">
+A probabilidade de inadimplência (PD) é estimada a partir de uma função logística aplicada ao score e ao segmento de risco.
+
+Essa abordagem representa uma simplificação da relação típica observada em modelos de crédito, onde o aumento do score está associado à redução não linear do risco.
+
+Os parâmetros da curva (inclinação e ponto de inflexão) variam por segmento apenas para ilustrar diferentes perfis de risco.
+    </p>
+
+    <p class="subtitle">
+O objetivo não é reproduzir uma carteira real calibrada, mas permitir a análise da interação entre cutoff, risco, aprovação, perda esperada e retorno econômico.
+    </p>
+	
+	<p class="subtitle">
+A sugestão de política ótima utiliza um critério simplificado de valor econômico,
+que busca maximizar o retorno ajustado ao risco acima do custo de oportunidade (CDI),
+considerando simultaneamente o capital alocado.
+
+Na prática, isso significa priorizar decisões que combinam maior spread econômico
+com maior relevância de capital, aproximando a lógica de alocação utilizada em contextos reais.
+</p>
+</div>
+
+<div class="global-box">
+    <h3>Levar essa lógica para um cenário real</h3>
+
+    <p class="subtitle">
+Este simulador ilustra como decisões de crédito impactam risco, capital e retorno.
+Na prática, cada operação envolve dados reais, restrições específicas e objetivos distintos.
+
+A aplicação dessa lógica em ambiente real exige estruturação de critérios,
+calibração de modelos, definição de políticas e integração com o processo decisório da empresa.
+    </p>
+
+    <div class="actions">
+        <a class="btn-optimal" href="index.html#contato">
+            Avaliar um cenário de decisão
+        </a>
+    </div>
+</div>
 
 <div class="glossary">
 
