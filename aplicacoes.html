@@ -262,6 +262,117 @@ body {
         </p>
     </div>
 
+
+<h3 style="
+    color:#d8b06a;
+    font-size:14px;
+    letter-spacing:.18em;
+    margin-top:40px;
+    margin-bottom:10px;
+">
+
+<div style="height:30px;"></div>
+
+<h3 style="
+    color:#d8b06a;
+    font-size:14px;
+    letter-spacing:.18em;
+    margin-top:40px;
+    margin-bottom:10px;
+">
+    DECISÃO ECONÔMICA
+</h3> 
+<!-- POST 0 / FEATURED -->
+<div class="showcase" style="
+    border:1px solid rgba(216,176,106,.35);
+    padding:32px;
+    border-radius:32px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.2));
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+">
+    <div class="carousel-column">
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c0_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c0_track">
+                    <div class="slide"><img src="assets/posts/post0/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem6.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c0_nextSlide()">›</button>
+        </div>
+
+        <div class="dots" id="c0_dots">
+            <button class="dot" onclick="c0_goToSlide(0)"></button>
+            <button class="dot" onclick="c0_goToSlide(1)"></button>
+            <button class="dot" onclick="c0_goToSlide(2)"></button>
+            <button class="dot" onclick="c0_goToSlide(3)"></button>
+            <button class="dot" onclick="c0_goToSlide(4)"></button>
+            <button class="dot" onclick="c0_goToSlide(5)"></button>
+        </div>
+    </div>
+
+    <div class="text-panel">
+        <div class="text-content">
+
+            <p style="color:#d8b06a; font-size:12px; letter-spacing:.12em; margin-bottom:18px;">
+                DECISÃO ECONÔMICA • CAPITAL • RISCO
+            </p>
+
+            <p class="highlight">ROI positivo não garante valor.</p>
+
+            <p class="dash">—</p>
+
+            <p>Retorno sem custo de capital é ilusão.</p>
+
+            <p class="dash">—</p>
+
+            <p>O que define valor não é o lucro.</p>
+            <p class="highlight">É o retorno ajustado ao risco.</p>
+
+            <p class="dash">—</p>
+
+            <p>Se não supera o CDI, não compensa o capital.</p>
+            <p class="highlight">É destruição silenciosa de valor.</p>
+
+            <p class="dash">—</p>
+
+            <p>O modelo estima probabilidade.</p>
+            <p>Mas não toma decisão.</p>
+
+            <p class="dash">—</p>
+
+            <p class="highlight">O corte decide.</p>
+
+            <p class="dash">—</p>
+
+            <p>Cutoff não é filtro.</p>
+            <p>É alocação de capital sob incerteza.</p>
+
+            <p class="dash">—</p>
+
+            <p>Aprovar mais não é crescer.</p>
+            <p>É assumir mais risco.</p>
+
+            <p class="dash">—</p>
+
+            <p class="highlight">A melhor decisão não está nos extremos.</p>
+            <p>Está na zona onde risco e retorno se equilibram.</p>
+
+            <p class="dash">—</p>
+
+            <p>No fim, não é sobre modelo.</p>
+            <p class="highlight">É sobre arquitetura da decisão.</p>
+
+        </div>
+    </div>
+</div>
     <!-- POST 1 -->
     <div class="showcase">
         <div class="carousel-column">
@@ -549,6 +660,7 @@ function closeLightbox() {
     document.getElementById("lightbox").style.display = "none";
 }
 
+setupCarousel("c0", 6);
 setupCarousel("c1", 5);
 setupCarousel("c2", 6);
 setupCarousel("c3", 6);
