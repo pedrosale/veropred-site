@@ -462,6 +462,100 @@ body {
         </div>
     </div>
 
+
+<!-- NOVO POST (Expansão vs Sustentabilidade) -->
+<div class="showcase">
+    <div class="carousel-column">
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c5_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c5_track">
+                    <div class="slide"><img src="assets/posts/novo_post/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem6.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem7.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem8.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c5_nextSlide()">›</button>
+        </div>
+
+        <div class="dots" id="c5_dots">
+            <button class="dot" onclick="c5_goToSlide(0)"></button>
+            <button class="dot" onclick="c5_goToSlide(1)"></button>
+            <button class="dot" onclick="c5_goToSlide(2)"></button>
+            <button class="dot" onclick="c5_goToSlide(3)"></button>
+            <button class="dot" onclick="c5_goToSlide(4)"></button>
+            <button class="dot" onclick="c5_goToSlide(5)"></button>
+            <button class="dot" onclick="c5_goToSlide(6)"></button>
+            <button class="dot" onclick="c5_goToSlide(7)"></button>
+        </div>
+    </div>
+
+    <div class="text-panel">
+        <div class="text-content">
+
+            <p class="highlight">Expansão vs Sustentabilidade.</p>
+
+            <p>Parece equilíbrio.</p>
+            <p class="highlight">Não é.</p>
+
+            <p class="dash">—</p>
+
+            <p>Uma parte da empresa quer crescer.</p>
+            <p>Outra quer proteger.</p>
+
+            <p class="dash">—</p>
+
+            <p>Ambas estão certas.</p>
+            <p class="highlight">Mas isoladas, geram conflito.</p>
+
+            <p class="dash">—</p>
+
+            <p>Então surge a tentativa de integração.</p>
+
+            <p class="highlight">Alinhamento operacional.</p>
+
+            <p class="dash">—</p>
+
+            <p>Integração.<br>Alinhamento.<br>Colaboração.</p>
+
+            <p class="dash">—</p>
+
+            <p>Melhora o processo.</p>
+
+            <p class="dash">—</p>
+
+            <p class="highlight">Mas não resolve a decisão.</p>
+
+            <p class="dash">—</p>
+
+            <p>O erro não está nas áreas.</p>
+            <p class="highlight">Está na pergunta.</p>
+
+            <p class="dash">—</p>
+
+            <p>Não é:</p>
+            <p>Quem abordar?</p>
+            <p>Quem aprovar?</p>
+
+            <p class="dash">—</p>
+
+            <p class="highlight">É sobre alocar capital sob incerteza.</p>
+
+            <p class="dash">—</p>
+
+            <p>Decisão não é escolher um lado.</p>
+            <p class="highlight">É integrar os dois.</p>
+
+        </div>
+    </div>
+</div>
     <!-- POST 2 -->
     <div class="showcase">
         <div class="carousel-column">
@@ -705,6 +799,7 @@ function closeLightbox() {
 
 setupCarousel("c0", 6);
 setupCarousel("c1", 5);
+setupCarousel("c5", 8);
 setupCarousel("c2", 6);
 setupCarousel("c3", 6);
 setupCarousel("c4", 6);
