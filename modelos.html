@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Arquitetura da Decisão | Veropred Analytics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:'Inter',sans-serif;
+    line-height:1.9;
+    overflow-x:hidden;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    padding:80px 24px 120px;
+}
+
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:40px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
+}
+
+.hero{
+    margin-bottom:90px;
+}
+
+.logo{
+    font-size:14px;
+    letter-spacing:4px;
+    color:#c6922b;
+    margin-bottom:50px;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:76px;
+    line-height:0.95;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.hero h1 span{
+    color:#c6922b;
+}
+
+.hero-sub{
+    font-size:22px;
+    color:#d8d8d8;
+    max-width:780px;
+    line-height:1.6;
+}
+
+.symbolic-summary{
+    margin:10px 0 100px;
+    padding:42px;
+    border:1px solid rgba(198,146,43,.28);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(198,146,43,.12), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.28));
+    box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+
+.symbolic-head{
+    margin-bottom:34px;
+}
+
+.symbolic-head p{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.symbolic-head h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.1;
+    font-weight:600;
+    max-width:760px;
+}
+
+.symbolic-showcase{
+    display:grid;
+    grid-template-columns:minmax(320px,520px) 1fr;
+    gap:44px;
+    align-items:center;
+}
+
+.carousel-wrap{
+    position:relative;
+    max-width:520px;
+}
+
+.carousel{
+    overflow:hidden;
+    border-radius:28px;
+}
+
+.track{
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide{
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.45);
+    cursor:pointer;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(198,146,43,.45);
+    background:rgba(5,5,5,.78);
+    color:#c6922b;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.arrow.left{ left:-22px; }
+.arrow.right{ right:-22px; }
+
+.dots{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active{
+    width:28px;
+    border-radius:999px;
+    background:#c6922b;
+}
+
+.symbolic-text{
+    border-left:1px solid rgba(198,146,43,.28);
+    padding-left:38px;
+}
+
+.symbolic-text .eyebrow{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+}
+
+.symbolic-text h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.12;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.symbolic-text p{
+    font-size:18px;
+    line-height:1.7;
+    color:#dedede;
+    margin-bottom:20px;
+}
+
+.symbolic-text .strong{
+    color:#c6922b;
+    font-weight:600;
+    font-size:20px;
+}
+
+.divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(to right, transparent, #c6922b, transparent);
+    margin:90px 0;
+    opacity:0.6;
+}
+
+.section{
+    margin-bottom:90px;
+}
+
+.section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    font-weight:600;
+    margin-bottom:35px;
+    line-height:1.1;
+}
+
+.section h2 span{
+    color:#c6922b;
+}
+
+.section p{
+    margin-bottom:28px;
+    color:#e3e3e3;
+    font-size:19px;
+}
+
+.highlight{
+    color:#c6922b;
+}
+
+.quote{
+    margin:60px 0;
+    padding:40px;
+    border:1px solid rgba(198,146,43,0.3);
+    background:rgba(255,255,255,0.02);
+    backdrop-filter:blur(10px);
+}
+
+.quote p{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.2;
+    margin:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
+    margin-top:40px;
+}
+
+.card{
+    border:1px solid rgba(198,146,43,0.18);
+    padding:28px;
+    background:rgba(255,255,255,0.015);
+    transition:0.3s ease;
+}
+
+.card:hover{
+    border-color:#c6922b;
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#c6922b;
+    margin-bottom:14px;
+    font-size:20px;
+    font-weight:500;
+}
+
+.card p{
+    font-size:16px;
+    margin:0;
+    color:#d6d6d6;
+}
+
+.final-block{
+    margin-top:120px;
+    padding:60px;
+    border:1px solid rgba(198,146,43,0.35);
+    background:linear-gradient(
+        180deg,
+        rgba(198,146,43,0.06),
+        rgba(255,255,255,0.01)
+    );
+}
+
+.final-block h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:54px;
+    margin-bottom:30px;
+    line-height:1.05;
+}
+
+.final-block p{
+    font-size:22px;
+    line-height:1.8;
+}
+
+.footer{
+    margin-top:120px;
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+.lightbox{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img{
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.32);
+}
+
+.close{
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+
+    .container{
+        padding:60px 20px 100px;
+    }
+
+    .hero h1{
+        font-size:54px;
+    }
+
+    .hero-sub{
+        font-size:20px;
+    }
+
+    .symbolic-showcase{
+        grid-template-columns:1fr;
+    }
+
+    .symbolic-summary{
+        padding:28px;
+    }
+
+    .symbolic-text{
+        border-left:0;
+        border-top:1px solid rgba(198,146,43,.28);
+        padding-left:0;
+        padding-top:28px;
+    }
+
+    .symbolic-head h2{
+        font-size:34px;
+    }
+
+    .symbolic-text h3{
+        font-size:34px;
+    }
+
+    .symbolic-text p{
+        font-size:17px;
+    }
+
+    .arrow.left{
+        left:8px;
+    }
+
+    .arrow.right{
+        right:8px;
+    }
+
+    .section h2{
+        font-size:36px;
+    }
+
+    .section p{
+        font-size:18px;
+        line-height:1.8;
+    }
+
+    .quote p{
+        font-size:32px;
+    }
+
+    .final-block{
+        padding:36px;
+    }
+
+    .final-block h2{
+        font-size:42px;
+    }
+
+    .final-block p{
+        font-size:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
+
+<div class="hero">
+
+    <div class="logo">
+        VEROPRED ANALYTICS
+    </div>
+
+    <h1>
+        Arquitetura da <span>Decisão</span>
+    </h1>
+
+    <p class="hero-sub">
+        Modelos não tomam decisões.
+        Decisões melhores exigem método, contexto,
+        critérios claros e profundidade analítica.
+    </p>
+
+</div>
+
+<section class="symbolic-summary">
+
+    <div class="symbolic-head">
+        <p>RESUMO</p>
+        <h2>Do modelo estatístico à decisão consistente.</h2>
+    </div>
+
+    <div class="symbolic-showcase">
+
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c_dec_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c_dec_track">
+                    <div class="slide"><img src="assets/posts/post1/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post1/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post1/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post1/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post1/imagem5.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c_dec_nextSlide()">›</button>
+
+            <div class="dots" id="c_dec_dots">
+                <button class="dot" onclick="c_dec_goToSlide(0)"></button>
+                <button class="dot" onclick="c_dec_goToSlide(1)"></button>
+                <button class="dot" onclick="c_dec_goToSlide(2)"></button>
+                <button class="dot" onclick="c_dec_goToSlide(3)"></button>
+                <button class="dot" onclick="c_dec_goToSlide(4)"></button>
+            </div>
+        </div>
+
+        <div class="symbolic-text">
+            <p class="eyebrow">CIÊNCIA DE DADOS • IA • DECISÃO</p>
+
+            <h3>Decisão não é dado. Nem modelo.</h3>
+
+            <p>
+                Dados mostram.
+                Modelos estimam.
+                Mas a decisão acontece quando estimativas viram critérios,
+                cortes, regras e ações consistentes.
+            </p>
+
+            <p>
+                Sem estrutura, cada decisão depende de interpretação.
+                E interpretação varia.
+            </p>
+
+            <p class="strong">
+                A diferença não está no modelo. Está na arquitetura da decisão.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+
+    <h2>
+        Decisão não é <span>dado</span>
+    </h2>
+
+    <p>
+        Dados são fundamentais.
+        Eles revelam padrões, registram comportamentos,
+        expõem tendências e permitem compreender melhor a realidade.
+    </p>
+
+    <p>
+        Mas dados, sozinhos, não decidem.
+        Eles mostram o que aconteceu, sugerem relações e ajudam a reduzir incerteza.
+        Ainda assim, não definem automaticamente o que deve ser feito.
+    </p>
+
+    <p>
+        Uma empresa pode ter muitos dados e continuar decidindo mal.
+        Pode ter dashboards sofisticados e ainda depender de interpretações dispersas.
+        Pode acompanhar dezenas de indicadores e, mesmo assim, não ter clareza sobre o próximo movimento.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Nem <span>modelo</span>
+    </h2>
+
+    <p>
+        Modelos estimam.
+        Eles calculam probabilidades, ordenam riscos,
+        projetam retornos, identificam padrões e antecipam comportamentos.
+    </p>
+
+    <p>
+        Um modelo pode indicar propensão de compra.
+        Pode estimar probabilidade de inadimplência.
+        Pode prever churn.
+        Pode classificar risco.
+        Pode recomendar uma ação.
+    </p>
+
+    <p>
+        Mas a estimativa ainda não é decisão.
+        Ela precisa ser traduzida em critério.
+        E esse critério precisa estar alinhado ao objetivo do negócio,
+        à tolerância a risco, à capacidade operacional e ao retorno esperado.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “O modelo estima. O corte decide.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        A decisão acontece no <span>corte</span>
+    </h2>
+
+    <p>
+        Toda decisão relevante possui um ponto de ação.
+        Um limiar.
+        Um corte.
+        Uma regra que transforma informação em movimento.
+    </p>
+
+    <p>
+        Aprovar ou negar.
+        Abordar ou não abordar.
+        Priorizar ou esperar.
+        Investir ou preservar.
+        Automatizar ou revisar.
+        Escalar ou conter.
+    </p>
+
+    <p>
+        É nesse ponto que a estimativa deixa de ser análise
+        e passa a ser decisão.
+    </p>
+
+    <p>
+        O corte define o risco aceito,
+        o retorno exigido,
+        o custo tolerado
+        e o tipo de resultado que a empresa escolhe perseguir.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Sem estrutura, decisão vira <span>interpretação</span>
+    </h2>
+
+    <p>
+        Quando não existe uma arquitetura clara,
+        cada área interpreta a mesma informação de forma diferente.
+    </p>
+
+    <p>
+        O comercial vê oportunidade.
+        O risco vê exposição.
+        A operação vê capacidade limitada.
+        O financeiro vê custo.
+        A liderança vê trade-off.
+    </p>
+
+    <p>
+        Nenhuma dessas leituras está necessariamente errada.
+        O problema surge quando elas não estão conectadas por um critério comum.
+    </p>
+
+    <p>
+        Sem estrutura, cada decisão depende do contexto do dia,
+        da pressão do momento,
+        do peso político da área
+        e da interpretação de quem está decidindo.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Com estrutura, decisão vira sistema. E sistema gera consistência.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        Arquitetura da decisão é o que conecta <span>modelo e ação</span>
+    </h2>
+
+    <p>
+        A diferença não está apenas no modelo.
+        Está na forma como o modelo é incorporado ao processo decisório.
+    </p>
+
+    <p>
+        Um bom modelo mal utilizado pode gerar decisões ruins.
+        Um modelo simples, quando conectado a uma boa arquitetura de decisão,
+        pode gerar consistência, controle e vantagem operacional.
+    </p>
+
+    <p>
+        A arquitetura da decisão organiza a passagem entre informação,
+        estimativa, critério, regra, execução e resultado.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Dados</h3>
+            <p>
+                Informação de qualidade para representar a realidade do problema.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Modelagem</h3>
+            <p>
+                Estimativa quantitativa de padrões, riscos, retornos e probabilidades.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Critérios</h3>
+            <p>
+                Regras alinhadas à estratégia, ao risco aceito e ao objetivo econômico.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Decisão</h3>
+            <p>
+                Ação consistente, justificável e conectada ao resultado esperado.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Decisão sem simulação é <span>aposta</span>
+    </h2>
+
+    <p>
+        Toda decisão relevante produz consequências ao longo do tempo.
+        Ela altera risco, retorno, volume, custo, eficiência e sustentabilidade.
+    </p>
+
+    <p>
+        Por isso, decidir sem simular cenários é assumir que o futuro será uma extensão simples do presente.
+    </p>
+
+    <p>
+        Simulação permite observar alternativas antes da execução.
+        Permite comparar cortes.
+        Medir impactos.
+        Projetar cenários.
+        Avaliar sensibilidade.
+        E entender onde uma decisão começa a deixar de compensar.
+    </p>
+
+    <p>
+        Não elimina a incerteza.
+        Mas torna a decisão menos dependente de intuição e mais dependente de critério.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Ciência de dados só gera valor quando entra no <span>sistema decisório</span>
+    </h2>
+
+    <p>
+        Ciência de dados não deveria terminar em um score,
+        em um gráfico ou em uma apresentação.
+    </p>
+
+    <p>
+        Seu valor aparece quando a análise passa a orientar escolhas reais:
+        quem abordar,
+        quem aprovar,
+        quanto conceder,
+        onde investir,
+        quando revisar,
+        qual risco aceitar
+        e qual retorno exigir.
+    </p>
+
+    <p>
+        Nesse ponto, dados deixam de ser apenas informação.
+        Modelos deixam de ser apenas estimativa.
+        E decisão deixa de ser opinião.
+    </p>
+
+</section>
+
+<div class="final-block">
+
+    <h2>
+        No fim, não é sobre modelo.
+    </h2>
+
+    <p>
+        É sobre arquitetura da decisão.
+    </p>
+
+    <br>
+
+    <p>
+        Dados mostram.
+        Modelos estimam.
+        Mas é o sistema decisório que transforma análise em ação,
+        critério em consistência
+        e decisão em resultado.
+    </p>
+
+</div>
+
+<div class="footer">
+    VEROPRED ANALYTICS • DADOS • MODELAGEM • CONTEXTO • DECISÃO
+</div>
+
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c_dec", 5);
+</script>
+
+</body>
+  </html>
