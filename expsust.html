@@ -172,6 +172,175 @@ body{
     letter-spacing:2px;
 }
 
+
+.symbolic-summary{
+    margin:10px 0 100px;
+    padding:42px;
+    border:1px solid rgba(198,146,43,.28);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(198,146,43,.12), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.28));
+    box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+
+.symbolic-head{
+    margin-bottom:34px;
+}
+
+.symbolic-head p{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.symbolic-head h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.1;
+    font-weight:600;
+    max-width:760px;
+}
+
+.symbolic-showcase{
+    display:grid;
+    grid-template-columns:minmax(320px,520px) 1fr;
+    gap:44px;
+    align-items:center;
+}
+
+.carousel-wrap{
+    position:relative;
+    max-width:520px;
+}
+
+.carousel{
+    overflow:hidden;
+    border-radius:28px;
+}
+
+.track{
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide{
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.45);
+    cursor:pointer;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(198,146,43,.45);
+    background:rgba(5,5,5,.78);
+    color:#c6922b;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.arrow.left{ left:-22px; }
+.arrow.right{ right:-22px; }
+
+.dots{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active{
+    width:28px;
+    border-radius:999px;
+    background:#c6922b;
+}
+
+.symbolic-text{
+    border-left:1px solid rgba(198,146,43,.28);
+    padding-left:38px;
+}
+
+.symbolic-text .eyebrow{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+}
+
+.symbolic-text h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.12;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.symbolic-text p{
+    font-size:18px;
+    line-height:1.7;
+    color:#dedede;
+    margin-bottom:20px;
+}
+
+.symbolic-text .strong{
+    color:#c6922b;
+    font-weight:600;
+    font-size:20px;
+}
+
+.lightbox{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img{
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.32);
+}
+
+.close{
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+
 @media(max-width:768px){
 
     .container{
@@ -205,6 +374,33 @@ body{
     .final-block p{
         font-size:20px;
     }
+	
+	.symbolic-showcase{
+    grid-template-columns:1fr;
+}
+
+.symbolic-text{
+    border-left:0;
+    border-top:1px solid rgba(198,146,43,.28);
+    padding-left:0;
+    padding-top:28px;
+}
+
+.symbolic-head h2{
+    font-size:34px;
+}
+
+.symbolic-text h3{
+    font-size:34px;
+}
+
+.arrow.left{
+    left:8px;
+}
+
+.arrow.right{
+    right:8px;
+}
 
 }
 
@@ -232,9 +428,71 @@ body{
             Ela acontece na alocação de capital sob incerteza.
         </p>
 
+</div>
+
+<section class="symbolic-summary">
+
+    <div class="symbolic-head">
+        <p>RESUMO SIMBÓLICO</p>
+        <h2>Da tensão entre crescimento e proteção à decisão estratégica.</h2>
     </div>
 
-    <div class="divider"></div>
+    <div class="symbolic-showcase">
+
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c_exp_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c_exp_track">
+                    <div class="slide"><img src="assets/posts/novo_post/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem6.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem7.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/novo_post/imagem8.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c_exp_nextSlide()">›</button>
+
+            <div class="dots" id="c_exp_dots">
+                <button class="dot" onclick="c_exp_goToSlide(0)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(1)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(2)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(3)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(4)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(5)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(6)"></button>
+                <button class="dot" onclick="c_exp_goToSlide(7)"></button>
+            </div>
+        </div>
+
+        <div class="symbolic-text">
+            <p class="eyebrow">EXPANSÃO • SUSTENTABILIDADE • CAPITAL</p>
+
+            <h3>Expansão e sustentabilidade não são lados opostos.</h3>
+
+            <p>
+                São forças legítimas que entram em conflito quando a empresa tenta decidir por área,
+                e não por arquitetura.
+            </p>
+
+            <p>
+                O ponto central não é escolher entre crescer ou proteger.
+                É definir onde o capital deve trabalhar sob incerteza.
+            </p>
+
+            <p class="strong">
+                Decisão estratégica é integrar os dois.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+<div class="divider"></div>
 
     <section class="section">
 
@@ -495,8 +753,59 @@ body{
     <div class="footer">
         VEROPRED ANALYTICS • DECISÃO • RISCO • MODELAGEM • ESTRATÉGIA
     </div>
-
 </div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c_exp", 8);
+</script>
 
 </body>
 </html>
