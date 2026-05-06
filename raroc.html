@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Decisão Econômica | Veropred Analytics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:'Inter',sans-serif;
+    line-height:1.9;
+    overflow-x:hidden;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    padding:80px 24px 120px;
+}
+
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:40px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
+}
+
+.hero{
+    margin-bottom:90px;
+}
+
+.logo{
+    font-size:14px;
+    letter-spacing:4px;
+    color:#c6922b;
+    margin-bottom:50px;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:76px;
+    line-height:0.95;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.hero h1 span{
+    color:#c6922b;
+}
+
+.hero-sub{
+    font-size:22px;
+    color:#d8d8d8;
+    max-width:780px;
+    line-height:1.6;
+}
+
+.symbolic-summary{
+    margin:10px 0 100px;
+    padding:42px;
+    border:1px solid rgba(198,146,43,.28);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(198,146,43,.12), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.28));
+    box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+
+.symbolic-head{
+    margin-bottom:34px;
+}
+
+.symbolic-head p{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.symbolic-head h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.1;
+    font-weight:600;
+    max-width:760px;
+}
+
+.symbolic-showcase{
+    display:grid;
+    grid-template-columns:minmax(320px,520px) 1fr;
+    gap:44px;
+    align-items:center;
+}
+
+.carousel-wrap{
+    position:relative;
+    max-width:520px;
+}
+
+.carousel{
+    overflow:hidden;
+    border-radius:28px;
+}
+
+.track{
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide{
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.45);
+    cursor:pointer;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(198,146,43,.45);
+    background:rgba(5,5,5,.78);
+    color:#c6922b;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.arrow.left{ left:-22px; }
+.arrow.right{ right:-22px; }
+
+.dots{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active{
+    width:28px;
+    border-radius:999px;
+    background:#c6922b;
+}
+
+.symbolic-text{
+    border-left:1px solid rgba(198,146,43,.28);
+    padding-left:38px;
+}
+
+.symbolic-text .eyebrow{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+}
+
+.symbolic-text h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.12;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.symbolic-text p{
+    font-size:18px;
+    line-height:1.7;
+    color:#dedede;
+    margin-bottom:20px;
+}
+
+.symbolic-text .strong{
+    color:#c6922b;
+    font-weight:600;
+    font-size:20px;
+}
+
+.divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(to right, transparent, #c6922b, transparent);
+    margin:90px 0;
+    opacity:0.6;
+}
+
+.section{
+    margin-bottom:90px;
+}
+
+.section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    font-weight:600;
+    margin-bottom:35px;
+    line-height:1.1;
+}
+
+.section h2 span{
+    color:#c6922b;
+}
+
+.section p{
+    margin-bottom:28px;
+    color:#e3e3e3;
+    font-size:19px;
+}
+
+.highlight{
+    color:#c6922b;
+}
+
+.quote{
+    margin:60px 0;
+    padding:40px;
+    border:1px solid rgba(198,146,43,0.3);
+    background:rgba(255,255,255,0.02);
+    backdrop-filter:blur(10px);
+}
+
+.quote p{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.2;
+    margin:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
+    margin-top:40px;
+}
+
+.card{
+    border:1px solid rgba(198,146,43,0.18);
+    padding:28px;
+    background:rgba(255,255,255,0.015);
+    transition:0.3s ease;
+}
+
+.card:hover{
+    border-color:#c6922b;
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#c6922b;
+    margin-bottom:14px;
+    font-size:20px;
+    font-weight:500;
+}
+
+.card p{
+    font-size:16px;
+    margin:0;
+    color:#d6d6d6;
+}
+
+.cta-sim{
+    margin:100px auto 0;
+    max-width:760px;
+    text-align:center;
+    border-top:1px solid rgba(198,146,43,.25);
+    padding-top:34px;
+}
+
+.cta-sim p{
+    color:#b9aa96;
+    font-size:18px;
+    margin-bottom:22px;
+}
+
+.cta-sim a{
+    display:inline-block;
+    padding:14px 28px;
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:600;
+    color:#1a0f09;
+    background:linear-gradient(135deg, #f0bf7a, #c9783a);
+    box-shadow:0 16px 40px rgba(201,120,58,.25);
+    transition:.2s ease;
+}
+
+.cta-sim a:hover{
+    transform:translateY(-2px);
+}
+
+.final-block{
+    margin-top:120px;
+    padding:60px;
+    border:1px solid rgba(198,146,43,0.35);
+    background:linear-gradient(
+        180deg,
+        rgba(198,146,43,0.06),
+        rgba(255,255,255,0.01)
+    );
+}
+
+.final-block h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:54px;
+    margin-bottom:30px;
+    line-height:1.05;
+}
+
+.final-block p{
+    font-size:22px;
+    line-height:1.8;
+}
+
+.footer{
+    margin-top:120px;
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+.lightbox{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img{
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.32);
+}
+
+.close{
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+
+    .container{
+        padding:60px 20px 100px;
+    }
+
+    .hero h1{
+        font-size:54px;
+    }
+
+    .hero-sub{
+        font-size:20px;
+    }
+
+    .symbolic-showcase{
+        grid-template-columns:1fr;
+    }
+
+    .symbolic-summary{
+        padding:28px;
+    }
+
+    .symbolic-text{
+        border-left:0;
+        border-top:1px solid rgba(198,146,43,.28);
+        padding-left:0;
+        padding-top:28px;
+    }
+
+    .symbolic-head h2{
+        font-size:34px;
+    }
+
+    .symbolic-text h3{
+        font-size:34px;
+    }
+
+    .symbolic-text p{
+        font-size:17px;
+    }
+
+    .arrow.left{
+        left:8px;
+    }
+
+    .arrow.right{
+        right:8px;
+    }
+
+    .section h2{
+        font-size:36px;
+    }
+
+    .section p{
+        font-size:18px;
+        line-height:1.8;
+    }
+
+    .quote p{
+        font-size:32px;
+    }
+
+    .final-block{
+        padding:36px;
+    }
+
+    .final-block h2{
+        font-size:42px;
+    }
+
+    .final-block p{
+        font-size:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
+
+<div class="hero">
+
+    <div class="logo">
+        VEROPRED ANALYTICS
+    </div>
+
+    <h1>
+        Decisão <span>Econômica</span><br>
+        Capital e Risco
+    </h1>
+
+    <p class="hero-sub">
+        ROI positivo não garante valor.
+        A decisão econômica real começa quando retorno, risco,
+        custo de capital e alocação são tratados dentro do mesmo sistema.
+    </p>
+
+</div>
+
+<section class="symbolic-summary">
+
+    <div class="symbolic-head">
+        <p>RESUMO</p>
+        <h2>Do lucro aparente à alocação inteligente de capital.</h2>
+    </div>
+
+    <div class="symbolic-showcase">
+
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c_econ_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c_econ_track">
+                    <div class="slide"><img src="assets/posts/post0/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post0/imagem6.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c_econ_nextSlide()">›</button>
+
+            <div class="dots" id="c_econ_dots">
+                <button class="dot" onclick="c_econ_goToSlide(0)"></button>
+                <button class="dot" onclick="c_econ_goToSlide(1)"></button>
+                <button class="dot" onclick="c_econ_goToSlide(2)"></button>
+                <button class="dot" onclick="c_econ_goToSlide(3)"></button>
+                <button class="dot" onclick="c_econ_goToSlide(4)"></button>
+                <button class="dot" onclick="c_econ_goToSlide(5)"></button>
+            </div>
+        </div>
+
+        <div class="symbolic-text">
+            <p class="eyebrow">DECISÃO ECONÔMICA • CAPITAL • RISCO</p>
+
+            <h3>ROI positivo não garante valor.</h3>
+
+            <p>
+                Retorno sem custo de capital é apenas resultado aparente.
+                Pode parecer lucro, mas ainda assim destruir valor.
+            </p>
+
+            <p>
+                O que define qualidade econômica não é o retorno isolado.
+                É o retorno ajustado ao risco, comparado ao capital consumido.
+            </p>
+
+            <p class="strong">
+                Cutoff não é filtro. É decisão de capital.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+
+    <h2>
+        ROI positivo <span>não garante valor</span>
+    </h2>
+
+    <p>
+        Muitas empresas ainda tratam ROI como sinônimo de criação de valor.
+        Se o retorno é positivo, a decisão parece correta.
+        Se o lucro contábil aparece, a iniciativa parece bem-sucedida.
+    </p>
+
+    <p>
+        Mas essa leitura é incompleta.
+        Uma decisão pode gerar retorno positivo e, ainda assim,
+        consumir capital de forma ineficiente.
+    </p>
+
+    <p>
+        O problema é que ROI, quando observado isoladamente,
+        ignora dimensões fundamentais da decisão:
+        risco assumido, custo de capital, perda esperada,
+        volatilidade, restrição de recursos e custo de oportunidade.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Retorno sem custo de capital é ilusão.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        O lucro aparente pode esconder <span>destruição de valor</span>
+    </h2>
+
+    <p>
+        O que define valor não é apenas o lucro.
+        É o retorno ajustado ao risco.
+    </p>
+
+    <p>
+        Uma carteira pode crescer.
+        Uma campanha pode converter.
+        Um produto pode vender.
+        Uma operação pode aprovar mais clientes.
+    </p>
+
+    <p>
+        Mas se o retorno gerado não compensa o capital alocado,
+        a perda esperada, o risco assumido e o custo de oportunidade,
+        o crescimento é apenas aparência.
+    </p>
+
+    <p>
+        Em mercados financeiros e decisões de crédito,
+        essa leitura é ainda mais crítica.
+        Se uma decisão não supera adequadamente uma referência mínima de capital,
+        como o CDI, ela não está remunerando o capital de forma suficiente.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        O modelo estima. <span>O corte decide.</span>
+    </h2>
+
+    <p>
+        Modelos estimam probabilidade.
+        Estimam risco.
+        Estimam retorno esperado.
+        Estimam comportamento.
+        Estimam propensão.
+    </p>
+
+    <p>
+        Mas modelos não tomam decisão.
+    </p>
+
+    <p>
+        A decisão acontece no corte.
+        No limiar.
+        Na regra.
+        No ponto em que a estimativa vira ação.
+    </p>
+
+    <p>
+        Por isso, cutoff não é apenas um filtro operacional.
+        É uma decisão de capital.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Cutoff não é filtro. É alocação de capital sob incerteza.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        Aprovar mais não é necessariamente <span>crescer</span>
+    </h2>
+
+    <p>
+        Aumentar aprovação pode elevar volume.
+        Pode aumentar receita.
+        Pode acelerar aquisição.
+        Pode melhorar indicadores comerciais no curto prazo.
+    </p>
+
+    <p>
+        Mas aprovar mais também pode significar assumir mais risco,
+        consumir mais capital e elevar a perda esperada.
+    </p>
+
+    <p>
+        Da mesma forma, aprovar menos pode reduzir inadimplência,
+        mas também destruir oportunidade,
+        limitar crescimento e deixar capital parado.
+    </p>
+
+    <p>
+        O ponto estratégico não está em aprovar mais ou aprovar menos.
+        Está em aprovar melhor.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        A melhor decisão não está <span>nos extremos</span>
+    </h2>
+
+    <p>
+        Decisões muito conservadoras reduzem risco,
+        mas também podem limitar retorno.
+    </p>
+
+    <p>
+        Decisões muito agressivas aumentam volume,
+        mas podem comprometer margem,
+        capital e sustentabilidade.
+    </p>
+
+    <p>
+        Entre esses extremos existe uma zona decisória mais relevante:
+        a região onde risco e retorno precisam ser lidos em conjunto.
+    </p>
+
+    <p>
+        Essa é a zona cinza.
+        Não é uma área de indecisão.
+        É a área onde a decisão exige critério.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        RAROC muda a <span>pergunta</span>
+    </h2>
+
+    <p>
+        ROI pergunta quanto uma decisão retorna.
+        RAROC pergunta se esse retorno compensa o risco e o capital consumido.
+    </p>
+
+    <p>
+        Essa diferença muda o centro da decisão.
+    </p>
+
+    <p>
+        A pergunta deixa de ser:
+        “qual decisão gera mais retorno?”
+    </p>
+
+    <p>
+        E passa a ser:
+        “qual decisão gera retorno suficiente para o risco assumido
+        e para o capital alocado?”
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Retorno esperado</h3>
+            <p>
+                O ganho projetado considerando a performance econômica da decisão.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Perda esperada</h3>
+            <p>
+                O custo probabilístico associado ao risco assumido.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Capital econômico</h3>
+            <p>
+                O capital necessário para sustentar a exposição ao risco.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Custo de oportunidade</h3>
+            <p>
+                O retorno mínimo exigido para justificar o uso do capital.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Ciência de dados entra como <span>arquitetura da decisão</span>
+    </h2>
+
+    <p>
+        A função da ciência de dados não é apenas construir modelos.
+        É conectar probabilidade, retorno, risco e capital em uma lógica de decisão.
+    </p>
+
+    <p>
+        Isso envolve estimar cenários,
+        projetar perdas,
+        comparar alternativas,
+        simular cortes,
+        calcular impacto financeiro
+        e transformar incerteza em regra operacional.
+    </p>
+
+    <p>
+        Sem essa estrutura, o modelo pode ser tecnicamente bom,
+        mas economicamente mal utilizado.
+    </p>
+
+</section>
+
+<div class="final-block">
+
+    <h2>
+        No fim, não é sobre modelo.
+    </h2>
+
+    <p>
+        É sobre arquitetura da decisão.
+    </p>
+
+    <br>
+
+    <p>
+        ROI mostra retorno.
+        RAROC organiza decisão.
+        Cutoff transforma estimativa em ação.
+        E capital, quando bem alocado, deixa de ser apenas recurso disponível:
+        vira vantagem econômica.
+    </p>
+
+</div>
+
+<div class="cta-sim">
+    <p>
+        Veja como pequenas mudanças no cutoff impactam risco, retorno e capital.
+    </p>
+
+    <a href="simulador.html">
+        Simular decisão na prática →
+    </a>
+</div>
+
+<div class="footer">
+    VEROPRED ANALYTICS • DECISÃO • RISCO • MODELAGEM • CAPITAL
+</div>
+
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c_econ", 6);
+</script>
+
+</body>
+</html>
