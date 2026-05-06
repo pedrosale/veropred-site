@@ -340,6 +340,24 @@ body{
     cursor:pointer;
 }
 
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:40px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
+}
 
 @media(max-width:768px){
 
@@ -423,6 +441,9 @@ body{
 <body>
 
 <div class="container">
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
 
     <div class="hero">
 
