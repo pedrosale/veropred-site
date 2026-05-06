@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Gestão Integrada de Riscos | Veropred Analytics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:'Inter',sans-serif;
+    line-height:1.9;
+    overflow-x:hidden;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    padding:80px 24px 120px;
+}
+
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:40px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
+}
+
+.hero{margin-bottom:90px;}
+
+.logo{
+    font-size:14px;
+    letter-spacing:4px;
+    color:#c6922b;
+    margin-bottom:50px;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:76px;
+    line-height:.95;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.hero h1 span{color:#c6922b;}
+
+.hero-sub{
+    font-size:22px;
+    color:#d8d8d8;
+    max-width:820px;
+    line-height:1.6;
+}
+
+.symbolic-summary{
+    margin:10px 0 100px;
+    padding:42px;
+    border:1px solid rgba(198,146,43,.28);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(198,146,43,.12), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.28));
+    box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+
+.symbolic-head{margin-bottom:34px;}
+
+.symbolic-head p{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.symbolic-head h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.1;
+    font-weight:600;
+    max-width:820px;
+}
+
+.symbolic-showcase{
+    display:grid;
+    grid-template-columns:minmax(320px,520px) 1fr;
+    gap:44px;
+    align-items:center;
+}
+
+.carousel-wrap{
+    position:relative;
+    max-width:520px;
+}
+
+.carousel{
+    overflow:hidden;
+    border-radius:28px;
+}
+
+.track{
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide{
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.45);
+    cursor:pointer;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(198,146,43,.45);
+    background:rgba(5,5,5,.78);
+    color:#c6922b;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.arrow.left{left:-22px;}
+.arrow.right{right:-22px;}
+
+.dots{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active{
+    width:28px;
+    border-radius:999px;
+    background:#c6922b;
+}
+
+.symbolic-text{
+    border-left:1px solid rgba(198,146,43,.28);
+    padding-left:38px;
+}
+
+.symbolic-text .eyebrow{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+}
+
+.symbolic-text h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.12;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.symbolic-text p{
+    font-size:18px;
+    line-height:1.7;
+    color:#dedede;
+    margin-bottom:20px;
+}
+
+.symbolic-text .strong{
+    color:#c6922b;
+    font-weight:600;
+    font-size:20px;
+}
+
+.divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(to right, transparent, #c6922b, transparent);
+    margin:90px 0;
+    opacity:.6;
+}
+
+.section{margin-bottom:90px;}
+
+.section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    font-weight:600;
+    margin-bottom:35px;
+    line-height:1.1;
+}
+
+.section h2 span{color:#c6922b;}
+
+.section h3{
+    color:#c6922b;
+    font-size:22px;
+    font-weight:500;
+    margin:42px 0 18px;
+}
+
+.section p{
+    margin-bottom:28px;
+    color:#e3e3e3;
+    font-size:19px;
+}
+
+.section ul{
+    margin:8px 0 34px 24px;
+    color:#e3e3e3;
+    font-size:18px;
+}
+
+.section li{
+    margin-bottom:8px;
+}
+
+.highlight{color:#c6922b;}
+
+.quote{
+    margin:60px 0;
+    padding:40px;
+    border:1px solid rgba(198,146,43,.3);
+    background:rgba(255,255,255,.02);
+    backdrop-filter:blur(10px);
+}
+
+.quote p{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.2;
+    margin:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
+    margin-top:40px;
+}
+
+.card{
+    border:1px solid rgba(198,146,43,.18);
+    padding:28px;
+    background:rgba(255,255,255,.015);
+    transition:.3s ease;
+}
+
+.card:hover{
+    border-color:#c6922b;
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#c6922b;
+    margin:0 0 14px;
+    font-size:20px;
+    font-weight:500;
+}
+
+.card p{
+    font-size:16px;
+    margin:0;
+    color:#d6d6d6;
+}
+
+.image-break{
+    margin:70px 0 90px;
+    border-radius:28px;
+    overflow:hidden;
+    border:1px solid rgba(198,146,43,.24);
+    box-shadow:0 30px 90px rgba(0,0,0,.5);
+}
+
+.image-break img{
+    display:block;
+    width:100%;
+    cursor:pointer;
+}
+
+.final-block{
+    margin-top:120px;
+    padding:60px;
+    border:1px solid rgba(198,146,43,.35);
+    background:linear-gradient(180deg, rgba(198,146,43,.06), rgba(255,255,255,.01));
+}
+
+.final-block h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:54px;
+    margin-bottom:30px;
+    line-height:1.05;
+}
+
+.final-block p{
+    font-size:22px;
+    line-height:1.8;
+}
+
+.footer{
+    margin-top:120px;
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+.lightbox{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img{
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.32);
+}
+
+.close{
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+    .container{padding:60px 20px 100px;}
+    .hero h1{font-size:54px;}
+    .hero-sub{font-size:20px;}
+
+    .symbolic-showcase{grid-template-columns:1fr;}
+    .symbolic-summary{padding:28px;}
+
+    .symbolic-text{
+        border-left:0;
+        border-top:1px solid rgba(198,146,43,.28);
+        padding-left:0;
+        padding-top:28px;
+    }
+
+    .symbolic-head h2{font-size:34px;}
+    .symbolic-text h3{font-size:34px;}
+    .symbolic-text p{font-size:17px;}
+
+    .arrow.left{left:8px;}
+    .arrow.right{right:8px;}
+
+    .section h2{font-size:36px;}
+    .section p{font-size:18px;line-height:1.8;}
+    .section ul{font-size:17px;}
+    .quote p{font-size:32px;}
+
+    .final-block{padding:36px;}
+    .final-block h2{font-size:42px;}
+    .final-block p{font-size:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
+
+<div class="hero">
+
+    <div class="logo">
+        VEROPRED ANALYTICS
+    </div>
+
+    <h1>
+        Gestão Integrada<br>
+        de <span>Riscos</span>
+    </h1>
+
+    <p class="hero-sub">
+        Quando o risco deixa de ser departamento e passa a ser compreendido como
+        uma arquitetura de decisão, a empresa deixa de apenas medir eventos
+        e começa a entender propagação, interdependência e impacto sistêmico.
+    </p>
+
+</div>
+
+<section class="symbolic-summary">
+
+    <div class="symbolic-head">
+        <p>RESUMO</p>
+        <h2>Riscos não quebram empresas por categoria. Quebram por propagação.</h2>
+    </div>
+
+    <div class="symbolic-showcase">
+
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c_risk_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c_risk_track">
+                    <div class="slide"><img src="assets/posts/post5/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post5/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post5/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post5/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post5/imagem5.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c_risk_nextSlide()">›</button>
+
+            <div class="dots" id="c_risk_dots">
+                <button class="dot" onclick="c_risk_goToSlide(0)"></button>
+                <button class="dot" onclick="c_risk_goToSlide(1)"></button>
+                <button class="dot" onclick="c_risk_goToSlide(2)"></button>
+                <button class="dot" onclick="c_risk_goToSlide(3)"></button>
+                <button class="dot" onclick="c_risk_goToSlide(4)"></button>
+            </div>
+        </div>
+
+        <div class="symbolic-text">
+            <p class="eyebrow">RISCO INTEGRADO • PROPAGAÇÃO • DECISÃO</p>
+
+            <h3>Risco não é isolado. É sistêmico.</h3>
+
+            <p>
+                Uma falha operacional pode virar evento jurídico.
+                O evento jurídico pode virar exposição reputacional.
+                A exposição reputacional pode afetar liquidez.
+            </p>
+
+            <p>
+                Liquidez afeta confiança. Confiança afeta capital.
+                Capital redefine decisão.
+            </p>
+
+            <p class="strong">
+                O risco real está na forma como os riscos se conectam.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+
+    <h2>
+        O risco deixa de ser categoria quando vira <span>propagação</span>
+    </h2>
+
+    <p>
+        Risco costuma ser tratado como categoria:
+        crédito, operacional, jurídico, tecnológico, reputacional,
+        liquidez, mercado, compliance, imagem.
+    </p>
+
+    <p>
+        Mas empresas não quebram por categorias. Quebram por propagação.
+    </p>
+
+    <p>
+        O problema raramente está em um único risco isolado.
+        Está na forma como eles se conectam.
+        E essa conexão nem sempre aparece no dashboard.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “O maior risco não é o evento. É o acoplamento invisível entre eventos.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        O erro clássico da gestão de riscos é trabalhar em <span>silos</span>
+    </h2>
+
+    <p>
+        A maioria das organizações ainda estrutura risco por área.
+        Cada área mede sua própria exposição.
+        Cada indicador tenta representar uma dimensão específica do problema.
+        Cada comitê observa apenas parte do sistema.
+    </p>
+
+    <p>
+        Crédito olha inadimplência.
+        Operacional olha perdas.
+        Tecnologia olha disponibilidade.
+        Jurídico olha contingência.
+        Compliance olha aderência.
+        Financeiro olha liquidez.
+    </p>
+
+    <p>
+        Todos parecem corretos individualmente.
+        Mas o risco real raramente respeita essa divisão.
+    </p>
+
+    <p>
+        Na prática, eventos se propagam.
+        E a propagação é o que redefine o impacto.
+    </p>
+
+</section>
+
+<div class="image-break">
+    <img src="assets/posts/post5/imagem2.png" onclick="openLightbox(this.src)">
+</div>
+
+<section class="section">
+
+    <h2>
+        O risco moderno <span>não é linear</span>
+    </h2>
+
+    <p>
+        Durante muito tempo, gestão de riscos foi associada à ideia de controle:
+        identificar, mitigar e reduzir.
+    </p>
+
+    <p>
+        Mas o ambiente moderno tornou essa leitura insuficiente.
+        Empresas operam hoje em estruturas altamente conectadas:
+    </p>
+
+    <ul>
+        <li>cadeias digitais;</li>
+        <li>terceiros;</li>
+        <li>APIs;</li>
+        <li>nuvem;</li>
+        <li>automações;</li>
+        <li>ecossistemas;</li>
+        <li>inteligência artificial;</li>
+        <li>plataformas distribuídas;</li>
+        <li>integrações em tempo real.</li>
+    </ul>
+
+    <p>
+        Quanto maior a conectividade, maior a eficiência.
+        Mas também maior a possibilidade de propagação.
+    </p>
+
+    <p>
+        O risco moderno é sistêmico.
+        Não porque tudo falha ao mesmo tempo.
+        Mas porque pequenos eventos podem atravessar múltiplas camadas
+        antes de se tornarem visíveis.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Empresas financeiras e não financeiras possuem <span>estruturas de risco semelhantes</span>
+    </h2>
+
+    <p>
+        Existe uma percepção equivocada de que gestão integrada de riscos
+        é um tema exclusivo do setor financeiro.
+    </p>
+
+    <p>
+        Não é.
+    </p>
+
+    <p>
+        Instituições financeiras apenas foram obrigadas a amadurecer essa disciplina antes,
+        principalmente após Basiléia, crises sistêmicas, aumento regulatório,
+        exigências de capital, testes de estresse e gerenciamento integrado.
+    </p>
+
+    <p>
+        Mas qualquer empresa moderna já opera sob múltiplas exposições simultâneas:
+        indústria, varejo, saúde, energia, tecnologia, logística e agronegócio.
+    </p>
+
+    <p>
+        Todas possuem riscos interdependentes.
+        A diferença é que muitas ainda não enxergam esses riscos de forma integrada.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Gestão integrada muda a pergunta: não é qual risco temos, mas como riscos interagem.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        Principais classes de <span>risco</span>
+    </h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Crédito</h3>
+            <p>
+                Inadimplência, concentração, ciclo econômico, comportamento,
+                política de concessão e qualidade da decisão.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Operacional</h3>
+            <p>
+                Falhas humanas, processos, sistemas, terceiros, fraudes,
+                execução e automação mal implementada.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Liquidez</h3>
+            <p>
+                Capacidade de honrar obrigações, funding, confiança,
+                continuidade operacional e percepção de mercado.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Mercado</h3>
+            <p>
+                Juros, câmbio, inflação, preços, volatilidade,
+                valuation e capacidade de investimento.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Tecnologia</h3>
+            <p>
+                Infraestrutura, nuvem, APIs, automações, pipelines,
+                modelos, dados e integrações críticas.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Cibernético</h3>
+            <p>
+                Segurança, interrupção operacional, exposição jurídica,
+                dano reputacional e sanções regulatórias.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Jurídico e regulatório</h3>
+            <p>
+                Contingências, mudanças normativas, restrições legais
+                e impactos sobre estratégia e operação.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Reputacional</h3>
+            <p>
+                Confiança, imagem, percepção institucional e efeitos derivados
+                de outros riscos materializados.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="image-break">
+    <img src="assets/posts/post5/imagem3.png" onclick="openLightbox(this.src)">
+</div>
+
+<section class="section">
+
+    <h2>
+        A literatura moderna já trata risco como <span>sistema</span>
+    </h2>
+
+    <p>
+        Essa visão integrada não é apenas conceitual.
+        Ela aparece nas principais estruturas modernas de gestão de riscos.
+    </p>
+
+    <h3>Banco Central e Basiléia</h3>
+
+    <p>
+        A Resolução CMN 4.557 do Banco Central do Brasil estabelece a necessidade
+        de estrutura integrada de gerenciamento de riscos e capital.
+    </p>
+
+    <p>
+        Ela aborda governança, apetite a risco, ICAAP, testes de estresse,
+        integração entre riscos, capital, continuidade e controles.
+    </p>
+
+    <p>
+        O ponto central não é apenas medir eventos.
+        É integrar risco à decisão estratégica.
+    </p>
+
+    <h3>Literatura quantitativa moderna</h3>
+
+    <p>
+        Autores como McNeil, Frey & Embrechts, John Hull, Douglas Hubbard e Nassim Taleb
+        reforçam que risco relevante não está apenas em frequência.
+    </p>
+
+    <p>
+        Está em caudas, eventos extremos, incerteza, distribuição,
+        fragilidade e propagação.
+    </p>
+
+    <h3>Literatura executiva moderna</h3>
+
+    <p>
+        McKinsey, Deloitte, Gartner, WEF e BIS passaram a tratar risco
+        como tema transversal de negócio, conectando estratégia,
+        tecnologia, IA, continuidade, geopolítica, cibersegurança,
+        supply chain, capital e reputação.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Onde ciência de dados <span>entra nisso</span>
+    </h2>
+
+    <p>
+        Ciência de dados não substitui gestão de riscos.
+        Mas transforma profundamente sua capacidade de leitura.
+    </p>
+
+    <p>
+        Muitos riscos modernos não são diretamente observáveis.
+        Precisam ser inferidos.
+        E isso exige estrutura analítica.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Modelagem de risco</h3>
+            <p>
+                Estimar inadimplência, detectar fraude, prever perdas,
+                simular cenários, avaliar capital e medir propagação.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Simulação</h3>
+            <p>
+                Monte Carlo, stress testing e cenários para observar impactos possíveis
+                antes da materialização.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Grafos e redes</h3>
+            <p>
+                Mapear terceiros, sistemas, dependências, usuários,
+                transações e fluxos operacionais.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>IA e padrões</h3>
+            <p>
+                Identificar anomalias, deterioração, mudanças de padrão
+                e propagação silenciosa.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="image-break">
+    <img src="assets/posts/post5/imagem4.png" onclick="openLightbox(this.src)">
+</div>
+
+<section class="section">
+
+    <h2>
+        O risco invisível é <span>o mais perigoso</span>
+    </h2>
+
+    <p>
+        O maior risco raramente é o mais visível.
+    </p>
+
+    <p>
+        É o que parece improvável, não aparece no dashboard,
+        não possui histórico suficiente, atravessa áreas
+        e depende de interações invisíveis.
+    </p>
+
+    <p>
+        Por isso, maturidade em risco não significa ausência de eventos.
+        Significa capacidade de identificar, mensurar, modelar,
+        decidir, responder e adaptar.
+    </p>
+
+</section>
+
+<div class="image-break">
+    <img src="assets/posts/post5/imagem5.png" onclick="openLightbox(this.src)">
+</div>
+
+<div class="final-block">
+
+    <h2>
+        No fim, não é sobre controle.
+    </h2>
+
+    <p>
+        É sobre estrutura.
+    </p>
+
+    <br>
+
+    <p>
+        Empresas modernas não precisam apenas medir eventos.
+        Precisam compreender propagação.
+    </p>
+
+    <br>
+
+    <p>
+        Risco não é ausência de certeza.
+        É presença de interdependência.
+    </p>
+
+    <br>
+
+    <p>
+        E gestão integrada de riscos não é apenas compliance.
+        É arquitetura decisória aplicada à sustentabilidade do negócio.
+    </p>
+
+    <br>
+
+    <p>
+        Dados ajudam a observar.
+        Modelos ajudam a estimar.
+        IA ajuda a ampliar leitura.
+        Mas o verdadeiro diferencial está em transformar tudo isso em decisão consistente.
+    </p>
+
+</div>
+
+<div class="footer">
+    VEROPRED ANALYTICS • RISCO INTEGRADO • GOVERNANÇA • MODELAGEM • DECISÃO
+</div>
+
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c_risk", 5);
+</script>
+
+</body>
+</html>
