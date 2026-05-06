@@ -619,10 +619,9 @@ h1 {
             </div>
         </div>
         <div class="nav-links">
-<a href="metodologia.html" class="nav-link">Metodologia</a>
-<a href="#quando" class="nav-link">Quando contratar</a>
-<a href="aplicacoes.html" class="nav-link">Aplicações</a>
-<a href="simulador.html" class="nav-link">Simulador</a>
+<button onclick="scrollToId('tese')">Como atuamos</button>
+<button onclick="scrollToId('quando')">Quando contratar</button>
+<a href="aplicacoes.html" target="_blank" class="nav-link">Aplicações</a>
 <button onclick="scrollToId('contato')">Avaliar um cenário de decisão</button>
         </div>
     </nav>
@@ -664,16 +663,16 @@ h1 {
     <div class="hero-panel">
         <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
         <div class="hero-core"><strong>Decision<br>Architecture</strong></div>
-        <div class="hero-node n1" onclick="window.location.href='aplicacoes.html'"><b>Crédito</b><span>aprovação, limite, preço e risco</span></div>
-        <div class="hero-node n2" onclick="window.location.href='aplicacoes.html'"><b>Modelagem</b><span>evidência para decidir</span></div>
-        <div class="hero-node n3" onclick="window.location.href='aplicacoes.html'"><b>IA Controlada</b><span>LLMs, RAG, agentes e guardrails</span></div>
-        <div class="hero-node n4" onclick="window.location.href='aplicacoes.html'"><b>Risco Operacional</b><span>perdas, capital e governança</span></div>
-        <div class="hero-node n5" onclick="window.location.href='aplicacoes.html'"><b>Estratégia</b><span>priorização e cenários</span></div>
-        <div class="hero-node n6" onclick="window.location.href='aplicacoes.html'"><b>Base Técnica</b><span>tecnologia como meio</span></div>
+        <div class="hero-node n1" onclick="activateArea('credito'); scrollToId('areas')"><b>Crédito</b><span>aprovação, limite, preço e risco</span></div>
+        <div class="hero-node n2" onclick="activateArea('modelagem'); scrollToId('areas')"><b>Modelagem</b><span>evidência para decidir</span></div>
+        <div class="hero-node n3" onclick="activateArea('ia'); scrollToId('areas')"><b>IA Controlada</b><span>LLMs, RAG, agentes e guardrails</span></div>
+        <div class="hero-node n4" onclick="activateArea('operacional'); scrollToId('areas')"><b>Risco Operacional</b><span>perdas, capital e governança</span></div>
+        <div class="hero-node n5" onclick="activateArea('estrategia'); scrollToId('areas')"><b>Estratégia</b><span>priorização e cenários</span></div>
+        <div class="hero-node n6" onclick="activateArea('tech'); scrollToId('areas')"><b>Base Técnica</b><span>tecnologia como meio</span></div>
     </div>
 </section>
 
-<section class="section" id="quando">
+<section class="section">
     <div class="section-title">
         <h2>Quando faz sentido envolver a Veropred</h2>
         <p>
@@ -775,9 +774,6 @@ Não é sobre ter mais modelo — é sobre decidir melhor, com clareza e consequ
             <span>Governança protege valor</span>
             <span>Consistência vira vantagem</span>
         </div>
-        <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
-            <a href="metodologia.html" class="btn secondary">Ver metodologia completa</a>
-        </div>
     </div>
 </section>
 <section class="section">
@@ -826,6 +822,110 @@ aumentou consistência de aprovação e trouxe maior clareza sobre risco assumid
 
 </section>
 <section class="section">
+    <div class="section-title">
+        <h2>A maioria das empresas já tem capacidade analítica suficiente.</h2>
+        <p>
+            Modelos existem. Dashboards existem. Dados existem.
+            O que falta é clareza sobre o que decidir, quando decidir, sob quais critérios e com qual risco aceitável.
+        </p>
+    </div>
+
+    <div class="grid three">
+        <div class="mini-card"><small>Decisão</small><h4>Critérios fracos custam caro</h4><p>Regras pouco calibradas, cortes arbitrários e prioridades mal definidas distorcem risco, margem e execução.</p></div>
+        <div class="mini-card"><small>Risco</small><h4>Modelo sem política não muda resultado</h4><p>Um score, dashboard ou alerta só cria valor quando altera uma decisão relevante dentro da operação.</p></div>
+        <div class="mini-card"><small>Liderança</small><h4>Execução sem estrutura vira opinião</h4><p>Quando a decisão não está formalizada, a empresa oscila entre intuição, urgência, pressão comercial e conveniência.</p></div>
+    </div>
+</section>
+
+<section class="section" id="metodo">
+    <div class="section-title">
+        <h2>Veropred Decision Architecture™</h2>
+        <p>
+            Estrutura para decisões que precisam amadurecer com método:
+            defendidas tecnicamente, compreendidas pela liderança e executadas pela operação.
+        </p>
+    </div>
+
+    <div class="grid four">
+        <div class="mini-card method-card">
+            <div class="num">01</div>
+            <div>
+                <h4>Diagnóstico da decisão</h4>
+                <p>Definição do que realmente está sendo decidido — e do que está sendo ignorado.</p>
+                <div class="decision-output">Saída: decisão, atores, restrições, riscos e critérios mínimos.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">02</div>
+            <div>
+                <h4>Estruturação analítica</h4>
+                <p>Separação entre variável relevante, ruído estatístico e narrativa conveniente.</p>
+                <div class="decision-output">Saída: desenho analítico, hipóteses, métricas e limites de análise.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">03</div>
+            <div>
+                <h4>Modelagem e validação</h4>
+                <p>Evidência quantitativa suficiente para sustentar uma decisão — não apenas um modelo.</p>
+                <div class="decision-output">Saída: leitura de risco, robustez, estabilidade e recomendação.</div>
+            </div>
+        </div>
+
+        <div class="mini-card method-card">
+            <div class="num">04</div>
+            <div>
+                <h4>Tradução em ação</h4>
+                <p>Conversão direta em política, limite, corte, prioridade, regra ou governança.</p>
+                <div class="decision-output">Saída: decisão executável, acompanhamento e próximos ajustes.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="quando">
+    <div class="section-title">
+        <h2>Como essa decisão se manifesta na prática</h2>
+        <p>
+            A Veropred entra quando a decisão já existe — mas ainda não está suficientemente estruturada
+            para sustentar escala, automação, risco ou crescimento.
+        </p>
+    </div>
+
+    <div class="grid two">
+        <div class="fit-list">
+            <div class="fit-item"><span><b>Você tem dados, mas a decisão ainda depende de interpretação.</b><br>O problema não é ausência de informação. É ausência de critério estável para agir.</span></div>
+            <div class="fit-item"><span><b>Existe um modelo, mas áreas diferentes usam o resultado de formas distintas.</b><br>Score, alerta ou dashboard existem, mas a tradução em política não está padronizada.</span></div>
+            <div class="fit-item"><span><b>Você quer usar IA, mas ainda não está claro onde ela entra na decisão.</b><br>Antes de automatizar, é preciso definir autonomia, risco, limite de uso e rastreabilidade.</span></div>
+        </div>
+
+        <div class="fit-list">
+            <div class="fit-item"><span><b>O problema não é previsão — é transformar sinal em ação consistente.</b><br>A decisão precisa virar regra, corte, prioridade, limite, política ou rotina de governança.</span></div>
+            <div class="fit-item"><span><b>Há esforço analítico, mas pouca clareza sobre impacto real.</b><br>A empresa mede muito, mas ainda não sabe quais decisões devem mudar por causa disso.</span></div>
+            <div class="fit-item"><span><b>As decisões variam mais do que deveriam.</b><br>Quando a execução oscila entre áreas, pessoas e momentos, o risco começa a ficar invisível.</span></div>
+        </div>
+    </div>
+
+    <div class="process-line">
+        <p>
+            Descreva seu cenário em poucas linhas. Se fizer sentido, a próxima conversa começa pela decisão —
+            não pela ferramenta.
+        </p>
+        <div class="process-truths">
+            <span>Sem estrutura, modelo vira opinião</span>
+            <span>Sem critério, IA vira experimento</span>
+            <span>Sem processo, decisão vira ruído</span>
+        </div>
+        <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn primary" onclick="scrollToId('contato')">Avaliar um cenário de decisão</button>
+            <a href="simulador.html" class="btn secondary">Explorar simulador</a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
     <div class="simulator-callout">
         <div>
             <h2>Existe uma decisão crítica amadurecendo agora?</h2>
@@ -862,6 +962,232 @@ ou como estruturar o problema.
         <div class="offer-card"><small>02</small><h4>Projeto Analítico Sob Medida</h4><p>Construção de modelos, critérios, políticas ou sistemas de decisão quando a decisão exige sustentação quantitativa.</p></div>
         <div class="offer-card"><small>03</small><h4>Validação e Governança de Modelos</h4><p>Avaliação de performance, estabilidade, explicabilidade, drift, limites de uso e aderência da modelagem à decisão real.</p></div>
         <div class="offer-card"><small>04</small><h4>Advisory Analítico Recorrente</h4><p>Acompanhamento estratégico para decisões recorrentes em crédito, risco, IA, crescimento, priorização e governança.</p></div>
+    </div>
+</section>
+
+<section class="section" id="areas">
+    <div class="section-title">
+        <h2>Núcleo analítico de atuação</h2>
+        <p>
+            Poucas frentes, alta consequência: crédito, risco, IA controlada, modelagem e estratégia analítica.
+        </p>
+    </div>
+
+    <div class="map-layout">
+        <div class="map">
+            <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+            <div class="map-core"><b>Veropred<br>Analytics</b><span>dados, risco e IA aplicados à decisão</span></div>
+
+            <button class="map-btn m1 active" data-area="credito" onclick="activateArea('credito')"><em>◈</em><b>Crédito</b><span>decisão e risco</span></button>
+            <button class="map-btn m2" data-area="modelagem" onclick="activateArea('modelagem')"><em>⌁</em><b>Modelagem</b><span>evidência decisória</span></button>
+            <button class="map-btn m3" data-area="ia" onclick="activateArea('ia')"><em>◎</em><b>IA Controlada</b><span>LLMs e RAG</span></button>
+            <button class="map-btn m4" data-area="operacional" onclick="activateArea('operacional')"><em>▣</em><b>Risco Operacional</b><span>perdas e capital</span></button>
+            <button class="map-btn m5" data-area="estrategia" onclick="activateArea('estrategia')"><em>✦</em><b>Estratégia</b><span>cenários e priorização</span></button>
+            <button class="map-btn m6" data-area="tech" onclick="activateArea('tech')"><em>⚙</em><b>Base Técnica</b><span>tecnologia como meio</span></button>
+        </div>
+
+        <div class="content-panel">
+            <article class="area-card active" id="area-credito">
+                <h3>Veropred Credit Decision Framework</h3>
+                <p class="lead">Crédito não é apenas previsão de inadimplência. É decisão sobre risco, margem, volume e responsabilidade.</p>
+                <div class="insight">O objetivo é definir como a instituição decide, em quais condições, com qual risco aceitável e com qual retorno esperado.</div>
+
+                <div class="grid three">
+                    <div class="mini-card"><small>Problema</small><h4>População e decisão</h4><p>Produto, público, momento decisório, bad rate, janelas, canal, restrições e responsabilidade de uso.</p></div>
+                    <div class="mini-card"><small>Informação</small><h4>Variáveis e estabilidade</h4><p>Poder preditivo, coerência econômica, estabilidade temporal e disponibilidade no momento da decisão.</p></div>
+                    <div class="mini-card"><small>Risco</small><h4>PD, score e calibração</h4><p>Modelagem, estimação, safras, segmentos, out-of-time, calibração e limites de generalização.</p></div>
+                    <div class="mini-card"><small>Decisão</small><h4>Cutoff, limite e preço</h4><p>Políticas baseadas em perda esperada, retorno ajustado ao risco, margem, aprovação e apetite.</p></div>
+                    <div class="mini-card"><small>Controle</small><h4>Governança e monitoramento</h4><p>Drift, PSI, overrides, documentação, auditoria, challengers, recalibração e revisão periódica.</p></div>
+                    <div class="mini-card"><small>Executivo</small><h4>Comitês e recomendação</h4><p>Tradução do modelo em decisão defensável para liderança, risco, negócio, operação e auditoria.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-modelagem">
+                <h3>Modelagem Preditiva orientada à decisão</h3>
+                <p class="lead">Métrica boa não basta. Modelo útil é o que altera uma decisão relevante com estabilidade e clareza.</p>
+
+                <div class="grid two">
+                    <div class="mini-card"><small>Desenho</small><h4>Evento, amostra e horizonte</h4><p>Definição rigorosa do evento, janela, população, vieses, leakage, representatividade e uso operacional.</p></div>
+                    <div class="mini-card"><small>Validação</small><h4>Generalização e estabilidade</h4><p>Sérries temporais, safras, segmentos, out-of-time, drift, sensibilidade e impacto prático na decisão.</p></div>
+                    <div class="mini-card"><small>Interpretação</small><h4>Drivers e explicabilidade</h4><p>Leitura de variáveis, coerência econômica, direção de efeito, limites de interpretação e comunicação executiva.</p></div>
+                    <div class="mini-card"><small>Uso real</small><h4>Política e monitoramento</h4><p>Conversão do output em critério, regra, prioridade, alerta, rotina, dashboard ou mecanismo de governança.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-ia">
+                <h3>IA Generativa com controle executivo</h3>
+                <p class="lead">IA corporativa não escala por entusiasmo. Escala por caso certo, controle, avaliação e limite de uso.</p>
+
+                <div class="grid two">
+                    <div class="mini-card"><small>Estratégia</small><h4>AI Operating Model</h4><p>Priorização de casos, AI Office, maturidade organizacional, papéis, riscos, políticas de uso e roadmap.</p></div>
+                    <div class="mini-card"><small>Conhecimento</small><h4>Enterprise Knowledge Systems</h4><p>RAG com embeddings, busca híbrida, controle de fontes, versionamento, grounding, rastreabilidade e auditoria.</p></div>
+                    <div class="mini-card"><small>Produto</small><h4>Copilotos e agentes</h4><p>Sistemas integrados ao fluxo de trabalho, com limites claros, intervenção humana e critérios de segurança.</p></div>
+                    <div class="mini-card"><small>Confiabilidade</small><h4>Evaluation & Guardrails</h4><p>Testes semânticos, redução de alucinação, critérios de aceitação, fallback, monitoramento e compliance.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-operacional">
+                <h3>Risco Operacional e capital econômico</h3>
+                <p class="lead">Risco operacional exige leitura de cauda, dependência, cenários extremos e governança compatível com decisão de capital.</p>
+
+                <div class="grid three">
+                    <div class="mini-card"><small>LDA</small><h4>Frequência e severidade</h4><p>Perdas, heavy tails, truncamento, viés de coleta, agregação e incerteza paramétrica.</p></div>
+                    <div class="mini-card"><small>Dependência</small><h4>Estrutura de risco</h4><p>Correlação entre eventos, cópulas, clustering de perdas e dependência entre linhas de negócio.</p></div>
+                    <div class="mini-card"><small>Capital</small><h4>VaR e Expected Shortfall</h4><p>Cauda, estabilidade, sensibilidade a eventos raros e interpretação de capital econômico.</p></div>
+                    <div class="mini-card"><small>Stress</small><h4>Cenários severos</h4><p>Reverse stress testing, cenários plausíveis e impacto em capital, liquidez e operação.</p></div>
+                    <div class="mini-card"><small>Governança</small><h4>ICAAP & RAS</h4><p>Apetite a risco, limites, indicadores, documentação regulatória e suporte à gestão de capital.</p></div>
+                    <div class="mini-card"><small>Gestão</small><h4>KRIs e controles</h4><p>Perdas, controles internos, indicadores e evolução gradual da maturidade de risco operacional.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-estrategia">
+                <h3>Decisão Estratégica</h3>
+                <p class="lead">Nem toda decisão precisa de mais dados. Algumas precisam de melhor formulação.</p>
+
+                <div class="grid two">
+                    <div class="mini-card"><small>Diagnóstico</small><h4>Leitura analítica do problema</h4><p>Separação entre sintoma, causa, indicador, restrição operacional, risco e decisão necessária.</p></div>
+                    <div class="mini-card"><small>Priorização</small><h4>Oportunidades com critério</h4><p>Priorização baseada em impacto, risco, viabilidade, custo, maturidade dos dados e retorno esperado.</p></div>
+                    <div class="mini-card"><small>Indicadores</small><h4>Painéis executivos de decisão</h4><p>Indicadores que esclarecem trade-offs, e não apenas acumulam visualizações.</p></div>
+                    <div class="mini-card"><small>Cenários</small><h4>Simulação e trade-offs</h4><p>Projeções, sensibilidades, cenários e políticas alternativas para decisões sob incerteza.</p></div>
+                </div>
+            </article>
+
+            <article class="area-card" id="area-tech">
+                <h3>Infraestrutura analítica a serviço da decisão</h3>
+                <p class="lead">Tecnologia é requisito. Não é posicionamento. A stack existe para sustentar decisões auditáveis, monitoráveis e executáveis.</p>
+
+                <div class="stack-list">
+                    <div class="stack-row"><b>Base Analítica</b><span>Python, R, SQL, SAS e ambientes corporativos usados para modelos, pipelines, análises e sistemas de decisão.</span></div>
+                    <div class="stack-row"><b>Modelagem & ML</b><span>Regressão logística, árvores, ensemble methods, clustering, engenharia de variáveis, validação temporal, backtesting e estabilidade.</span></div>
+                    <div class="stack-row"><b>Risco & Capital</b><span>VaR, LDA, Monte Carlo, stress testing, risco de crédito, risco operacional, governança e documentação executiva.</span></div>
+                    <div class="stack-row"><b>LLM Systems</b><span>Prompt engineering, RAG, fine-tuning, agentes, avaliação de respostas, redução de alucinação e controle de qualidade.</span></div>
+                    <div class="stack-row"><b>Cloud & Produção</b><span>AWS, Azure, Google Cloud e Microsoft Fabric para deploy, monitoramento e integração com processos de negócio.</span></div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="provas">
+    <div class="section-title">
+        <h2>Autoridade aplicada, não decorativa</h2>
+        <p>
+            Relevância não vem de ferramenta. Vem da qualidade das decisões que a estrutura analítica permite sustentar.
+        </p>
+    </div>
+
+    <div class="proof-strip">
+        <div class="proof-card"><strong>+10 anos</strong><span>em ciência de dados, analytics, risco, crédito e decisão corporativa.</span></div>
+        <div class="proof-card"><strong>Decisões críticas</strong><span>Atuação em aprovação de crédito, política, risco, priorização, retenção e governança analítica.</span></div>
+        <div class="proof-card"><strong>IA com controle</strong><span>LLMs, RAG, agentes e automações com critérios de confiabilidade, rastreabilidade e limite de uso.</span></div>
+        <div class="proof-card"><strong>Risco operacional</strong><span>Estruturação de modelagem de perdas e critérios analíticos para decisões de risco em ambiente institucional.</span></div>
+
+        
+    <div class="proof-card">
+        <strong>Ambiente regulado</strong>
+        <span>Experiência em decisões sujeitas a BCB, CVM e SUSEP, com exigência de rastreabilidade e consistência.</span>
+    </div>
+</div>
+</section>
+
+
+	<section class="section" id="cases">
+    <div class="section-title">
+        <h2>Decisões apoiadas</h2>
+        <p>
+            Os exemplos abaixo não são uma lista de técnicas. São processos decisórios onde método analítico muda consequência.
+        </p>
+    </div>
+
+    <div class="case-grid">
+        <div class="case-card">
+            <div class="case-meta"><span>Crédito</span><span>Risco</span><span>Política</span></div>
+            <h4>Redefinição de decisão de crédito</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Aprovar, limitar, precificar ou revisar crédito com controle de inadimplência e margem.</p></div>
+                <div><b>Estrutura</b><p>Score, cutoffs, política, variáveis, estabilidade, perda esperada, retorno e monitoramento.</p></div>
+                <div><b>Valor</b><p>Menos arbitrariedade na concessão e maior clareza sobre risco assumido.</p></div>
+            </div>
+        </div>
+
+
+ <div class="case-card">
+    <div class="case-meta"><span>Comercial</span><span>Open Finance</span><span>Modelagem</span></div>
+    <h4>Latent Credit Demand & Commercial Decision Framework</h4>
+    <div class="case-cols">
+        <div><b>Decisão</b><p>Onde alocar esforço comercial para capturar demanda latente com maior probabilidade de conversão.</p></div>
+        <div><b>Estrutura</b><p>Análise de comportamento transacional via Open Finance, modelagem de propensão e priorização dinâmica de leads.</p></div>
+        <div><b>Valor</b><p>Conversão elevada a partir de leitura de necessidade real, reduzindo abordagem genérica e aumentando eficiência do funil.</p></div>
+    </div>
+</div>
+
+        <div class="case-card">
+            <div class="case-meta"><span>Retenção</span><span>Produto</span><span>Modelagem</span></div>
+            <h4>Churn Intelligence & Decision Framework</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Quais clientes, drivers e iniciativas devem receber prioridade para reduzir churn.</p></div>
+                <div><b>Estrutura</b><p>Modelagem preditiva, leitura de drivers, segmentação e tradução em roadmap de produto.</p></div>
+                <div><b>Valor</b><p>Menos reação genérica e mais priorização orientada por evidência.</p></div>
+            </div>
+        </div>
+
+
+
+
+       <div class="case-card">
+    <div class="case-meta">
+        <span>Risco Operacional</span>
+        <span>Modelagem</span>
+        <span>Governança</span>
+    </div>
+
+    <h4>Estruturação de modelagem de perdas operacionais</h4>
+
+    <div class="case-cols">
+        <div>
+            <b>Decisão</b>
+            <p>
+                Definição de critérios para mensuração de risco operacional e suporte à governança e decisões associadas.
+            </p>
+        </div>
+
+        <div>
+            <b>Estrutura</b>
+            <p>
+                Construção de base de perdas, modelagem de frequência e severidade, agregação e definição de métricas de risco.
+            </p>
+        </div>
+
+        <div>
+            <b>Valor</b>
+            <p>
+                Evolução da maturidade analítica em risco operacional e maior consistência nas decisões relacionadas a exposição e controle de risco.
+            </p>
+        </div>
+    </div>
+</div>
+
+        <div class="case-card">
+            <div class="case-meta"><span>IA</span><span>RAG</span><span>Governança</span></div>
+            <h4>Sistemas corporativos com LLMs e controle de qualidade</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Quais processos automatizar, com qual grau de autonomia e quais limites de uso.</p></div>
+                <div><b>Estrutura</b><p>RAG, busca híbrida, prompts controlados, avaliação semântica, rastreabilidade e guardrails.</p></div>
+                <div><b>Valor</b><p>Uso de IA com menor risco de alucinação, menor variância e maior confiabilidade operacional.</p></div>
+            </div>
+        </div>
+
+
+
+        <div class="case-card">
+            <div class="case-meta"><span>Investimentos</span><span>Pesquisa aplicada</span><span>Backtesting</span></div>
+            <h4>Factor Investing como repertório quantitativo</h4>
+            <div class="case-cols">
+                <div><b>Decisão</b><p>Selecionar ativos de forma sistemática, reduzindo subjetividade e disciplina fraca de validação.</p></div>
+                <div><b>Estrutura</b><p>Fatores, z-score, backtesting, risco-retorno, Sharpe, Sortino e drawdown.</p></div>
+                <div><b>Leitura</b><p>Repertório complementar em validação quantitativa, alocação, risco e consistência temporal.</p></div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -960,10 +1286,27 @@ ou como estruturar o problema.
 </main>
 
 <script>
+const areas = ["credito", "modelagem", "ia", "operacional", "estrategia", "tech"];
+
 function scrollToId(id) {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+
+function activateArea(area) {
+    areas.forEach(a => {
+        const card = document.getElementById("area-" + a);
+        if (card) card.classList.remove("active");
+    });
+
+    const selected = document.getElementById("area-" + area);
+    if (selected) selected.classList.add("active");
+
+    document.querySelectorAll(".map-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.area === area);
+    });
+}
+
 
 function addLudovicoMessage(text, type) {
     const messages = document.getElementById("ludovicoMessages");
