@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Risco Operacional | Veropred Analytics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    background:#050505;
+    color:#f5f5f5;
+    font-family:'Inter',sans-serif;
+    line-height:1.9;
+    overflow-x:hidden;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:0 auto;
+    padding:80px 24px 120px;
+}
+
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:40px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
+}
+
+.hero{margin-bottom:90px;}
+
+.logo{
+    font-size:14px;
+    letter-spacing:4px;
+    color:#c6922b;
+    margin-bottom:50px;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:76px;
+    line-height:.95;
+    font-weight:600;
+    margin-bottom:30px;
+}
+
+.hero h1 span{color:#c6922b;}
+
+.hero-sub{
+    font-size:22px;
+    color:#d8d8d8;
+    max-width:780px;
+    line-height:1.6;
+}
+
+.symbolic-summary{
+    margin:10px 0 100px;
+    padding:42px;
+    border:1px solid rgba(198,146,43,.28);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(198,146,43,.12), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.28));
+    box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+
+.symbolic-head{margin-bottom:34px;}
+
+.symbolic-head p{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.symbolic-head h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.1;
+    font-weight:600;
+    max-width:760px;
+}
+
+.symbolic-showcase{
+    display:grid;
+    grid-template-columns:minmax(320px,520px) 1fr;
+    gap:44px;
+    align-items:center;
+}
+
+.carousel-wrap{
+    position:relative;
+    max-width:520px;
+}
+
+.carousel{
+    overflow:hidden;
+    border-radius:28px;
+}
+
+.track{
+    display:flex;
+    transition:transform .65s cubic-bezier(.22,.9,.25,1);
+}
+
+.slide{
+    min-width:100%;
+    flex:0 0 100%;
+}
+
+.slide img{
+    width:100%;
+    display:block;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 28px 70px rgba(0,0,0,.45);
+    cursor:pointer;
+}
+
+.arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:5;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid rgba(198,146,43,.45);
+    background:rgba(5,5,5,.78);
+    color:#c6922b;
+    font-size:26px;
+    cursor:pointer;
+}
+
+.arrow.left{left:-22px;}
+.arrow.right{right:-22px;}
+
+.dots{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:22px;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    border:0;
+    background:rgba(255,255,255,.22);
+    cursor:pointer;
+}
+
+.dot.active{
+    width:28px;
+    border-radius:999px;
+    background:#c6922b;
+}
+
+.symbolic-text{
+    border-left:1px solid rgba(198,146,43,.28);
+    padding-left:38px;
+}
+
+.symbolic-text .eyebrow{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:22px;
+}
+
+.symbolic-text h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.12;
+    font-weight:600;
+    margin-bottom:24px;
+}
+
+.symbolic-text p{
+    font-size:18px;
+    line-height:1.7;
+    color:#dedede;
+    margin-bottom:20px;
+}
+
+.symbolic-text .strong{
+    color:#c6922b;
+    font-weight:600;
+    font-size:20px;
+}
+
+.divider{
+    width:100%;
+    height:1px;
+    background:linear-gradient(to right, transparent, #c6922b, transparent);
+    margin:90px 0;
+    opacity:.6;
+}
+
+.section{margin-bottom:90px;}
+
+.section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    font-weight:600;
+    margin-bottom:35px;
+    line-height:1.1;
+}
+
+.section h2 span{color:#c6922b;}
+
+.section p{
+    margin-bottom:28px;
+    color:#e3e3e3;
+    font-size:19px;
+}
+
+.highlight{color:#c6922b;}
+
+.quote{
+    margin:60px 0;
+    padding:40px;
+    border:1px solid rgba(198,146,43,.3);
+    background:rgba(255,255,255,.02);
+    backdrop-filter:blur(10px);
+}
+
+.quote p{
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px;
+    line-height:1.2;
+    margin:0;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:24px;
+    margin-top:40px;
+}
+
+.card{
+    border:1px solid rgba(198,146,43,.18);
+    padding:28px;
+    background:rgba(255,255,255,.015);
+    transition:.3s ease;
+}
+
+.card:hover{
+    border-color:#c6922b;
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#c6922b;
+    margin-bottom:14px;
+    font-size:20px;
+    font-weight:500;
+}
+
+.card p{
+    font-size:16px;
+    margin:0;
+    color:#d6d6d6;
+}
+
+.final-block{
+    margin-top:120px;
+    padding:60px;
+    border:1px solid rgba(198,146,43,.35);
+    background:linear-gradient(180deg, rgba(198,146,43,.06), rgba(255,255,255,.01));
+}
+
+.final-block h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:54px;
+    margin-bottom:30px;
+    line-height:1.05;
+}
+
+.final-block p{
+    font-size:22px;
+    line-height:1.8;
+}
+
+.footer{
+    margin-top:120px;
+    text-align:center;
+    color:#888;
+    font-size:14px;
+    letter-spacing:2px;
+}
+
+.lightbox{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:99;
+    background:rgba(0,0,0,.88);
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+}
+
+.lightbox img{
+    max-width:92vw;
+    max-height:88vh;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.32);
+}
+
+.close{
+    position:fixed;
+    top:24px;
+    right:28px;
+    color:#f6efe3;
+    font-size:38px;
+    cursor:pointer;
+}
+
+@media(max-width:768px){
+    .container{padding:60px 20px 100px;}
+    .hero h1{font-size:54px;}
+    .hero-sub{font-size:20px;}
+
+    .symbolic-showcase{grid-template-columns:1fr;}
+    .symbolic-summary{padding:28px;}
+
+    .symbolic-text{
+        border-left:0;
+        border-top:1px solid rgba(198,146,43,.28);
+        padding-left:0;
+        padding-top:28px;
+    }
+
+    .symbolic-head h2{font-size:34px;}
+    .symbolic-text h3{font-size:34px;}
+    .symbolic-text p{font-size:17px;}
+
+    .arrow.left{left:8px;}
+    .arrow.right{right:8px;}
+
+    .section h2{font-size:36px;}
+    .section p{font-size:18px;line-height:1.8;}
+    .quote p{font-size:32px;}
+
+    .final-block{padding:36px;}
+    .final-block h2{font-size:42px;}
+    .final-block p{font-size:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="index.html" class="btn-back">
+    ← Voltar ao site
+</a>
+
+<div class="hero">
+
+    <div class="logo">
+        VEROPRED ANALYTICS
+    </div>
+
+    <h1>
+        Risco <span>Operacional</span><br>
+        Estrutura e Decisão
+    </h1>
+
+    <p class="hero-sub">
+        Risco operacional nem sempre aparece no dashboard.
+        Mas pode redefinir o resultado quando eventos raros, perdas assimétricas
+        e incertezas não modeladas entram em cena.
+    </p>
+
+</div>
+
+<section class="symbolic-summary">
+
+    <div class="symbolic-head">
+        <p>RESUMO</p>
+        <h2>Da perda invisível à estrutura de mensuração e decisão.</h2>
+    </div>
+
+    <div class="symbolic-showcase">
+
+        <div class="carousel-wrap">
+            <button class="arrow left" onclick="c_op_prevSlide()">‹</button>
+
+            <div class="carousel">
+                <div class="track" id="c_op_track">
+                    <div class="slide"><img src="assets/posts/post2/imagem1.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post2/imagem2.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post2/imagem3.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post2/imagem4.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post2/imagem5.png" onclick="openLightbox(this.src)"></div>
+                    <div class="slide"><img src="assets/posts/post2/imagem6.png" onclick="openLightbox(this.src)"></div>
+                </div>
+            </div>
+
+            <button class="arrow right" onclick="c_op_nextSlide()">›</button>
+
+            <div class="dots" id="c_op_dots">
+                <button class="dot" onclick="c_op_goToSlide(0)"></button>
+                <button class="dot" onclick="c_op_goToSlide(1)"></button>
+                <button class="dot" onclick="c_op_goToSlide(2)"></button>
+                <button class="dot" onclick="c_op_goToSlide(3)"></button>
+                <button class="dot" onclick="c_op_goToSlide(4)"></button>
+                <button class="dot" onclick="c_op_goToSlide(5)"></button>
+            </div>
+        </div>
+
+        <div class="symbolic-text">
+            <p class="eyebrow">RISCO OPERACIONAL • CAUDA • INCERTEZA</p>
+
+            <h3>Risco operacional não aparece no dashboard. Mas impacta.</h3>
+
+            <p>
+                A maioria das empresas mede o que ocorre com frequência.
+                Mas os maiores impactos muitas vezes estão fora da média,
+                em eventos raros e de alto impacto.
+            </p>
+
+            <p>
+                Ausência de dados não é ausência de risco.
+                Sem estrutura, estimativa vira opinião.
+            </p>
+
+            <p class="strong">
+                Gestão de risco operacional exige identificar, mensurar, modelar e decidir.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<div class="divider"></div>
+
+<section class="section">
+
+    <h2>
+        O risco que não aparece <span>também impacta</span>
+    </h2>
+
+    <p>
+        Risco operacional raramente se apresenta de forma simples.
+        Ele pode estar em falhas de processo, erros humanos, sistemas,
+        terceiros, fraudes, dependências críticas, controles frágeis ou eventos externos.
+    </p>
+
+    <p>
+        Muitas dessas perdas não aparecem todos os dias.
+        Algumas não aparecem em nenhum dashboard recorrente.
+        Outras só se tornam visíveis quando o impacto já ocorreu.
+    </p>
+
+    <p>
+        Por isso, medir apenas aquilo que é frequente cria uma falsa sensação de controle.
+        A empresa enxerga a rotina, mas pode permanecer exposta àquilo que realmente derruba resultado.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Risco não está na média. Está na cauda.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        A média não explica <span>eventos extremos</span>
+    </h2>
+
+    <p>
+        A maioria dos eventos operacionais tende a ter baixo impacto.
+        São ocorrências recorrentes, observáveis, relativamente tratáveis
+        e muitas vezes absorvidas pela rotina.
+    </p>
+
+    <p>
+        Mas os maiores impactos não estão nessa região.
+        Estão na cauda da distribuição:
+        eventos raros, pouco frequentes, difíceis de prever
+        e capazes de gerar perdas desproporcionais.
+    </p>
+
+    <p>
+        É nesse ponto que a leitura média falha.
+        Porque o risco relevante não é necessariamente o que acontece mais vezes.
+        É o que pode comprometer o resultado quando acontece.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Ausência de dados não é <span>ausência de risco</span>
+    </h2>
+
+    <p>
+        Um erro comum é interpretar baixa ocorrência registrada como baixo risco.
+        Mas registros incompletos, bases pouco maduras, subnotificação
+        e eventos ainda não materializados podem esconder exposições relevantes.
+    </p>
+
+    <p>
+        O fato de uma perda ainda não ter sido observada não significa que ela não possa acontecer.
+        Significa apenas que a organização ainda não possui evidência suficiente para medir diretamente sua frequência e seu impacto.
+    </p>
+
+    <p>
+        Nesses casos, o papel da estrutura analítica é ampliar a visibilidade:
+        combinar histórico, especialistas, cenários, dados externos,
+        proxies e simulações para transformar incerteza em estimativa defensável.
+    </p>
+
+</section>
+
+<div class="quote">
+    <p>
+        “Sem estrutura, estimativa vira opinião.”
+    </p>
+</div>
+
+<section class="section">
+
+    <h2>
+        Modelar incerteza muda <span>a decisão</span>
+    </h2>
+
+    <p>
+        A função da modelagem não é eliminar incerteza.
+        É organizar a incerteza para que a decisão deixe de depender apenas de percepção.
+    </p>
+
+    <p>
+        Quando a empresa estima frequência, severidade, cenários e perdas agregadas,
+        ela passa a enxergar não apenas o que ocorreu, mas o que pode ocorrer.
+    </p>
+
+    <p>
+        Isso permite priorizar controles, definir apetite a risco,
+        avaliar capital econômico, testar cenários e decidir onde mitigar,
+        transferir, aceitar ou reduzir exposição.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Perda operacional não cresce <span>linearmente</span>
+    </h2>
+
+    <p>
+        Em risco operacional, pequenos erros podem se acumular.
+        Falhas aparentemente pequenas podem atravessar processos,
+        sistemas e decisões até se transformarem em eventos críticos.
+    </p>
+
+    <p>
+        O impacto muitas vezes não cresce de forma proporcional.
+        Existe acúmulo de fatores, pontos de aceleração e efeitos não lineares.
+    </p>
+
+    <p>
+        Por isso, uma única ocorrência pode redefinir o resultado.
+        Uma falha rara, se ocorrer no ponto errado do processo,
+        pode gerar impacto financeiro, reputacional, regulatório e operacional.
+    </p>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Gestão não é só controle. <span>É estrutura</span>
+    </h2>
+
+    <p>
+        Controle é necessário.
+        Mas controle isolado não basta.
+    </p>
+
+    <p>
+        A gestão efetiva de risco operacional exige uma estrutura capaz de conectar
+        identificação, mensuração, modelagem e decisão.
+    </p>
+
+    <p>
+        Sem essa conexão, a empresa apenas reage.
+        Com essa conexão, ela antecipa, estima e prioriza.
+    </p>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Identificação</h3>
+            <p>
+                Mapeamento de processos, eventos, vulnerabilidades e fontes de exposição operacional.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Mensuração</h3>
+            <p>
+                Estimativa de frequência, impacto financeiro, severidade e distribuição de perdas.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Modelagem</h3>
+            <p>
+                Simulação de cenários, cálculo de perdas agregadas e métricas de risco.
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Decisão</h3>
+            <p>
+                Priorização de ações, alocação de capital, mitigação e monitoramento contínuo.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section">
+
+    <h2>
+        Ciência de dados entra como <span>estrutura de risco</span>
+    </h2>
+
+    <p>
+        Ciência de dados aplicada a risco operacional não é apenas construção de dashboards.
+        É a criação de uma infraestrutura analítica para compreender eventos raros,
+        estimar perdas e apoiar decisões sob incerteza.
+    </p>
+
+    <p>
+        Isso envolve taxonomia de eventos, bases históricas,
+        tratamento de dados, estatística de frequência e severidade,
+        simulação de Monte Carlo, cenários especialistas,
+        distribuições de perdas e indicadores de exposição.
+    </p>
+
+    <p>
+        O objetivo não é prever perfeitamente o evento raro.
+        É tomar melhores decisões mesmo quando a incerteza é alta.
+    </p>
+
+</section>
+
+<div class="final-block">
+
+    <h2>
+        Risco existe. Gestão exige estrutura.
+    </h2>
+
+    <p>
+        O que não aparece no dashboard ainda pode impactar o resultado.
+    </p>
+
+    <br>
+
+    <p>
+        A diferença está em transformar eventos dispersos, dados incompletos
+        e incertezas operacionais em uma arquitetura de mensuração,
+        modelagem e decisão.
+    </p>
+
+</div>
+
+<div class="footer">
+    VEROPRED ANALYTICS • RISCO OPERACIONAL • ESTRUTURA • MODELAGEM • DECISÃO
+</div>
+
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="close">×</span>
+    <img id="lightboxImg">
+</div>
+
+<script>
+function setupCarousel(prefix, total) {
+    let index = 0;
+    const track = document.getElementById(prefix + "_track");
+    const dots = document.querySelectorAll("#" + prefix + "_dots .dot");
+
+    function update() {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+
+        track.style.transform = `translateX(-${index * 100}%)`;
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("active", i === index);
+        });
+    }
+
+    window[prefix + "_nextSlide"] = function() {
+        index++;
+        update();
+    }
+
+    window[prefix + "_prevSlide"] = function() {
+        index--;
+        update();
+    }
+
+    window[prefix + "_goToSlide"] = function(i) {
+        index = i;
+        update();
+    }
+
+    update();
+}
+
+function openLightbox(src) {
+    document.getElementById("lightboxImg").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+}
+
+setupCarousel("c_op", 6);
+</script>
+
+</body>
+          </html>
