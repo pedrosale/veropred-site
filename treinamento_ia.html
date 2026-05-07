@@ -7,57 +7,101 @@
 
   <style>
     :root {
-      --vp-bg: #070707;
-      --vp-panel: #111111;
+      --vp-bg: #050505;
+      --vp-panel: #101010;
       --vp-panel-2: #171717;
-      --vp-border: rgba(196, 137, 72, 0.35);
+      --vp-panel-3: #1e1a15;
+      --vp-border: rgba(214, 168, 95, 0.26);
+      --vp-border-strong: rgba(214, 168, 95, 0.48);
       --vp-gold: #d6a85f;
+      --vp-gold-2: #f0cf8a;
       --vp-copper: #b87333;
+      --vp-bronze: #8a552b;
       --vp-text: #f3eee7;
-      --vp-muted: #a9a39a;
-      --vp-soft: #6f6a63;
+      --vp-muted: #aaa29a;
+      --vp-soft: #706a62;
       --vp-danger: #d08370;
       --vp-success: #c8a96a;
       --vp-graphite: #242424;
+      --vp-shadow: rgba(0, 0, 0, 0.55);
+      --vp-glow: rgba(214, 168, 95, 0.16);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgba(184,115,51,0.20), transparent 34%),
-        radial-gradient(circle at bottom left, rgba(214,168,95,0.10), transparent 28%),
-        #050505;
+        radial-gradient(circle at 78% 0%, rgba(184,115,51,0.22), transparent 32%),
+        radial-gradient(circle at 8% 95%, rgba(214,168,95,0.11), transparent 26%),
+        linear-gradient(135deg, #030303 0%, #080808 48%, #0d0b09 100%);
       color: var(--vp-text);
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      opacity: 0.32;
+      z-index: -1;
     }
 
     .page {
-      width: min(1180px, 94vw);
+      width: min(1220px, 94vw);
       margin: 0 auto;
-      padding: 30px 0 48px;
+      padding: 30px 0 54px;
     }
 
     .vp-shell {
       background:
-        radial-gradient(circle at top right, rgba(184,115,51,0.18), transparent 35%),
-        linear-gradient(135deg, #050505 0%, #0c0c0c 50%, #111111 100%);
+        radial-gradient(circle at top right, rgba(184,115,51,0.16), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(214,168,95,0.08), transparent 32%),
+        linear-gradient(135deg, rgba(6,6,6,0.98) 0%, rgba(12,12,12,0.98) 50%, rgba(16,15,13,0.98) 100%);
       border: 1px solid var(--vp-border);
-      border-radius: 22px;
+      border-radius: 24px;
       padding: 28px;
       color: var(--vp-text);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      box-shadow: 0 30px 90px var(--vp-shadow);
       margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vp-shell::after {
+      content: "";
+      position: absolute;
+      inset: auto -15% -35% auto;
+      width: 360px;
+      height: 360px;
+      background: radial-gradient(circle, rgba(214,168,95,0.12), transparent 68%);
+      pointer-events: none;
     }
 
     .vp-header {
-      border-bottom: 1px solid rgba(214,168,95,0.25);
+      position: relative;
+      z-index: 1;
+      border-bottom: 1px solid rgba(214,168,95,0.22);
       padding-bottom: 20px;
       margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
     }
 
     .vp-brand {
@@ -69,12 +113,13 @@
     }
 
     .vp-title {
-      font-size: clamp(28px, 5vw, 42px);
-      line-height: 1.08;
+      font-size: clamp(29px, 5vw, 46px);
+      line-height: 1.04;
       font-weight: 650;
       color: var(--vp-text);
       margin: 0;
-      letter-spacing: -0.035em;
+      letter-spacing: -0.04em;
+      max-width: 820px;
     }
 
     .vp-subtitle {
@@ -82,21 +127,45 @@
       color: var(--vp-muted);
       margin-top: 10px;
       line-height: 1.55;
+      max-width: 800px;
+    }
+
+    .vp-rank-badge {
+      border: 1px solid rgba(214,168,95,0.28);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(214,168,95,0.07);
+      color: var(--vp-gold-2);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: inset 0 0 24px rgba(214,168,95,0.04);
     }
 
     .vp-grid {
       display: grid;
-      grid-template-columns: 1.25fr 0.75fr;
+      grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.72fr);
       gap: 20px;
       align-items: start;
+      position: relative;
+      z-index: 1;
     }
 
     .vp-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
-      border: 1px solid rgba(214,168,95,0.22);
+      border: 1px solid rgba(214,168,95,0.20);
       border-radius: 18px;
       padding: 22px;
       margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+    }
+
+    .vp-card:hover {
+      border-color: rgba(214,168,95,0.34);
+      transform: translateY(-1px);
     }
 
     .vp-card h2 {
@@ -104,15 +173,16 @@
       font-size: 22px;
       color: var(--vp-text);
       line-height: 1.25;
+      letter-spacing: -0.02em;
     }
 
     .vp-card h3,
     .vp-feedback h3 {
       margin: 0 0 10px 0;
-      font-size: 16px;
+      font-size: 13px;
       color: var(--vp-gold);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
     }
 
     .vp-phase {
@@ -136,7 +206,9 @@
     }
 
     .vp-chaos {
-      background: #0a0a0a;
+      background:
+        linear-gradient(90deg, rgba(184,115,51,0.10), transparent 42%),
+        #090909;
       border-left: 4px solid var(--vp-copper);
       border-radius: 14px;
       padding: 18px;
@@ -144,6 +216,7 @@
       font-size: 15px;
       line-height: 1.7;
       white-space: pre-wrap;
+      box-shadow: inset 0 0 34px rgba(0,0,0,0.35);
     }
 
     .vp-text {
@@ -172,9 +245,13 @@
       line-height: 1.65;
     }
 
+    .vp-list li {
+      margin-bottom: 6px;
+    }
+
     .vp-progress-wrap {
-      background: #0a0a0a;
-      border: 1px solid rgba(214,168,95,0.16);
+      background: #090909;
+      border: 1px solid rgba(214,168,95,0.14);
       border-radius: 12px;
       height: 10px;
       overflow: hidden;
@@ -184,9 +261,10 @@
     .vp-progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #8a552b, #d6a85f);
+      background: linear-gradient(90deg, #7f4a23, #d6a85f, #f0cf8a);
       border-radius: 12px;
-      transition: width 0.35s ease;
+      transition: width 0.45s ease;
+      box-shadow: 0 0 16px rgba(214,168,95,0.24);
     }
 
     .vp-attr-row {
@@ -229,23 +307,26 @@
     textarea {
       display: block;
       width: 100%;
-      min-height: 300px;
+      min-height: 330px;
       resize: vertical;
-      background: #0b0b0b;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.02), transparent),
+        #0a0a0a;
       color: #f0e8dc;
       border: 1px solid rgba(214,168,95,0.35);
-      border-radius: 14px;
+      border-radius: 16px;
       font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 15px;
-      line-height: 1.55;
-      padding: 16px;
+      line-height: 1.58;
+      padding: 17px;
       outline: none;
       margin-bottom: 14px;
+      box-shadow: inset 0 0 34px rgba(0,0,0,0.32);
     }
 
     textarea:focus {
-      border-color: rgba(214,168,95,0.70);
-      box-shadow: 0 0 0 3px rgba(214,168,95,0.08);
+      border-color: rgba(214,168,95,0.75);
+      box-shadow: 0 0 0 3px rgba(214,168,95,0.08), inset 0 0 34px rgba(0,0,0,0.32);
     }
 
     .vp-button-row {
@@ -257,19 +338,20 @@
 
     button {
       min-height: 46px;
-      border-radius: 12px;
-      border: 1px solid rgba(214,168,95,0.22);
-      font-weight: 700;
+      border-radius: 13px;
+      border: 1px solid rgba(214,168,95,0.24);
+      font-weight: 750;
       letter-spacing: 0.02em;
       padding: 0 18px;
       cursor: pointer;
       color: #111;
       background: var(--vp-gold);
-      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
     }
 
     button:hover:not(:disabled) {
       transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.24);
     }
 
     button:disabled {
@@ -281,17 +363,30 @@
     .btn-submit { background: var(--vp-gold); color: #17120a; }
     .btn-next { background: #8a552b; color: #fff2df; }
     .btn-restart { background: #242424; color: #f3eee7; }
+    .btn-ghost { background: transparent; color: var(--vp-gold); }
 
     .vp-feedback {
       border-radius: 18px;
       padding: 20px;
       color: var(--vp-text);
       margin-top: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vp-feedback::before {
+      content: "";
+      position: absolute;
+      inset: -30% auto auto -20%;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(214,168,95,0.10), transparent 68%);
+      pointer-events: none;
     }
 
     .vp-feedback-success {
       background: rgba(214,168,95,0.08);
-      border: 1px solid rgba(214,168,95,0.35);
+      border: 1px solid rgba(214,168,95,0.38);
     }
 
     .vp-feedback-fail {
@@ -300,14 +395,209 @@
     }
 
     .vp-feedback-title {
-      color: var(--vp-gold);
-      font-size: 18px;
-      font-weight: 650;
+      color: var(--vp-gold-2);
+      font-size: 20px;
+      font-weight: 680;
       margin-bottom: 10px;
+      letter-spacing: -0.015em;
+    }
+
+    .vp-maturity-line {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .vp-rubric-chip {
+      border: 1px solid rgba(214,168,95,0.20);
+      background: rgba(255,255,255,0.026);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 78px;
+    }
+
+    .vp-rubric-chip strong {
+      display: block;
+      color: var(--vp-text);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .vp-rubric-chip span {
+      color: var(--vp-gold);
+      font-size: 20px;
+      font-weight: 760;
+    }
+
+    .vp-rubric-chip small {
+      display: block;
+      color: var(--vp-soft);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .vp-unlock-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .vp-unlock {
+      border: 1px solid rgba(214,168,95,0.20);
+      background: rgba(255,255,255,0.025);
+      border-radius: 16px;
+      padding: 15px;
+      min-height: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vp-unlock.unlocked {
+      border-color: rgba(214,168,95,0.46);
+      background:
+        radial-gradient(circle at top right, rgba(214,168,95,0.12), transparent 58%),
+        rgba(214,168,95,0.045);
+    }
+
+    .vp-unlock.locked {
+      opacity: 0.54;
+      filter: grayscale(0.25);
+    }
+
+    .vp-unlock-title {
+      color: var(--vp-text);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .vp-unlock-desc {
+      color: var(--vp-muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .vp-unlock-status {
+      color: var(--vp-gold);
+      font-size: 11px;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+
+    .vp-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .vp-map-node {
+      border: 1px solid rgba(214,168,95,0.20);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,0.022);
+      min-height: 88px;
+    }
+
+    .vp-map-node.active {
+      border-color: rgba(214,168,95,0.55);
+      background: rgba(214,168,95,0.07);
+      box-shadow: inset 0 0 24px rgba(214,168,95,0.04);
+    }
+
+    .vp-map-node.done {
+      border-color: rgba(214,168,95,0.36);
+      background: rgba(214,168,95,0.045);
+    }
+
+    .vp-map-node.locked {
+      opacity: 0.36;
+    }
+
+    .vp-map-node small {
+      color: var(--vp-soft);
+      font-size: 11px;
+    }
+
+    .vp-map-node b {
+      display: block;
+      color: var(--vp-text);
+      font-size: 12px;
+      margin-top: 5px;
+      line-height: 1.3;
+    }
+
+    .vp-philosophy {
+      border: 1px solid rgba(214,168,95,0.22);
+      background:
+        linear-gradient(90deg, rgba(184,115,51,0.09), transparent),
+        rgba(255,255,255,0.018);
+      border-radius: 16px;
+      padding: 16px;
+      color: #e9dcc8;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .vp-signal {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .vp-signal span {
+      border: 1px solid rgba(214,168,95,0.20);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--vp-muted);
+      font-size: 12px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .vp-toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: min(420px, calc(100vw - 44px));
+      background:
+        radial-gradient(circle at top right, rgba(214,168,95,0.18), transparent 56%),
+        #111;
+      border: 1px solid rgba(214,168,95,0.38);
+      border-radius: 18px;
+      padding: 18px;
+      z-index: 40;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.50);
+      animation: toastIn 0.35s ease both;
+    }
+
+    .vp-toast-title {
+      color: var(--vp-gold-2);
+      font-weight: 760;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .vp-toast-text {
+      color: var(--vp-muted);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .fade-in {
       animation: fadeIn 0.32s ease both;
+    }
+
+    .soft-rise {
+      animation: softRise 0.42s ease both;
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 1.8s ease-in-out infinite;
     }
 
     @keyframes fadeIn {
@@ -315,17 +605,95 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 860px) {
-      .vp-grid {
+    @keyframes softRise {
+      from { opacity: 0; transform: translateY(16px) scale(0.992); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(214,168,95,0.0); }
+      50% { box-shadow: 0 0 32px rgba(214,168,95,0.14); }
+    }
+
+
+    .vp-expectation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .vp-expectation-box {
+      border: 1px solid rgba(214,168,95,0.22);
+      background: rgba(255,255,255,0.024);
+      border-radius: 15px;
+      padding: 14px;
+    }
+
+    .vp-expectation-box.warning {
+      border-color: rgba(208,131,112,0.34);
+      background: rgba(208,131,112,0.055);
+    }
+
+    .vp-expectation-box b {
+      display: block;
+      color: var(--vp-gold-2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 7px;
+    }
+
+    .vp-expectation-box span {
+      color: var(--vp-muted);
+      font-size: 13px;
+      line-height: 1.5;
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .vp-grid,
+      .vp-header {
         grid-template-columns: 1fr;
       }
 
+      .vp-maturity-line {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .vp-map {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .vp-rank-badge {
+        width: fit-content;
+      }
+    }
+
+    @media (max-width: 640px) {
       .vp-shell {
         padding: 20px;
       }
 
       .vp-button-row button {
         width: 100%;
+      }
+
+      .vp-unlock-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .vp-maturity-line {
+        grid-template-columns: 1fr;
+      }
+
+      .vp-map {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -342,20 +710,30 @@
         id: 1,
         title: "Missão 1 — O E-mail Caótico",
         phase: "FASE 1 — Sobrevivência Operacional",
-        psychological_objective: "Parar de se sentir perdido.",
+        arc: "Caos inicial",
+        psychological_objective: "Parar de se sentir perdido diante de uma demanda ampla.",
         scenario_type: "E-mail bruto recebido de um diretor",
         raw_content:
-          "Pessoal, precisamos resolver rapidamente essa situação do churn porque os números pioraram nas últimas semanas. Quero entender quais clientes estão saindo mais, o que está causando isso, quais áreas precisam atuar e o que conseguimos fazer rapidamente. Também preciso consolidar isso antes da reunião de sexta. Tentem trazer algo acionável porque diretoria vai cobrar respostas.",
+`Assunto: churn
+
+Pessoal, precisamos resolver rapidamente essa situação do churn porque os números pioraram nas últimas semanas.
+
+Ainda não tenho certeza se isso é produto, atendimento, preço, onboarding ou outra coisa. Mas a reunião de sexta com diretoria vai cobrar uma leitura minimamente madura.
+
+Não quero um relatório gigante. Quero algo acionável: onde está concentrado, o que pode estar causando, quem precisa atuar e o que conseguimos fazer nos próximos dias.
+
+Tentem não trazer só opinião. Precisamos chegar com alguma estrutura.`,
         problem:
-          "O seu trabalho é transformar esse caos em estrutura operacional. A diretoria não precisa apenas de uma resposta bonita: precisa de clareza, prioridade, ação, responsáveis e próximos passos.",
+          "Transformar uma demanda ampla, urgente e ambígua em uma estrutura operacional mínima para decisão.",
         how_to_think: [
           "Separe ruído de decisão.",
-          "Transforme uma solicitação ampla em blocos operacionais.",
           "Identifique o que precisa ser entendido, decidido e executado.",
-          "Defina prioridades antes de listar ações.",
-          "Evite responder como opinião solta; responda como estrutura de trabalho."
+          "Transforme a demanda em blocos: diagnóstico, prioridade, ação e encaminhamento.",
+          "Evite responder como opinião solta.",
+          "Crie uma estrutura que sobreviva a uma reunião com diretoria."
         ],
-        expected_structure: `Resumo executivo:
+        expected_structure:
+`Resumo executivo:
 (...)
 
 Prioridades:
@@ -363,9 +741,10 @@ Prioridades:
 2. (...)
 3. (...)
 
-Ações:
+Hipóteses iniciais:
 - (...)
-- (...)
+
+Ações imediatas:
 - (...)
 
 Responsáveis:
@@ -375,40 +754,49 @@ Próximos passos:
 - Até quando?
 - O que será entregue?
 - Como isso será usado na reunião de sexta?`,
-        placeholder: "Cole aqui sua estrutura operacional. Você pode escrever diretamente ou usar uma IA externa para apoiar sua primeira versão.",
-        required_sections: ["resumo", "prioridade", "ação", "ações", "responsável", "responsáveis", "próximo", "próximos"],
+        placeholder: "Cole aqui sua estrutura operacional. Você pode escrever diretamente ou usar uma IA externa como apoio.",
+        required_sections: ["resumo", "prioridade", "prioridades", "hipótese", "hipóteses", "ação", "ações", "responsável", "responsáveis", "próximo", "próximos"],
         required_context_terms: ["churn", "cliente", "clientes", "diretoria", "sexta", "reunião"],
-        min_chars: 420,
-        min_lines: 8,
-        min_section_hits: 4,
-        min_context_hits: 3,
-        attributes_gain: {
-          Clareza: 14,
-          Síntese: 12,
-          Estrutura: 16,
-          Contexto: 8,
-          Priorização: 10
-        },
-        competency: "estruturação operacional inicial"
+        min_chars: 520,
+        min_lines: 10,
+        weights: { clareza: 18, sintese: 12, estrutura: 26, contexto: 18, priorizacao: 18, confiabilidade: 8 },
+        attributes_gain: { Clareza: 12, Síntese: 8, Estrutura: 14, Contexto: 10, Priorização: 10 },
+        competency: "estruturação operacional inicial",
+        hint_ladder: [
+          "Comece separando diagnóstico, prioridades e próximos passos.",
+          "Inclua explicitamente o prazo de sexta e o uso da entrega na reunião com diretoria.",
+          "Erro comum: listar ações sem definir hierarquia. Prioridade sem ordem vira apenas inventário.",
+          "Estrutura parcial sugerida: Resumo executivo → Prioridades → Hipóteses → Ações imediatas → Responsáveis → Próximos passos."
+        ],
+        consequence_success: "A diretoria recebe uma leitura inicial com direção clara.",
+        consequence_fail: "A demanda continua ampla demais; cada área tende a interpretar o problema de um jeito."
       },
       {
         id: 2,
         title: "Missão 2 — A Reunião Desalinhada",
         phase: "FASE 1 — Sobrevivência Operacional",
-        psychological_objective: "Transformar discussão dispersa em decisão prática.",
+        arc: "Ruído entre áreas",
+        psychological_objective: "Transformar discussão dispersa em quadro de decisão.",
         scenario_type: "Notas brutas de reunião",
         raw_content:
-          "Marketing disse que os clientes reclamam da experiência. Produto acha que o problema é falta de funcionalidade. Atendimento comentou que os tickets aumentaram, mas não sabe se é causa ou sintoma. Comercial quer uma oferta de retenção. Dados ainda não fechou a análise por segmento. Ninguém sabe exatamente se o churn está concentrado em clientes novos, antigos, grandes contas ou usuários de baixo uso. A reunião terminou sem decisão.",
+`Marketing disse que os clientes reclamam da experiência. Produto acha que o problema é falta de funcionalidade. Atendimento comentou que os tickets aumentaram, mas não sabe se é causa ou sintoma.
+
+Comercial quer uma oferta de retenção ainda esta semana. Dados disse que precisa de mais tempo para fechar análise por segmento.
+
+Ninguém sabe exatamente se o churn está concentrado em clientes novos, antigos, grandes contas ou usuários de baixo uso.
+
+A reunião terminou sem decisão.`,
         problem:
-          "O seu trabalho é converter uma reunião desalinhada em um quadro de decisão. Não basta repetir o que cada área falou: você precisa organizar hipóteses, lacunas, evidências e encaminhamentos.",
+          "Converter uma reunião desalinhada em um quadro de decisão: fatos, hipóteses, lacunas, evidências e encaminhamentos.",
         how_to_think: [
           "Separe fatos, hipóteses e opiniões.",
           "Mostre o que já se sabe e o que ainda precisa ser validado.",
           "Transforme desalinhamento em perguntas decisórias.",
-          "Defina quais áreas devem produzir quais evidências.",
-          "Crie um caminho de fechamento da decisão."
+          "Defina evidências por área.",
+          "Crie caminho de fechamento."
         ],
-        expected_structure: `Fatos observados:
+        expected_structure:
+`Fatos observados:
 (...)
 
 Hipóteses:
@@ -430,39 +818,48 @@ Encaminhamentos por área:
 Decisão pendente:
 (...)`,
         placeholder: "Transforme as notas da reunião em uma estrutura de decisão operacional.",
-        required_sections: ["fato", "hipótese", "hipóteses", "lacuna", "evidência", "encaminhamento", "decisão"],
+        required_sections: ["fato", "fatos", "hipótese", "hipóteses", "lacuna", "lacunas", "evidência", "evidências", "encaminhamento", "encaminhamentos", "decisão"],
         required_context_terms: ["marketing", "produto", "atendimento", "comercial", "dados", "churn"],
-        min_chars: 520,
-        min_lines: 10,
-        min_section_hits: 4,
-        min_context_hits: 4,
-        attributes_gain: {
-          Clareza: 8,
-          Estrutura: 14,
-          Contexto: 14,
-          Confiabilidade: 8,
-          Priorização: 8
-        },
-        competency: "separação entre opinião, hipótese e evidência"
+        min_chars: 650,
+        min_lines: 12,
+        weights: { clareza: 14, sintese: 10, estrutura: 24, contexto: 22, priorizacao: 16, confiabilidade: 14 },
+        attributes_gain: { Clareza: 8, Estrutura: 14, Contexto: 14, Confiabilidade: 8, Priorização: 8 },
+        competency: "separação entre opinião, hipótese e evidência",
+        hint_ladder: [
+          "Não tente decidir ainda. Primeiro organize o que é fato, hipótese e lacuna.",
+          "Cada área deve sair com evidência a produzir, não apenas com opinião registrada.",
+          "Erro comum: transformar todas as falas em fatos. Fala de área não é evidência automaticamente.",
+          "Estrutura parcial sugerida: Fatos → Hipóteses → Lacunas → Evidências necessárias → Encaminhamentos por área → Decisão pendente."
+        ],
+        consequence_success: "A reunião deixa de ser disputa narrativa e vira trilha de validação.",
+        consequence_fail: "As áreas seguem defendendo interpretações próprias sem critério comum."
       },
       {
         id: 3,
         title: "Missão 3 — O Prompt Operacional",
         phase: "FASE 2 — Operação Assistida por IA",
+        arc: "Delegação para IA",
         psychological_objective: "Aprender a delegar bem para uma IA externa.",
         scenario_type: "Solicitação de trabalho com IA",
         raw_content:
-          "Você precisa usar uma IA externa para apoiar a análise de churn. O problema é que prompts vagos geram respostas genéricas. A liderança precisa de uma análise executiva com hipóteses, segmentos prioritários, perguntas para os dados, riscos de interpretação e uma proposta de plano de ação para a reunião de sexta.",
+`Você precisa usar uma IA externa para apoiar a análise de churn.
+
+O problema: prompts vagos geram respostas genéricas.
+
+A liderança precisa de uma análise executiva com hipóteses, segmentos prioritários, perguntas para os dados, riscos de interpretação e uma proposta de plano de ação para a reunião de sexta.
+
+A IA não terá acesso aos dados. Ela deve ajudar a estruturar o raciocínio, não fingir que conhece a base.`,
         problem:
-          "O seu trabalho é escrever um prompt operacional forte para usar em uma IA externa. A plataforma não executa IA própria; ela treina sua capacidade de formular uma instrução madura.",
+          "Escrever um prompt operacional forte para uma IA externa, deixando claro papel, contexto, objetivo, limites e formato de resposta.",
         how_to_think: [
           "Defina papel, contexto e objetivo da IA.",
           "Explique o problema real antes de pedir a saída.",
           "Defina formato esperado.",
           "Inclua critérios de qualidade.",
-          "Peça que a IA diferencie fatos, hipóteses e recomendações."
+          "Peça diferenciação entre fatos, hipóteses e recomendações."
         ],
-        expected_structure: `Papel da IA:
+        expected_structure:
+`Papel da IA:
 (...)
 
 Contexto:
@@ -474,31 +871,626 @@ Objetivo:
 Tarefa:
 (...)
 
+Limites:
+- Não inventar dados.
+- Separar fatos, hipóteses e recomendações.
+
 Formato da resposta:
 1. Resumo executivo
 2. Hipóteses
 3. Segmentos prioritários
 4. Perguntas para análise
-5. Plano de ação
+5. Riscos de interpretação
+6. Plano de ação
 
 Critérios de qualidade:
 - (...)`,
         placeholder: "Escreva aqui o prompt que você usaria no ChatGPT, Claude, Gemini ou Copilot.",
-        required_sections: ["papel", "contexto", "objetivo", "tarefa", "formato", "critério", "critérios"],
-        required_context_terms: ["churn", "segmento", "hipótese", "dados", "sexta", "liderança"],
-        min_chars: 620,
+        required_sections: ["papel", "contexto", "objetivo", "tarefa", "limite", "limites", "formato", "critério", "critérios"],
+        required_context_terms: ["churn", "segmento", "segmentos", "hipótese", "hipóteses", "dados", "sexta", "liderança", "reunião"],
+        min_chars: 780,
+        min_lines: 14,
+        weights: { clareza: 16, sintese: 8, estrutura: 22, contexto: 22, priorizacao: 12, confiabilidade: 20 },
+        attributes_gain: { Clareza: 8, Estrutura: 12, Contexto: 14, Confiabilidade: 12, Automação: 10, Orquestração: 6 },
+        competency: "formulação de prompt operacional",
+        hint_ladder: [
+          "O prompt precisa impedir a IA de inventar dados.",
+          "Inclua o que a IA deve produzir e também o que ela não deve fazer.",
+          "Erro comum: pedir uma análise de churn sem explicar que a IA não tem acesso à base real.",
+          "Estrutura parcial sugerida: Papel → Contexto → Objetivo → Tarefa → Limites → Formato → Critérios de qualidade."
+        ],
+        consequence_success: "A IA externa passa a funcionar como apoio de estrutura, não como geradora de opinião genérica.",
+        consequence_fail: "A IA tende a produzir uma análise bonita, porém sem lastro operacional."
+      },
+      {
+        id: 4,
+        title: "Missão 4 — A Resposta Genérica da IA",
+        phase: "FASE 2 — Operação Assistida por IA",
+        arc: "Controle de qualidade",
+        psychological_objective: "Reconhecer quando uma resposta parece boa, mas não decide nada.",
+        scenario_type: "Resposta ruim gerada por IA externa",
+        raw_content:
+`Resposta da IA externa:
+
+"Para reduzir churn, a empresa deve melhorar a experiência do cliente, analisar dados, segmentar usuários, criar campanhas personalizadas, ouvir feedbacks e acompanhar indicadores de satisfação. Também é importante envolver as áreas responsáveis e manter comunicação constante."
+
+A liderança achou o texto correto, mas pouco útil.
+
+Você precisa transformar essa resposta genérica em uma solicitação de refinamento para a IA.`,
+        problem:
+          "Criar um prompt de refinamento que force a IA a sair do genérico e produzir uma resposta operacional, com prioridades, hipóteses, evidências e ações concretas.",
+        how_to_think: [
+          "Identifique o que está correto, mas superficial.",
+          "Peça especificidade, trade-offs e critérios.",
+          "Exija separação entre hipótese, evidência e recomendação.",
+          "Peça priorização.",
+          "Defina formato executivo."
+        ],
+        expected_structure:
+`Diagnóstico da resposta anterior:
+(...)
+
+Problema:
+(...)
+
+Pedido de refinamento para a IA:
+(...)
+
+Exigências:
+- Priorizar ações.
+- Separar hipóteses de evidências.
+- Explicitar riscos.
+- Indicar perguntas para os dados.
+- Evitar recomendações genéricas.
+
+Formato esperado:
+(...)`,
+        placeholder: "Escreva o prompt de refinamento que você enviaria para a IA externa.",
+        required_sections: ["diagnóstico", "problema", "refinamento", "exigência", "exigências", "formato", "priorizar", "risco", "riscos"],
+        required_context_terms: ["genérica", "ia", "churn", "hipótese", "evidência", "dados", "prioridade", "ações"],
+        min_chars: 760,
+        min_lines: 14,
+        weights: { clareza: 16, sintese: 10, estrutura: 20, contexto: 18, priorizacao: 18, confiabilidade: 18 },
+        attributes_gain: { Clareza: 8, Síntese: 6, Estrutura: 10, Confiabilidade: 14, Automação: 12 },
+        competency: "controle de qualidade de resposta gerada por IA",
+        hint_ladder: [
+          "Não basta dizer que a resposta está genérica. Mostre por quê.",
+          "Peça para a IA transformar recomendações em critérios de decisão.",
+          "Erro comum: aceitar texto correto como se fosse texto útil.",
+          "Estrutura parcial sugerida: Diagnóstico da resposta → Problema → Pedido de refinamento → Exigências → Formato esperado."
+        ],
+        consequence_success: "A IA deixa de operar como redatora e passa a operar como suporte de decisão.",
+        consequence_fail: "A organização mantém recomendações corretas, porém sem poder de execução."
+      },
+      {
+        id: 5,
+        title: "Missão 5 — O Chat de Crise",
+        phase: "FASE 3 — Pressão Operacional",
+        arc: "Urgência e conflito",
+        psychological_objective: "Criar ordem sob pressão sem amplificar ruído.",
+        scenario_type: "Conversa interna em chat corporativo",
+        raw_content:
+`[08:13] Comercial: Cliente grande ameaçou cancelar. Isso pode virar problema político.
+[08:16] Atendimento: Eles abriram 12 chamados este mês. Mas alguns são dúvidas simples.
+[08:18] Produto: Não dá para tratar tudo como falha de produto.
+[08:21] Dados: Ainda não temos evidência suficiente para dizer que é padrão.
+[08:24] Diretor: Preciso de uma posição até 11h. Não quero disputa entre áreas. Quero encaminhamento.
+
+Você foi chamado para organizar a resposta.`,
+        problem:
+          "Transformar um chat reativo em plano de contenção, separando resposta imediata, investigação e decisão pendente.",
+        how_to_think: [
+          "Defina o que precisa ser feito até 11h.",
+          "Separe contenção de diagnóstico.",
+          "Não culpe áreas sem evidência.",
+          "Crie uma posição executiva provisória.",
+          "Indique riscos de comunicação."
+        ],
+        expected_structure:
+`Posição executiva provisória:
+(...)
+
+Ação de contenção até 11h:
+(...)
+
+O que sabemos:
+(...)
+
+O que não sabemos:
+(...)
+
+Riscos:
+(...)
+
+Responsáveis:
+(...)
+
+Mensagem sugerida ao diretor:
+(...)`,
+        placeholder: "Organize uma posição executiva e um plano de contenção até 11h.",
+        required_sections: ["posição", "contenção", "sabemos", "não sabemos", "risco", "riscos", "responsáveis", "mensagem", "diretor"],
+        required_context_terms: ["cliente", "comercial", "atendimento", "produto", "dados", "11h", "chamados", "cancelar"],
+        min_chars: 820,
+        min_lines: 15,
+        weights: { clareza: 18, sintese: 12, estrutura: 22, contexto: 18, priorizacao: 20, confiabilidade: 10 },
+        attributes_gain: { Clareza: 10, Síntese: 8, Estrutura: 10, Contexto: 8, Priorização: 14, Orquestração: 8 },
+        competency: "organização de crise operacional",
+        hint_ladder: [
+          "A primeira entrega é uma posição provisória; a investigação vem depois.",
+          "Até 11h, a decisão é de contenção, não de diagnóstico completo.",
+          "Erro comum: tentar resolver a causa raiz antes de estabilizar a comunicação.",
+          "Estrutura parcial sugerida: Posição provisória → Contenção até 11h → Sabemos → Não sabemos → Riscos → Responsáveis → Mensagem ao diretor."
+        ],
+        consequence_success: "A crise ganha contenção, linguagem comum e dono de encaminhamento.",
+        consequence_fail: "O chat continua reativo e aumenta a chance de ruído político."
+      },
+      {
+        id: 6,
+        title: "Missão 6 — A Decisão de Trade-off",
+        phase: "FASE 3 — Pressão Operacional",
+        arc: "Escolha sob restrição",
+        psychological_objective: "Sair da lista de opções e entrar em critério de decisão.",
+        scenario_type: "Dilema executivo",
+        raw_content:
+`A empresa tem três caminhos para reduzir churn no curto prazo:
+
+1. Desconto para clientes em risco.
+2. Melhorar onboarding para novos clientes.
+3. Ação consultiva para grandes contas.
+
+Comercial quer desconto. Produto prefere onboarding. Financeiro teme erosão de margem. Atendimento quer priorizar grandes contas.
+
+Não há orçamento para tudo agora.`,
+        problem:
+          "Criar uma matriz de decisão para priorizar uma alternativa, explicitando critérios, riscos e recomendação provisória.",
+        how_to_think: [
+          "Não escolha por preferência.",
+          "Defina critérios.",
+          "Compare impacto, urgência, custo, risco e evidência disponível.",
+          "Explique trade-offs.",
+          "Indique recomendação provisória com condição de revisão."
+        ],
+        expected_structure:
+`Critérios de decisão:
+- Impacto esperado
+- Urgência
+- Custo
+- Risco
+- Evidência disponível
+
+Comparação das alternativas:
+1. Desconto: (...)
+2. Onboarding: (...)
+3. Grandes contas: (...)
+
+Trade-offs:
+(...)
+
+Recomendação provisória:
+(...)
+
+Condição de revisão:
+(...)`,
+        placeholder: "Monte uma matriz decisória executiva para priorizar o caminho.",
+        required_sections: ["critério", "critérios", "comparação", "alternativas", "trade-off", "trade-offs", "recomendação", "revisão"],
+        required_context_terms: ["desconto", "onboarding", "grandes contas", "comercial", "produto", "financeiro", "margem", "churn"],
+        min_chars: 850,
+        min_lines: 15,
+        weights: { clareza: 16, sintese: 10, estrutura: 20, contexto: 16, priorizacao: 26, confiabilidade: 12 },
+        attributes_gain: { Clareza: 8, Estrutura: 10, Contexto: 8, Priorização: 16, Confiabilidade: 8 },
+        competency: "priorização sob restrição",
+        hint_ladder: [
+          "A missão não pede a alternativa perfeita. Pede critério defensável.",
+          "Explique por que uma opção entra agora e outra fica para depois.",
+          "Erro comum: recomendar tudo. Decisão real exige renúncia.",
+          "Estrutura parcial sugerida: Critérios → Comparação → Trade-offs → Recomendação provisória → Condição de revisão."
+        ],
+        consequence_success: "A decisão deixa de ser disputa de área e passa a ser escolha com critério.",
+        consequence_fail: "A organização tenta avançar em tudo e dilui capacidade operacional."
+      },
+      {
+        id: 7,
+        title: "Missão 7 — A Diretoria Pede Uma Página",
+        phase: "FASE 4 — Síntese Executiva",
+        arc: "Pressão por clareza",
+        psychological_objective: "Condensar complexidade sem perder decisão.",
+        scenario_type: "Pedido executivo",
+        raw_content:
+`O diretor pediu uma página para a reunião.
+
+Ele não quer histórico longo, nem explicação metodológica. Quer entender:
+
+- o que está acontecendo;
+- onde dói mais;
+- o que recomendamos fazer;
+- quais riscos existem;
+- qual decisão precisa ser tomada.
+
+Você tem muitos insumos, mas pouco espaço.`,
+        problem:
+          "Produzir uma síntese executiva de uma página, com foco em decisão, prioridade e riscos.",
+        how_to_think: [
+          "Comece pela mensagem principal.",
+          "Reduza detalhes secundários.",
+          "Use bullets fortes.",
+          "Separe diagnóstico, recomendação e decisão requerida.",
+          "Não esconda incertezas críticas."
+        ],
+        expected_structure:
+`Mensagem principal:
+(...)
+
+Diagnóstico em 3 pontos:
+1. (...)
+2. (...)
+3. (...)
+
+Recomendação:
+(...)
+
+Riscos:
+(...)
+
+Decisão requerida:
+(...)
+
+Próximos 7 dias:
+(...)`,
+        placeholder: "Escreva a versão executiva de uma página.",
+        required_sections: ["mensagem", "diagnóstico", "recomendação", "riscos", "decisão", "próximos", "7 dias"],
+        required_context_terms: ["diretor", "reunião", "churn", "prioridade", "risco", "recomendamos", "decisão"],
+        min_chars: 720,
         min_lines: 12,
-        min_section_hits: 5,
-        min_context_hits: 4,
-        attributes_gain: {
-          Clareza: 8,
-          Estrutura: 12,
-          Contexto: 14,
-          Confiabilidade: 12,
-          Automação: 10,
-          Orquestração: 6
-        },
-        competency: "formulação de prompt operacional"
+        weights: { clareza: 24, sintese: 24, estrutura: 18, contexto: 12, priorizacao: 14, confiabilidade: 8 },
+        attributes_gain: { Clareza: 14, Síntese: 16, Estrutura: 8, Priorização: 8 },
+        competency: "síntese executiva para decisão",
+        hint_ladder: [
+          "A primeira linha deve carregar a mensagem principal.",
+          "Evite transformar a página em ata. Diretoria precisa de decisão.",
+          "Erro comum: escrever muito contexto e pouca recomendação.",
+          "Estrutura parcial sugerida: Mensagem principal → Diagnóstico em 3 pontos → Recomendação → Riscos → Decisão requerida → Próximos 7 dias."
+        ],
+        consequence_success: "A diretoria consegue decidir sem atravessar ruído operacional.",
+        consequence_fail: "A página vira relatório comprimido, não instrumento de decisão."
+      },
+      {
+        id: 8,
+        title: "Missão 8 — O Erro Grave da IA",
+        phase: "FASE 4 — Síntese Executiva",
+        arc: "Governança e confiança",
+        psychological_objective: "Proteger a decisão contra uma resposta convincente, mas falsa.",
+        scenario_type: "Falha de IA em ambiente corporativo",
+        raw_content:
+`Uma IA externa gerou uma recomendação dizendo que o churn está concentrado em clientes enterprise.
+
+O problema: ninguém forneceu dados por segmento para a IA.
+
+Mesmo assim, a frase entrou em um rascunho de apresentação.
+
+Você percebeu o risco antes da reunião.`,
+        problem:
+          "Criar uma correção executiva e um protocolo simples para evitar que inferências não verificadas sejam tratadas como fatos.",
+        how_to_think: [
+          "Diferencie fato, hipótese e inferência.",
+          "Não demonize a IA; corrija o uso.",
+          "Proteja a apresentação.",
+          "Crie regra simples de validação.",
+          "Preserve velocidade sem perder confiabilidade."
+        ],
+        expected_structure:
+`Correção executiva:
+(...)
+
+Risco identificado:
+(...)
+
+Fato vs hipótese:
+- Fato: (...)
+- Hipótese: (...)
+
+Ajuste na apresentação:
+(...)
+
+Protocolo de validação:
+1. (...)
+2. (...)
+3. (...)
+
+Mensagem para o time:
+(...)`,
+        placeholder: "Escreva a correção executiva e o protocolo de validação.",
+        required_sections: ["correção", "risco", "fato", "hipótese", "ajuste", "protocolo", "validação", "mensagem"],
+        required_context_terms: ["ia", "churn", "enterprise", "segmento", "dados", "apresentação", "fato", "hipótese"],
+        min_chars: 900,
+        min_lines: 16,
+        weights: { clareza: 16, sintese: 10, estrutura: 18, contexto: 18, priorizacao: 12, confiabilidade: 26 },
+        attributes_gain: { Clareza: 8, Estrutura: 8, Contexto: 8, Confiabilidade: 18, Automação: 8, Orquestração: 6 },
+        competency: "governança operacional de uso de IA",
+        hint_ladder: [
+          "A correção precisa preservar credibilidade sem criar caça às bruxas.",
+          "A regra central: IA pode sugerir hipótese, mas não transformar hipótese em fato sem base.",
+          "Erro comum: substituir a frase falsa por outra frase igualmente não validada.",
+          "Estrutura parcial sugerida: Correção executiva → Risco identificado → Fato vs hipótese → Ajuste na apresentação → Protocolo → Mensagem ao time."
+        ],
+        consequence_success: "A organização ganha velocidade com controle, não velocidade com alucinação.",
+        consequence_fail: "Uma inferência sem base pode virar decisão executiva."
+      },
+      {
+        id: 9,
+        title: "Missão 9 — O Workflow de Automação",
+        phase: "FASE 5 — Orquestração",
+        arc: "Processo replicável",
+        psychological_objective: "Transformar uma tarefa repetida em sistema operacional.",
+        scenario_type: "Desenho de fluxo assistido por IA",
+        raw_content:
+`Toda semana, o time precisa consolidar:
+
+- sinais de churn;
+- reclamações;
+- tickets críticos;
+- clientes em risco;
+- hipóteses de causa;
+- ações em andamento.
+
+Hoje cada pessoa faz de um jeito. A liderança quer padronizar o processo, mas sem criar burocracia excessiva.`,
+        problem:
+          "Desenhar um workflow operacional simples, com entradas, processamento, validação, saída e revisão humana.",
+        how_to_think: [
+          "Defina entradas.",
+          "Explique o papel da IA externa.",
+          "Inclua validação humana.",
+          "Defina saída padronizada.",
+          "Crie cadência de revisão."
+        ],
+        expected_structure:
+`Objetivo do workflow:
+(...)
+
+Entradas:
+- (...)
+
+Etapas:
+1. Coleta
+2. Organização
+3. Análise assistida por IA
+4. Validação humana
+5. Saída executiva
+
+Saída padronizada:
+(...)
+
+Controles:
+(...)
+
+Cadência:
+(...)`,
+        placeholder: "Desenhe o workflow operacional semanal.",
+        required_sections: ["objetivo", "entradas", "etapas", "ia", "validação", "saída", "controles", "cadência"],
+        required_context_terms: ["churn", "reclamações", "tickets", "clientes", "risco", "hipóteses", "liderança", "semanal"],
+        min_chars: 900,
+        min_lines: 16,
+        weights: { clareza: 14, sintese: 8, estrutura: 24, contexto: 16, priorizacao: 12, confiabilidade: 14, automacao: 12 },
+        attributes_gain: { Clareza: 6, Estrutura: 14, Contexto: 8, Confiabilidade: 10, Automação: 16, Orquestração: 12 },
+        competency: "desenho de workflow assistido por IA",
+        hint_ladder: [
+          "Workflow não é lista de tarefas. É fluxo com entrada, transformação, controle e saída.",
+          "Inclua onde a IA ajuda e onde o humano valida.",
+          "Erro comum: automatizar antes de padronizar.",
+          "Estrutura parcial sugerida: Objetivo → Entradas → Etapas → Saída padronizada → Controles → Cadência."
+        ],
+        consequence_success: "A rotina deixa de depender de heroísmo individual e passa a operar como sistema.",
+        consequence_fail: "A equipe continua repetindo esforço sem padrão decisório."
+      },
+      {
+        id: 10,
+        title: "Missão 10 — O Conflito de Stakeholders",
+        phase: "FASE 5 — Orquestração",
+        arc: "Coordenação executiva",
+        psychological_objective: "Organizar interesses conflitantes sem reduzir o problema a política interna.",
+        scenario_type: "Alinhamento entre áreas",
+        raw_content:
+`Produto quer priorizar correções estruturais.
+
+Comercial quer resposta rápida para grandes contas.
+
+Financeiro exige proteção de margem.
+
+Atendimento quer reduzir volume de chamados.
+
+Dados alerta que ainda não há evidência conclusiva.
+
+Todos estão parcialmente certos. Mas a empresa precisa de uma decisão coordenada.`,
+        problem:
+          "Criar uma estrutura de alinhamento que reconheça os interesses de cada área e leve a uma decisão coordenada.",
+        how_to_think: [
+          "Não trate conflito como problema de personalidade.",
+          "Mapeie interesses legítimos.",
+          "Defina critério comum.",
+          "Separe decisão imediata de agenda estrutural.",
+          "Estabeleça governança mínima."
+        ],
+        expected_structure:
+`Interesses por área:
+- Produto: (...)
+- Comercial: (...)
+- Financeiro: (...)
+- Atendimento: (...)
+- Dados: (...)
+
+Critério comum de decisão:
+(...)
+
+Decisão de curto prazo:
+(...)
+
+Agenda estrutural:
+(...)
+
+Governança:
+(...)
+
+Risco se não houver alinhamento:
+(...)`,
+        placeholder: "Organize a decisão coordenada entre áreas.",
+        required_sections: ["interesses", "critério", "decisão", "curto prazo", "agenda", "governança", "risco", "alinhamento"],
+        required_context_terms: ["produto", "comercial", "financeiro", "atendimento", "dados", "margem", "chamados", "evidência"],
+        min_chars: 950,
+        min_lines: 17,
+        weights: { clareza: 16, sintese: 8, estrutura: 20, contexto: 20, priorizacao: 16, confiabilidade: 10, orquestracao: 10 },
+        attributes_gain: { Clareza: 8, Estrutura: 10, Contexto: 12, Priorização: 10, Orquestração: 16 },
+        competency: "orquestração entre stakeholders",
+        hint_ladder: [
+          "Reconheça que cada área tem um interesse legítimo.",
+          "O ponto central é criar um critério comum de decisão.",
+          "Erro comum: escolher um lado e chamar isso de alinhamento.",
+          "Estrutura parcial sugerida: Interesses por área → Critério comum → Decisão de curto prazo → Agenda estrutural → Governança → Risco."
+        ],
+        consequence_success: "O conflito vira arquitetura de decisão compartilhada.",
+        consequence_fail: "A decisão continua fragmentada e cada área otimiza seu próprio objetivo."
+      },
+      {
+        id: 11,
+        title: "Missão 11 — O Comitê Executivo",
+        phase: "FASE 6 — Arquitetura de Decisão",
+        arc: "Decisão final",
+        psychological_objective: "Apresentar recomendação com maturidade, limites e critério.",
+        scenario_type: "Preparação para comitê",
+        raw_content:
+`A reunião de comitê começa em 40 minutos.
+
+Você precisa levar uma recomendação consolidada sobre churn.
+
+A recomendação precisa ser defensável, mas não pode fingir certeza absoluta.
+
+O comitê quer saber:
+
+- qual é a leitura atual;
+- qual ação será tomada;
+- qual risco será aceito;
+- qual evidência ainda falta;
+- quando a decisão será revisada.`,
+        problem:
+          "Preparar uma recomendação executiva madura, com decisão, risco aceito, evidência faltante e mecanismo de revisão.",
+        how_to_think: [
+          "Decisão não exige certeza absoluta.",
+          "Explique a base atual.",
+          "Declare risco aceito.",
+          "Mostre condição de revisão.",
+          "Defina próximo ciclo de aprendizado."
+        ],
+        expected_structure:
+`Recomendação executiva:
+(...)
+
+Base da recomendação:
+(...)
+
+Risco aceito:
+(...)
+
+Evidências ainda faltantes:
+(...)
+
+Plano de ação:
+(...)
+
+Critério de revisão:
+(...)
+
+Mensagem de fechamento para o comitê:
+(...)`,
+        placeholder: "Escreva a recomendação executiva para o comitê.",
+        required_sections: ["recomendação", "base", "risco", "evidências", "plano", "ação", "critério", "revisão", "comitê"],
+        required_context_terms: ["churn", "comitê", "decisão", "risco", "evidência", "revisada", "recomendação"],
+        min_chars: 940,
+        min_lines: 16,
+        weights: { clareza: 20, sintese: 12, estrutura: 18, contexto: 16, priorizacao: 18, confiabilidade: 16 },
+        attributes_gain: { Clareza: 12, Síntese: 8, Estrutura: 10, Contexto: 8, Priorização: 12, Confiabilidade: 12 },
+        competency: "recomendação executiva sob incerteza",
+        hint_ladder: [
+          "A recomendação precisa dizer o que será feito, não apenas o que deve ser estudado.",
+          "Declare o risco aceito. Isso demonstra maturidade decisória.",
+          "Erro comum: esconder incerteza para parecer seguro.",
+          "Estrutura parcial sugerida: Recomendação → Base → Risco aceito → Evidências faltantes → Plano → Critério de revisão → Fechamento."
+        ],
+        consequence_success: "O comitê recebe uma decisão clara, sem falsa certeza.",
+        consequence_fail: "A reunião termina em novas perguntas, não em direção."
+      },
+      {
+        id: 12,
+        title: "Missão 12 — Arquitetura Final",
+        phase: "FASE 6 — Arquitetura de Decisão",
+        arc: "Sistema completo",
+        psychological_objective: "Consolidar um sistema operacional, não apenas uma boa resposta.",
+        scenario_type: "Síntese da jornada",
+        raw_content:
+`Depois de várias semanas, a empresa percebeu que o problema não era apenas churn.
+
+O problema real era ausência de arquitetura operacional para transformar sinais em decisões.
+
+Agora querem institucionalizar um modelo de trabalho assistido por IA:
+
+- entrada de sinais;
+- organização de hipóteses;
+- análise assistida;
+- validação;
+- decisão;
+- execução;
+- revisão.
+
+Você precisa propor a arquitetura final.`,
+        problem:
+          "Desenhar uma arquitetura operacional completa para uso maduro de IA em decisões recorrentes.",
+        how_to_think: [
+          "Pense como sistema.",
+          "Conecte dados, IA, pessoas, critérios e decisão.",
+          "Inclua governança leve.",
+          "Defina cadência.",
+          "Mostre como a organização aprende."
+        ],
+        expected_structure:
+`Princípio central:
+(...)
+
+Arquitetura operacional:
+1. Entrada de sinais
+2. Estruturação do problema
+3. Análise assistida por IA
+4. Validação humana
+5. Decisão
+6. Execução
+7. Revisão e aprendizado
+
+Papéis:
+(...)
+
+Controles:
+(...)
+
+Indicadores:
+(...)
+
+Cadência:
+(...)
+
+Resultado esperado:
+(...)`,
+        placeholder: "Proponha a arquitetura final da jornada.",
+        required_sections: ["princípio", "arquitetura", "sinais", "estruturação", "ia", "validação", "decisão", "execução", "revisão", "aprendizado", "papéis", "controles", "indicadores", "cadência"],
+        required_context_terms: ["churn", "sinais", "hipóteses", "ia", "decisão", "execução", "governança", "aprendizado"],
+        min_chars: 1100,
+        min_lines: 20,
+        weights: { clareza: 16, sintese: 8, estrutura: 24, contexto: 14, priorizacao: 12, confiabilidade: 14, automacao: 6, orquestracao: 6 },
+        attributes_gain: { Clareza: 10, Síntese: 6, Estrutura: 18, Contexto: 10, Confiabilidade: 12, Automação: 10, Orquestração: 16 },
+        competency: "arquitetura operacional de decisão assistida por IA",
+        hint_ladder: [
+          "A entrega final precisa parecer sistema, não apresentação.",
+          "Mostre como sinais viram hipóteses, hipóteses viram decisão e decisão vira execução.",
+          "Erro comum: criar uma lista de boas práticas sem fluxo operacional.",
+          "Estrutura parcial sugerida: Princípio central → Arquitetura operacional → Papéis → Controles → Indicadores → Cadência → Resultado esperado."
+        ],
+        consequence_success: "A organização deixa de usar IA como ferramenta isolada e passa a operar com arquitetura de decisão.",
+        consequence_fail: "A IA continua ajudando em tarefas pontuais, sem mudar a maturidade operacional."
       }
     ];
 
@@ -512,6 +1504,172 @@ Critérios de qualidade:
       "Priorização",
       "Orquestração"
     ];
+
+    const UNLOCKS = [
+      {
+        id: "executive_mode",
+        title: "Modo Executivo",
+        threshold: 1,
+        description: "Sínteses mais densas, linguagem de decisão e menos ruído operacional."
+      },
+      {
+        id: "strategic_panel",
+        title: "Painel Estratégico",
+        threshold: 3,
+        description: "Visão de jornada, módulos futuros e leitura de maturidade."
+      },
+      {
+        id: "quality_control",
+        title: "Controle de Qualidade de IA",
+        threshold: 5,
+        description: "A plataforma passa a enfatizar validação, limites e confiabilidade."
+      },
+      {
+        id: "workflow_lab",
+        title: "Laboratório de Workflows",
+        threshold: 8,
+        description: "Novos desafios passam a exigir orquestração entre pessoas, IA e processo."
+      },
+      {
+        id: "decision_architecture",
+        title: "Arquitetura de Decisão",
+        threshold: 11,
+        description: "O treinamento deixa de avaliar respostas e passa a consolidar sistemas."
+      }
+    ];
+
+    const FUTURE_JOURNEYS = [
+      {
+        title: "Jornada 02 — Decisão Analítica",
+        desc: "Modelagem, critérios, métricas e trade-offs orientados por evidência."
+      },
+      {
+        title: "Jornada 03 — Risco e Governança",
+        desc: "Uso responsável de IA, validação, incerteza, controles e accountability."
+      },
+      {
+        title: "Jornada 04 — Automação Operacional",
+        desc: "Workflows, agentes, handoffs, revisão humana e padronização escalável."
+      },
+      {
+        title: "Jornada 05 — Comunicação Executiva",
+        desc: "Narrativas de decisão para diretoria, comitês e stakeholders críticos."
+      }
+    ];
+
+    const PHILOSOPHY = [
+      "Ambiguidade sem estrutura gera retrabalho.",
+      "IA sem contexto produz ruído.",
+      "Clareza reduz custo operacional.",
+      "Estrutura precede escala.",
+      "Toda boa automação começa como uma boa decisão.",
+      "A resposta certa sem critério vira opinião sofisticada.",
+      "Maturidade não é usar IA. É saber o que delegar, validar e decidir.",
+      "Decisão não é texto. Decisão é consequência organizada."
+    ];
+
+
+    const OUTPUT_TYPE_RULES = {
+      resposta_operacional: {
+        label: "Resposta operacional estruturada",
+        not_expected: "prompt genérico para IA ou lista solta de boas práticas",
+        required: ["resumo", "prioridades", "hipóteses", "ações", "responsáveis", "próximos passos"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      quadro_decisao: {
+        label: "Quadro de decisão",
+        not_expected: "plano de ação genérico ou prompt para IA",
+        required: ["fatos", "hipóteses", "lacunas", "evidências", "decisão pendente", "encaminhamentos"],
+        wrong: ["papel da ia", "atue como", "critérios de qualidade"]
+      },
+      prompt_ia: {
+        label: "Prompt operacional para IA externa",
+        not_expected: "análise direta de churn sem instrução para a IA",
+        required: ["papel da IA", "contexto", "objetivo", "tarefa", "formato", "critérios", "limites"],
+        wrong: []
+      },
+      refinamento_ia: {
+        label: "Prompt de refinamento para IA",
+        not_expected: "resposta final de churn ou elogio genérico à IA",
+        required: ["diagnóstico", "problema", "pedido de refinamento", "exigências", "formato esperado"],
+        wrong: []
+      },
+      plano_contencao: {
+        label: "Plano de contenção operacional",
+        not_expected: "prompt genérico para IA ou diagnóstico completo de causa raiz",
+        required: ["posição provisória", "ação de contenção", "o que sabemos", "o que não sabemos", "riscos", "responsáveis", "mensagem executiva"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      matriz_tradeoff: {
+        label: "Matriz de trade-off",
+        not_expected: "lista de ações sem comparação entre alternativas",
+        required: ["alternativas", "critérios", "comparação", "trade-offs", "recomendação", "condição de revisão"],
+        wrong: ["papel da ia", "atue como", "critérios de qualidade"]
+      },
+      sintese_executiva: {
+        label: "Síntese executiva de uma página",
+        not_expected: "relatório longo, ata de reunião ou prompt para IA",
+        required: ["mensagem principal", "diagnóstico", "recomendação", "riscos", "decisão requerida", "próximos dias"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      protocolo_validacao: {
+        label: "Protocolo de validação",
+        not_expected: "nova inferência não verificada ou defesa genérica da IA",
+        required: ["correção", "risco", "fato", "hipótese", "validação", "revisão humana", "ajuste"],
+        wrong: ["atue como consultoria", "campanhas personalizadas"]
+      },
+      workflow_operacional: {
+        label: "Workflow operacional",
+        not_expected: "lista de tarefas sem entrada, transformação, validação e saída",
+        required: ["objetivo", "entradas", "etapas", "IA", "validação humana", "saída", "controles", "cadência"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      alinhamento_stakeholders: {
+        label: "Alinhamento de stakeholders",
+        not_expected: "escolher um lado ou listar áreas sem critério comum",
+        required: ["interesses por área", "critério comum", "decisão de curto prazo", "agenda estrutural", "governança", "risco"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      recomendacao_comite: {
+        label: "Recomendação para comitê executivo",
+        not_expected: "diagnóstico sem decisão ou certeza artificial",
+        required: ["recomendação", "base", "risco aceito", "evidências faltantes", "plano de ação", "critério de revisão"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      arquitetura_operacional: {
+        label: "Arquitetura operacional de decisão",
+        not_expected: "boas práticas soltas ou apresentação conceitual sem fluxo",
+        required: ["princípio", "arquitetura", "sinais", "estruturação", "IA", "validação", "decisão", "execução", "revisão", "papéis", "controles", "indicadores", "cadência"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      }
+    };
+
+    const MISSION_EVALUATION_CONFIGS = {
+      1: { expected_output_type: "resposta_operacional", exclusive_terms: ["diretoria", "sexta", "produto", "atendimento", "preço", "onboarding", "próximos dias", "onde está concentrado", "números pioraram"], min_exclusive_hits: 4 },
+      2: { expected_output_type: "quadro_decisao", exclusive_terms: ["marketing", "produto", "atendimento", "comercial", "dados", "clientes novos", "clientes antigos", "grandes contas", "baixo uso", "reunião terminou sem decisão"], min_exclusive_hits: 5 },
+      3: { expected_output_type: "prompt_ia", exclusive_terms: ["IA externa", "não terá acesso aos dados", "não inventar dados", "segmentos prioritários", "riscos de interpretação", "reunião de sexta", "estruturar o raciocínio"], min_exclusive_hits: 4 },
+      4: { expected_output_type: "refinamento_ia", exclusive_terms: ["resposta genérica", "pouco útil", "pedido de refinamento", "prioridades", "evidências", "ações concretas", "evitar recomendações genéricas"], min_exclusive_hits: 4 },
+      5: { expected_output_type: "plano_contencao", exclusive_terms: ["11h", "cliente grande", "12 chamados", "contenção", "posição provisória", "problema político", "mensagem ao diretor", "não temos evidência suficiente"], min_exclusive_hits: 5 },
+      6: { expected_output_type: "matriz_tradeoff", exclusive_terms: ["desconto", "onboarding", "grandes contas", "comercial", "produto", "financeiro", "margem", "não há orçamento", "condição de revisão"], min_exclusive_hits: 5 },
+      7: { expected_output_type: "sintese_executiva", exclusive_terms: ["uma página", "diretor", "onde dói mais", "decisão precisa ser tomada", "próximos 7 dias", "histórico longo", "explicação metodológica"], min_exclusive_hits: 4 },
+      8: { expected_output_type: "protocolo_validacao", exclusive_terms: ["enterprise", "segmento", "apresentação", "inferência", "fato vs hipótese", "ninguém forneceu dados", "rascunho", "antes da reunião"], min_exclusive_hits: 5 },
+      9: { expected_output_type: "workflow_operacional", exclusive_terms: ["toda semana", "reclamações", "tickets críticos", "clientes em risco", "ações em andamento", "padronizar", "sem burocracia excessiva", "cadência"], min_exclusive_hits: 5 },
+      10: { expected_output_type: "alinhamento_stakeholders", exclusive_terms: ["produto", "comercial", "financeiro", "atendimento", "dados", "margem", "chamados", "evidência conclusiva", "parcialmente certos"], min_exclusive_hits: 6 },
+      11: { expected_output_type: "recomendacao_comite", exclusive_terms: ["comitê", "40 minutos", "defensável", "certeza absoluta", "risco aceito", "evidência ainda falta", "quando a decisão será revisada"], min_exclusive_hits: 4 },
+      12: { expected_output_type: "arquitetura_operacional", exclusive_terms: ["várias semanas", "arquitetura operacional", "entrada de sinais", "organização de hipóteses", "análise assistida", "validação", "execução", "revisão", "institucionalizar"], min_exclusive_hits: 5 }
+    };
+
+    MISSIONS.forEach(mission => {
+      const config = MISSION_EVALUATION_CONFIGS[mission.id] || {};
+      const typeRule = OUTPUT_TYPE_RULES[config.expected_output_type] || {};
+      mission.expected_output_type = config.expected_output_type || "resposta_operacional";
+      mission.delivery_label = typeRule.label || "Entrega operacional";
+      mission.not_expected = typeRule.not_expected || "resposta genérica reutilizável";
+      mission.output_required_patterns = typeRule.required || [];
+      mission.wrong_output_patterns = [...(typeRule.wrong || [])];
+      mission.exclusive_terms = config.exclusive_terms || [];
+      mission.min_exclusive_hits = config.min_exclusive_hits || Math.min(4, mission.exclusive_terms.length);
+    });
 
     let state = createInitialState();
 
@@ -527,7 +1685,11 @@ Critérios de qualidade:
         attempts: {},
         lastPassed: false,
         lastFeedback: null,
-        currentAnswer: ""
+        currentAnswer: "",
+        previousAnswers: [],
+        toast: null,
+        unlocked: [],
+        lastUnlockCount: 0
       };
     }
 
@@ -549,15 +1711,10 @@ Critérios de qualidade:
 
       terms.forEach(term => {
         const termNorm = normalizeText(term);
-        if (normalized.includes(termNorm)) {
-          found.push(term);
-        }
+        if (normalized.includes(termNorm)) found.push(term);
       });
 
-      return {
-        count: unique(found).length,
-        found: unique(found).sort()
-      };
+      return { count: unique(found).length, found: unique(found).sort() };
     }
 
     function countStructuralTitles(text) {
@@ -569,94 +1726,449 @@ Critérios de qualidade:
       let titleLike = 0;
 
       lines.forEach(line => {
-        if (line.includes(":") && line.length <= 80) {
-          titleLike += 1;
-        } else if (/^\d+[\.)]\s+/.test(line)) {
-          titleLike += 1;
-        } else if (/^[-•]\s+/.test(line)) {
-          titleLike += 1;
-        }
+        if (line.includes(":") && line.length <= 92) titleLike += 1;
+        else if (/^\d+[\.)]\s+/.test(line)) titleLike += 1;
+        else if (/^[-•]\s+/.test(line)) titleLike += 1;
       });
 
       return titleLike;
     }
 
-    function detectGenericAnswer(text) {
+    function wordStats(text) {
       const clean = normalizeText(text).replace(/[^a-z0-9\s]/g, " ");
       const words = clean.split(/\s+/).filter(Boolean);
       const uniqueWords = unique(words);
+      const freq = {};
+      words.forEach(w => freq[w] = (freq[w] || 0) + 1);
+      const topFrequency = Math.max(0, ...Object.values(freq));
 
-      if (words.length < 45) return true;
-      if (uniqueWords.length < 25) return true;
+      return {
+        words,
+        uniqueWords,
+        uniqueRatio: words.length ? uniqueWords.length / words.length : 0,
+        topFrequency,
+        avgWordLength: words.length ? words.reduce((sum, w) => sum + w.length, 0) / words.length : 0
+      };
+    }
 
-      const keywordOnly = ["resumo", "prioridade", "acao", "acoes", "prazo", "responsavel", "proximo", "passo"];
-      const intersection = uniqueWords.filter(word => keywordOnly.includes(word));
+    function detectGenericAnswer(text, mission) {
+      const stats = wordStats(text);
+      const clean = normalizeText(text);
 
-      if (intersection.length >= 4 && words.length < 70) return true;
+      if (stats.words.length < 70) return true;
+      if (stats.uniqueWords.length < 45) return true;
+      if (stats.uniqueRatio < 0.34 && stats.words.length > 120) return true;
+      if (stats.topFrequency > Math.max(18, stats.words.length * 0.09)) return true;
 
-      return false;
+      const sectionHits = countHits(clean, mission.required_sections);
+      const contextHits = countHits(clean, mission.required_context_terms);
+
+      const hasManyKeywordsButLittleSubstance =
+        sectionHits.count >= mission.required_sections.length * 0.55 &&
+        contextHits.count >= mission.required_context_terms.length * 0.45 &&
+        stats.words.length < 110;
+
+      const repeatedOperationalWords = ["acao", "acoes", "prioridade", "prioridades", "risco", "dados", "decisao", "ia"]
+        .filter(word => (clean.match(new RegExp("\\b" + word + "\\b", "g")) || []).length >= 8);
+
+      return hasManyKeywordsButLittleSubstance || repeatedOperationalWords.length >= 3;
+    }
+
+
+    const STOPWORDS = new Set([
+      "a", "o", "os", "as", "um", "uma", "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas",
+      "por", "para", "com", "sem", "que", "se", "e", "ou", "mas", "como", "ao", "aos", "sua", "seu", "suas", "seus",
+      "isso", "esse", "essa", "este", "esta", "ser", "ter", "foi", "sao", "são", "deve", "devem", "precisa", "precisam",
+      "mais", "menos", "tambem", "também", "entre", "sobre", "pela", "pelo", "pelos", "pelas", "cada", "todo", "toda",
+      "todos", "todas", "ate", "até", "ja", "já", "ha", "há", "quando", "onde", "qual", "quais"
+    ]);
+
+    function tokenizeRelevant(text) {
+      return normalizeText(text)
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(word => word.length >= 3 && !STOPWORDS.has(word));
+    }
+
+    function jaccardSimilarity(aWords, bWords) {
+      const a = new Set(aWords);
+      const b = new Set(bWords);
+      if (!a.size || !b.size) return 0;
+      let intersection = 0;
+      a.forEach(word => { if (b.has(word)) intersection += 1; });
+      const union = new Set([...a, ...b]).size;
+      return union ? intersection / union : 0;
+    }
+
+    function extractTitles(text) {
+      return String(text || "")
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.includes(":") && line.length <= 92)
+        .map(line => normalizeText(line.split(":")[0]).replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim())
+        .filter(Boolean);
+    }
+
+    function titleSequenceSimilarity(currentTitles, previousTitles) {
+      if (!currentTitles.length || !previousTitles.length) return 0;
+      const max = Math.min(currentTitles.length, previousTitles.length, 8);
+      let samePosition = 0;
+      for (let i = 0; i < max; i++) {
+        if (currentTitles[i] === previousTitles[i]) samePosition += 1;
+      }
+      return samePosition / max;
+    }
+
+    function detectReusedAnswer(currentAnswer, previousAnswers, mission) {
+      const relevantPrevious = (previousAnswers || []).filter(item => item.missionId !== mission.id);
+      if (!relevantPrevious.length) {
+        return { reused: false, warning: false, maxJaccard: 0, titleSimilarity: 0, matchedMissionId: null };
+      }
+
+      const currentTokens = tokenizeRelevant(currentAnswer);
+      const currentTitles = extractTitles(currentAnswer);
+      let maxJaccard = 0;
+      let maxTitleSimilarity = 0;
+      let matchedMissionId = null;
+
+      relevantPrevious.forEach(item => {
+        const jac = jaccardSimilarity(currentTokens, tokenizeRelevant(item.answer));
+        const titleSim = titleSequenceSimilarity(currentTitles, extractTitles(item.answer));
+        if (jac > maxJaccard || titleSim > maxTitleSimilarity) {
+          matchedMissionId = item.missionId;
+        }
+        maxJaccard = Math.max(maxJaccard, jac);
+        maxTitleSimilarity = Math.max(maxTitleSimilarity, titleSim);
+      });
+
+      const currentType = mission.expected_output_type;
+      const matchedMission = MISSIONS.find(m => m.id === matchedMissionId);
+      const differentType = matchedMission && matchedMission.expected_output_type !== currentType;
+      const reused = maxJaccard >= 0.65 || (differentType && maxTitleSimilarity >= 0.72);
+      const warning = !reused && (maxJaccard >= 0.55 || maxTitleSimilarity >= 0.58);
+
+      return { reused, warning, maxJaccard, titleSimilarity: maxTitleSimilarity, matchedMissionId };
+    }
+
+    function extractSections(answer) {
+      const sections = [];
+      const lines = String(answer || "").split("\n");
+      let current = null;
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        const isTitle = trimmed.includes(":") && trimmed.length <= 92 && !trimmed.endsWith(";");
+        if (isTitle) {
+          if (current) sections.push(current);
+          const idx = trimmed.indexOf(":");
+          current = {
+            title: trimmed.slice(0, idx).trim(),
+            normalizedTitle: normalizeText(trimmed.slice(0, idx).trim()),
+            content: trimmed.slice(idx + 1).trim()
+          };
+        } else if (current) {
+          current.content += "\n" + trimmed;
+        }
+      });
+
+      if (current) sections.push(current);
+      return sections;
+    }
+
+    function isLooseWordList(content) {
+      const clean = String(content || "").trim();
+      if (!clean) return true;
+      const lines = clean.split("\n").map(l => l.trim()).filter(Boolean);
+      const words = tokenizeRelevant(clean);
+      const mostlyBullets = lines.length >= 2 && lines.filter(l => /^[-•\d]/.test(l)).length / lines.length > 0.75;
+      return words.length < 12 || (mostlyBullets && clean.length < 140);
+    }
+
+    function sectionMatches(section, requiredName) {
+      const title = normalizeText(section.normalizedTitle);
+      const req = normalizeText(requiredName);
+      return title.includes(req) || req.includes(title);
+    }
+
+    function validateSectionDepth(answer, mission) {
+      const sections = extractSections(answer);
+      const required = mission.output_required_patterns || [];
+      const scenarioTerms = [...(mission.required_context_terms || []), ...(mission.exclusive_terms || [])];
+      const deepSections = [];
+      const missing = [];
+
+      required.forEach(req => {
+        const section = sections.find(sec => sectionMatches(sec, req));
+        if (!section) {
+          missing.push(req);
+          return;
+        }
+
+        const usefulContent = String(section.content || "").replace(/[-•\d.()]/g, " ").replace(/\s+/g, " ").trim();
+        const hasScenarioAnchor = countHits(section.title + " " + section.content, scenarioTerms).count >= 1;
+        const developed = usefulContent.length >= 80 && !isLooseWordList(usefulContent) && hasScenarioAnchor;
+
+        if (developed) deepSections.push(req);
+      });
+
+      const minDeep = Math.max(3, Math.ceil(required.length * 0.45));
+      return {
+        sections,
+        deepSections,
+        missing,
+        requiredCount: required.length,
+        deepCount: deepSections.length,
+        minDeep,
+        passed: deepSections.length >= minDeep
+      };
+    }
+
+    function detectWrongOutputFormat(answer, mission) {
+      const clean = normalizeText(answer);
+      const wrongPatterns = mission.wrong_output_patterns || [];
+      const foundWrongPatterns = wrongPatterns.filter(pattern => clean.includes(normalizeText(pattern)));
+      const hasPromptSkeleton = countHits(answer, ["papel da ia", "contexto", "objetivo", "tarefa", "formato da resposta", "critérios de qualidade", "atue como"]).count >= 4;
+      const promptAllowed = ["prompt_ia", "refinamento_ia"].includes(mission.expected_output_type);
+
+      let reason = "";
+      if (!promptAllowed && hasPromptSkeleton) {
+        reason = "A resposta usa esqueleto de prompt para IA em uma missão que pede outra entrega.";
+      } else if (foundWrongPatterns.length) {
+        reason = `Formato incompatível detectado: ${foundWrongPatterns.join(", ")}.`;
+      }
+
+      if (mission.expected_output_type === "matriz_tradeoff") {
+        const hasAlternatives = countHits(answer, ["desconto", "onboarding", "grandes contas"]).count >= 2;
+        const hasComparison = countHits(answer, ["comparação", "comparar", "alternativas", "trade-off", "trade-offs", "critério", "critérios"]).count >= 3;
+        if (!hasAlternatives || !hasComparison) reason = "A missão exige comparação explícita entre alternativas, não apenas plano de ação.";
+      }
+
+      if (mission.expected_output_type === "quadro_decisao") {
+        const hasDecisionFrame = countHits(answer, ["fatos", "hipóteses", "lacunas", "evidências", "decisão pendente"]).count >= 4;
+        if (!hasDecisionFrame) reason = "A missão exige quadro de decisão com fatos, hipóteses, lacunas, evidências e decisão pendente.";
+      }
+
+      if (mission.expected_output_type === "protocolo_validacao") {
+        const hasValidationFrame = countHits(answer, ["fato", "hipótese", "inferência", "validação", "revisão", "apresentação"]).count >= 4;
+        if (!hasValidationFrame) reason = "A missão exige protocolo de validação, separando fato, hipótese e inferência.";
+      }
+
+      return { wrong: Boolean(reason), reason, foundWrongPatterns };
+    }
+
+    function evaluateMissionSpecificity(answer, mission, scoring) {
+      const exclusive = countHits(answer, mission.exclusive_terms || []);
+      const typeRule = OUTPUT_TYPE_RULES[mission.expected_output_type] || {};
+      const typeHits = countHits(answer, mission.output_required_patterns || []);
+      const wrongFormat = detectWrongOutputFormat(answer, mission);
+      const reused = detectReusedAnswer(answer, state.previousAnswers, mission);
+      const sectionDepth = validateSectionDepth(answer, mission);
+      const rawScenarioHits = countHits(answer, [...(mission.required_context_terms || []), ...(mission.exclusive_terms || [])]);
+
+      const exclusiveScore = Math.min(100, Math.round((exclusive.count / Math.max(1, mission.min_exclusive_hits)) * 100));
+      const typeScore = Math.min(100, Math.round((typeHits.count / Math.max(1, (mission.output_required_patterns || []).length * 0.65)) * 100));
+      const sectionDepthScore = Math.min(100, Math.round((sectionDepth.deepCount / Math.max(1, sectionDepth.minDeep)) * 100));
+      const scenarioScore = Math.min(100, Math.round((rawScenarioHits.count / Math.max(1, ((mission.required_context_terms || []).length + (mission.exclusive_terms || []).length) * 0.34)) * 100));
+      const reusePenalty = reused.reused ? 45 : reused.warning ? 18 : 0;
+      const wrongPenalty = wrongFormat.wrong ? 45 : 0;
+
+      const score = clampScore(
+        exclusiveScore * 0.28 +
+        typeScore * 0.22 +
+        sectionDepthScore * 0.24 +
+        scenarioScore * 0.18 +
+        Math.min(100, scoring.rubric.contexto) * 0.08 -
+        reusePenalty -
+        wrongPenalty
+      );
+
+      return {
+        score,
+        exclusive,
+        typeHits,
+        wrongFormat,
+        reused,
+        sectionDepth,
+        scenarioHits: rawScenarioHits,
+        typeLabel: typeRule.label || mission.delivery_label,
+        notExpected: typeRule.not_expected || mission.not_expected,
+        passed: score >= 70 &&
+          exclusive.count >= mission.min_exclusive_hits &&
+          !wrongFormat.wrong &&
+          !reused.reused &&
+          sectionDepth.passed &&
+          typeHits.count >= Math.max(3, Math.ceil((mission.output_required_patterns || []).length * 0.50))
+      };
+    }
+
+    function scoreRubric(answer, mission) {
+      const cleanAnswer = String(answer || "").trim();
+      const lines = cleanAnswer.split("\n").filter(line => line.trim());
+      const sections = countHits(cleanAnswer, mission.required_sections);
+      const context = countHits(cleanAnswer, mission.required_context_terms);
+      const structuralTitles = countStructuralTitles(cleanAnswer);
+      const stats = wordStats(cleanAnswer);
+      const generic = detectGenericAnswer(cleanAnswer, mission);
+
+      const hasDecisionLanguage = countHits(cleanAnswer, [
+        "decisão", "recomendação", "critério", "prioridade", "risco", "responsável", "prazo", "evidência", "hipótese", "validação"
+      ]).count;
+
+      const hasGovernanceLanguage = countHits(cleanAnswer, [
+        "validar", "validação", "controle", "limite", "fato", "hipótese", "evidência", "não inventar", "revisão"
+      ]).count;
+
+      const hasActionLanguage = countHits(cleanAnswer, [
+        "ação", "ações", "próximo", "próximos", "responsável", "responsáveis", "prazo", "entrega", "cadência"
+      ]).count;
+
+      const lengthScore = Math.min(100, Math.floor((cleanAnswer.length / mission.min_chars) * 100));
+      const lineScore = Math.min(100, Math.floor((lines.length / mission.min_lines) * 100));
+      const structureScore = Math.min(100, Math.floor(((sections.count / Math.max(1, mission.required_sections.length * 0.62)) * 54) + ((structuralTitles / 8) * 46)));
+      const contextScore = Math.min(100, Math.floor((context.count / Math.max(1, mission.required_context_terms.length * 0.62)) * 100));
+      const clarityScore = Math.min(100, Math.floor((lengthScore * 0.25) + (lineScore * 0.25) + (structureScore * 0.30) + (hasDecisionLanguage * 5)));
+      const synthesisPenalty = cleanAnswer.length > mission.min_chars * 2.7 ? 18 : cleanAnswer.length > mission.min_chars * 2.2 ? 10 : 0;
+      const synthesisScore = Math.max(0, Math.min(100, Math.floor(72 + (lineScore * 0.12) + (structureScore * 0.18) - synthesisPenalty)));
+      const prioritizationScore = Math.min(100, Math.floor((hasActionLanguage * 9) + (hasDecisionLanguage * 7) + (sections.found.some(s => normalizeText(s).includes("prior")) ? 18 : 0)));
+      const reliabilityScore = Math.min(100, Math.floor((hasGovernanceLanguage * 11) + (contextScore * 0.22) + (generic ? -18 : 12)));
+
+      const automationScore = mission.weights.automacao
+        ? Math.min(100, Math.floor((countHits(cleanAnswer, ["ia", "automação", "workflow", "fluxo", "padronizada", "processo"]).count * 13) + (structureScore * 0.18)))
+        : 0;
+
+      const orchestrationScore = mission.weights.orquestracao
+        ? Math.min(100, Math.floor((countHits(cleanAnswer, ["área", "áreas", "stakeholders", "responsáveis", "governança", "papéis", "coordenação"]).count * 12) + (contextScore * 0.16)))
+        : 0;
+
+      const rubric = {
+        clareza: clampScore(clarityScore),
+        sintese: clampScore(synthesisScore),
+        estrutura: clampScore(structureScore),
+        contexto: clampScore(contextScore),
+        priorizacao: clampScore(prioritizationScore),
+        confiabilidade: clampScore(reliabilityScore)
+      };
+
+      if (mission.weights.automacao) rubric.automacao = clampScore(automationScore);
+      if (mission.weights.orquestracao) rubric.orquestracao = clampScore(orchestrationScore);
+
+      if (generic) {
+        Object.keys(rubric).forEach(k => rubric[k] = Math.max(0, rubric[k] - 18));
+      }
+
+      const weightedScore = Object.entries(mission.weights).reduce((sum, [key, weight]) => {
+        return sum + ((rubric[key] || 0) * weight / 100);
+      }, 0);
+
+      return {
+        rubric,
+        weightedScore: Math.round(weightedScore),
+        generic,
+        metrics: {
+          chars: cleanAnswer.length,
+          lines: lines.length,
+          sectionHits: sections.count,
+          contextHits: context.count,
+          structuralTitles,
+          uniqueRatio: stats.uniqueRatio
+        },
+        foundSections: sections.found,
+        foundContext: context.found
+      };
+    }
+
+    function clampScore(value) {
+      return Math.max(0, Math.min(100, Math.round(value)));
     }
 
     function evaluateResponse(answer, mission) {
       const cleanAnswer = String(answer || "").trim();
-      const lines = cleanAnswer.split("\n").filter(line => line.trim());
-      const sectionHits = countHits(cleanAnswer, mission.required_sections);
-      const contextHits = countHits(cleanAnswer, mission.required_context_terms);
-      const structuralTitles = countStructuralTitles(cleanAnswer);
-      const generic = detectGenericAnswer(cleanAnswer);
+      const scoring = scoreRubric(cleanAnswer, mission);
+      const attempts = state.attempts[mission.id] || 0;
+      const specificity = evaluateMissionSpecificity(cleanAnswer, mission, scoring);
 
       const checks = {
-        "Tamanho mínimo": cleanAnswer.length >= mission.min_chars,
-        "Mínimo de linhas": lines.length >= mission.min_lines,
-        "Seções estruturadas": sectionHits.count >= mission.min_section_hits,
-        "Contexto do caso": contextHits.count >= mission.min_context_hits,
-        "Organização visível": structuralTitles >= 5,
-        "Não genérica": !generic
+        "Densidade mínima": cleanAnswer.length >= mission.min_chars,
+        "Organização visual": scoring.metrics.lines >= mission.min_lines,
+        "Estrutura operacional": scoring.rubric.estrutura >= 68,
+        "Contexto do caso": scoring.rubric.contexto >= 62,
+        "Priorização ou decisão": scoring.rubric.priorizacao >= 54,
+        "Resposta não genérica": !scoring.generic,
+        "Maturidade ponderada": scoring.weightedScore >= 68,
+        "Tipo de entrega correto": specificity.typeHits.count >= Math.max(3, Math.ceil((mission.output_required_patterns || []).length * 0.50)),
+        "Termos exclusivos da missão": specificity.exclusive.count >= mission.min_exclusive_hits,
+        "Formato compatível": !specificity.wrongFormat.wrong,
+        "Seções com profundidade": specificity.sectionDepth.passed,
+        "Resposta não reaproveitada": !specificity.reused.reused,
+        "Aderência específica": specificity.score >= 70
       };
 
-      const passed = Object.values(checks).every(Boolean);
+      const passed = Object.values(checks).every(Boolean) && specificity.passed;
+
       const strengths = [];
       const gaps = [];
 
-      if (checks["Tamanho mínimo"]) {
-        strengths.push("Você desenvolveu a resposta com densidade suficiente para análise operacional.");
+      if (specificity.exclusive.count >= mission.min_exclusive_hits) {
+        strengths.push(`A resposta usa elementos específicos desta missão: ${specificity.exclusive.found.slice(0, 6).join(", ")}.`);
       } else {
-        gaps.push(`Sua resposta ainda está curta. Ela precisa ter pelo menos ${mission.min_chars} caracteres para demonstrar raciocínio, não apenas intenção.`);
+        gaps.push(`Pouca aderência ao cenário específico. Use pelo menos ${mission.min_exclusive_hits} elementos próprios deste caso, como: ${(mission.exclusive_terms || []).slice(0, 7).join(", ")}.`);
       }
 
-      if (checks["Mínimo de linhas"]) {
-        strengths.push("A resposta já apresenta divisão visual adequada, o que facilita leitura executiva.");
+      if (!specificity.wrongFormat.wrong) {
+        strengths.push(`O formato está compatível com a entrega esperada: ${specificity.typeLabel}.`);
       } else {
-        gaps.push(`A resposta precisa de mais quebras e organização. Use pelo menos ${mission.min_lines} linhas com blocos claros.`);
+        gaps.push(specificity.wrongFormat.reason || "O conteúdo está estruturado, mas no formato errado para esta missão.");
       }
 
-      if (checks["Seções estruturadas"]) {
-        strengths.push("Você utilizou seções compatíveis com uma entrega operacional.");
+      if (!specificity.reused.reused) {
+        if (specificity.reused.warning) {
+          gaps.push("A resposta tem sinais de reaproveitamento estrutural. Reforce a adaptação ao tipo de entrega desta missão.");
+        }
       } else {
-        gaps.push("Faltam seções operacionais claras. Uma boa resposta precisa separar blocos como resumo, prioridades, ações, responsáveis e próximos passos.");
+        gaps.push("Sua resposta parece reaproveitada de uma missão anterior. Esta missão exige uma entrega diferente, com formato e vocabulário próprios.");
       }
 
-      if (checks["Contexto do caso"]) {
-        strengths.push("Você conectou a resposta ao contexto real da missão.");
+      if (specificity.sectionDepth.passed) {
+        strengths.push("As seções obrigatórias têm densidade mínima e conexão com o cenário, não apenas títulos corretos.");
       } else {
-        gaps.push("A resposta ainda parece genérica. Ela precisa mencionar elementos do caso, como churn, clientes, reunião, diretoria, áreas envolvidas ou prazo.");
+        gaps.push(`Seções superficiais. Pelo menos ${specificity.sectionDepth.minDeep} blocos obrigatórios precisam ter desenvolvimento real, com contexto, consequência e encaminhamento.`);
       }
 
-      if (checks["Organização visível"]) {
-        strengths.push("A estrutura visual ajuda a transformar informação dispersa em execução.");
+      if (scoring.rubric.estrutura >= 76) {
+        strengths.push("A resposta apresenta arquitetura visível: blocos, hierarquia e encaminhamento operacional.");
       } else {
-        gaps.push("A organização ainda não está suficientemente visível. Use títulos, listas, numeração e blocos de decisão.");
+        gaps.push("A estrutura ainda não sustenta execução. Separe melhor diagnóstico, critérios, ações, responsáveis e revisão.");
       }
 
-      if (checks["Não genérica"]) {
-        strengths.push("A resposta demonstra elaboração própria, não apenas palavras soltas.");
+      if (scoring.rubric.contexto >= 72) {
+        strengths.push("Você conectou a resposta ao cenário real, reduzindo risco de entrega genérica.");
       } else {
-        gaps.push("Sua resposta ainda está genérica. Escrever apenas palavras como resumo, prioridade, ação e prazo não demonstra competência operacional.");
+        gaps.push("A resposta ainda poderia estar mais ancorada no caso. Sem contexto, a entrega fica reutilizável demais e decisiva de menos.");
       }
+
+      if (scoring.rubric.priorizacao >= 70) {
+        strengths.push("Há sinal de hierarquia operacional: nem tudo foi tratado como igualmente importante.");
+      } else {
+        gaps.push("O principal gargalo está na priorização. Sem hierarquia, execução tende à dispersão.");
+      }
+
+      if (scoring.rubric.confiabilidade >= 72) {
+        strengths.push("A resposta mostra preocupação com evidência, validação e limites de interpretação.");
+      } else {
+        gaps.push("Inclua mais controle de qualidade: o que é fato, o que é hipótese, o que precisa ser validado e qual risco permanece.");
+      }
+
+      if (scoring.generic) {
+        gaps.push("Resposta genérica apesar de longa. Cada bloco precisa carregar uma consequência operacional específica do caso.");
+      }
+
+      const bottleneck = getBottleneck(scoring.rubric);
+      const maturity = getMaturityLabel(scoring.weightedScore);
+      const primaryReason = getPrimaryFailureReason(checks, specificity, scoring);
 
       const diagnosis = passed
-        ? `Competência mínima demonstrada: ${mission.competency}. Você transformou ambiguidade em estrutura, o que é o núcleo da maturidade operacional com IA.`
-        : "Ainda não há maturidade operacional mínima para avançar. Ajuste sua resposta para transformar informação em execução: contexto, estrutura, prioridade, ação e consequência.";
+        ? `${mission.consequence_success} Competência demonstrada: ${mission.competency}.`
+        : `${primaryReason} ${mission.consequence_fail} Gargalo principal: ${bottleneck.label}. ${bottleneck.message}`;
 
       return {
         passed,
@@ -664,16 +2176,86 @@ Critérios de qualidade:
         strengths,
         gaps,
         diagnosis,
-        foundSections: sectionHits.found,
-        foundContext: contextHits.found,
+        rubric: scoring.rubric,
+        weightedScore: scoring.weightedScore,
+        missionSpecificityScore: specificity.score,
+        maturity,
+        bottleneck,
+        foundSections: scoring.foundSections,
+        foundContext: scoring.foundContext,
+        foundExclusive: specificity.exclusive.found,
+        expectedDelivery: specificity.typeLabel,
+        notExpected: specificity.notExpected,
+        specificity,
         metrics: {
-          chars: cleanAnswer.length,
-          lines: lines.length,
-          sectionHits: sectionHits.count,
-          contextHits: contextHits.count,
-          structuralTitles
-        }
+          ...scoring.metrics,
+          exclusiveHits: specificity.exclusive.count,
+          requiredExclusiveHits: mission.min_exclusive_hits,
+          deepSections: specificity.sectionDepth.deepCount,
+          requiredDeepSections: specificity.sectionDepth.minDeep,
+          reuseJaccard: specificity.reused.maxJaccard,
+          titleSimilarity: specificity.reused.titleSimilarity
+        },
+        hint: getProgressiveHint(mission, attempts)
       };
+    }
+
+    function getPrimaryFailureReason(checks, specificity, scoring) {
+      if (specificity.reused.reused) return "Resposta reaproveitada.";
+      if (specificity.wrongFormat.wrong) return "Formato errado para a missão.";
+      if (checks["Termos exclusivos da missão"] === false) return "Falta de termos exclusivos do cenário.";
+      if (!specificity.sectionDepth.passed) return "Seções superficiais.";
+      if (specificity.score < 70) return "Pouca aderência ao cenário específico.";
+      if (scoring.generic) return "Resposta genérica apesar de longa.";
+      if (!checks["Maturidade ponderada"]) return "Baixa maturidade operacional.";
+      return "A entrega ainda não atinge o padrão mínimo desta missão.";
+    }
+
+    function getBottleneck(rubric) {
+      const labels = {
+        clareza: "clareza executiva",
+        sintese: "síntese",
+        estrutura: "estrutura operacional",
+        contexto: "contexto",
+        priorizacao: "priorização",
+        confiabilidade: "confiabilidade",
+        automacao: "automação",
+        orquestracao: "orquestração"
+      };
+
+      const messages = {
+        clareza: "A leitura ainda exige esforço demais; torne a mensagem principal mais explícita.",
+        sintese: "Há conteúdo, mas a energia decisória precisa ficar mais concentrada.",
+        estrutura: "A resposta precisa de blocos que sustentem execução, não apenas raciocínio.",
+        contexto: "A entrega ainda poderia servir para casos demais; ancore mais no cenário.",
+        priorizacao: "Ações sem hierarquia reduzem capacidade de execução.",
+        confiabilidade: "A decisão precisa diferenciar fatos, hipóteses, limites e validações.",
+        automacao: "O uso de IA ou workflow ainda não está suficientemente operacionalizado.",
+        orquestracao: "Os papéis e handoffs entre áreas precisam ficar mais claros."
+      };
+
+      const entries = Object.entries(rubric).sort((a, b) => a[1] - b[1]);
+      const [key, value] = entries[0];
+
+      return {
+        key,
+        value,
+        label: labels[key] || key,
+        message: messages[key] || "Reforce esse critério para avançar com maturidade."
+      };
+    }
+
+    function getMaturityLabel(score) {
+      if (score >= 88) return "Maturidade avançada";
+      if (score >= 76) return "Maturidade consistente";
+      if (score >= 68) return "Maturidade mínima demonstrada";
+      if (score >= 52) return "Estrutura em formação";
+      return "Resposta ainda reativa";
+    }
+
+    function getProgressiveHint(mission, attempts) {
+      const index = Math.min(Math.max(0, attempts - 1), mission.hint_ladder.length - 1);
+      return mission.hint_ladder[index];
     }
 
     function applyMissionGain(mission) {
@@ -683,6 +2265,24 @@ Critérios de qualidade:
         Object.entries(mission.attributes_gain).forEach(([attr, gain]) => {
           state.attributes[attr] = Math.min(100, (state.attributes[attr] || 0) + gain);
         });
+
+        updateUnlocks();
+      }
+    }
+
+    function updateUnlocks() {
+      const completed = state.completedMissions.length;
+      const newUnlocked = UNLOCKS.filter(u => completed >= u.threshold).map(u => u.id);
+      const previous = state.unlocked.length;
+
+      state.unlocked = newUnlocked;
+
+      if (newUnlocked.length > previous) {
+        const unlock = UNLOCKS.find(u => u.id === newUnlocked[newUnlocked.length - 1]);
+        state.toast = {
+          title: "Novo módulo desbloqueado",
+          text: `${unlock.title}: ${unlock.description}`
+        };
       }
     }
 
@@ -699,15 +2299,41 @@ Critérios de qualidade:
       return MISSIONS[state.currentMissionIndex];
     }
 
+    function avgMaturity() {
+      return Math.floor(Object.values(state.attributes).reduce((sum, value) => sum + value, 0) / ATTRIBUTES.length);
+    }
+
+    function currentRank() {
+      const completed = state.completedMissions.length;
+      if (completed >= 12) return "Arquiteto de Decisão";
+      if (completed >= 9) return "Orquestrador Operacional";
+      if (completed >= 6) return "Estrategista Assistido por IA";
+      if (completed >= 3) return "Analista Estrutural";
+      if (completed >= 1) return "Operador em Evolução";
+      return "Iniciante Operacional";
+    }
+
+    function randomPhilosophy() {
+      const index = (state.completedMissions.length + state.currentMissionIndex) % PHILOSOPHY.length;
+      return PHILOSOPHY[index];
+    }
+
+    function isUnlocked(id) {
+      return state.unlocked.includes(id);
+    }
+
     function renderHeader() {
       return `
         <div class="vp-shell fade-in">
           <div class="vp-header">
-            <div class="vp-brand">VEROPRED ENGENHARIA DE PROMPTS</div>
-            <h1 class="vp-title">Treinamento interativo de IA</h1>
-            <div class="vp-subtitle">
-              Jornada 01 — Estrutura Operacional · Aula, laboratório e desafio profissional em uma única experiência.
+            <div>
+              <div class="vp-brand">VEROPRED ENGENHARIA DE PROMPTS</div>
+              <h1 class="vp-title">Treinamento interativo de maturidade operacional com IA</h1>
+              <div class="vp-subtitle">
+                Jornada 01 — Estrutura Operacional · Aula, laboratório e desafio profissional em uma única experiência.
+              </div>
             </div>
+            <div class="vp-rank-badge">${escapeHTML(currentRank())}</div>
           </div>
       `;
     }
@@ -735,9 +2361,77 @@ Critérios de qualidade:
           <div class="vp-divider"></div>
           <div class="vp-status">
             Missões concluídas: <b>${state.completedMissions.length}/${MISSIONS.length}</b><br>
-            Jornada ativa: <b>Estrutura Operacional</b><br>
-            Recompensa principal: evolução cognitiva aplicada.
+            Maturidade média: <b>${avgMaturity()}%</b><br>
+            Patente operacional: <b>${escapeHTML(currentRank())}</b>
           </div>
+        </div>
+      `;
+    }
+
+    function renderUnlocksPanel() {
+      const items = UNLOCKS.map(unlock => {
+        const unlocked = isUnlocked(unlock.id);
+        const status = unlocked ? "Desbloqueado" : `Bloqueado · conclua ${unlock.threshold} missão(ões)`;
+        return `
+          <div class="vp-unlock ${unlocked ? "unlocked pulse-glow" : "locked"}">
+            <div class="vp-unlock-title">${escapeHTML(unlock.title)}</div>
+            <div class="vp-unlock-desc">${escapeHTML(unlock.description)}</div>
+            <div class="vp-unlock-status">${escapeHTML(status)}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Desbloqueios operacionais</h3>
+          <div class="vp-text">
+            A interface se expande conforme sua maturidade aumenta.
+          </div>
+          <div class="vp-unlock-grid">${items}</div>
+        </div>
+      `;
+    }
+
+    function renderJourneyMap() {
+      const nodes = MISSIONS.map((mission, index) => {
+        const done = state.completedMissions.includes(mission.id);
+        const active = index === state.currentMissionIndex && state.started;
+        const locked = state.started && !done && !active && index > state.currentMissionIndex;
+        return `
+          <div class="vp-map-node ${done ? "done" : ""} ${active ? "active" : ""} ${locked ? "locked" : ""}">
+            <small>${escapeHTML(mission.phase.replace("FASE ", "F"))}</small>
+            <b>${escapeHTML(mission.title.replace("Missão ", "M"))}</b>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Mapa da Jornada 01</h3>
+          <div class="vp-text">
+            A dificuldade cresce de estrutura inicial até arquitetura de decisão.
+          </div>
+          <div class="vp-map">${nodes}</div>
+        </div>
+      `;
+    }
+
+    function renderFutureJourneys() {
+      const items = FUTURE_JOURNEYS.map(journey => `
+        <div class="vp-unlock locked">
+          <div class="vp-unlock-title">${escapeHTML(journey.title)}</div>
+          <div class="vp-unlock-desc">${escapeHTML(journey.desc)}</div>
+          <div class="vp-unlock-status">Em desenvolvimento · bloqueada</div>
+        </div>
+      `).join("");
+
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Horizonte da plataforma</h3>
+          <div class="vp-text">
+            A academia operacional não termina nesta trilha. Novas jornadas aparecem como ambientes futuros.
+          </div>
+          <div class="vp-unlock-grid">${items}</div>
         </div>
       `;
     }
@@ -748,38 +2442,83 @@ Critérios de qualidade:
           <div class="vp-grid">
             <div>
               <div class="vp-card">
-                <h2>Você está entrando em uma academia operacional.</h2>
+                <h2>Você está entrando em um laboratório de maturidade operacional.</h2>
                 <div class="vp-text">
-                  Aqui, o objetivo não é decorar prompts. É aprender a transformar caos em estrutura.
-                  A plataforma não usa IA própria. Você pode usar ChatGPT, Claude, Gemini, Copilot
-                  ou qualquer ferramenta externa como apoio.
+                  Aqui, o objetivo não é decorar prompts. É aprender a transformar ambiguidade em estrutura,
+                  pressão em decisão e IA externa em instrumento de trabalho.
                   <br><br>
-                  A cada missão, você receberá um cenário realista, verá o problema com clareza,
-                  entenderá como pensar e produzirá uma resposta operacional. Só avança quem demonstra
-                  competência mínima.
+                  A plataforma não fornece IA própria. Você pode usar ChatGPT, Claude, Gemini, Copilot
+                  ou qualquer ferramenta externa como apoio. O que está sendo treinado é a sua capacidade
+                  de formular, avaliar, validar e conduzir.
+                </div>
+                <div class="vp-signal">
+                  <span>clareza</span>
+                  <span>estrutura</span>
+                  <span>priorização</span>
+                  <span>confiabilidade</span>
+                  <span>orquestração</span>
                 </div>
               </div>
+
+              <div class="vp-philosophy">${escapeHTML(randomPhilosophy())}</div>
 
               <div class="vp-card">
                 <h3>Como funciona</h3>
                 <div class="vp-text">
                   1. Leia o cenário bruto.<br>
                   2. Entenda o problema operacional.<br>
-                  3. Use a estrutura esperada como molde, não como resposta pronta.<br>
-                  4. Escreva sua resposta ou construa um prompt para usar em uma IA externa.<br>
-                  5. Envie, receba feedback e tente novamente até amadurecer a entrega.
+                  3. Use o molde como referência, não como resposta pronta.<br>
+                  4. Escreva sua resposta ou use uma IA externa para construir uma primeira versão.<br>
+                  5. Envie, receba feedback por rubrica e tente novamente até estabilizar a estrutura.
                 </div>
               </div>
+
+              ${renderJourneyMap()}
+              ${renderFutureJourneys()}
             </div>
 
             <div>
               ${renderAttributesPanel()}
+              ${renderUnlocksPanel()}
             </div>
           </div>
         </div>
 
         <div class="vp-button-row">
           <button class="btn-start" onclick="startJourney()">Iniciar jornada</button>
+        </div>
+        ${renderToast()}
+      `;
+    }
+
+    function renderExpectationPanel(mission) {
+      const required = (mission.output_required_patterns || []).slice(0, 8).join(" · ");
+      const exclusive = (mission.exclusive_terms || []).slice(0, 7).join(" · ");
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Entrega esperada</h3>
+          <div class="vp-expectation-grid">
+            <div class="vp-expectation-box">
+              <b>Tipo de entrega</b>
+              <span>${escapeHTML(mission.delivery_label)}</span>
+            </div>
+            <div class="vp-expectation-box warning">
+              <b>Esta missão não pede</b>
+              <span>${escapeHTML(mission.not_expected)}</span>
+            </div>
+            <div class="vp-expectation-box">
+              <b>Blocos avaliados</b>
+              <span>${escapeHTML(required)}</span>
+            </div>
+            <div class="vp-expectation-box warning">
+              <b>Formato que reprova</b>
+              <span>Resposta genérica, prompt reaproveitado, lista sem decisão ou texto que serviria para qualquer cenário.</span>
+            </div>
+          </div>
+          <div class="vp-divider"></div>
+          <div class="vp-small">
+            Termos específicos esperados no cenário: ${escapeHTML(exclusive)}.
+          </div>
         </div>
       `;
     }
@@ -788,18 +2527,27 @@ Critérios de qualidade:
       const mission = currentMission();
       const how = mission.how_to_think.map(item => `<li>${escapeHTML(item)}</li>`).join("");
       const attempts = state.attempts[mission.id] || 0;
+      const showExecutive = isUnlocked("executive_mode");
+      const showStrategic = isUnlocked("strategic_panel");
 
       return `
         ${renderHeader()}
           <div class="vp-grid">
             <div>
               <div class="vp-card">
-                <div class="vp-phase">${escapeHTML(mission.phase)}</div>
+                <div class="vp-phase">${escapeHTML(mission.phase)} · ${escapeHTML(mission.arc)}</div>
                 <h2>${escapeHTML(mission.title)}</h2>
                 <div class="vp-objective">
                   <b>Objetivo psicológico:</b> ${escapeHTML(mission.psychological_objective)}
                 </div>
+                <div class="vp-signal">
+                  <span>tensão operacional</span>
+                  <span>ambiguidade real</span>
+                  <span>decisão sob restrição</span>
+                </div>
               </div>
+
+              <div class="vp-philosophy">${escapeHTML(randomPhilosophy())}</div>
 
               <div class="vp-card">
                 <h3>Cenário</h3>
@@ -812,6 +2560,8 @@ Critérios de qualidade:
                 <h3>O problema</h3>
                 <div class="vp-text">${escapeHTML(mission.problem)}</div>
               </div>
+
+              ${renderExpectationPanel(mission)}
 
               <div class="vp-card">
                 <h3>Como pensar</h3>
@@ -830,51 +2580,109 @@ Critérios de qualidade:
                 <br>
                 <div class="vp-structure">${escapeHTML(mission.expected_structure)}</div>
               </div>
+
+              ${showExecutive ? renderExecutiveLens(mission) : ""}
+              ${showStrategic ? renderJourneyMap() : ""}
             </div>
 
             <div>
               ${renderAttributesPanel()}
+              ${renderUnlocksPanel()}
+
               <div class="vp-card">
                 <h3>Critério de avanço</h3>
                 <div class="vp-text">
-                  Você avança apenas se demonstrar estrutura mínima, contexto, clareza e organização operacional.
+                  Você avança apenas se demonstrar estrutura mínima, contexto, clareza,
+                  priorização, confiabilidade e aderência específica ao tipo de entrega desta missão.
                 </div>
                 <div class="vp-divider"></div>
                 <div class="vp-small">
-                  Tentativas nesta missão: ${attempts}
+                  Tentativas nesta missão: ${attempts}<br>
+                  Dica ativa: ${escapeHTML(getProgressiveHint(mission, Math.max(1, attempts + 1)))}
                 </div>
               </div>
+
+              ${isUnlocked("quality_control") ? renderQualityPanel() : ""}
             </div>
           </div>
         </div>
 
-        <div class="vp-answer-title">Sua resposta (dica de ouro: tá perdido em como responder ? Use IA pra te ajudar).</div>
+        <div class="vp-answer-title">Sua resposta</div>
         <textarea id="answerBox" placeholder="${escapeHTML(mission.placeholder)}">${escapeHTML(state.currentAnswer)}</textarea>
 
         <div class="vp-button-row">
           <button class="btn-submit" onclick="submitAnswer()">Enviar resposta</button>
           <button class="btn-next" onclick="nextMission()" ${state.lastPassed ? "" : "disabled"}>Próxima missão</button>
+          <button class="btn-ghost" onclick="fillScaffold()">Inserir molde</button>
           <button class="btn-restart" onclick="restartJourney()">Reiniciar</button>
         </div>
 
         <div id="feedbackBox">
           ${state.lastFeedback ? renderFeedback(state.lastFeedback) : ""}
         </div>
+        ${renderToast()}
+      `;
+    }
+
+    function renderExecutiveLens(mission) {
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Modo Executivo desbloqueado</h3>
+          <div class="vp-text">
+            Nesta missão, procure responder a três perguntas antes de escrever:
+          </div>
+          <ul class="vp-list">
+            <li>Qual decisão fica mais clara depois da sua resposta?</li>
+            <li>Qual risco diminui?</li>
+            <li>Qual próximo passo se torna executável?</li>
+          </ul>
+          <div class="vp-divider"></div>
+          <div class="vp-small">
+            Consequência esperada ao passar: ${escapeHTML(mission.consequence_success)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderQualityPanel() {
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Controle de qualidade</h3>
+          <div class="vp-text">
+            Antes de enviar, verifique:
+          </div>
+          <ul class="vp-list">
+            <li>Você separou fato, hipótese e recomendação?</li>
+            <li>Você indicou limites ou riscos de interpretação?</li>
+            <li>A resposta gera ação ou apenas opinião organizada?</li>
+          </ul>
+        </div>
       `;
     }
 
     function renderFeedback(result) {
       const cssClass = result.passed ? "vp-feedback-success" : "vp-feedback-fail";
-      const title = result.passed ? "Missão validada" : "Ajuste necessário";
+      const title = result.passed ? "Estrutura operacional estabilizada" : "Estrutura ainda instável";
+
       const strengths = result.strengths.length
         ? result.strengths.map(item => `<li>${escapeHTML(item)}</li>`).join("")
         : "<li>Ainda não há elementos fortes o suficiente para destacar.</li>";
+
       const gaps = result.gaps.length
         ? result.gaps.map(item => `<li>${escapeHTML(item)}</li>`).join("")
         : "<li>Nenhum ajuste crítico identificado.</li>";
+
       const checks = Object.entries(result.checks)
         .map(([key, value]) => `<li>${escapeHTML(key)}: ${value ? "OK" : "Ajustar"}</li>`)
         .join("");
+
+      const rubric = Object.entries(result.rubric).map(([key, value]) => `
+        <div class="vp-rubric-chip">
+          <strong>${escapeHTML(labelRubric(key))}</strong>
+          <span>${value}</span>
+          <small>/100</small>
+        </div>
+      `).join("");
 
       return `
         <div class="vp-feedback ${cssClass} fade-in">
@@ -883,11 +2691,23 @@ Critérios de qualidade:
 
           <div class="vp-divider"></div>
 
+          <h3>Maturidade da entrega</h3>
+          <div class="vp-text">
+            Score ponderado: <b>${result.weightedScore}/100</b> · ${escapeHTML(result.maturity)}<br>
+            Aderência específica da missão: <b>${result.missionSpecificityScore}/100</b> · Entrega esperada: <b>${escapeHTML(result.expectedDelivery)}</b>
+          </div>
+          <div class="vp-maturity-line">${rubric}</div>
+
+          <div class="vp-divider"></div>
+
           <h3>O que funcionou</h3>
           <ul class="vp-list">${strengths}</ul>
 
           <h3 style="margin-top:18px;">O que precisa melhorar</h3>
           <ul class="vp-list">${gaps}</ul>
+
+          <h3 style="margin-top:18px;">Dica progressiva</h3>
+          <div class="vp-text">${escapeHTML(result.hint)}</div>
 
           <h3 style="margin-top:18px;">Validação objetiva</h3>
           <ul class="vp-list">${checks}</ul>
@@ -898,17 +2718,30 @@ Critérios de qualidade:
             Caracteres: ${result.metrics.chars} · Linhas: ${result.metrics.lines} ·
             Seções detectadas: ${result.metrics.sectionHits} ·
             Termos contextuais: ${result.metrics.contextHits} ·
+            Termos exclusivos: ${result.metrics.exclusiveHits}/${result.metrics.requiredExclusiveHits} ·
+            Seções profundas: ${result.metrics.deepSections}/${result.metrics.requiredDeepSections} ·
             Marcadores estruturais: ${result.metrics.structuralTitles}
           </div>
         </div>
       `;
     }
 
-    function renderCompletion() {
-      const avg = Math.floor(
-        Object.values(state.attributes).reduce((sum, value) => sum + value, 0) / ATTRIBUTES.length
-      );
+    function labelRubric(key) {
+      const labels = {
+        clareza: "Clareza",
+        sintese: "Síntese",
+        estrutura: "Estrutura",
+        contexto: "Contexto",
+        priorizacao: "Priorização",
+        confiabilidade: "Confiabilidade",
+        automacao: "Automação",
+        orquestracao: "Orquestração"
+      };
 
+      return labels[key] || key;
+    }
+
+    function renderCompletion() {
       return `
         ${renderHeader()}
           <div class="vp-grid">
@@ -918,22 +2751,35 @@ Critérios de qualidade:
                 <div class="vp-text">
                   Você concluiu o primeiro ciclo da jornada <b>Estrutura Operacional</b>.
                   A evolução demonstrada não foi pontuação superficial: foi capacidade de transformar
-                  ambiguidade em estrutura operacional.
+                  ambiguidade em estrutura, IA em instrumento e decisão em sistema.
                   <br><br>
-                  Maturidade média atual: <b>${avg}%</b>.
+                  Maturidade média atual: <b>${avgMaturity()}%</b>.<br>
+                  Patente final: <b>${escapeHTML(currentRank())}</b>.
                 </div>
               </div>
 
               <div class="vp-card">
-                <h3>Competências ativadas</h3>
+                <h3>Competências estabilizadas</h3>
                 <div class="vp-text">
                   Clareza executiva, síntese operacional, estruturação de problemas,
-                  uso mais maduro de IA externa, organização de hipóteses e tradução de caos em plano de ação.
+                  delegação madura para IA externa, controle de qualidade, priorização sob restrição,
+                  coordenação entre áreas e arquitetura de decisão.
                 </div>
               </div>
+
+              <div class="vp-card pulse-glow">
+                <h3>Resultado da jornada</h3>
+                <div class="vp-text">
+                  Estrutura operacional estabilizada. Capacidade de síntese ampliada.
+                  Novo nível de maturidade decisória desbloqueado.
+                </div>
+              </div>
+
+              ${renderFutureJourneys()}
             </div>
             <div>
               ${renderAttributesPanel()}
+              ${renderUnlocksPanel()}
             </div>
           </div>
         </div>
@@ -941,7 +2787,27 @@ Critérios de qualidade:
         <div class="vp-button-row">
           <button class="btn-restart" onclick="restartJourney()">Reiniciar</button>
         </div>
+        ${renderToast()}
       `;
+    }
+
+    function renderToast() {
+      if (!state.toast) return "";
+
+      const toast = `
+        <div class="vp-toast">
+          <div class="vp-toast-title">${escapeHTML(state.toast.title)}</div>
+          <div class="vp-toast-text">${escapeHTML(state.toast.text)}</div>
+        </div>
+      `;
+
+      setTimeout(() => {
+        state.toast = null;
+        const node = document.querySelector(".vp-toast");
+        if (node) node.remove();
+      }, 4200);
+
+      return toast;
     }
 
     function render() {
@@ -966,6 +2832,10 @@ Critérios de qualidade:
       state.lastPassed = false;
       state.lastFeedback = null;
       state.currentAnswer = "";
+      state.toast = {
+        title: "Jornada iniciada",
+        text: "Ambiente operacional ativado. Primeira competência: transformar caos em estrutura."
+      };
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -980,17 +2850,29 @@ Critérios de qualidade:
       const result = evaluateResponse(state.currentAnswer, mission);
       state.lastPassed = result.passed;
       state.lastFeedback = result;
+      state.previousAnswers.push({
+        missionId: mission.id,
+        outputType: mission.expected_output_type,
+        answer: state.currentAnswer,
+        passed: result.passed,
+        timestamp: Date.now()
+      });
+      if (state.previousAnswers.length > 40) state.previousAnswers.shift();
 
       if (result.passed) {
         applyMissionGain(mission);
+        if (!state.toast) {
+          state.toast = {
+            title: "Capacidade ampliada",
+            text: "Maturidade estrutural aumentada. A próxima missão exigirá mais precisão operacional."
+          };
+        }
       }
 
       render();
 
       const feedbackBox = document.getElementById("feedbackBox");
-      if (feedbackBox) {
-        feedbackBox.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      if (feedbackBox) feedbackBox.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function nextMission() {
@@ -1001,6 +2883,10 @@ Critérios de qualidade:
         state.lastPassed = false;
         state.lastFeedback = null;
         state.currentAnswer = "";
+        state.toast = {
+          title: "Nova camada operacional",
+          text: `${currentMission().title}: ${currentMission().arc}.`
+        };
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
@@ -1008,6 +2894,10 @@ Critérios de qualidade:
         state.lastPassed = false;
         state.lastFeedback = null;
         state.currentAnswer = "";
+        state.toast = {
+          title: "Jornada concluída",
+          text: "Arquitetura operacional estabilizada. Você concluiu o primeiro ciclo."
+        };
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -1017,6 +2907,24 @@ Critérios de qualidade:
       state = createInitialState();
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function fillScaffold() {
+      const mission = currentMission();
+      const answerBox = document.getElementById("answerBox");
+
+      if (!answerBox) return;
+
+      const current = answerBox.value.trim();
+
+      if (current.length > 0) {
+        answerBox.value = current + "\n\n---\n\n" + mission.expected_structure;
+      } else {
+        answerBox.value = mission.expected_structure;
+      }
+
+      state.currentAnswer = answerBox.value;
+      answerBox.focus();
     }
 
     render();
