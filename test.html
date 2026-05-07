@@ -620,6 +620,42 @@
       50% { box-shadow: 0 0 32px rgba(214,168,95,0.14); }
     }
 
+
+    .vp-expectation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .vp-expectation-box {
+      border: 1px solid rgba(214,168,95,0.22);
+      background: rgba(255,255,255,0.024);
+      border-radius: 15px;
+      padding: 14px;
+    }
+
+    .vp-expectation-box.warning {
+      border-color: rgba(208,131,112,0.34);
+      background: rgba(208,131,112,0.055);
+    }
+
+    .vp-expectation-box b {
+      display: block;
+      color: var(--vp-gold-2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 7px;
+    }
+
+    .vp-expectation-box span {
+      color: var(--vp-muted);
+      font-size: 13px;
+      line-height: 1.5;
+      display: block;
+    }
+
     @media (max-width: 980px) {
       .vp-grid,
       .vp-header {
@@ -1532,6 +1568,109 @@ Resultado esperado:
       "Decisão não é texto. Decisão é consequência organizada."
     ];
 
+
+    const OUTPUT_TYPE_RULES = {
+      resposta_operacional: {
+        label: "Resposta operacional estruturada",
+        not_expected: "prompt genérico para IA ou lista solta de boas práticas",
+        required: ["resumo", "prioridades", "hipóteses", "ações", "responsáveis", "próximos passos"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      quadro_decisao: {
+        label: "Quadro de decisão",
+        not_expected: "plano de ação genérico ou prompt para IA",
+        required: ["fatos", "hipóteses", "lacunas", "evidências", "decisão pendente", "encaminhamentos"],
+        wrong: ["papel da ia", "atue como", "critérios de qualidade"]
+      },
+      prompt_ia: {
+        label: "Prompt operacional para IA externa",
+        not_expected: "análise direta de churn sem instrução para a IA",
+        required: ["papel da IA", "contexto", "objetivo", "tarefa", "formato", "critérios", "limites"],
+        wrong: []
+      },
+      refinamento_ia: {
+        label: "Prompt de refinamento para IA",
+        not_expected: "resposta final de churn ou elogio genérico à IA",
+        required: ["diagnóstico", "problema", "pedido de refinamento", "exigências", "formato esperado"],
+        wrong: []
+      },
+      plano_contencao: {
+        label: "Plano de contenção operacional",
+        not_expected: "prompt genérico para IA ou diagnóstico completo de causa raiz",
+        required: ["posição provisória", "ação de contenção", "o que sabemos", "o que não sabemos", "riscos", "responsáveis", "mensagem executiva"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      matriz_tradeoff: {
+        label: "Matriz de trade-off",
+        not_expected: "lista de ações sem comparação entre alternativas",
+        required: ["alternativas", "critérios", "comparação", "trade-offs", "recomendação", "condição de revisão"],
+        wrong: ["papel da ia", "atue como", "critérios de qualidade"]
+      },
+      sintese_executiva: {
+        label: "Síntese executiva de uma página",
+        not_expected: "relatório longo, ata de reunião ou prompt para IA",
+        required: ["mensagem principal", "diagnóstico", "recomendação", "riscos", "decisão requerida", "próximos dias"],
+        wrong: ["papel da ia", "atue como", "formato da resposta", "critérios de qualidade"]
+      },
+      protocolo_validacao: {
+        label: "Protocolo de validação",
+        not_expected: "nova inferência não verificada ou defesa genérica da IA",
+        required: ["correção", "risco", "fato", "hipótese", "validação", "revisão humana", "ajuste"],
+        wrong: ["atue como consultoria", "campanhas personalizadas"]
+      },
+      workflow_operacional: {
+        label: "Workflow operacional",
+        not_expected: "lista de tarefas sem entrada, transformação, validação e saída",
+        required: ["objetivo", "entradas", "etapas", "IA", "validação humana", "saída", "controles", "cadência"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      alinhamento_stakeholders: {
+        label: "Alinhamento de stakeholders",
+        not_expected: "escolher um lado ou listar áreas sem critério comum",
+        required: ["interesses por área", "critério comum", "decisão de curto prazo", "agenda estrutural", "governança", "risco"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      recomendacao_comite: {
+        label: "Recomendação para comitê executivo",
+        not_expected: "diagnóstico sem decisão ou certeza artificial",
+        required: ["recomendação", "base", "risco aceito", "evidências faltantes", "plano de ação", "critério de revisão"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      },
+      arquitetura_operacional: {
+        label: "Arquitetura operacional de decisão",
+        not_expected: "boas práticas soltas ou apresentação conceitual sem fluxo",
+        required: ["princípio", "arquitetura", "sinais", "estruturação", "IA", "validação", "decisão", "execução", "revisão", "papéis", "controles", "indicadores", "cadência"],
+        wrong: ["papel da ia", "atue como", "formato da resposta"]
+      }
+    };
+
+    const MISSION_EVALUATION_CONFIGS = {
+      1: { expected_output_type: "resposta_operacional", exclusive_terms: ["diretoria", "sexta", "produto", "atendimento", "preço", "onboarding", "próximos dias", "onde está concentrado", "números pioraram"], min_exclusive_hits: 4 },
+      2: { expected_output_type: "quadro_decisao", exclusive_terms: ["marketing", "produto", "atendimento", "comercial", "dados", "clientes novos", "clientes antigos", "grandes contas", "baixo uso", "reunião terminou sem decisão"], min_exclusive_hits: 5 },
+      3: { expected_output_type: "prompt_ia", exclusive_terms: ["IA externa", "não terá acesso aos dados", "não inventar dados", "segmentos prioritários", "riscos de interpretação", "reunião de sexta", "estruturar o raciocínio"], min_exclusive_hits: 4 },
+      4: { expected_output_type: "refinamento_ia", exclusive_terms: ["resposta genérica", "pouco útil", "pedido de refinamento", "prioridades", "evidências", "ações concretas", "evitar recomendações genéricas"], min_exclusive_hits: 4 },
+      5: { expected_output_type: "plano_contencao", exclusive_terms: ["11h", "cliente grande", "12 chamados", "contenção", "posição provisória", "problema político", "mensagem ao diretor", "não temos evidência suficiente"], min_exclusive_hits: 5 },
+      6: { expected_output_type: "matriz_tradeoff", exclusive_terms: ["desconto", "onboarding", "grandes contas", "comercial", "produto", "financeiro", "margem", "não há orçamento", "condição de revisão"], min_exclusive_hits: 5 },
+      7: { expected_output_type: "sintese_executiva", exclusive_terms: ["uma página", "diretor", "onde dói mais", "decisão precisa ser tomada", "próximos 7 dias", "histórico longo", "explicação metodológica"], min_exclusive_hits: 4 },
+      8: { expected_output_type: "protocolo_validacao", exclusive_terms: ["enterprise", "segmento", "apresentação", "inferência", "fato vs hipótese", "ninguém forneceu dados", "rascunho", "antes da reunião"], min_exclusive_hits: 5 },
+      9: { expected_output_type: "workflow_operacional", exclusive_terms: ["toda semana", "reclamações", "tickets críticos", "clientes em risco", "ações em andamento", "padronizar", "sem burocracia excessiva", "cadência"], min_exclusive_hits: 5 },
+      10: { expected_output_type: "alinhamento_stakeholders", exclusive_terms: ["produto", "comercial", "financeiro", "atendimento", "dados", "margem", "chamados", "evidência conclusiva", "parcialmente certos"], min_exclusive_hits: 6 },
+      11: { expected_output_type: "recomendacao_comite", exclusive_terms: ["comitê", "40 minutos", "defensável", "certeza absoluta", "risco aceito", "evidência ainda falta", "quando a decisão será revisada"], min_exclusive_hits: 4 },
+      12: { expected_output_type: "arquitetura_operacional", exclusive_terms: ["várias semanas", "arquitetura operacional", "entrada de sinais", "organização de hipóteses", "análise assistida", "validação", "execução", "revisão", "institucionalizar"], min_exclusive_hits: 5 }
+    };
+
+    MISSIONS.forEach(mission => {
+      const config = MISSION_EVALUATION_CONFIGS[mission.id] || {};
+      const typeRule = OUTPUT_TYPE_RULES[config.expected_output_type] || {};
+      mission.expected_output_type = config.expected_output_type || "resposta_operacional";
+      mission.delivery_label = typeRule.label || "Entrega operacional";
+      mission.not_expected = typeRule.not_expected || "resposta genérica reutilizável";
+      mission.output_required_patterns = typeRule.required || [];
+      mission.wrong_output_patterns = [...(typeRule.wrong || [])];
+      mission.exclusive_terms = config.exclusive_terms || [];
+      mission.min_exclusive_hits = config.min_exclusive_hits || Math.min(4, mission.exclusive_terms.length);
+    });
+
     let state = createInitialState();
 
     function createInitialState() {
@@ -1547,6 +1686,7 @@ Resultado esperado:
         lastPassed: false,
         lastFeedback: null,
         currentAnswer: "",
+        previousAnswers: [],
         toast: null,
         unlocked: [],
         lastUnlockCount: 0
@@ -1634,6 +1774,233 @@ Resultado esperado:
       return hasManyKeywordsButLittleSubstance || repeatedOperationalWords.length >= 3;
     }
 
+
+    const STOPWORDS = new Set([
+      "a", "o", "os", "as", "um", "uma", "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas",
+      "por", "para", "com", "sem", "que", "se", "e", "ou", "mas", "como", "ao", "aos", "sua", "seu", "suas", "seus",
+      "isso", "esse", "essa", "este", "esta", "ser", "ter", "foi", "sao", "são", "deve", "devem", "precisa", "precisam",
+      "mais", "menos", "tambem", "também", "entre", "sobre", "pela", "pelo", "pelos", "pelas", "cada", "todo", "toda",
+      "todos", "todas", "ate", "até", "ja", "já", "ha", "há", "quando", "onde", "qual", "quais"
+    ]);
+
+    function tokenizeRelevant(text) {
+      return normalizeText(text)
+        .replace(/[^a-z0-9\s]/g, " ")
+        .split(/\s+/)
+        .filter(word => word.length >= 3 && !STOPWORDS.has(word));
+    }
+
+    function jaccardSimilarity(aWords, bWords) {
+      const a = new Set(aWords);
+      const b = new Set(bWords);
+      if (!a.size || !b.size) return 0;
+      let intersection = 0;
+      a.forEach(word => { if (b.has(word)) intersection += 1; });
+      const union = new Set([...a, ...b]).size;
+      return union ? intersection / union : 0;
+    }
+
+    function extractTitles(text) {
+      return String(text || "")
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.includes(":") && line.length <= 92)
+        .map(line => normalizeText(line.split(":")[0]).replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim())
+        .filter(Boolean);
+    }
+
+    function titleSequenceSimilarity(currentTitles, previousTitles) {
+      if (!currentTitles.length || !previousTitles.length) return 0;
+      const max = Math.min(currentTitles.length, previousTitles.length, 8);
+      let samePosition = 0;
+      for (let i = 0; i < max; i++) {
+        if (currentTitles[i] === previousTitles[i]) samePosition += 1;
+      }
+      return samePosition / max;
+    }
+
+    function detectReusedAnswer(currentAnswer, previousAnswers, mission) {
+      const relevantPrevious = (previousAnswers || []).filter(item => item.missionId !== mission.id);
+      if (!relevantPrevious.length) {
+        return { reused: false, warning: false, maxJaccard: 0, titleSimilarity: 0, matchedMissionId: null };
+      }
+
+      const currentTokens = tokenizeRelevant(currentAnswer);
+      const currentTitles = extractTitles(currentAnswer);
+      let maxJaccard = 0;
+      let maxTitleSimilarity = 0;
+      let matchedMissionId = null;
+
+      relevantPrevious.forEach(item => {
+        const jac = jaccardSimilarity(currentTokens, tokenizeRelevant(item.answer));
+        const titleSim = titleSequenceSimilarity(currentTitles, extractTitles(item.answer));
+        if (jac > maxJaccard || titleSim > maxTitleSimilarity) {
+          matchedMissionId = item.missionId;
+        }
+        maxJaccard = Math.max(maxJaccard, jac);
+        maxTitleSimilarity = Math.max(maxTitleSimilarity, titleSim);
+      });
+
+      const currentType = mission.expected_output_type;
+      const matchedMission = MISSIONS.find(m => m.id === matchedMissionId);
+      const differentType = matchedMission && matchedMission.expected_output_type !== currentType;
+      const reused = maxJaccard >= 0.65 || (differentType && maxTitleSimilarity >= 0.72);
+      const warning = !reused && (maxJaccard >= 0.55 || maxTitleSimilarity >= 0.58);
+
+      return { reused, warning, maxJaccard, titleSimilarity: maxTitleSimilarity, matchedMissionId };
+    }
+
+    function extractSections(answer) {
+      const sections = [];
+      const lines = String(answer || "").split("\n");
+      let current = null;
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        const isTitle = trimmed.includes(":") && trimmed.length <= 92 && !trimmed.endsWith(";");
+        if (isTitle) {
+          if (current) sections.push(current);
+          const idx = trimmed.indexOf(":");
+          current = {
+            title: trimmed.slice(0, idx).trim(),
+            normalizedTitle: normalizeText(trimmed.slice(0, idx).trim()),
+            content: trimmed.slice(idx + 1).trim()
+          };
+        } else if (current) {
+          current.content += "\n" + trimmed;
+        }
+      });
+
+      if (current) sections.push(current);
+      return sections;
+    }
+
+    function isLooseWordList(content) {
+      const clean = String(content || "").trim();
+      if (!clean) return true;
+      const lines = clean.split("\n").map(l => l.trim()).filter(Boolean);
+      const words = tokenizeRelevant(clean);
+      const mostlyBullets = lines.length >= 2 && lines.filter(l => /^[-•\d]/.test(l)).length / lines.length > 0.75;
+      return words.length < 12 || (mostlyBullets && clean.length < 140);
+    }
+
+    function sectionMatches(section, requiredName) {
+      const title = normalizeText(section.normalizedTitle);
+      const req = normalizeText(requiredName);
+      return title.includes(req) || req.includes(title);
+    }
+
+    function validateSectionDepth(answer, mission) {
+      const sections = extractSections(answer);
+      const required = mission.output_required_patterns || [];
+      const scenarioTerms = [...(mission.required_context_terms || []), ...(mission.exclusive_terms || [])];
+      const deepSections = [];
+      const missing = [];
+
+      required.forEach(req => {
+        const section = sections.find(sec => sectionMatches(sec, req));
+        if (!section) {
+          missing.push(req);
+          return;
+        }
+
+        const usefulContent = String(section.content || "").replace(/[-•\d.()]/g, " ").replace(/\s+/g, " ").trim();
+        const hasScenarioAnchor = countHits(section.title + " " + section.content, scenarioTerms).count >= 1;
+        const developed = usefulContent.length >= 80 && !isLooseWordList(usefulContent) && hasScenarioAnchor;
+
+        if (developed) deepSections.push(req);
+      });
+
+      const minDeep = Math.max(3, Math.ceil(required.length * 0.45));
+      return {
+        sections,
+        deepSections,
+        missing,
+        requiredCount: required.length,
+        deepCount: deepSections.length,
+        minDeep,
+        passed: deepSections.length >= minDeep
+      };
+    }
+
+    function detectWrongOutputFormat(answer, mission) {
+      const clean = normalizeText(answer);
+      const wrongPatterns = mission.wrong_output_patterns || [];
+      const foundWrongPatterns = wrongPatterns.filter(pattern => clean.includes(normalizeText(pattern)));
+      const hasPromptSkeleton = countHits(answer, ["papel da ia", "contexto", "objetivo", "tarefa", "formato da resposta", "critérios de qualidade", "atue como"]).count >= 4;
+      const promptAllowed = ["prompt_ia", "refinamento_ia"].includes(mission.expected_output_type);
+
+      let reason = "";
+      if (!promptAllowed && hasPromptSkeleton) {
+        reason = "A resposta usa esqueleto de prompt para IA em uma missão que pede outra entrega.";
+      } else if (foundWrongPatterns.length) {
+        reason = `Formato incompatível detectado: ${foundWrongPatterns.join(", ")}.`;
+      }
+
+      if (mission.expected_output_type === "matriz_tradeoff") {
+        const hasAlternatives = countHits(answer, ["desconto", "onboarding", "grandes contas"]).count >= 2;
+        const hasComparison = countHits(answer, ["comparação", "comparar", "alternativas", "trade-off", "trade-offs", "critério", "critérios"]).count >= 3;
+        if (!hasAlternatives || !hasComparison) reason = "A missão exige comparação explícita entre alternativas, não apenas plano de ação.";
+      }
+
+      if (mission.expected_output_type === "quadro_decisao") {
+        const hasDecisionFrame = countHits(answer, ["fatos", "hipóteses", "lacunas", "evidências", "decisão pendente"]).count >= 4;
+        if (!hasDecisionFrame) reason = "A missão exige quadro de decisão com fatos, hipóteses, lacunas, evidências e decisão pendente.";
+      }
+
+      if (mission.expected_output_type === "protocolo_validacao") {
+        const hasValidationFrame = countHits(answer, ["fato", "hipótese", "inferência", "validação", "revisão", "apresentação"]).count >= 4;
+        if (!hasValidationFrame) reason = "A missão exige protocolo de validação, separando fato, hipótese e inferência.";
+      }
+
+      return { wrong: Boolean(reason), reason, foundWrongPatterns };
+    }
+
+    function evaluateMissionSpecificity(answer, mission, scoring) {
+      const exclusive = countHits(answer, mission.exclusive_terms || []);
+      const typeRule = OUTPUT_TYPE_RULES[mission.expected_output_type] || {};
+      const typeHits = countHits(answer, mission.output_required_patterns || []);
+      const wrongFormat = detectWrongOutputFormat(answer, mission);
+      const reused = detectReusedAnswer(answer, state.previousAnswers, mission);
+      const sectionDepth = validateSectionDepth(answer, mission);
+      const rawScenarioHits = countHits(answer, [...(mission.required_context_terms || []), ...(mission.exclusive_terms || [])]);
+
+      const exclusiveScore = Math.min(100, Math.round((exclusive.count / Math.max(1, mission.min_exclusive_hits)) * 100));
+      const typeScore = Math.min(100, Math.round((typeHits.count / Math.max(1, (mission.output_required_patterns || []).length * 0.65)) * 100));
+      const sectionDepthScore = Math.min(100, Math.round((sectionDepth.deepCount / Math.max(1, sectionDepth.minDeep)) * 100));
+      const scenarioScore = Math.min(100, Math.round((rawScenarioHits.count / Math.max(1, ((mission.required_context_terms || []).length + (mission.exclusive_terms || []).length) * 0.34)) * 100));
+      const reusePenalty = reused.reused ? 45 : reused.warning ? 18 : 0;
+      const wrongPenalty = wrongFormat.wrong ? 45 : 0;
+
+      const score = clampScore(
+        exclusiveScore * 0.28 +
+        typeScore * 0.22 +
+        sectionDepthScore * 0.24 +
+        scenarioScore * 0.18 +
+        Math.min(100, scoring.rubric.contexto) * 0.08 -
+        reusePenalty -
+        wrongPenalty
+      );
+
+      return {
+        score,
+        exclusive,
+        typeHits,
+        wrongFormat,
+        reused,
+        sectionDepth,
+        scenarioHits: rawScenarioHits,
+        typeLabel: typeRule.label || mission.delivery_label,
+        notExpected: typeRule.not_expected || mission.not_expected,
+        passed: score >= 70 &&
+          exclusive.count >= mission.min_exclusive_hits &&
+          !wrongFormat.wrong &&
+          !reused.reused &&
+          sectionDepth.passed &&
+          typeHits.count >= Math.max(3, Math.ceil((mission.output_required_patterns || []).length * 0.50))
+      };
+    }
+
     function scoreRubric(answer, mission) {
       const cleanAnswer = String(answer || "").trim();
       const lines = cleanAnswer.split("\n").filter(line => line.trim());
@@ -1718,6 +2085,7 @@ Resultado esperado:
       const cleanAnswer = String(answer || "").trim();
       const scoring = scoreRubric(cleanAnswer, mission);
       const attempts = state.attempts[mission.id] || 0;
+      const specificity = evaluateMissionSpecificity(cleanAnswer, mission, scoring);
 
       const checks = {
         "Densidade mínima": cleanAnswer.length >= mission.min_chars,
@@ -1725,14 +2093,46 @@ Resultado esperado:
         "Estrutura operacional": scoring.rubric.estrutura >= 68,
         "Contexto do caso": scoring.rubric.contexto >= 62,
         "Priorização ou decisão": scoring.rubric.priorizacao >= 54,
-        "Resposta não hackeada": !scoring.generic,
-        "Maturidade ponderada": scoring.weightedScore >= 68
+        "Resposta não genérica": !scoring.generic,
+        "Maturidade ponderada": scoring.weightedScore >= 68,
+        "Tipo de entrega correto": specificity.typeHits.count >= Math.max(3, Math.ceil((mission.output_required_patterns || []).length * 0.50)),
+        "Termos exclusivos da missão": specificity.exclusive.count >= mission.min_exclusive_hits,
+        "Formato compatível": !specificity.wrongFormat.wrong,
+        "Seções com profundidade": specificity.sectionDepth.passed,
+        "Resposta não reaproveitada": !specificity.reused.reused,
+        "Aderência específica": specificity.score >= 70
       };
 
-      const passed = Object.values(checks).every(Boolean);
+      const passed = Object.values(checks).every(Boolean) && specificity.passed;
 
       const strengths = [];
       const gaps = [];
+
+      if (specificity.exclusive.count >= mission.min_exclusive_hits) {
+        strengths.push(`A resposta usa elementos específicos desta missão: ${specificity.exclusive.found.slice(0, 6).join(", ")}.`);
+      } else {
+        gaps.push(`Pouca aderência ao cenário específico. Use pelo menos ${mission.min_exclusive_hits} elementos próprios deste caso, como: ${(mission.exclusive_terms || []).slice(0, 7).join(", ")}.`);
+      }
+
+      if (!specificity.wrongFormat.wrong) {
+        strengths.push(`O formato está compatível com a entrega esperada: ${specificity.typeLabel}.`);
+      } else {
+        gaps.push(specificity.wrongFormat.reason || "O conteúdo está estruturado, mas no formato errado para esta missão.");
+      }
+
+      if (!specificity.reused.reused) {
+        if (specificity.reused.warning) {
+          gaps.push("A resposta tem sinais de reaproveitamento estrutural. Reforce a adaptação ao tipo de entrega desta missão.");
+        }
+      } else {
+        gaps.push("Sua resposta parece reaproveitada de uma missão anterior. Esta missão exige uma entrega diferente, com formato e vocabulário próprios.");
+      }
+
+      if (specificity.sectionDepth.passed) {
+        strengths.push("As seções obrigatórias têm densidade mínima e conexão com o cenário, não apenas títulos corretos.");
+      } else {
+        gaps.push(`Seções superficiais. Pelo menos ${specificity.sectionDepth.minDeep} blocos obrigatórios precisam ter desenvolvimento real, com contexto, consequência e encaminhamento.`);
+      }
 
       if (scoring.rubric.estrutura >= 76) {
         strengths.push("A resposta apresenta arquitetura visível: blocos, hierarquia e encaminhamento operacional.");
@@ -1758,22 +2158,17 @@ Resultado esperado:
         gaps.push("Inclua mais controle de qualidade: o que é fato, o que é hipótese, o que precisa ser validado e qual risco permanece.");
       }
 
-      if (scoring.rubric.sintese >= 72) {
-        strengths.push("A síntese está adequada: existe densidade sem excesso desnecessário.");
-      } else {
-        gaps.push("A síntese pode melhorar. Reduza explicações periféricas e concentre energia no que muda a decisão.");
-      }
-
       if (scoring.generic) {
-        gaps.push("A resposta aciona muitos termos corretos, mas ainda parece pouco específica. Evite keyword stuffing: cada bloco precisa produzir consequência operacional.");
+        gaps.push("Resposta genérica apesar de longa. Cada bloco precisa carregar uma consequência operacional específica do caso.");
       }
 
       const bottleneck = getBottleneck(scoring.rubric);
       const maturity = getMaturityLabel(scoring.weightedScore);
+      const primaryReason = getPrimaryFailureReason(checks, specificity, scoring);
 
       const diagnosis = passed
         ? `${mission.consequence_success} Competência demonstrada: ${mission.competency}.`
-        : `${mission.consequence_fail} Gargalo principal: ${bottleneck.label}. ${bottleneck.message}`;
+        : `${primaryReason} ${mission.consequence_fail} Gargalo principal: ${bottleneck.label}. ${bottleneck.message}`;
 
       return {
         passed,
@@ -1783,13 +2178,37 @@ Resultado esperado:
         diagnosis,
         rubric: scoring.rubric,
         weightedScore: scoring.weightedScore,
+        missionSpecificityScore: specificity.score,
         maturity,
         bottleneck,
         foundSections: scoring.foundSections,
         foundContext: scoring.foundContext,
-        metrics: scoring.metrics,
+        foundExclusive: specificity.exclusive.found,
+        expectedDelivery: specificity.typeLabel,
+        notExpected: specificity.notExpected,
+        specificity,
+        metrics: {
+          ...scoring.metrics,
+          exclusiveHits: specificity.exclusive.count,
+          requiredExclusiveHits: mission.min_exclusive_hits,
+          deepSections: specificity.sectionDepth.deepCount,
+          requiredDeepSections: specificity.sectionDepth.minDeep,
+          reuseJaccard: specificity.reused.maxJaccard,
+          titleSimilarity: specificity.reused.titleSimilarity
+        },
         hint: getProgressiveHint(mission, attempts)
       };
+    }
+
+    function getPrimaryFailureReason(checks, specificity, scoring) {
+      if (specificity.reused.reused) return "Resposta reaproveitada.";
+      if (specificity.wrongFormat.wrong) return "Formato errado para a missão.";
+      if (checks["Termos exclusivos da missão"] === false) return "Falta de termos exclusivos do cenário.";
+      if (!specificity.sectionDepth.passed) return "Seções superficiais.";
+      if (specificity.score < 70) return "Pouca aderência ao cenário específico.";
+      if (scoring.generic) return "Resposta genérica apesar de longa.";
+      if (!checks["Maturidade ponderada"]) return "Baixa maturidade operacional.";
+      return "A entrega ainda não atinge o padrão mínimo desta missão.";
     }
 
     function getBottleneck(rubric) {
@@ -2072,6 +2491,38 @@ Resultado esperado:
       `;
     }
 
+    function renderExpectationPanel(mission) {
+      const required = (mission.output_required_patterns || []).slice(0, 8).join(" · ");
+      const exclusive = (mission.exclusive_terms || []).slice(0, 7).join(" · ");
+      return `
+        <div class="vp-card soft-rise">
+          <h3>Entrega esperada</h3>
+          <div class="vp-expectation-grid">
+            <div class="vp-expectation-box">
+              <b>Tipo de entrega</b>
+              <span>${escapeHTML(mission.delivery_label)}</span>
+            </div>
+            <div class="vp-expectation-box warning">
+              <b>Esta missão não pede</b>
+              <span>${escapeHTML(mission.not_expected)}</span>
+            </div>
+            <div class="vp-expectation-box">
+              <b>Blocos avaliados</b>
+              <span>${escapeHTML(required)}</span>
+            </div>
+            <div class="vp-expectation-box warning">
+              <b>Formato que reprova</b>
+              <span>Resposta genérica, prompt reaproveitado, lista sem decisão ou texto que serviria para qualquer cenário.</span>
+            </div>
+          </div>
+          <div class="vp-divider"></div>
+          <div class="vp-small">
+            Termos específicos esperados no cenário: ${escapeHTML(exclusive)}.
+          </div>
+        </div>
+      `;
+    }
+
     function renderMission() {
       const mission = currentMission();
       const how = mission.how_to_think.map(item => `<li>${escapeHTML(item)}</li>`).join("");
@@ -2110,6 +2561,8 @@ Resultado esperado:
                 <div class="vp-text">${escapeHTML(mission.problem)}</div>
               </div>
 
+              ${renderExpectationPanel(mission)}
+
               <div class="vp-card">
                 <h3>Como pensar</h3>
                 <div class="vp-text">
@@ -2140,7 +2593,7 @@ Resultado esperado:
                 <h3>Critério de avanço</h3>
                 <div class="vp-text">
                   Você avança apenas se demonstrar estrutura mínima, contexto, clareza,
-                  priorização e confiabilidade.
+                  priorização, confiabilidade e aderência específica ao tipo de entrega desta missão.
                 </div>
                 <div class="vp-divider"></div>
                 <div class="vp-small">
@@ -2240,7 +2693,8 @@ Resultado esperado:
 
           <h3>Maturidade da entrega</h3>
           <div class="vp-text">
-            Score ponderado: <b>${result.weightedScore}/100</b> · ${escapeHTML(result.maturity)}
+            Score ponderado: <b>${result.weightedScore}/100</b> · ${escapeHTML(result.maturity)}<br>
+            Aderência específica da missão: <b>${result.missionSpecificityScore}/100</b> · Entrega esperada: <b>${escapeHTML(result.expectedDelivery)}</b>
           </div>
           <div class="vp-maturity-line">${rubric}</div>
 
@@ -2264,6 +2718,8 @@ Resultado esperado:
             Caracteres: ${result.metrics.chars} · Linhas: ${result.metrics.lines} ·
             Seções detectadas: ${result.metrics.sectionHits} ·
             Termos contextuais: ${result.metrics.contextHits} ·
+            Termos exclusivos: ${result.metrics.exclusiveHits}/${result.metrics.requiredExclusiveHits} ·
+            Seções profundas: ${result.metrics.deepSections}/${result.metrics.requiredDeepSections} ·
             Marcadores estruturais: ${result.metrics.structuralTitles}
           </div>
         </div>
@@ -2394,6 +2850,14 @@ Resultado esperado:
       const result = evaluateResponse(state.currentAnswer, mission);
       state.lastPassed = result.passed;
       state.lastFeedback = result;
+      state.previousAnswers.push({
+        missionId: mission.id,
+        outputType: mission.expected_output_type,
+        answer: state.currentAnswer,
+        passed: result.passed,
+        timestamp: Date.now()
+      });
+      if (state.previousAnswers.length > 40) state.previousAnswers.shift();
 
       if (result.passed) {
         applyMissionGain(mission);
