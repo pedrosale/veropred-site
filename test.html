@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Veropred Analytics | Arquitetura de Decisão para Ambientes Complexos</title>
-<meta name="description" content="Boutique de arquitetura de decisão para crédito, risco, IA, modelagem e estratégia. Transformamos dados, modelos e sinais em decisões executáveis." />
+<title>Veropred Analytics | Arquitetura de Decisão com Dados, Risco e IA</title>
+<meta name="description" content="Boutique de arquitetura de decisão aplicada a crédito, risco, IA, modelagem e estratégia. Dados, modelos e sinais traduzidos em critérios, políticas e execução." />
 
 <style>
 /* ============================================================
-   VEROPRED ANALYTICS — HOMEPAGE FINAL
+   VEROPRED ANALYTICS — VERSÃO LAPIDADA
    Estrutura: HTML + CSS + JavaScript puro
-   Direção: homepage premium, fluida, explorável e mobile-first
+   Direção: experiência institucional premium, fluida e mobile-first
 ============================================================ */
 
 :root {
@@ -869,6 +869,94 @@ h3 {
 .footer-line strong { color: var(--cream); }
 .footer-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
+
+/* ============================================================
+   ECOSSISTEMA
+============================================================ */
+.ecosystem-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr .85fr;
+    gap: 18px;
+}
+
+.ecosystem-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(216,176,106,.24);
+    background:
+        radial-gradient(circle at 18% 18%, rgba(216,176,106,.12), transparent 36%),
+        rgba(255,255,255,.055);
+    padding: clamp(24px, 3vw, 34px);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: .26s var(--ease);
+}
+
+.ecosystem-card::before {
+    content: "";
+    position: absolute;
+    inset: -80px -80px auto auto;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(216,176,106,.22), transparent 68%);
+}
+
+.ecosystem-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(216,176,106,.46);
+    background:
+        radial-gradient(circle at 18% 18%, rgba(216,176,106,.15), transparent 38%),
+        rgba(255,255,255,.078);
+}
+
+.ecosystem-card.featured {
+    min-height: 360px;
+    background:
+        radial-gradient(circle at 20% 18%, rgba(241,199,126,.18), transparent 36%),
+        radial-gradient(circle at 72% 70%, rgba(201,120,58,.14), transparent 40%),
+        rgba(255,255,255,.062);
+}
+
+.ecosystem-card small {
+    position: relative;
+    z-index: 1;
+    color: var(--copper-soft);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    font-size: 12px;
+    margin-bottom: 14px;
+}
+
+.ecosystem-card h3 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 12px;
+    font-size: clamp(24px, 3.2vw, 40px);
+    line-height: 1;
+    letter-spacing: -.045em;
+}
+
+.ecosystem-card p {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 18px;
+    color: var(--muted);
+    line-height: 1.55;
+}
+
+.ecosystem-card span {
+    position: relative;
+    z-index: 1;
+    color: var(--gold);
+    font-weight: 900;
+}
+
 /* ============================================================
    RESPONSIVE
 ============================================================ */
@@ -878,6 +966,7 @@ h3 {
     .cta-panel,
     .section-head,
     .area-top { grid-template-columns: 1fr; }
+    .ecosystem-grid { grid-template-columns: 1fr; }
     .grid.four,
     .grid.three,
     .proof-bar,
@@ -932,10 +1021,10 @@ h3 {
         </a>
 
         <div class="nav-links" aria-label="Navegação principal">
-            <button class="nav-link" onclick="scrollToId('arquitetura')">Decision Architecture</button>
-            <button class="nav-link" onclick="scrollToId('explorar')">Frentes</button>
+            <button class="nav-link" onclick="scrollToId('arquitetura')">Método</button>
+            <button class="nav-link" onclick="scrollToId('explorar')">Atuação</button>
+            <button class="nav-link" onclick="scrollToId('ecossistema')">Ecossistema</button>
             <a class="nav-link" href="aplicacoes.html">Aplicações</a>
-            <a class="nav-link" href="simulador.html">Simulador</a>
             <button class="nav-link nav-cta" onclick="scrollToId('contato')">Avaliar cenário</button>
         </div>
     </nav>
@@ -945,19 +1034,19 @@ h3 {
     <!-- HERO -->
     <section class="wrap hero" id="inicio">
         <div class="hero-copy">
-            <div class="kicker">Boutique de arquitetura de decisão</div>
-            <h1>Complexidade não pede mais ruído. Pede estrutura.</h1>
+            <div class="kicker">Boutique de analytics, risco e IA aplicada</div>
+            <h1>Decisões críticas exigem mais do que bons modelos.</h1>
             <p class="lead">
-                A Veropred Analytics atua onde dados, modelos, risco e IA precisam deixar de ser sinais dispersos — e passar a sustentar decisões executáveis.
+                A Veropred Analytics ajuda empresas a transformar dados, scores, indicadores e automações em critérios de decisão, políticas executáveis e governança clara.
             </p>
 
             <div class="hero-actions">
                 <button class="btn primary" onclick="scrollToId('contato')">Avaliar um cenário de decisão</button>
-                <button class="btn secondary" onclick="scrollToId('arquitetura')">Entender a arquitetura</button>
+                <button class="btn secondary" onclick="scrollToId('ecossistema')">Explorar experiências</button>
             </div>
 
             <p class="hero-note">
-                Para instituições que já possuem capacidade analítica, mas precisam transformar evidência em critério, política, prioridade, governança e ação.
+                Para instituições que já possuem dados, modelos ou dashboards, mas precisam decidir melhor sobre risco, margem, capital, IA, crescimento e execução.
             </p>
         </div>
 
@@ -968,7 +1057,7 @@ h3 {
 
             <div class="core">
                 <strong>Decision<br>Architecture</strong>
-                <span>o núcleo proprietário da Veropred</span>
+                <span>dados, modelos, regras e execução</span>
             </div>
 
             <button class="node n1" onclick="openArea('credito'); scrollToId('explorar')"><b>Crédito</b><span>risco, margem, limite e aprovação</span></button>
@@ -986,17 +1075,17 @@ h3 {
             <div class="signature-item"><b>Dados mostram.</b><span>Mas não dizem, sozinhos, qual risco aceitar.</span></div>
             <div class="signature-item"><b>Modelos estimam.</b><span>Mas não substituem critério, política e governança.</span></div>
             <div class="signature-item"><b>Dashboards acompanham.</b><span>Mas não estruturam consequência executiva.</span></div>
-            <div class="signature-item"><b>Decisão exige arquitetura.</b><span>É aí que a Veropred atua.</span></div>
+            <div class="signature-item"><b>Decisão exige método.</b><span>É aí que a Veropred atua.</span></div>
         </div>
     </section>
 
     <!-- THESIS -->
     <section class="wrap section" id="tese">
         <div class="thesis-box">
-            <div class="eyebrow">A tese central</div>
+            <div class="eyebrow">Princípio de atuação</div>
             <h2>A lacuna não está entre dado e relatório. Está entre sinal e decisão.</h2>
             <p class="lead">
-                Empresas maduras acumulam modelos, indicadores e automações. O desafio real é definir o que muda quando o sinal aparece: quem decide, com qual critério, sob qual risco, com qual limite e com que mecanismo de revisão.
+                Empresas maduras já acumulam modelos, indicadores e automações. O desafio é definir o que muda quando o sinal aparece: quem decide, com qual critério, sob qual risco, com qual limite e com que mecanismo de revisão.
             </p>
             <div class="thesis-line">
                 <span class="pill">sinal</span>
@@ -1013,11 +1102,11 @@ h3 {
     <section class="wrap section" id="arquitetura">
         <div class="section-head">
             <div>
-                <div class="eyebrow">Núcleo proprietário</div>
+                <div class="eyebrow">Sistema de decisão</div>
                 <h2>Veropred Decision Architecture™</h2>
             </div>
             <p class="muted">
-                Um sistema para transformar complexidade analítica em decisão defensável, compreensível pela liderança e executável pela operação.
+                Um método para definir a decisão certa, medir o risco relevante, validar a evidência e transformar análise em regra operacional.
             </p>
         </div>
 
@@ -1035,9 +1124,9 @@ h3 {
             </div>
 
             <div class="arch-copy">
-                <div class="card"><strong>01</strong><h4>Menos explicação contínua. Mais centro de gravidade.</h4><p>A arquitetura organiza o pensamento da marca sem transformar a homepage em documentação técnica.</p></div>
-                <div class="card"><strong>02</strong><h4>Profundidade explorável, não despejada.</h4><p>Crédito, risco, IA, modelagem e estratégia aparecem como portas de entrada para investigação posterior.</p></div>
-                <div class="card"><strong>03</strong><h4>Decisão como produto intelectual.</h4><p>A entrega não é uma ferramenta isolada. É a estrutura que permite decidir com consistência em ambientes difíceis.</p></div>
+                <div class="card"><strong>01</strong><h4>Formulação da decisão</h4><p>Antes da modelagem, define-se qual decisão precisa mudar, quais atores participam e quais restrições limitam a ação.</p></div>
+                <div class="card"><strong>02</strong><h4>Critério e consequência</h4><p>Scores, alertas e indicadores são traduzidos em corte, limite, prioridade, política, capital ou rotina de governança.</p></div>
+                <div class="card"><strong>03</strong><h4>Uso real e revisão</h4><p>A decisão é acompanhada por métricas, estabilidade, documentação, monitoramento e ciclos de ajuste.</p></div>
             </div>
         </div>
     </section>
@@ -1065,11 +1154,11 @@ h3 {
     <section class="wrap section" id="explorar">
         <div class="section-head">
             <div>
-                <div class="eyebrow">Profundidade explorável</div>
-                <h2>Frentes de atuação, sem transformar a homepage em whitepaper.</h2>
+                <div class="eyebrow">Onde atuamos</div>
+                <h2>Frentes de atuação conectadas à decisão.</h2>
             </div>
             <p class="muted">
-                O visitante escolhe onde aprofundar. A homepage preserva atmosfera, clareza e desejo de exploração.
+                Crédito, risco, IA, modelagem e estratégia entram quando a análise precisa mudar uma decisão concreta — não apenas produzir mais informação.
             </p>
         </div>
 
@@ -1165,20 +1254,56 @@ h3 {
         </div>
     </section>
 
+    <!-- ECOSYSTEM -->
+    <section class="wrap section" id="ecossistema">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Ecossistema Veropred</div>
+                <h2>Três formas de explorar decisão, risco e IA.</h2>
+            </div>
+            <p class="muted">
+                A página principal apresenta a direção. As experiências complementares mostram a lógica aplicada em crédito, risco, IA e comunicação executiva.
+            </p>
+        </div>
+
+        <div class="ecosystem-grid">
+            <a class="ecosystem-card featured" href="simulador.html">
+                <small>Experiência interativa</small>
+                <h3>Simulador executivo de decisão de crédito</h3>
+                <p>Explore como cutoff, PD, aprovação, perda esperada, RAROC e capital econômico mudam a qualidade da decisão.</p>
+                <span>Entrar no simulador →</span>
+            </a>
+
+            <a class="ecosystem-card" href="aplicacoes.html">
+                <small>Biblioteca editorial</small>
+                <h3>Aplicações reais de decisão</h3>
+                <p>Ensaios e cards executivos sobre risco, capital, IA, modelagem, governança e arquitetura da decisão.</p>
+                <span>Ver aplicações →</span>
+            </a>
+
+            <a class="ecosystem-card" href="engenharia_prompts.html">
+                <small>Treinamento in company</small>
+                <h3>Maturidade operacional com IA</h3>
+                <p>Jornadas práticas para equipes aprenderem a usar IA com clareza, critério, segurança e qualidade operacional.</p>
+                <span>Conhecer treinamentos →</span>
+            </a>
+        </div>
+    </section>
+
     <!-- CASES -->
     <section class="wrap section compact" id="aplicacoes-preview">
         <div class="section-head">
             <div>
                 <div class="eyebrow">Aplicações com consequência</div>
-                <h2>Menos lista de técnicas. Mais decisões apoiadas.</h2>
+                <h2>Decisões que precisam de estrutura.</h2>
             </div>
-            <p class="muted">Exemplos sintéticos de onde a estrutura analítica muda risco, margem, eficiência, priorização ou governança.</p>
+            <p class="muted">Exemplos de situações em que a análise precisa sair do relatório e chegar à política, à priorização ou à governança.</p>
         </div>
 
         <div class="grid three">
-            <div class="case-card"><div class="case-meta"><span>Crédito</span><span>Política</span></div><h4>Redefinição de aprovação e limite</h4><p>Score, cutoff, perda esperada e retorno traduzidos em política de decisão.</p></div>
-            <div class="case-card"><div class="case-meta"><span>Comercial</span><span>Open Finance</span></div><h4>Latent Credit Demand</h4><p>Priorização de leads com base em sinais transacionais e propensão real.</p></div>
-            <div class="case-card"><div class="case-meta"><span>IA</span><span>Governança</span></div><h4>LLMs com controle de qualidade</h4><p>RAG, avaliação semântica, guardrails e rastreabilidade para uso corporativo.</p></div>
+            <div class="case-card"><div class="case-meta"><span>Crédito</span><span>Política</span></div><h4>Aprovação, limite e preço</h4><p>Score, cutoff, perda esperada e retorno traduzidos em regra de decisão.</p></div>
+            <div class="case-card"><div class="case-meta"><span>Comercial</span><span>Open Finance</span></div><h4>Demanda latente de crédito</h4><p>Sinais transacionais usados para priorizar clientes com maior probabilidade de necessidade e conversão.</p></div>
+            <div class="case-card"><div class="case-meta"><span>IA</span><span>Governança</span></div><h4>LLMs em processos corporativos</h4><p>RAG, avaliação semântica, guardrails e rastreabilidade para reduzir variância e risco operacional.</p></div>
         </div>
     </section>
 
@@ -1263,6 +1388,7 @@ h3 {
     <div class="footer-actions">
         <a class="btn secondary" href="aplicacoes.html">Aplicações</a>
         <a class="btn secondary" href="simulador.html">Simulador</a>
+        <a class="btn secondary" href="engenharia_prompts.html">Treinamentos</a>
         <button class="btn primary" onclick="scrollToId('contato')">Avaliar cenário</button>
     </div>
 </footer>
