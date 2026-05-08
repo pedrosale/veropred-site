@@ -658,49 +658,51 @@
 
 
 
-    /* Ludovico — briefing premium antes da missão */
+    /* Ludovico — mentoria guiada antes da missão */
     .vp-ludovico-briefing {
       display: grid;
-      grid-template-columns: minmax(220px, 0.36fr) minmax(0, 0.64fr);
-      gap: 22px;
-      align-items: stretch;
+      grid-template-columns: minmax(190px, 0.34fr) minmax(0, 0.66fr);
+      gap: 20px;
+      align-items: center;
       position: relative;
       z-index: 1;
+      min-height: 560px;
     }
 
-    .vp-ludovico-portrait {
-      min-height: 520px;
+    .vp-ludovico-mentor {
       border: 1px solid rgba(214,168,95,0.22);
-      border-radius: 24px;
+      border-radius: 26px;
       background:
-        radial-gradient(circle at 50% 20%, rgba(214,168,95,0.18), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+        radial-gradient(circle at 50% 18%, rgba(214,168,95,0.20), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.038), rgba(255,255,255,0.012));
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 0 60px rgba(0,0,0,0.36);
+      min-height: 460px;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.38), 0 24px 80px rgba(0,0,0,0.30);
     }
 
-    .vp-ludovico-portrait::after {
+    .vp-ludovico-mentor::after {
       content: "";
       position: absolute;
       inset: auto 0 0 0;
-      height: 46%;
+      height: 48%;
       background: linear-gradient(180deg, transparent, rgba(5,5,5,0.96));
       pointer-events: none;
     }
 
-    .vp-ludovico-portrait img {
+    .vp-ludovico-mentor img {
       width: 100%;
       height: 100%;
+      min-height: 460px;
       object-fit: cover;
       object-position: center top;
       display: block;
       transform: scale(1.035);
-      animation: ludovicoBreath 5.8s ease-in-out infinite;
+      animation: ludovicoBreath 6.2s ease-in-out infinite;
       filter: contrast(1.05) saturate(0.92);
     }
 
-    .vp-ludovico-caption {
+    .vp-ludovico-id {
       position: absolute;
       left: 18px;
       right: 18px;
@@ -709,11 +711,11 @@
       border: 1px solid rgba(214,168,95,0.22);
       border-radius: 16px;
       padding: 13px 14px;
-      background: rgba(8,8,8,0.70);
+      background: rgba(8,8,8,0.72);
       backdrop-filter: blur(12px);
     }
 
-    .vp-ludovico-caption b {
+    .vp-ludovico-id b {
       display: block;
       color: var(--vp-gold-2);
       font-size: 13px;
@@ -722,21 +724,40 @@
       margin-bottom: 4px;
     }
 
-    .vp-ludovico-caption span {
+    .vp-ludovico-id span {
       color: var(--vp-muted);
       font-size: 12px;
       line-height: 1.45;
     }
 
-    .vp-ludovico-panel {
-      border: 1px solid rgba(214,168,95,0.24);
-      border-radius: 24px;
-      padding: 24px;
+    .vp-ludovico-dialogue {
+      position: relative;
+      border: 1px solid rgba(214,168,95,0.26);
+      border-radius: 28px;
+      padding: clamp(20px, 3vw, 30px);
       background:
-        radial-gradient(circle at top right, rgba(214,168,95,0.13), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018));
-      box-shadow: 0 28px 80px rgba(0,0,0,0.34);
-      backdrop-filter: blur(16px);
+        radial-gradient(circle at top right, rgba(214,168,95,0.13), transparent 44%),
+        linear-gradient(180deg, rgba(255,255,255,0.060), rgba(255,255,255,0.020));
+      box-shadow: 0 28px 85px rgba(0,0,0,0.36);
+      backdrop-filter: blur(18px);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .vp-ludovico-dialogue::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 54px;
+      width: 24px;
+      height: 24px;
+      border-left: 1px solid rgba(214,168,95,0.26);
+      border-bottom: 1px solid rgba(214,168,95,0.26);
+      background: rgba(18,16,13,0.86);
+      transform: rotate(45deg);
+      backdrop-filter: blur(18px);
     }
 
     .vp-ludovico-kicker {
@@ -748,86 +769,99 @@
     }
 
     .vp-ludovico-title {
-      margin: 0;
+      margin: 0 0 16px 0;
       color: var(--vp-text);
-      font-size: clamp(27px, 4.4vw, 42px);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
+      font-size: clamp(24px, 3.5vw, 34px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
       font-weight: 680;
     }
 
-    .vp-ludovico-subtitle {
-      color: var(--vp-muted);
-      margin-top: 12px;
-      font-size: 15px;
-      line-height: 1.6;
-      max-width: 720px;
-    }
-
-    .vp-briefing-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .vp-briefing-box {
-      border: 1px solid rgba(214,168,95,0.20);
-      border-radius: 16px;
-      padding: 15px;
-      background: rgba(0,0,0,0.22);
-    }
-
-    .vp-briefing-box.full { grid-column: 1 / -1; }
-    .vp-briefing-box.warning { border-color: rgba(208,131,112,0.33); background: rgba(208,131,112,0.055); }
-
-    .vp-briefing-box b {
-      display: block;
+    .vp-ludovico-step-label {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(214,168,95,0.24);
+      border-radius: 999px;
+      padding: 7px 10px;
       color: var(--vp-gold-2);
-      font-size: 12px;
+      background: rgba(214,168,95,0.065);
+      font-size: 11px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      letter-spacing: 0.10em;
-      margin-bottom: 8px;
+      margin-bottom: 14px;
     }
 
-    .vp-briefing-box span,
-    .vp-briefing-box li {
-      color: var(--vp-muted);
-      font-size: 13px;
+    .vp-ludovico-speech {
+      color: #eadcc6;
+      font-size: clamp(17px, 2.1vw, 22px);
       line-height: 1.55;
+      letter-spacing: -0.01em;
+      max-width: 760px;
+      animation: speechIn 0.28s ease both;
     }
 
-    .vp-briefing-box ul {
-      margin: 0;
-      padding-left: 17px;
-    }
-
-    .vp-briefing-example {
+    .vp-ludovico-example {
+      margin-top: 16px;
       background: rgba(214,168,95,0.055);
       border: 1px solid rgba(214,168,95,0.18);
       color: #eadcc6;
-      border-radius: 14px;
-      padding: 14px;
+      border-radius: 16px;
+      padding: 15px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 13px;
       line-height: 1.62;
       white-space: pre-wrap;
       overflow-x: auto;
+      animation: speechIn 0.28s ease both;
     }
 
-    .vp-ludovico-close {
-      margin-top: 20px;
+    .vp-ludovico-controls {
       display: flex;
-      gap: 12px;
       align-items: center;
       justify-content: space-between;
+      gap: 14px;
+      margin-top: 28px;
       flex-wrap: wrap;
     }
 
-    .vp-ludovico-motto {
-      color: #eadcc6;
-      font-size: 14px;
-      letter-spacing: 0.02em;
+    .vp-ludovico-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .vp-ludovico-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(214,168,95,0.38);
+      background: rgba(255,255,255,0.06);
+      transition: width 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+    }
+
+    .vp-ludovico-dot.active {
+      width: 24px;
+      background: var(--vp-gold);
+      box-shadow: 0 0 18px rgba(214,168,95,0.24);
+    }
+
+    .vp-ludovico-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vp-ludovico-actions button {
+      min-width: 150px;
+    }
+
+    .vp-ludovico-note {
+      margin-top: 16px;
+      color: var(--vp-soft);
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .vp-ludovico-micro {
@@ -865,6 +899,11 @@
       line-height: 1.5;
     }
 
+    @keyframes speechIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     @keyframes ludovicoBreath {
       0%, 100% { transform: scale(1.035) translateY(0); }
       50% { transform: scale(1.055) translateY(-4px); }
@@ -890,10 +929,20 @@
 
       .vp-ludovico-briefing {
         grid-template-columns: 1fr;
+        min-height: auto;
       }
 
-      .vp-ludovico-portrait {
-        min-height: 380px;
+      .vp-ludovico-dialogue::before {
+        left: 54px;
+        top: -12px;
+        border-left: 1px solid rgba(214,168,95,0.26);
+        border-top: 1px solid rgba(214,168,95,0.26);
+        border-bottom: 0;
+      }
+
+      .vp-ludovico-mentor,
+      .vp-ludovico-mentor img {
+        min-height: 360px;
       }
     }
 
@@ -918,16 +967,23 @@
         grid-template-columns: 1fr;
       }
 
-      .vp-briefing-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .vp-ludovico-panel {
+      .vp-ludovico-dialogue {
         padding: 18px;
+        min-height: 330px;
       }
 
-      .vp-ludovico-portrait {
-        min-height: 310px;
+      .vp-ludovico-mentor,
+      .vp-ludovico-mentor img {
+        min-height: 300px;
+      }
+
+      .vp-ludovico-actions,
+      .vp-ludovico-actions button {
+        width: 100%;
+      }
+
+      .vp-ludovico-controls {
+        align-items: stretch;
       }
     }
   </style>
@@ -1915,6 +1971,7 @@ Resultado esperado:
         currentMissionIndex: 0,
         started: false,
         missionBriefingOpen: false,
+        briefingStep: 0,
         completedMissions: [],
         attributes,
         attempts: {},
@@ -2760,18 +2817,22 @@ Resultado esperado:
 
 
     function briefingLearnText(mission) {
-      return `Você vai treinar ${mission.competency}, transformando ${mission.scenario_type.toLowerCase()} em ${mission.delivery_label.toLowerCase()}.`;
+      return `Nesta missão, você vai aprender a ${mission.competency}, transformando ${mission.scenario_type.toLowerCase()} em ${mission.delivery_label.toLowerCase()}.`;
     }
 
     function briefingCommonError(mission) {
       const hint = (mission.hint_ladder || []).find(item => normalizeText(item).includes("erro comum"));
       if (hint) return hint.replace(/^Erro comum:\s*/i, "");
-      return mission.not_expected || "Responder de forma genérica, sem demonstrar critério decisório.";
+      return mission.not_expected || "Responder de forma genérica, sem organizar o problema antes.";
     }
 
-    function briefingExpectedItems(mission) {
+    function briefingExpectedSentence(mission) {
       const items = (mission.output_required_patterns || mission.required_sections || []).slice(0, 6);
-      return items.map(item => `<li>${escapeHTML(item)}</li>`).join("");
+      if (!items.length) return `Sua tarefa é produzir ${mission.delivery_label.toLowerCase()} com estrutura, contexto e próximos passos.`;
+      const visible = items.map(item => String(item).toLowerCase());
+      const last = visible.pop();
+      const joined = visible.length ? `${visible.join(", ")} e ${last}` : last;
+      return `Sua tarefa é produzir uma entrega com ${joined}.`;
     }
 
     function briefingMiniExample(mission) {
@@ -2779,72 +2840,105 @@ Resultado esperado:
         .split("\n")
         .map(line => line.trimEnd())
         .filter(Boolean)
-        .slice(0, 10);
+        .slice(0, 9);
       return lines.join("\n");
+    }
+
+    function getLudovicoDialogueSteps(mission) {
+      return [
+        {
+          label: "O que será aprendido",
+          speech: briefingLearnText(mission)
+        },
+        {
+          label: "Erro comum",
+          speech: `O erro mais comum aqui é ${briefingCommonError(mission)}`
+        },
+        {
+          label: "O que deve ser feito",
+          speech: briefingExpectedSentence(mission)
+        },
+        {
+          label: "Mini exemplo simplificado",
+          speech: "Use esta estrutura como referência. Ela guia o raciocínio, mas não entrega a resposta pronta.",
+          example: briefingMiniExample(mission)
+        },
+        {
+          label: "Entrada na missão",
+          speech: "Agora entre na missão. A partir daqui, o foco sai da explicação e vai para a execução.",
+          enter: true
+        }
+      ];
+    }
+
+    function renderLudovicoDots(total, activeIndex) {
+      return Array.from({ length: total }, (_, index) => `
+        <span class="vp-ludovico-dot ${index === activeIndex ? "active" : ""}" aria-hidden="true"></span>
+      `).join("");
     }
 
     function renderLudovicoBriefing() {
       const mission = currentMission();
       const attempts = state.attempts[mission.id] || 0;
+      const steps = getLudovicoDialogueSteps(mission);
+      const stepIndex = Math.max(0, Math.min(state.briefingStep || 0, steps.length - 1));
+      const step = steps[stepIndex];
+      const isLast = stepIndex === steps.length - 1;
 
       return `
         ${renderHeader()}
           <div class="vp-ludovico-briefing soft-rise">
-            <div class="vp-ludovico-portrait">
+            <div class="vp-ludovico-mentor">
               <img src="assets/ludovico_2.png" alt="Ludovico, mentor operacional da Veropred">
-              <div class="vp-ludovico-caption">
+              <div class="vp-ludovico-id">
                 <b>Ludovico</b>
-                <span>Mentoria operacional antes da missão. Clareza suficiente para começar, sem entregar a resposta.</span>
+                <span>Mentor operacional. Uma fala por vez, para reduzir ruído antes da execução.</span>
               </div>
             </div>
 
-            <div class="vp-ludovico-panel">
-              <div class="vp-ludovico-kicker">Briefing da missão · ${escapeHTML(mission.phase)} · ${escapeHTML(mission.arc)}</div>
-              <h2 class="vp-ludovico-title">${escapeHTML(mission.title)}</h2>
-              <div class="vp-ludovico-subtitle">
-                Antes de entrar na execução, observe o tipo de entrega. A missão não avalia beleza do texto; avalia maturidade operacional.
+            <section class="vp-ludovico-dialogue" aria-live="polite">
+              <div>
+                <div class="vp-ludovico-kicker">${escapeHTML(mission.phase)} · ${escapeHTML(mission.arc)}</div>
+                <h2 class="vp-ludovico-title">${escapeHTML(mission.title)}</h2>
+                <div class="vp-ludovico-step-label">Etapa ${stepIndex + 1} de ${steps.length} · ${escapeHTML(step.label)}</div>
+                <div class="vp-ludovico-speech" key="${stepIndex}">${escapeHTML(step.speech)}</div>
+                ${step.example ? `<div class="vp-ludovico-example">${escapeHTML(step.example)}</div>` : ""}
               </div>
 
-              <div class="vp-briefing-grid">
-                <div class="vp-briefing-box">
-                  <b>O que será aprendido</b>
-                  <span>${escapeHTML(briefingLearnText(mission))}</span>
+              <div>
+                <div class="vp-ludovico-controls">
+                  <div class="vp-ludovico-progress" aria-label="Progresso do onboarding do Ludovico">
+                    ${renderLudovicoDots(steps.length, stepIndex)}
+                  </div>
+
+                  <div class="vp-ludovico-actions">
+                    ${stepIndex > 0 ? `<button class="btn-ghost" onclick="previousLudovicoStep()">Voltar</button>` : ""}
+                    ${isLast
+                      ? `<button class="btn-start" onclick="enterMission()">Entrar na missão</button>`
+                      : `<button class="btn-start" onclick="nextLudovicoStep()">Próximo</button>`}
+                  </div>
                 </div>
 
-                <div class="vp-briefing-box warning">
-                  <b>Erro mais comum</b>
-                  <span>${escapeHTML(briefingCommonError(mission))}</span>
-                </div>
-
-                <div class="vp-briefing-box">
-                  <b>O que precisa ser entregue</b>
-                  <ul>${briefingExpectedItems(mission)}</ul>
-                </div>
-
-                <div class="vp-briefing-box warning">
-                  <b>O que não entregar</b>
-                  <span>${escapeHTML(mission.not_expected)}</span>
-                </div>
-
-                <div class="vp-briefing-box full">
-                  <b>Mini exemplo simplificado</b>
-                  <div class="vp-briefing-example">${escapeHTML(briefingMiniExample(mission))}</div>
+                <div class="vp-ludovico-note">
+                  Tentativas anteriores nesta missão: ${attempts}. Ao entrar, o Ludovico sai da tela e a missão aparece normalmente.
                 </div>
               </div>
-
-              <div class="vp-ludovico-close">
-                <div class="vp-ludovico-motto">Clareza primeiro. Velocidade depois.</div>
-                <button class="btn-start" onclick="enterMission()">Entrar na missão</button>
-              </div>
-
-              <div class="vp-small" style="margin-top:12px;">
-                Tentativas anteriores nesta missão: ${attempts}. Ao entrar, o Ludovico sai da tela e o foco fica no problema.
-              </div>
-            </div>
+            </section>
           </div>
         </div>
         ${renderToast()}
       `;
+    }
+
+    function nextLudovicoStep() {
+      const total = getLudovicoDialogueSteps(currentMission()).length;
+      state.briefingStep = Math.min((state.briefingStep || 0) + 1, total - 1);
+      render();
+    }
+
+    function previousLudovicoStep() {
+      state.briefingStep = Math.max((state.briefingStep || 0) - 1, 0);
+      render();
     }
 
     function renderLudovicoMicroFeedback(result) {
@@ -3178,6 +3272,7 @@ Resultado esperado:
       state.started = true;
       state.currentMissionIndex = 0;
       state.missionBriefingOpen = true;
+      state.briefingStep = 0;
       state.lastPassed = false;
       state.lastFeedback = null;
       state.currentAnswer = "";
@@ -3191,6 +3286,7 @@ Resultado esperado:
 
     function enterMission() {
       state.missionBriefingOpen = false;
+      state.briefingStep = 0;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -3236,6 +3332,7 @@ Resultado esperado:
       if (state.currentMissionIndex < MISSIONS.length - 1) {
         state.currentMissionIndex += 1;
         state.missionBriefingOpen = true;
+        state.briefingStep = 0;
         state.lastPassed = false;
         state.lastFeedback = null;
         state.currentAnswer = "";
