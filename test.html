@@ -1245,11 +1245,19 @@ h3 {
                     </div>
                 </article>
 
-                <div class="deep-link-row">
-                    <a class="btn secondary" href="aplicacoes.html">Ver aplicações reais</a>
-                    <a class="btn secondary" href="simulador.html">Explorar simulador</a>
-                    <button class="btn primary" onclick="scrollToId('contato')">Avaliar cenário</button>
-                </div>
+<div class="deep-link-row" id="contextualCtas">
+    <a class="btn secondary" id="ctaSecondaryOne" href="simulador.html">
+        Explorar simulador executivo
+    </a>
+
+    <a class="btn secondary" id="ctaSecondaryTwo" href="aplicacoes.html">
+        Ver aplicações de crédito
+    </a>
+
+    <button class="btn primary" id="ctaPrimary" onclick="scrollToId('contato')">
+        Avaliar cenário de crédito
+    </button>
+</div>
             </div>
         </div>
     </section>
@@ -1405,16 +1413,89 @@ function scrollToId(id) {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+const ctaByArea = {
+    credito: {
+        oneText: "Explorar simulador executivo",
+        oneHref: "simulador.html",
+        twoText: "Ver aplicações de crédito",
+        twoHref: "aplicacoes.html",
+        primaryText: "Avaliar cenário de crédito"
+    },
+
+    modelagem: {
+        oneText: "Ver aplicações analíticas",
+        oneHref: "aplicacoes.html",
+        twoText: "Explorar método",
+        twoHref: "#arquitetura",
+        primaryText: "Avaliar uso de modelo"
+    },
+
+    ia: {
+        oneText: "Conhecer treinamentos de IA",
+        oneHref: "engenharia_prompts.html",
+        twoText: "Ver aplicações de IA",
+        twoHref: "aplicacoes.html",
+        primaryText: "Avaliar cenário de IA"
+    },
+
+    operacional: {
+        oneText: "Ver aplicações de risco",
+        oneHref: "aplicacoes.html",
+        twoText: "Explorar método",
+        twoHref: "#arquitetura",
+        primaryText: "Avaliar cenário de risco"
+    },
+
+    estrategia: {
+        oneText: "Ver aplicações estratégicas",
+        oneHref: "aplicacoes.html",
+        twoText: "Explorar experiências",
+        twoHref: "#ecossistema",
+        primaryText: "Avaliar cenário estratégico"
+    },
+
+    tech: {
+        oneText: "Ver aplicações técnicas",
+        oneHref: "aplicacoes.html",
+        twoText: "Conhecer treinamentos",
+        twoHref: "engenharia_prompts.html",
+        primaryText: "Avaliar arquitetura técnica"
+    }
+};
+
+function updateContextualCtas(area) {
+
+    const config = ctaByArea[area];
+
+    document.getElementById("ctaSecondaryOne").textContent = config.oneText;
+    document.getElementById("ctaSecondaryOne").href = config.oneHref;
+
+    document.getElementById("ctaSecondaryTwo").textContent = config.twoText;
+    document.getElementById("ctaSecondaryTwo").href = config.twoHref;
+
+    document.getElementById("ctaPrimary").textContent = config.primaryText;
+}
+
 function openArea(area) {
+
     areas.forEach(item => {
         const panel = document.getElementById("area-" + item);
-        if (panel) panel.classList.toggle("active", item === area);
+
+        if (panel) {
+            panel.classList.toggle("active", item === area);
+        }
     });
 
     document.querySelectorAll(".tab").forEach(tab => {
         tab.classList.toggle("active", tab.dataset.area === area);
     });
+
+    updateContextualCtas(area);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateContextualCtas("credito");
+});
 
 function addLudovicoMessage(text, type) {
     const messages = document.getElementById("ludovicoMessages");
