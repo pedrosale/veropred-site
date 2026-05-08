@@ -658,104 +658,71 @@
 
 
 
-    /* ============================================================
-       LUDOVICO — camada premium de onboarding por missão
-       ============================================================ */
+    /* Ludovico — briefing premium antes da missão */
     .vp-ludovico-briefing {
-      position: relative;
-      z-index: 1;
       display: grid;
-      grid-template-columns: minmax(230px, 0.42fr) minmax(0, 1fr);
+      grid-template-columns: minmax(220px, 0.36fr) minmax(0, 0.64fr);
       gap: 22px;
       align-items: stretch;
-      margin-bottom: 22px;
+      position: relative;
+      z-index: 1;
     }
 
-    .vp-ludovico-stage {
-      min-height: 100%;
+    .vp-ludovico-portrait {
+      min-height: 520px;
       border: 1px solid rgba(214,168,95,0.22);
-      border-radius: 22px;
+      border-radius: 24px;
       background:
-        radial-gradient(circle at 52% 24%, rgba(214,168,95,0.18), transparent 38%),
-        radial-gradient(circle at 50% 78%, rgba(184,115,51,0.14), transparent 44%),
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.014));
+        radial-gradient(circle at 50% 20%, rgba(214,168,95,0.18), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
       overflow: hidden;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      box-shadow: inset 0 0 50px rgba(0,0,0,0.34);
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.36);
     }
 
-    .vp-ludovico-stage::before {
+    .vp-ludovico-portrait::after {
       content: "";
       position: absolute;
-      inset: 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(214,168,95,0.10);
+      inset: auto 0 0 0;
+      height: 46%;
+      background: linear-gradient(180deg, transparent, rgba(5,5,5,0.96));
       pointer-events: none;
     }
 
-    .vp-ludovico-stage::after {
-      content: "";
-      position: absolute;
-      left: 11%;
-      right: 11%;
-      bottom: 16px;
-      height: 28px;
-      background: radial-gradient(ellipse at center, rgba(214,168,95,0.22), transparent 70%);
-      filter: blur(10px);
-      opacity: 0.75;
-      pointer-events: none;
-    }
-
-    .vp-ludovico-img-wrap {
-      position: relative;
+    .vp-ludovico-portrait img {
       width: 100%;
-      min-height: 320px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 22px 18px 0;
-    }
-
-    .vp-ludovico-img {
-      width: min(275px, 90%);
-      max-height: 350px;
-      object-fit: contain;
-      object-position: bottom center;
-      filter: drop-shadow(0 24px 42px rgba(0,0,0,0.62));
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transform: scale(1.035);
       animation: ludovicoBreath 5.8s ease-in-out infinite;
-      transform-origin: bottom center;
-      position: relative;
-      z-index: 2;
+      filter: contrast(1.05) saturate(0.92);
     }
 
-    .vp-ludovico-nameplate {
+    .vp-ludovico-caption {
       position: absolute;
-      left: 16px;
-      right: 16px;
-      bottom: 16px;
-      z-index: 3;
-      border: 1px solid rgba(214,168,95,0.26);
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2;
+      border: 1px solid rgba(214,168,95,0.22);
       border-radius: 16px;
-      padding: 12px 13px;
-      background: rgba(5,5,5,0.66);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 18px 42px rgba(0,0,0,0.35);
+      padding: 13px 14px;
+      background: rgba(8,8,8,0.70);
+      backdrop-filter: blur(12px);
     }
 
-    .vp-ludovico-nameplate b {
+    .vp-ludovico-caption b {
       display: block;
       color: var(--vp-gold-2);
       font-size: 13px;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 4px;
     }
 
-    .vp-ludovico-nameplate span {
-      display: block;
+    .vp-ludovico-caption span {
       color: var(--vp-muted);
       font-size: 12px;
       line-height: 1.45;
@@ -763,164 +730,144 @@
 
     .vp-ludovico-panel {
       border: 1px solid rgba(214,168,95,0.24);
-      border-radius: 22px;
+      border-radius: 24px;
       padding: 24px;
       background:
         radial-gradient(circle at top right, rgba(214,168,95,0.13), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.18);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .vp-ludovico-panel::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 24px;
-      right: 24px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(240,207,138,0.65), transparent);
-      opacity: 0.7;
+        linear-gradient(180deg, rgba(255,255,255,0.050), rgba(255,255,255,0.018));
+      box-shadow: 0 28px 80px rgba(0,0,0,0.34);
+      backdrop-filter: blur(16px);
     }
 
     .vp-ludovico-kicker {
       color: var(--vp-gold);
       font-size: 12px;
-      text-transform: uppercase;
       letter-spacing: 0.16em;
-      margin-bottom: 10px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
     .vp-ludovico-title {
       margin: 0;
       color: var(--vp-text);
-      font-size: clamp(24px, 4vw, 36px);
-      line-height: 1.06;
-      letter-spacing: -0.035em;
+      font-size: clamp(27px, 4.4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 680;
     }
 
     .vp-ludovico-subtitle {
-      margin-top: 11px;
       color: var(--vp-muted);
+      margin-top: 12px;
       font-size: 15px;
-      line-height: 1.58;
-      max-width: 760px;
+      line-height: 1.6;
+      max-width: 720px;
     }
 
-    .vp-ludovico-grid {
+    .vp-briefing-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-top: 20px;
     }
 
-    .vp-ludovico-block {
-      border: 1px solid rgba(214,168,95,0.18);
+    .vp-briefing-box {
+      border: 1px solid rgba(214,168,95,0.20);
       border-radius: 16px;
       padding: 15px;
-      background: rgba(0,0,0,0.18);
-      min-height: 118px;
+      background: rgba(0,0,0,0.22);
     }
 
-    .vp-ludovico-block.full {
-      grid-column: 1 / -1;
-    }
+    .vp-briefing-box.full { grid-column: 1 / -1; }
+    .vp-briefing-box.warning { border-color: rgba(208,131,112,0.33); background: rgba(208,131,112,0.055); }
 
-    .vp-ludovico-block.warning {
-      border-color: rgba(208,131,112,0.30);
-      background: rgba(208,131,112,0.045);
-    }
-
-    .vp-ludovico-block b {
+    .vp-briefing-box b {
       display: block;
       color: var(--vp-gold-2);
       font-size: 12px;
-      letter-spacing: 0.11em;
       text-transform: uppercase;
+      letter-spacing: 0.10em;
       margin-bottom: 8px;
     }
 
-    .vp-ludovico-block span,
-    .vp-ludovico-block li {
+    .vp-briefing-box span,
+    .vp-briefing-box li {
       color: var(--vp-muted);
       font-size: 13px;
       line-height: 1.55;
     }
 
-    .vp-ludovico-block ul {
+    .vp-briefing-box ul {
       margin: 0;
-      padding-left: 18px;
+      padding-left: 17px;
     }
 
-    .vp-ludovico-example {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    .vp-briefing-example {
+      background: rgba(214,168,95,0.055);
+      border: 1px solid rgba(214,168,95,0.18);
       color: #eadcc6;
+      border-radius: 14px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.62;
       white-space: pre-wrap;
       overflow-x: auto;
     }
 
-    .vp-ludovico-closing {
+    .vp-ludovico-close {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .vp-ludovico-motto {
+      color: #eadcc6;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .vp-ludovico-micro {
       margin-top: 16px;
-      padding: 14px 16px;
       border: 1px solid rgba(214,168,95,0.22);
       border-radius: 16px;
-      background: rgba(214,168,95,0.055);
+      padding: 14px;
+      background: rgba(0,0,0,0.20);
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .vp-ludovico-micro img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(214,168,95,0.36);
+    }
+
+    .vp-ludovico-micro b {
       color: var(--vp-gold-2);
-      font-size: 14px;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .vp-ludovico-micro span {
+      color: var(--vp-muted);
+      font-size: 13px;
       line-height: 1.5;
     }
 
-    .vp-ludovico-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .vp-ludovico-actions button {
-      min-width: 190px;
-    }
-
-    .vp-mentor-note {
-      border: 1px solid rgba(214,168,95,0.24);
-      border-radius: 16px;
-      padding: 14px 15px;
-      margin-top: 16px;
-      background:
-        radial-gradient(circle at top left, rgba(214,168,95,0.10), transparent 46%),
-        rgba(255,255,255,0.022);
-    }
-
-    .vp-mentor-note b {
-      color: var(--vp-gold-2);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .vp-mentor-note span {
-      color: var(--vp-muted);
-      font-size: 13px;
-      line-height: 1.52;
-    }
-
     @keyframes ludovicoBreath {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-4px) scale(1.012); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .vp-ludovico-img,
-      .fade-in,
-      .soft-rise,
-      .pulse-glow {
-        animation: none !important;
-      }
+      0%, 100% { transform: scale(1.035) translateY(0); }
+      50% { transform: scale(1.055) translateY(-4px); }
     }
 
     @media (max-width: 980px) {
@@ -945,12 +892,8 @@
         grid-template-columns: 1fr;
       }
 
-      .vp-ludovico-img-wrap {
-        min-height: 270px;
-      }
-
-      .vp-ludovico-img {
-        width: min(230px, 74vw);
+      .vp-ludovico-portrait {
+        min-height: 380px;
       }
     }
 
@@ -975,20 +918,16 @@
         grid-template-columns: 1fr;
       }
 
-      .vp-ludovico-panel {
-        padding: 19px;
-      }
-
-      .vp-ludovico-grid {
+      .vp-briefing-grid {
         grid-template-columns: 1fr;
       }
 
-      .vp-ludovico-actions button {
-        width: 100%;
+      .vp-ludovico-panel {
+        padding: 18px;
       }
 
-      .vp-ludovico-stage {
-        border-radius: 20px;
+      .vp-ludovico-portrait {
+        min-height: 310px;
       }
     }
   </style>
@@ -1975,6 +1914,7 @@ Resultado esperado:
       return {
         currentMissionIndex: 0,
         started: false,
+        missionBriefingOpen: false,
         completedMissions: [],
         attributes,
         attempts: {},
@@ -1984,8 +1924,7 @@ Resultado esperado:
         previousAnswers: [],
         toast: null,
         unlocked: [],
-        lastUnlockCount: 0,
-        missionBriefingSeen: false
+        lastUnlockCount: 0
       };
     }
 
@@ -2820,109 +2759,86 @@ Resultado esperado:
     }
 
 
-    function getMissionBriefing(mission) {
-      const learnedByType = {
-        resposta_operacional: "Converter demanda ambígua em estrutura mínima de decisão.",
-        quadro_decisao: "Separar fatos, hipóteses, lacunas e decisões pendentes.",
-        prompt_ia: "Delegar trabalho para uma IA externa sem perder controle operacional.",
-        refinamento_ia: "Transformar uma resposta correta, porém genérica, em instrumento de decisão.",
-        plano_contencao: "Criar contenção executiva antes de buscar causa raiz.",
-        matriz_tradeoff: "Priorizar sob restrição usando critérios explícitos.",
-        sintese_executiva: "Condensar complexidade em decisão clara para diretoria.",
-        protocolo_validacao: "Proteger a decisão contra inferências não verificadas de IA.",
-        workflow_operacional: "Transformar uma rotina recorrente em fluxo operacional replicável.",
-        alinhamento_stakeholders: "Coordenar áreas com interesses legítimos, mas conflitantes.",
-        recomendacao_comite: "Levar recomendação defensável sem fingir certeza absoluta.",
-        arquitetura_operacional: "Consolidar sinais, IA, validação e decisão em um sistema operacional."
-      };
+    function briefingLearnText(mission) {
+      return `Você vai treinar ${mission.competency}, transformando ${mission.scenario_type.toLowerCase()} em ${mission.delivery_label.toLowerCase()}.`;
+    }
 
-      const errorByType = {
-        resposta_operacional: "Responder com opinião organizada, mas sem prioridade, responsável e próximo passo.",
-        quadro_decisao: "Tratar fala de área como fato comprovado.",
-        prompt_ia: "Pedir uma análise bonita sem informar limites, papel e critérios de qualidade.",
-        refinamento_ia: "Dizer apenas que a resposta está genérica, sem forçar nova estrutura.",
-        plano_contencao: "Tentar resolver a causa raiz antes de estabilizar a comunicação.",
-        matriz_tradeoff: "Recomendar tudo ao mesmo tempo e evitar a renúncia decisória.",
-        sintese_executiva: "Comprimir um relatório longo, em vez de produzir uma página de decisão.",
-        protocolo_validacao: "Trocar uma inferência falsa por outra frase não validada.",
-        workflow_operacional: "Automatizar antes de padronizar entrada, validação e saída.",
-        alinhamento_stakeholders: "Escolher um lado e chamar isso de alinhamento.",
-        recomendacao_comite: "Esconder incerteza para parecer mais seguro.",
-        arquitetura_operacional: "Listar boas práticas sem desenhar fluxo, papéis, controle e cadência."
-      };
+    function briefingCommonError(mission) {
+      const hint = (mission.hint_ladder || []).find(item => normalizeText(item).includes("erro comum"));
+      if (hint) return hint.replace(/^Erro comum:\s*/i, "");
+      return mission.not_expected || "Responder de forma genérica, sem demonstrar critério decisório.";
+    }
 
-      const closingByPhase = {
-        "FASE 1": "Clareza primeiro. Velocidade depois.",
-        "FASE 2": "Delegue com precisão. Valide com critério.",
-        "FASE 3": "Sob pressão, estrutura vale mais que volume.",
-        "FASE 4": "Síntese não é cortar texto. É preservar decisão.",
-        "FASE 5": "Orquestrar é transformar conflito em critério comum.",
-        "FASE 6": "Maturidade é decidir sem confundir incerteza com fraqueza."
-      };
+    function briefingExpectedItems(mission) {
+      const items = (mission.output_required_patterns || mission.required_sections || []).slice(0, 6);
+      return items.map(item => `<li>${escapeHTML(item)}</li>`).join("");
+    }
 
-      const phaseKey = Object.keys(closingByPhase).find(key => mission.phase.includes(key));
-      return {
-        learned: learnedByType[mission.expected_output_type] || mission.competency,
-        commonError: errorByType[mission.expected_output_type] || mission.not_expected,
-        deliverables: (mission.output_required_patterns || []).slice(0, 7),
-        example: mission.expected_structure,
-        closing: closingByPhase[phaseKey] || "Estrutura antes da execução."
-      };
+    function briefingMiniExample(mission) {
+      const lines = String(mission.expected_structure || "")
+        .split("\n")
+        .map(line => line.trimEnd())
+        .filter(Boolean)
+        .slice(0, 10);
+      return lines.join("\n");
     }
 
     function renderLudovicoBriefing() {
       const mission = currentMission();
-      const briefing = getMissionBriefing(mission);
-      const deliverables = briefing.deliverables.map(item => `<li>${escapeHTML(item)}</li>`).join("");
+      const attempts = state.attempts[mission.id] || 0;
 
       return `
         ${renderHeader()}
           <div class="vp-ludovico-briefing soft-rise">
-            <div class="vp-ludovico-stage">
-              <div class="vp-ludovico-img-wrap">
-                <img class="vp-ludovico-img" src="assets/ludovico_2.png" alt="Ludovico, mentor operacional da Veropred" loading="eager" decoding="async">
-                <div class="vp-ludovico-nameplate">
-                  <b>Ludovico</b>
-                  <span>Mentor operacional · briefing da missão</span>
-                </div>
+            <div class="vp-ludovico-portrait">
+              <img src="assets/ludovico_2.png" alt="Ludovico, mentor operacional da Veropred">
+              <div class="vp-ludovico-caption">
+                <b>Ludovico</b>
+                <span>Mentoria operacional antes da missão. Clareza suficiente para começar, sem entregar a resposta.</span>
               </div>
             </div>
 
             <div class="vp-ludovico-panel">
-              <div class="vp-ludovico-kicker">Entrada da missão · ${escapeHTML(mission.phase)}</div>
+              <div class="vp-ludovico-kicker">Briefing da missão · ${escapeHTML(mission.phase)} · ${escapeHTML(mission.arc)}</div>
               <h2 class="vp-ludovico-title">${escapeHTML(mission.title)}</h2>
               <div class="vp-ludovico-subtitle">
-                Antes de entrar no caso, estabilize o objetivo. Esta etapa existe para reduzir ruído cognitivo e deixar claro o que será avaliado.
+                Antes de entrar na execução, observe o tipo de entrega. A missão não avalia beleza do texto; avalia maturidade operacional.
               </div>
 
-              <div class="vp-ludovico-grid">
-                <div class="vp-ludovico-block">
+              <div class="vp-briefing-grid">
+                <div class="vp-briefing-box">
                   <b>O que será aprendido</b>
-                  <span>${escapeHTML(briefing.learned)}</span>
+                  <span>${escapeHTML(briefingLearnText(mission))}</span>
                 </div>
-                <div class="vp-ludovico-block warning">
+
+                <div class="vp-briefing-box warning">
                   <b>Erro mais comum</b>
-                  <span>${escapeHTML(briefing.commonError)}</span>
+                  <span>${escapeHTML(briefingCommonError(mission))}</span>
                 </div>
-                <div class="vp-ludovico-block">
+
+                <div class="vp-briefing-box">
                   <b>O que precisa ser entregue</b>
-                  <ul>${deliverables}</ul>
+                  <ul>${briefingExpectedItems(mission)}</ul>
                 </div>
-                <div class="vp-ludovico-block">
-                  <b>Foco operacional</b>
-                  <span>${escapeHTML(mission.problem)}</span>
+
+                <div class="vp-briefing-box warning">
+                  <b>O que não entregar</b>
+                  <span>${escapeHTML(mission.not_expected)}</span>
                 </div>
-                <div class="vp-ludovico-block full">
+
+                <div class="vp-briefing-box full">
                   <b>Mini exemplo simplificado</b>
-                  <div class="vp-ludovico-example">${escapeHTML(briefing.example)}</div>
+                  <div class="vp-briefing-example">${escapeHTML(briefingMiniExample(mission))}</div>
                 </div>
               </div>
 
-              <div class="vp-ludovico-closing">${escapeHTML(briefing.closing)}</div>
+              <div class="vp-ludovico-close">
+                <div class="vp-ludovico-motto">Clareza primeiro. Velocidade depois.</div>
+                <button class="btn-start" onclick="enterMission()">Entrar na missão</button>
+              </div>
 
-              <div class="vp-ludovico-actions">
-                <button class="btn-submit" onclick="enterMission()">Entrar na missão</button>
-                <button class="btn-ghost" onclick="restartJourney()">Voltar ao início</button>
+              <div class="vp-small" style="margin-top:12px;">
+                Tentativas anteriores nesta missão: ${attempts}. Ao entrar, o Ludovico sai da tela e o foco fica no problema.
               </div>
             </div>
           </div>
@@ -2931,24 +2847,21 @@ Resultado esperado:
       `;
     }
 
-    function renderMentorNote(result) {
+    function renderLudovicoMicroFeedback(result) {
+      if (!result) return "";
       const text = result.passed
-        ? "Boa estabilização. Agora avance sem aumentar complexidade desnecessária. A próxima missão exigirá mais precisão contextual."
-        : "A estrutura ainda precisa de mais lastro. Volte ao tipo de entrega, aos blocos obrigatórios e aos termos específicos do cenário.";
+        ? "Boa estabilização. Agora transforme essa clareza em continuidade operacional."
+        : "Ajuste a entrega antes de tentar avançar. O ponto central é aderência específica ao cenário, não volume de texto.";
 
       return `
-        <div class="vp-mentor-note fade-in">
-          <b>Ludovico observa</b>
-          <span>${escapeHTML(text)}</span>
+        <div class="vp-ludovico-micro">
+          <img src="assets/ludovico_2.png" alt="Ludovico">
+          <div>
+            <b>Nota do Ludovico</b>
+            <span>${escapeHTML(text)}</span>
+          </div>
         </div>
       `;
-    }
-
-    function enterMission() {
-      state.missionBriefingSeen = true;
-      state.toast = null;
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function renderMission() {
@@ -3134,10 +3047,10 @@ Resultado esperado:
           <h3 style="margin-top:18px;">O que precisa melhorar</h3>
           <ul class="vp-list">${gaps}</ul>
 
+          ${renderLudovicoMicroFeedback(result)}
+
           <h3 style="margin-top:18px;">Dica progressiva</h3>
           <div class="vp-text">${escapeHTML(result.hint)}</div>
-
-          ${renderMentorNote(result)}
 
           <h3 style="margin-top:18px;">Validação objetiva</h3>
           <ul class="vp-list">${checks}</ul>
@@ -3253,7 +3166,7 @@ Resultado esperado:
         return;
       }
 
-      if (!state.missionBriefingSeen) {
+      if (state.missionBriefingOpen) {
         app.innerHTML = renderLudovicoBriefing();
         return;
       }
@@ -3264,14 +3177,20 @@ Resultado esperado:
     function startJourney() {
       state.started = true;
       state.currentMissionIndex = 0;
+      state.missionBriefingOpen = true;
       state.lastPassed = false;
       state.lastFeedback = null;
       state.currentAnswer = "";
-      state.missionBriefingSeen = false;
       state.toast = {
         title: "Jornada iniciada",
         text: "Ambiente operacional ativado. Primeira competência: transformar caos em estrutura."
       };
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function enterMission() {
+      state.missionBriefingOpen = false;
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -3316,10 +3235,10 @@ Resultado esperado:
 
       if (state.currentMissionIndex < MISSIONS.length - 1) {
         state.currentMissionIndex += 1;
+        state.missionBriefingOpen = true;
         state.lastPassed = false;
         state.lastFeedback = null;
         state.currentAnswer = "";
-        state.missionBriefingSeen = false;
         state.toast = {
           title: "Nova camada operacional",
           text: `${currentMission().title}: ${currentMission().arc}.`
