@@ -1246,17 +1246,11 @@ h3 {
                 </article>
 
 <div class="deep-link-row" id="contextualCtas">
-    <a class="btn secondary" id="ctaSecondaryOne" href="simulador.html">
-        Explorar simulador executivo
-    </a>
 
-    <a class="btn secondary" id="ctaSecondaryTwo" href="aplicacoes.html">
-        Ver aplicações de crédito
-    </a>
+    <a class="btn secondary" id="ctaSecondaryOne"></a>
 
-    <button class="btn primary" id="ctaPrimary" onclick="scrollToId('contato')">
-        Avaliar cenário de crédito
-    </button>
+    <a class="btn secondary" id="ctaSecondaryTwo"></a>
+
 </div>
             </div>
         </div>
@@ -1414,67 +1408,75 @@ function scrollToId(id) {
 }
 
 const ctaByArea = {
+
     credito: {
         oneText: "Explorar simulador executivo",
         oneHref: "simulador.html",
+
         twoText: "Ver aplicações de crédito",
-        twoHref: "aplicacoes.html",
-        primaryText: "Avaliar cenário de crédito"
+        twoHref: "aplicacoes.html"
     },
 
-modelagem: {
-    oneText: "Ver aplicações analíticas",
-    oneHref: "aplicacoes.html",
-    twoText: "Avaliar uso do modelo",
-    twoHref: "#contato",
-    primaryText: "Avaliar uso de modelo"
-},
-
+    modelagem: {
+        oneText: "Ver aplicações analíticas",
+        oneHref: "aplicacoes.html"
+    },
 
     ia: {
         oneText: "Conhecer treinamentos de IA",
         oneHref: "engenharia_prompts.html",
+
         twoText: "Ver aplicações de IA",
-        twoHref: "aplicacoes.html",
-        primaryText: "Avaliar cenário de IA"
+        twoHref: "aplicacoes.html"
     },
 
-operacional: {
-    oneText: "Ver aplicações de risco",
-    oneHref: "aplicacoes.html",
-    twoText: "Avaliar exposição operacional",
-    twoHref: "#contato",
-    primaryText: "Avaliar cenário de risco"
-},
+    operacional: {
+        oneText: "Ver aplicações de risco",
+        oneHref: "aplicacoes.html"
+    },
 
     estrategia: {
         oneText: "Ver aplicações estratégicas",
-        oneHref: "aplicacoes.html",
-        twoText: "Explorar experiências",
-        twoHref: "#ecossistema",
-        primaryText: "Avaliar cenário estratégico"
+        oneHref: "aplicacoes.html"
     },
 
-    tech: {
-        oneText: "Ver aplicações técnicas",
-        oneHref: "aplicacoes.html",
-        twoText: "Conhecer treinamentos",
-        twoHref: "engenharia_prompts.html",
-        primaryText: "Avaliar arquitetura técnica"
-    }
+tech: {
+    oneText: "Ver aplicações técnicas",
+    oneHref: "aplicacoes.html"
+}
 };
+
 
 function updateContextualCtas(area) {
 
     const config = ctaByArea[area];
 
-    document.getElementById("ctaSecondaryOne").textContent = config.oneText;
-    document.getElementById("ctaSecondaryOne").href = config.oneHref;
+    const ctaOne = document.getElementById("ctaSecondaryOne");
+    const ctaTwo = document.getElementById("ctaSecondaryTwo");
 
-    document.getElementById("ctaSecondaryTwo").textContent = config.twoText;
-    document.getElementById("ctaSecondaryTwo").href = config.twoHref;
+    // CTA 1
+    if (config.oneText && config.oneHref) {
 
-    document.getElementById("ctaPrimary").textContent = config.primaryText;
+        ctaOne.style.display = "inline-flex";
+        ctaOne.textContent = config.oneText;
+        ctaOne.href = config.oneHref;
+
+    } else {
+
+        ctaOne.style.display = "none";
+    }
+
+    // CTA 2
+    if (config.twoText && config.twoHref) {
+
+        ctaTwo.style.display = "inline-flex";
+        ctaTwo.textContent = config.twoText;
+        ctaTwo.href = config.twoHref;
+
+    } else {
+
+        ctaTwo.style.display = "none";
+    }
 }
 
 function openArea(area) {
