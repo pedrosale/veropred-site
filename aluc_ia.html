@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTN — MVP Bolsa de Valores Cognitiva</title>
+  <style>
+    :root {
+      --bg:#050505;
+      --panel:#0d0c0a;
+      --panel2:#14110d;
+      --line:rgba(214,168,95,.25);
+      --gold:#d6a85f;
+      --copper:#b87333;
+      --text:#f4eee4;
+      --muted:#a9a096;
+      --danger:#ff6b6b;
+      --ok:#77d69a;
+      --warn:#ffd166;
+      --blue:#8fb3ff;
+      --shadow:0 24px 80px rgba(0,0,0,.55);
+      --radius:22px;
+      --font:Inter,Segoe UI,Arial,sans-serif;
+    }
+
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:
+        radial-gradient(circle at top left, rgba(184,115,51,.18), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(214,168,95,.13), transparent 34%),
+        linear-gradient(180deg,#050505,#090806 55%,#050505);
+      color:var(--text);
+      font-family:var(--font);
+      min-height:100vh;
+    }
+
+    .shell { max-width:1380px; margin:0 auto; padding:28px; }
+
+    .hero {
+      border:1px solid var(--line);
+      background:linear-gradient(135deg,rgba(20,17,13,.94),rgba(5,5,5,.96));
+      border-radius:32px;
+      padding:34px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero:after {
+      content:"";
+      position:absolute;
+      width:520px;
+      height:520px;
+      right:-240px;
+      top:-240px;
+      background:radial-gradient(circle,rgba(214,168,95,.18),transparent 67%);
+      pointer-events:none;
+    }
+
+    .eyebrow { color:var(--gold); text-transform:uppercase; letter-spacing:.18em; font-size:12px; font-weight:700; }
+    h1 { margin:12px 0 12px; font-size:clamp(34px,5vw,72px); line-height:.95; letter-spacing:-.05em; max-width:880px; }
+    .lead { color:var(--muted); font-size:18px; line-height:1.65; max-width:820px; margin:0; }
+
+    .top-grid { display:grid; grid-template-columns:1.1fr .9fr; gap:22px; margin-top:22px; }
+
+    .card {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(18,15,11,.92),rgba(9,8,7,.92));
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:0 18px 50px rgba(0,0,0,.25);
+    }
+
+    .card h2, .card h3 { margin:0 0 12px; letter-spacing:-.03em; }
+    .muted { color:var(--muted); line-height:1.55; }
+    .small { font-size:13px; }
+
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:22px; }
+    .metric {
+      border:1px solid rgba(214,168,95,.18);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:16px;
+    }
+    .metric .label { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+    .metric .value { font-size:24px; font-weight:800; margin-top:8px; color:var(--gold); }
+
+    .stepper { display:flex; gap:10px; flex-wrap:wrap; margin:26px 0; }
+    .step {
+      border:1px solid var(--line);
+      color:var(--muted);
+      padding:11px 14px;
+      border-radius:999px;
+      font-size:13px;
+      background:rgba(255,255,255,.02);
+      cursor:pointer;
+      transition:.2s;
+      user-select:none;
+    }
+    .step.active { color:#090806; background:linear-gradient(135deg,var(--gold),var(--copper)); border-color:transparent; font-weight:800; }
+
+    .stage { display:none; animation:fade .25s ease; }
+    .stage.active { display:block; }
+    @keyframes fade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+
+    .pill {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(214,168,95,.26);
+      color:var(--gold);
+      background:rgba(214,168,95,.07);
+      padding:8px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      margin:4px 4px 4px 0;
+    }
+
+    .btns { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+    button {
+      border:0;
+      border-radius:999px;
+      padding:13px 18px;
+      cursor:pointer;
+      font-weight:800;
+      color:#090806;
+      background:linear-gradient(135deg,var(--gold),var(--copper));
+      box-shadow:0 14px 38px rgba(184,115,51,.22);
+    }
+    button.secondary { background:transparent; border:1px solid var(--line); color:var(--gold); box-shadow:none; }
+    button.ghost { background:rgba(255,255,255,.05); color:var(--text); box-shadow:none; border:1px solid rgba(255,255,255,.08); }
+
+    .table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:18px; }
+    .table th, .table td { padding:14px; border-bottom:1px solid rgba(255,255,255,.07); text-align:left; font-size:14px; }
+    .table th { color:var(--gold); font-size:12px; text-transform:uppercase; letter-spacing:.08em; background:rgba(214,168,95,.06); }
+    .table tr:hover td { background:rgba(255,255,255,.025); }
+
+    .selected { outline:2px solid rgba(214,168,95,.7); background:rgba(214,168,95,.08); }
+
+    .flow { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px; }
+    .flow-node {
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(214,168,95,.22);
+      background:rgba(255,255,255,.03);
+      min-height:116px;
+      position:relative;
+    }
+    .flow-node b { display:block; margin-bottom:8px; color:var(--gold); }
+    .flow-node span { color:var(--muted); font-size:13px; line-height:1.45; }
+
+    .case-box {
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+      margin-top:12px;
+    }
+
+    .decision {
+      border-left:4px solid var(--gold);
+      background:rgba(214,168,95,.06);
+      padding:18px;
+      border-radius:16px;
+      margin-top:14px;
+    }
+
+    .bar { height:10px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin-top:8px; }
+    .bar > i { display:block; height:100%; background:linear-gradient(90deg,var(--copper),var(--gold)); border-radius:999px; }
+
+    .ledger {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+    }
+    .money {
+      border:1px solid rgba(214,168,95,.2);
+      border-radius:18px;
+      padding:16px;
+      background:rgba(255,255,255,.03);
+    }
+    .money strong { font-size:24px; color:var(--gold); display:block; margin-top:8px; }
+
+    .tag-ok { color:var(--ok); }
+    .tag-warn { color:var(--warn); }
+    .tag-danger { color:var(--danger); }
+
+    .footer-note { margin-top:26px; color:var(--muted); font-size:13px; text-align:center; }
+
+    @media (max-width: 960px) {
+      .top-grid,.grid-3,.grid-2,.metrics,.flow,.ledger { grid-template-columns:1fr; }
+      .shell { padding:16px; }
+      .hero { padding:24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="eyebrow">CTN · Cognitive Twin Networks</div>
+      <h1>Bolsa de Valores Cognitiva</h1>
+      <p class="lead">MVP funcional com dados fictícios. Simula o ciclo completo: originador de expertise, Twin cognitivo, consulta financeira crítica, parecer, precificação, royalties automáticos e atualização reputacional.</p>
+
+      <div class="metrics">
+        <div class="metric"><div class="label">Volume simulado</div><div class="value" id="mVolume">R$ 0</div></div>
+        <div class="metric"><div class="label">Receita CTN</div><div class="value" id="mRevenue">R$ 0</div></div>
+        <div class="metric"><div class="label">Royalties</div><div class="value" id="mRoyalty">R$ 0</div></div>
+        <div class="metric"><div class="label">Reputação média</div><div class="value" id="mRep">0</div></div>
+      </div>
+    </section>
+
+    <nav class="stepper" id="stepper"></nav>
+
+    <main>
+      <section class="stage active" data-stage="0">
+        <div class="top-grid">
+          <div class="card">
+            <h2>1. Tese do MVP</h2>
+            <p class="muted">O primeiro lote da Bolsa Cognitiva não vende IA. Vende julgamento especializado escalável para decisões financeiras onde o erro custa caro e a senioridade humana é escassa.</p>
+            <div class="flow">
+              <div class="flow-node"><b>Originador</b><span>Especialista humano transforma seu modelo mental em ativo licenciável.</span></div>
+              <div class="flow-node"><b>Twin</b><span>Agente cognitivo simula filtros, heurísticas e critérios do especialista.</span></div>
+              <div class="flow-node"><b>Comprador</b><span>Empresa compra uma consulta decisória de alta consequência.</span></div>
+              <div class="flow-node"><b>Liquidação</b><span>Pagamento é distribuído entre autor, plataforma e reserva.</span></div>
+              <div class="flow-node"><b>Reputação</b><span>O resultado alimenta score, preço futuro e confiança do mercado.</span></div>
+            </div>
+            <div class="btns"><button onclick="go(1)">Entrar no mercado</button></div>
+          </div>
+          <div class="card">
+            <h3>Categoria inicial recomendada</h3>
+            <p class="muted"><b>Underwriting PJ para crédito middle market.</b></p>
+            <span class="pill">Alto custo de erro</span>
+            <span class="pill">Alta frequência</span>
+            <span class="pill">Ticket B2B</span>
+            <span class="pill">ROI mensurável</span>
+            <p class="muted small">A hipótese: fintechs, FIDCs, bancos médios e plataformas de crédito pagariam por pareceres cognitivos rápidos quando a decisão envolve limite, risco, fraude, deterioração ou precificação.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage" data-stage="1">
+        <div class="card">
+          <h2>2. Mercado de Twins Cognitivos</h2>
+          <p class="muted">Selecione qual Twin será contratado para a primeira consulta. Cada Twin possui preço, especialidade, reputação operacional e modelo de royalties.</p>
+          <div class="grid-3" id="twins"></div>
+          <div class="btns"><button onclick="go(2)">Contratar Twin selecionado</button><button class="secondary" onclick="go(0)">Voltar</button></div>
+        </div>
+      </section>
+
+      <section class="stage" data-stage="2">
+        <div class="grid-2">
+          <div class="card">
+            <h2>3. Consulta Decisória</h2>
+            <p class="muted">Comprador envia uma operação financeira fictícia para análise. O sistema precifica a consulta pelo risco, exposição e senioridade do Twin.</p>
+            <div class="case-box">
+              <h3>Comprador</h3>
+              <p><b>NovaCred Capital</b> · fintech de crédito PJ</p>
+              <p class="muted small">Problema: crescimento acelerado da carteira, pressão comercial para aprovar limites e aumento recente de atraso em empresas com receita concentrada.</p>
+            </div>
+            <div class="case-box">
+              <h3>Operação</h3>
+              <table class="table">
+                <tr><th>Campo</th><th>Valor</th></tr>
+                <tr><td>Empresa analisada</td><td>Metalúrgica Orion Ltda.</td></tr>
+                <tr><td>Produto</td><td>Capital de giro PJ</td></tr>
+                <tr><td>Limite solicitado</td><td>R$ 2.800.000</td></tr>
+                <tr><td>Prazo</td><td>18 meses</td></tr>
+                <tr><td>Receita anual</td><td>R$ 42.000.000</td></tr>
+                <tr><td>Concentração de clientes</td><td>61% em 3 clientes</td></tr>
+                <tr><td>Atrasos recentes</td><td>2 eventos nos últimos 90 dias</td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Precificação da Consulta</h2>
+            <p class="muted">A consulta é uma <b>Cognitive Decision Call</b>: uma unidade de capacidade decisória comprada sob demanda.</p>
+            <div class="ledger">
+              <div class="money"><span class="muted small">Fee base</span><strong id="feeBase">R$ 0</strong></div>
+              <div class="money"><span class="muted small">Multiplicador risco</span><strong id="riskMult">0x</strong></div>
+              <div class="money"><span class="muted small">Fee final</span><strong id="feeFinal">R$ 0</strong></div>
+              <div class="money"><span class="muted small">Exposição</span><strong>R$ 2,8M</strong></div>
+            </div>
+            <div class="btns"><button onclick="runAnalysis()">Executar consulta cognitiva</button><button class="secondary" onclick="go(1)">Trocar Twin</button></div>
+            <div id="selectedTwinBox" class="case-box"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage" data-stage="3">
+        <div class="grid-2">
+          <div class="card">
+            <h2>4. Parecer do Twin</h2>
+            <div class="decision" id="decisionBox"></div>
+            <h3 style="margin-top:20px;">Indicadores de julgamento</h3>
+            <div id="judgementBars"></div>
+          </div>
+          <div class="card">
+            <h2>Red Flags Detectadas</h2>
+            <div id="flags"></div>
+            <div class="btns"><button onclick="go(4)">Liquidar transação</button><button class="secondary" onclick="go(2)">Revisar consulta</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stage" data-stage="4">
+        <div class="card">
+          <h2>5. Liquidação Econômica e Royalties</h2>
+          <p class="muted">A receita da consulta é distribuída automaticamente conforme o protocolo econômico do marketplace.</p>
+          <div class="ledger" id="settlement"></div>
+          <div class="case-box">
+            <h3>Lineage Cognitivo</h3>
+            <p class="muted">O Twin contratado utiliza um módulo derivado de análise setorial criado por outro especialista. Por isso, parte da receita é transferida automaticamente ao autor do módulo original.</p>
+            <table class="table" id="lineageTable"></table>
+          </div>
+          <div class="btns"><button onclick="go(5)">Atualizar reputação</button></div>
+        </div>
+      </section>
+
+      <section class="stage" data-stage="5">
+        <div class="grid-2">
+          <div class="card">
+            <h2>6. Reputação Operacional</h2>
+            <p class="muted">Após a consulta, o sistema atualiza a reputação do Twin com base em qualidade do parecer, coerência, histórico e resultado futuro simulado.</p>
+            <div id="repUpdate"></div>
+            <div class="btns"><button onclick="simulateOutcome()">Simular resultado futuro da decisão</button><button class="secondary" onclick="resetAll()">Reiniciar MVP</button></div>
+          </div>
+          <div class="card">
+            <h2>Ativo Econômico Gerado</h2>
+            <p class="muted">A reputação deixa de ser avaliação subjetiva. Vira um índice econômico que influencia preço, demanda, liquidez e uso como colateral reputacional.</p>
+            <table class="table" id="assetTable"></table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer-note">MVP conceitual. Dados fictícios. Objetivo: tangibilizar o fluxo econômico de uma Bolsa de Valores Cognitiva.</div>
+  </div>
+
+  <script>
+    const fmt = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL', maximumFractionDigits:0 });
+
+    const steps = [
+      'Tese', 'Mercado de Twins', 'Consulta', 'Parecer', 'Liquidação', 'Reputação'
+    ];
+
+    const twins = [
+      {
+        id:'t1',
+        name:'Twin Ana Ribeiro',
+        title:'Ex-Diretora de Risco Bancário',
+        focus:'Underwriting PJ · Middle Market · Fraude sofisticada',
+        rep:94,
+        baseFee:1200,
+        royalty:0.55,
+        ctn:0.18,
+        treasury:0.12,
+        lineage:0.15,
+        selected:true
+      },
+      {
+        id:'t2',
+        name:'Twin Marcelo Viana',
+        title:'Especialista em Crédito Estruturado',
+        focus:'FIDC · Recebíveis · Garantias · Covenants',
+        rep:89,
+        baseFee:950,
+        royalty:0.52,
+        ctn:0.2,
+        treasury:0.12,
+        lineage:0.16,
+        selected:false
+      },
+      {
+        id:'t3',
+        name:'Twin Helena Duarte',
+        title:'Consultora Sênior de Turnaround',
+        focus:'Deterioração · Caixa · Reestruturação · Stress',
+        rep:91,
+        baseFee:1050,
+        royalty:0.54,
+        ctn:0.18,
+        treasury:0.13,
+        lineage:0.15,
+        selected:false
+      }
+    ];
+
+    let selectedId = 't1';
+    let finalFee = 0;
+    let executed = false;
+    let outcomeDone = false;
+
+    function selectedTwin(){ return twins.find(t=>t.id===selectedId); }
+
+    function init(){
+      renderStepper();
+      renderTwins();
+      updatePricing();
+      updateMetrics();
+    }
+
+    function renderStepper(){
+      const s = document.getElementById('stepper');
+      s.innerHTML = steps.map((x,i)=>`<div class="step ${i===0?'active':''}" onclick="go(${i})">${i+1}. ${x}</div>`).join('');
+    }
+
+    function go(i){
+      document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));
+      document.querySelector(`[data-stage="${i}"]`).classList.add('active');
+      document.querySelectorAll('.step').forEach((x,idx)=>x.classList.toggle('active',idx===i));
+      if(i===2) updatePricing();
+      if(i===4) renderSettlement();
+      if(i===5) renderReputation();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function renderTwins(){
+      const el = document.getElementById('twins');
+      el.innerHTML = twins.map(t=>`
+        <div class="card ${t.id===selectedId?'selected':''}" onclick="selectTwin('${t.id}')">
+          <h3>${t.name}</h3>
+          <p><b>${t.title}</b></p>
+          <p class="muted small">${t.focus}</p>
+          <span class="pill">Reputação ${t.rep}/100</span>
+          <span class="pill">Fee base ${fmt.format(t.baseFee)}</span>
+          <div class="bar"><i style="width:${t.rep}%"></i></div>
+        </div>
+      `).join('');
+    }
+
+    function selectTwin(id){
+      selectedId = id;
+      renderTwins();
+      updatePricing();
+    }
+
+    function updatePricing(){
+      const t = selectedTwin();
+      const exposure = 2800000;
+      const riskMult = 1.85;
+      finalFee = Math.round(t.baseFee * riskMult + exposure * 0.00045);
+      const a = document.getElementById('feeBase');
+      if(a){
+        a.textContent = fmt.format(t.baseFee);
+        document.getElementById('riskMult').textContent = riskMult.toFixed(2)+'x';
+        document.getElementById('feeFinal').textContent = fmt.format(finalFee);
+        document.getElementById('selectedTwinBox').innerHTML = `
+          <h3>Twin contratado</h3>
+          <p><b>${t.name}</b></p>
+          <p class="muted small">${t.focus}</p>
+          <span class="pill">Reputação ${t.rep}/100</span>
+          <span class="pill">Royalty autor ${(t.royalty*100).toFixed(0)}%</span>
+        `;
+      }
+    }
+
+    function runAnalysis(){
+      executed = true;
+      const t = selectedTwin();
+      document.getElementById('decisionBox').innerHTML = `
+        <h3>Recomendação: Aprovar parcialmente com limite reduzido</h3>
+        <p class="muted">O limite solicitado de <b>R$ 2,8M</b> apresenta risco assimétrico. O Twin recomenda aprovação até <b>R$ 1,45M</b>, com trava de concentração, monitoramento mensal de recebíveis e covenant de caixa mínimo.</p>
+        <p><b>Confiança estimada:</b> 87%</p>
+      `;
+      const bars = [
+        ['Risco de deterioração',72],
+        ['Qualidade de caixa',64],
+        ['Concentração de clientes',86],
+        ['Coerência narrativa',78],
+        ['Atratividade risco-retorno',61]
+      ];
+      document.getElementById('judgementBars').innerHTML = bars.map(([k,v])=>`
+        <p class="small muted"><b>${k}</b> · ${v}/100</p><div class="bar"><i style="width:${v}%"></i></div>
+      `).join('');
+      document.getElementById('flags').innerHTML = `
+        <div class="case-box"><b class="tag-danger">Red flag 1</b><p class="muted small">Receita excessivamente concentrada em três clientes, elevando risco de ruptura de caixa.</p></div>
+        <div class="case-box"><b class="tag-warn">Red flag 2</b><p class="muted small">Dois atrasos recentes sugerem estresse operacional ainda não totalmente refletido nos demonstrativos.</p></div>
+        <div class="case-box"><b class="tag-warn">Red flag 3</b><p class="muted small">Prazo solicitado é longo para a volatilidade observada no comportamento recente.</p></div>
+        <div class="case-box"><b class="tag-ok">Ponto positivo</b><p class="muted small">Empresa possui receita relevante e histórico comercial suficiente para aprovação parcial com mitigadores.</p></div>
+      `;
+      updateMetrics();
+      go(3);
+    }
+
+    function renderSettlement(){
+      const t = selectedTwin();
+      if(!executed) runAnalysis();
+      const author = Math.round(finalFee*t.royalty);
+      const ctn = Math.round(finalFee*t.ctn);
+      const treasury = Math.round(finalFee*t.treasury);
+      const lineage = finalFee-author-ctn-treasury;
+      document.getElementById('settlement').innerHTML = `
+        <div class="money"><span class="muted small">Fee da consulta</span><strong>${fmt.format(finalFee)}</strong></div>
+        <div class="money"><span class="muted small">Autor do Twin</span><strong>${fmt.format(author)}</strong></div>
+        <div class="money"><span class="muted small">Protocolo CTN</span><strong>${fmt.format(ctn)}</strong></div>
+        <div class="money"><span class="muted small">Treasury + seguro</span><strong>${fmt.format(treasury)}</strong></div>
+      `;
+      document.getElementById('lineageTable').innerHTML = `
+        <tr><th>Beneficiário</th><th>Origem</th><th>Valor</th></tr>
+        <tr><td>${t.name}</td><td>Originador principal</td><td>${fmt.format(author)}</td></tr>
+        <tr><td>Rafael Monteiro</td><td>Módulo setorial derivado</td><td>${fmt.format(lineage)}</td></tr>
+        <tr><td>CTN Protocol</td><td>Infraestrutura, liquidação e reputação</td><td>${fmt.format(ctn)}</td></tr>
+        <tr><td>Risk Treasury</td><td>Reserva reputacional e seguro econômico</td><td>${fmt.format(treasury)}</td></tr>
+      `;
+      updateMetrics();
+    }
+
+    function renderReputation(){
+      const t = selectedTwin();
+      const newRep = Math.min(99, t.rep + 1.4);
+      document.getElementById('repUpdate').innerHTML = `
+        <div class="case-box"><h3>${t.name}</h3><p class="muted">Reputação anterior: <b>${t.rep}/100</b></p><p class="muted">Reputação pós-consulta: <b>${newRep.toFixed(1)}/100</b></p><div class="bar"><i style="width:${newRep}%"></i></div></div>
+        <div class="case-box"><b>Impacto econômico estimado</b><p class="muted small">A recomendação reduziu a exposição potencial em R$ 1,35M sem bloquear totalmente a receita da operação.</p></div>
+      `;
+      document.getElementById('assetTable').innerHTML = `
+        <tr><th>Ativo</th><th>Métrica</th><th>Efeito econômico</th></tr>
+        <tr><td>Reputação operacional</td><td>${newRep.toFixed(1)}/100</td><td>Aumenta preço futuro</td></tr>
+        <tr><td>Histórico validado</td><td>1 consulta liquidada</td><td>Cria lastro reputacional</td></tr>
+        <tr><td>Demanda esperada</td><td>+6%</td><td>Eleva liquidez do Twin</td></tr>
+        <tr><td>Valor colateral teórico</td><td>${fmt.format(finalFee*18)}</td><td>Baseado em receita futura estimada</td></tr>
+      `;
+      updateMetrics();
+    }
+
+    function simulateOutcome(){
+      if(outcomeDone) return;
+      outcomeDone = true;
+      const box = document.getElementById('repUpdate');
+      box.innerHTML += `
+        <div class="case-box"><h3>Resultado futuro simulado — 120 dias</h3><p class="muted">A empresa apresentou queda de 18% no caixa operacional e perda de um cliente relevante. A aprovação parcial evitou exposição adicional estimada de <b>R$ 1,35M</b>.</p><p class="tag-ok"><b>Validação:</b> parecer classificado como economicamente correto.</p></div>
+      `;
+      updateMetrics();
+    }
+
+    function updateMetrics(){
+      const t = selectedTwin();
+      const volume = executed ? 2800000 : 0;
+      const revenue = executed ? Math.round(finalFee*t.ctn) : 0;
+      const royalty = executed ? Math.round(finalFee*t.royalty) : 0;
+      document.getElementById('mVolume').textContent = fmt.format(volume);
+      document.getElementById('mRevenue').textContent = fmt.format(revenue);
+      document.getElementById('mRoyalty').textContent = fmt.format(royalty);
+      document.getElementById('mRep').textContent = t.rep;
+    }
+
+    function resetAll(){
+      executed = false;
+      outcomeDone = false;
+      selectedId = 't1';
+      renderTwins();
+      updatePricing();
+      updateMetrics();
+      go(0);
+    }
+
+    init();
+  </script>
+</body>
+</html>
