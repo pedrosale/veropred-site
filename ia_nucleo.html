@@ -3,882 +3,616 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Como a Inteligência Artificial Toma Decisões</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Atlas Cognitivo da IA</title>
 
 <style>
-
-:root {
-    --bg: #070606;
-    --panel: #12100d;
-    --panel2: #1b1712;
-    --line: rgba(201,150,74,.18);
-    --gold: #c9964a;
-    --gold2: #f0c27a;
-    --text: #f4eee4;
-    --muted: #b4a796;
-    --green: #84e0a5;
-    --blue: #79b8ff;
-    --radius: 24px;
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
+body{
+    min-height:100vh;
     background:
-        radial-gradient(circle at top, rgba(201,150,74,.12), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(121,184,255,.06), transparent 25%),
-        var(--bg);
-    color: var(--text);
-    font-family: Inter, sans-serif;
-    overflow-x: hidden;
+        radial-gradient(circle at 38% 54%, rgba(200,148,79,.16), transparent 34%),
+        radial-gradient(circle at 18% 18%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow:hidden;
 }
 
-section {
-    padding: 90px 24px;
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
 }
 
-.wrap {
-    width: 100%;
-    max-width: 1250px;
-    margin: 0 auto;
+.page{
+    position:relative;
+    z-index:2;
+    width:100vw;
+    height:100vh;
+    display:grid;
+    grid-template-columns:minmax(680px,1fr) minmax(520px,620px);
 }
 
-.hero {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 60px 24px;
+.hero{
+    position:relative;
+    padding:34px 44px;
+    overflow:hidden;
 }
 
-.eyebrow {
-    color: var(--gold2);
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    font-size: .78rem;
-    margin-bottom: 18px;
+.brand{
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--gold2);
+    font-size:12px;
+    margin-bottom:14px;
 }
 
-h1 {
-    font-size: clamp(3rem, 8vw, 7rem);
-    line-height: .92;
-    letter-spacing: -.08em;
-    max-width: 1000px;
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(34px,4.2vw,58px);
+    line-height:1;
+    max-width:620px;
+    font-weight:500;
 }
 
-.hero p {
-    max-width: 900px;
-    margin: 30px auto 0;
-    color: var(--muted);
-    font-size: clamp(1rem, 2vw, 1.35rem);
-    line-height: 1.8;
+.lead{
+    max-width:590px;
+    margin-top:18px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.45;
 }
 
-.hero strong {
-    color: var(--text);
+.brain{
+    position:absolute;
+    left:52%;
+    top:60%;
+    transform:translate(-50%,-50%);
+    width:min(62vw,720px);
+    height:min(62vw,720px);
+    border-radius:50%;
+    pointer-events:none;
 }
 
-.hero-actions {
-    margin-top: 40px;
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn {
-    border: 1px solid var(--line);
-    background: rgba(255,255,255,.03);
-    color: var(--text);
-    padding: 14px 18px;
-    border-radius: 999px;
-    text-decoration: none;
-    transition: .25s ease;
-}
-
-.btn:hover {
-    transform: translateY(-3px);
-    border-color: var(--gold);
-    background: rgba(201,150,74,.1);
-}
-
-.section-title {
-    font-size: clamp(2.3rem, 5vw, 4.5rem);
-    line-height: .95;
-    letter-spacing: -.06em;
-    margin-bottom: 20px;
-}
-
-.section-lead {
-    color: var(--muted);
-    max-width: 850px;
-    line-height: 1.8;
-    font-size: 1.05rem;
-    margin-bottom: 45px;
-}
-
-.core-layout {
-    position: relative;
-    min-height: 900px;
-    border: 1px solid var(--line);
-    border-radius: 40px;
-    overflow: hidden;
+.core{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:210px;
+    height:210px;
+    border-radius:50%;
     background:
-        radial-gradient(circle at center, rgba(201,150,74,.08), transparent 30%),
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+        radial-gradient(circle, rgba(255,214,139,.45), rgba(200,148,79,.14) 42%, transparent 72%);
+    border:1px solid rgba(255,211,142,.34);
+    box-shadow:0 0 80px rgba(220,159,78,.34), inset 0 0 40px rgba(255,211,142,.18);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:30px;
+    animation:pulse 4s ease-in-out infinite;
+    pointer-events:auto;
 }
 
-.orbit-ring {
-    position: absolute;
-    border: 1px dashed rgba(201,150,74,.12);
-    border-radius: 50%;
+.core span{
+    font-family:Georgia,serif;
+    font-size:21px;
+    color:#fff3d9;
+    letter-spacing:.04em;
 }
 
-.r1 {
-    inset: 8%;
+@keyframes pulse{
+    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}
+    50%{transform:translate(-50%,-50%) scale(1.045);opacity:1}
 }
 
-.r2 {
-    inset: 21%;
-}
-
-.core {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 320px;
-    min-height: 320px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 40px;
-    background:
-        radial-gradient(circle, rgba(240,194,122,.2), rgba(18,16,13,.96) 70%);
-    border: 1px solid var(--gold);
-    box-shadow: 0 0 80px rgba(201,150,74,.16);
-}
-
-.core h2 {
-    font-size: 2rem;
-    line-height: 1.1;
-}
-
-.core p {
-    margin-top: 16px;
-    color: var(--muted);
-    font-size: .95rem;
-    line-height: 1.7;
-}
-
-.node {
-    position: absolute;
-    width: 200px;
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    background: rgba(18,16,13,.95);
-    padding: 18px;
-    cursor: pointer;
-    transition: .28s ease;
+.node{
+    position:absolute;
+    width:108px;
+    height:108px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:radial-gradient(circle, rgba(238,188,105,.28), rgba(70,44,18,.34) 45%, rgba(10,8,6,.62));
+    box-shadow:0 0 38px rgba(206,143,63,.24);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:14px;
+    color:#ffe6b8;
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:.04em;
+    cursor:pointer;
+    pointer-events:auto;
+    transition:.35s ease;
 }
 
 .node:hover,
-.node.active {
-    border-color: var(--gold);
-    transform: translateY(-5px);
-    box-shadow: 0 30px 60px rgba(0,0,0,.35);
+.node.active{
+    transform:scale(1.12);
+    box-shadow:0 0 68px rgba(244,190,98,.55);
+    border-color:rgba(255,218,145,.72);
+    color:white;
 }
 
-.node small {
-    display: block;
-    color: var(--gold2);
-    margin-bottom: 7px;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    font-size: .72rem;
+.node small{
+    display:block;
+    margin-top:5px;
+    color:var(--muted);
+    font-size:9.5px;
+    font-weight:400;
 }
 
-.node h3 {
-    font-size: 1.05rem;
-    margin-bottom: 8px;
+.panel{
+    height:100vh;
+    background:linear-gradient(180deg, rgba(17,12,8,.9), rgba(5,5,5,.94));
+    border-left:1px solid var(--border);
+    backdrop-filter:blur(20px);
+    padding:42px 44px;
+    overflow-y:auto;
+    box-shadow:-30px 0 80px rgba(0,0,0,.35);
 }
 
-.node p {
-    color: var(--muted);
-    line-height: 1.45;
-    font-size: .88rem;
+.panel-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
 }
 
-.n1 { top: 6%; left: 8%; }
-.n2 { top: 0%; left: 40%; }
-.n3 { top: 6%; right: 8%; }
-.n4 { top: 39%; right: 1%; }
-.n5 { bottom: 7%; right: 9%; }
-.n6 { bottom: 0%; left: 40%; }
-.n7 { bottom: 7%; left: 8%; }
-.n8 { top: 39%; left: 1%; }
-
-.panel {
-    margin-top: 28px;
-    border: 1px solid var(--line);
-    border-radius: 28px;
-    padding: 35px;
-    background: rgba(18,16,13,.85);
+.panel h2{
+    font-family:Georgia,serif;
+    font-size:42px;
+    font-weight:500;
+    margin-bottom:10px;
 }
 
-.panel-grid {
-    display: grid;
-    grid-template-columns: 1.1fr .9fr;
-    gap: 26px;
+.subtitle{
+    color:var(--muted);
+    line-height:1.55;
+    margin-bottom:28px;
+    font-size:17px;
 }
 
-.panel h3 {
-    font-size: 2rem;
-    margin-bottom: 16px;
+.section{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:20px 0;
 }
 
-.panel p {
-    color: var(--muted);
-    line-height: 1.85;
+.section h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
 }
 
-.info-box {
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 22px;
-    background: rgba(255,255,255,.02);
-    margin-bottom: 18px;
+.section p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15.5px;
 }
 
-.info-box strong {
-    display: block;
-    color: var(--gold2);
-    margin-bottom: 10px;
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
 }
 
-.flow {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
-    margin-top: 45px;
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
 }
 
-.step {
-    border: 1px solid var(--line);
-    border-radius: 24px;
-    padding: 24px;
-    background: rgba(255,255,255,.03);
+.footer-note{
+    margin-top:28px;
+    color:#8f806a;
+    font-size:12px;
+    line-height:1.5;
 }
 
-.step b {
-    display: block;
-    color: var(--gold2);
-    margin-bottom: 12px;
-}
+@media(max-width:1100px){
+    body{overflow:auto}
 
-.step span {
-    color: var(--muted);
-    line-height: 1.6;
-    font-size: .95rem;
-}
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    margin-top: 40px;
-}
-
-.card {
-    border: 1px solid var(--line);
-    border-radius: 28px;
-    padding: 28px;
-    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-}
-
-.card-tag {
-    display: inline-flex;
-    padding: 6px 10px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    color: var(--gold2);
-    margin-bottom: 16px;
-    font-size: .72rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-.card h3 {
-    margin-bottom: 12px;
-    font-size: 1.3rem;
-}
-
-.card p,
-.card li {
-    color: var(--muted);
-    line-height: 1.75;
-}
-
-.card ul {
-    padding-left: 18px;
-    margin-top: 12px;
-}
-
-.highlight {
-    border-left: 3px solid var(--gold);
-    background: rgba(201,150,74,.06);
-    padding: 16px;
-    border-radius: 14px;
-    margin-top: 18px;
-}
-
-.compare {
-    margin-top: 45px;
-    border: 1px solid rgba(132,224,165,.2);
-    background: rgba(132,224,165,.05);
-    border-radius: 28px;
-    padding: 35px;
-}
-
-.compare h3 {
-    color: var(--green);
-    margin-bottom: 24px;
-}
-
-.compare-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.compare-box {
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 20px;
-    padding: 22px;
-    background: rgba(255,255,255,.02);
-}
-
-.compare-box h4 {
-    margin-bottom: 14px;
-}
-
-.compare-box li {
-    color: var(--muted);
-    margin-bottom: 8px;
-}
-
-footer {
-    padding: 90px 24px;
-    text-align: center;
-}
-
-footer p {
-    color: var(--muted);
-    max-width: 850px;
-    margin: 0 auto;
-    line-height: 1.9;
-    font-size: 1.05rem;
-}
-
-.mobile-nav {
-    display: none;
-}
-
-@media(max-width: 980px) {
-
-    .core-layout {
-        min-height: auto;
-        padding: 18px;
+    .page{
+        display:block;
+        height:auto;
     }
 
-    .orbit-ring,
-    .core,
-    .node {
-        position: static;
-        transform: none;
-        width: 100%;
+    .hero{
+        height:760px;
+        padding:30px 24px;
     }
 
-    .core {
-        border-radius: 28px;
-        min-height: auto;
-        margin-bottom: 18px;
+    .brain{
+        left:50%;
+        top:62%;
+        width:720px;
+        height:720px;
     }
 
-    .node {
-        margin-bottom: 12px;
-    }
-
-    .flow,
-    .cards,
-    .panel-grid,
-    .compare-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .mobile-nav {
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        padding-bottom: 14px;
-        margin-bottom: 18px;
-    }
-
-    .mobile-nav button {
-        flex: 0 0 auto;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,.03);
-        color: var(--text);
-        border-radius: 999px;
-        padding: 12px 14px;
+    .panel{
+        height:auto;
+        min-height:auto;
+        border-left:0;
+        border-top:1px solid var(--border);
     }
 }
 
+@media(max-width:680px){
+    h1{font-size:38px}
+    .lead{font-size:15px}
+    .brain{
+        width:620px;
+        height:620px;
+    }
+    .node{
+        width:94px;
+        height:94px;
+        font-size:11px;
+    }
+    .core{
+        width:180px;
+        height:180px;
+    }
+    .core span{
+        font-size:18px;
+    }
+    .panel{
+        padding:32px 24px;
+    }
+}
 </style>
 </head>
+
 <body>
+<canvas id="network"></canvas>
 
-<section class="hero">
-<div>
-<div class="eyebrow">IA • cognição • decisão • representação • geração</div>
+<div class="page">
+    <main class="hero">
+        <div class="brand">VEROPRED • ATLAS COGNITIVO DA IA</div>
 
-<h1>
-Como a Inteligência Artificial toma decisões
-</h1>
+        <h1>Inteligência artificial não é uma lista de técnicas.</h1>
 
-<p>
-A IA moderna não é uma única técnica.
-Ela é uma arquitetura de capacidades cognitivas artificiais:
-perceber, representar, aprender, prever, imaginar, buscar conhecimento,
-planejar ações e se adaptar.
-<br><br>
-<strong>
-A inteligência emerge da combinação dessas capacidades.
-</strong>
-</p>
+        <p class="lead">
+            É uma arquitetura de capacidades cognitivas artificiais: memória, associação,
+            atenção, previsão, imaginação, aprendizado, planejamento e alinhamento —
+            todas orbitando um núcleo comum: decisão sob incerteza.
+        </p>
 
-<div class="hero-actions">
-<a href="#mapa" class="btn">Explorar o mapa</a>
-<a href="#aprendizado" class="btn">Entender aprendizado</a>
-<a href="#llm" class="btn">Ver como LLMs funcionam</a>
+        <div class="brain" id="brain">
+            <div class="core">
+                <span>DECISÃO<br>SOB INCERTEZA</span>
+            </div>
+        </div>
+    </main>
+
+    <aside class="panel" id="panel">
+        <div class="panel-tag">Núcleo do sistema</div>
+        <h2>Atlas Cognitivo da IA</h2>
+
+        <p class="subtitle">
+            Clique em uma região cognitiva do cérebro artificial para explorar como cada técnica
+            contribui para sistemas capazes de reduzir incerteza, ampliar contexto e orientar ação.
+        </p>
+
+        <div class="section">
+            <h3>Ideia central</h3>
+            <p>
+                A forma mais madura de entender IA não é começar por algoritmos isolados,
+                mas pelas funções que esses algoritmos exercem dentro de um sistema inteligente.
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Como navegar</h3>
+            <p>
+                Cada região representa uma capacidade cognitiva artificial. Ao clicar, o painel
+                revela a função, o problema resolvido, as técnicas associadas e um exemplo operacional.
+            </p>
+        </div>
+    </aside>
 </div>
-</div>
-</section>
-
-<section id="mapa">
-<div class="wrap">
-
-<h2 class="section-title">
-O mapa cognitivo da IA
-</h2>
-
-<p class="section-lead">
-O erro mais comum é aprender IA como uma lista de algoritmos.
-A forma mais intuitiva de entender inteligência artificial é pensar nela como um conjunto de capacidades artificiais inspiradas em cognição.
-</p>
-
-<div class="mobile-nav">
-<button onclick="showNode('memoria')">Memória</button>
-<button onclick="showNode('atencao')">Atenção</button>
-<button onclick="showNode('previsao')">Previsão</button>
-<button onclick="showNode('imaginacao')">Imaginação</button>
-<button onclick="showNode('planejamento')">Planejamento</button>
-<button onclick="showNode('feedback')">Feedback</button>
-</div>
-
-<div class="core-layout">
-
-<div class="orbit-ring r1"></div>
-<div class="orbit-ring r2"></div>
-
-<div class="core">
-<div>
-<h2>
-INTELIGÊNCIA
-ARTIFICIAL
-</h2>
-
-<p>
-Um sistema capaz de transformar dados em representações matemáticas, reconhecer padrões, estimar probabilidades, gerar respostas e executar ações.
-</p>
-</div>
-</div>
-
-<div class="node n1 active" onclick="showNode('memoria')">
-<small>Memória</small>
-<h3>RAG + Embeddings</h3>
-<p>A IA consulta conhecimento e recupera contexto.</p>
-</div>
-
-<div class="node n2" onclick="showNode('atencao')">
-<small>Atenção</small>
-<h3>Transformers</h3>
-<p>A IA aprende o que importa mais no contexto.</p>
-</div>
-
-<div class="node n3" onclick="showNode('previsao')">
-<small>Previsão</small>
-<h3>Supervisionado</h3>
-<p>A IA estima o que provavelmente acontecerá.</p>
-</div>
-
-<div class="node n4" onclick="showNode('imaginacao')">
-<small>Imaginação</small>
-<h3>Diffusion Models</h3>
-<p>A IA cria novas imagens, textos e conteúdos.</p>
-</div>
-
-<div class="node n5" onclick="showNode('planejamento')">
-<small>Planejamento</small>
-<h3>Agentes</h3>
-<p>A IA organiza ações e usa ferramentas.</p>
-</div>
-
-<div class="node n6" onclick="showNode('feedback')">
-<small>Feedback</small>
-<h3>RLHF</h3>
-<p>A IA aprende preferências humanas.</p>
-</div>
-
-<div class="node n7" onclick="showNode('representacao')">
-<small>Representação</small>
-<h3>Espaços Latentes</h3>
-<p>A IA transforma significado em vetores.</p>
-</div>
-
-<div class="node n8" onclick="showNode('adaptacao')">
-<small>Adaptação</small>
-<h3>Reinforcement Learning</h3>
-<p>A IA ajusta comportamento via recompensa.</p>
-</div>
-
-</div>
-
-<div class="panel" id="panel">
-</div>
-
-</div>
-</section>
-
-<section id="aprendizado">
-<div class="wrap">
-
-<h2 class="section-title">
-Como a IA aprende
-</h2>
-
-<p class="section-lead">
-Existem várias formas de aprendizado artificial.
-Cada uma resolve um tipo diferente de problema.
-</p>
-
-<div class="cards">
-
-<div class="card">
-<div class="card-tag">Aprendizado</div>
-<h3>Supervisionado</h3>
-<p>
-Aprende com exemplos rotulados.
-O sistema recebe entradas e respostas corretas.
-</p>
-
-<ul>
-<li>Classificação</li>
-<li>Risco de crédito</li>
-<li>Fraude</li>
-<li>Previsão</li>
-</ul>
-
-<div class="highlight">
-Como um aluno treinando exercícios com gabarito.
-</div>
-</div>
-
-<div class="card">
-<div class="card-tag">Aprendizado</div>
-<h3>Não supervisionado</h3>
-<p>
-A IA procura padrões escondidos sem respostas corretas explícitas.
-</p>
-
-<ul>
-<li>Clusters</li>
-<li>Segmentação</li>
-<li>Anomalias</li>
-<li>Compressão</li>
-</ul>
-
-<div class="highlight">
-Como organizar objetos parecidos sem conhecer as categorias.
-</div>
-</div>
-
-<div class="card">
-<div class="card-tag">Aprendizado</div>
-<h3>Auto-supervisionado</h3>
-<p>
-O próprio dado cria o exercício de aprendizado.
-Base dos LLMs modernos.
-</p>
-
-<ul>
-<li>Previsão do próximo token</li>
-<li>Reconstrução</li>
-<li>Máscaras</li>
-<li>Representações</li>
-</ul>
-
-<div class="highlight">
-Como completar partes escondidas de um quebra-cabeça.
-</div>
-</div>
-
-</div>
-
-</div>
-</section>
-
-<section id="llm">
-<div class="wrap">
-
-<h2 class="section-title">
-O que realmente acontece em um LLM
-</h2>
-
-<p class="section-lead">
-Modelos modernos de linguagem são arquiteturas compostas.
-A resposta final emerge de múltiplas camadas matemáticas trabalhando juntas.
-</p>
-
-<div class="flow">
-
-<div class="step">
-<b>1. Tokenização</b>
-<span>
-Texto é quebrado em pedaços processáveis.
-</span>
-</div>
-
-<div class="step">
-<b>2. Embeddings</b>
-<span>
-Cada token vira um vetor numérico em espaço latente.
-</span>
-</div>
-
-<div class="step">
-<b>3. Atenção</b>
-<span>
-Transformers calculam relevância contextual entre partes da entrada.
-</span>
-</div>
-
-<div class="step">
-<b>4. Predição</b>
-<span>
-O modelo estima probabilidades para o próximo token.
-</span>
-</div>
-
-<div class="step">
-<b>5. Alinhamento</b>
-<span>
-Feedback humano, regras e sistemas externos moldam a resposta.
-</span>
-</div>
-
-</div>
-
-<div class="compare">
-
-<h3>
-A IA não decide sozinha
-</h3>
-
-<div class="compare-grid">
-
-<div class="compare-box">
-<h4>O que a IA calcula</h4>
-
-<ul>
-<li>Probabilidades</li>
-<li>Padrões</li>
-<li>Semelhanças</li>
-<li>Representações</li>
-<li>Próximas ações prováveis</li>
-<li>Estimativas de risco</li>
-</ul>
-</div>
-
-<div class="compare-box">
-<h4>O que o sistema decide</h4>
-
-<ul>
-<li>Aprovar ou negar</li>
-<li>Executar APIs</li>
-<li>Enviar mensagens</li>
-<li>Bloquear operações</li>
-<li>Solicitar revisão humana</li>
-<li>Aplicar regras de negócio</li>
-</ul>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</section>
-
-<footer>
-<p>
-A IA moderna não é um algoritmo isolado.
-É uma arquitetura de cognição artificial composta por representação, atenção, memória, previsão, geração, adaptação, alinhamento e execução.
-</p>
-</footer>
 
 <script>
-
-const content = {
-
-memoria: {
-    title: 'Memória Artificial',
-    desc: 'A IA moderna não depende apenas da memória interna do modelo. Ela pode consultar documentos, bancos vetoriais e bases externas antes de responder.',
-    math: 'Embeddings transformam significado em vetores numéricos. Busca vetorial encontra conteúdos semanticamente próximos.',
-    use: 'Chatbots corporativos, RAG, busca semântica, copilots empresariais e recuperação de conhecimento.',
-    human: 'Como consultar livros antes de responder uma pergunta.',
-    tech: 'Embeddings • Vector Databases • RAG • Busca Semântica'
+const modules = [
+{
+id:"memoria", label:"Memória", tech:"RAG",
+x:50, y:14,
+title:"Memória",
+subtitle:"Recuperação contextual e persistência informacional.",
+funcao:"Recuperar informações relevantes para ampliar o contexto decisório.",
+problema:"Modelos possuem janela de contexto limitada e não conseguem carregar todo o conhecimento necessário em cada resposta.",
+tecnicas:["RAG","Bancos vetoriais","Busca semântica","Memória contextual","Embeddings"],
+analogia:"Como consultar livros, normas e documentos antes de responder.",
+exemplo:"Um funcionário pergunta sobre política de reembolso internacional. O sistema busca a regra correta em documentos internos, envia os trechos relevantes ao LLM e gera uma resposta contextualizada."
 },
-
-atencao: {
-    title: 'Atenção Artificial',
-    desc: 'Transformers aprendem quais partes do contexto são mais relevantes naquele momento.',
-    math: 'Self-attention calcula pesos de relevância entre tokens da entrada.',
-    use: 'LLMs, tradução, resumo, contexto conversacional e multimodalidade.',
-    human: 'Como prestar mais atenção nas palavras importantes de uma frase.',
-    tech: 'Transformers • Self-Attention • LLMs'
+{
+id:"associacao", label:"Associação", tech:"Embeddings",
+x:76, y:24,
+title:"Associação",
+subtitle:"Transformação de significado em proximidade matemática.",
+funcao:"Aproximar conceitos semelhantes e afastar conceitos diferentes em espaços vetoriais.",
+problema:"Computadores não entendem significado diretamente; precisam converter textos, imagens e eventos em representações numéricas comparáveis.",
+tecnicas:["Embeddings","Aprendizado contrastivo","Espaços latentes","Recomendação","Busca semântica"],
+analogia:"Como organizar ideias parecidas em regiões próximas de um mapa mental.",
+exemplo:"Uma empresa transforma contratos, e-mails e normas em vetores. Quando alguém busca 'política de férias', o sistema encontra trechos semanticamente próximos mesmo sem palavras idênticas."
 },
-
-previsao: {
-    title: 'Previsão Artificial',
-    desc: 'Grande parte da IA moderna funciona estimando probabilidades futuras.',
-    math: 'Modelos minimizam erro ajustando parâmetros para prever saídas mais prováveis.',
-    use: 'Fraude, crédito, previsão de demanda, recomendação e linguagem.',
-    human: 'Como prever chuva observando padrões anteriores.',
-    tech: 'Supervisionado • Autoregressivo • Redes Neurais'
+{
+id:"atencao", label:"Atenção", tech:"Transformers",
+x:84, y:48,
+title:"Atenção",
+subtitle:"Seleção dinâmica de relevância contextual.",
+funcao:"Identificar quais partes da informação devem receber mais peso em cada momento.",
+problema:"Em sequências longas, nem tudo importa igualmente. O sistema precisa conectar elementos distantes e selecionar dependências relevantes.",
+tecnicas:["Transformers","Self-attention","Context window","LLMs","Modelagem sequencial"],
+analogia:"Como prestar atenção no trecho certo de uma conversa para entender uma referência.",
+exemplo:"Na frase 'o troféu não coube na mala porque ela era pequena', o modelo precisa entender que 'ela' se refere à mala, não ao troféu."
 },
-
-imaginacao: {
-    title: 'Imaginação Artificial',
-    desc: 'Modelos generativos criam novas saídas coerentes a partir de padrões aprendidos.',
-    math: 'Diffusion models aprendem a remover ruído progressivamente até formar algo plausível.',
-    use: 'Imagem, vídeo, áudio, design e geração de conteúdo.',
-    human: 'Como imaginar uma cena nunca vista combinando referências conhecidas.',
-    tech: 'Diffusion • GANs • Generative Models'
+{
+id:"previsao", label:"Previsão", tech:"Supervisionado",
+x:73, y:72,
+title:"Previsão",
+subtitle:"Aprender padrões a partir de exemplos corrigidos.",
+funcao:"Estimar classes, probabilidades ou valores futuros com base em dados históricos.",
+problema:"Organizações precisam antecipar risco, fraude, inadimplência, demanda, churn e eventos relevantes antes que eles aconteçam.",
+tecnicas:["Aprendizado supervisionado","Classificação","Regressão","Séries temporais","Modelos de score"],
+analogia:"Como um aluno fazendo exercícios com gabarito até aprender o padrão.",
+exemplo:"Um banco usa dados históricos de clientes para estimar a probabilidade de inadimplência de novos proponentes."
 },
-
-planejamento: {
-    title: 'Planejamento Artificial',
-    desc: 'Agentes organizam etapas, escolhem ferramentas e executam ações.',
-    math: 'Modelos estimam sequência ótima de ações baseada em contexto e objetivo.',
-    use: 'Automação corporativa, workflows, APIs, copilots e execução operacional.',
-    human: 'Como um analista organizando tarefas antes de agir.',
-    tech: 'Agentes • Tool Calling • Workflows'
+{
+id:"sequencia", label:"Sequência", tech:"Autoregressivo",
+x:50, y:84,
+title:"Aprendizado Autoregressivo",
+subtitle:"Geração passo a passo baseada no histórico anterior.",
+funcao:"Prever o próximo token, palavra, frame ou evento a partir do contexto acumulado.",
+problema:"Textos e conversas são sequenciais. A resposta precisa nascer progressivamente, mantendo coerência com tudo que veio antes.",
+tecnicas:["Modelos autoregressivos","LLMs","Next-token prediction","Modelagem de linguagem"],
+analogia:"Como completar frases continuamente.",
+exemplo:"Ao responder uma pergunta, o ChatGPT prevê um token, adiciona ao contexto, prevê o próximo e repete o processo até formar a resposta inteira."
 },
-
-feedback: {
-    title: 'Feedback Humano',
-    desc: 'Modelos aprendem preferências humanas sobre utilidade, clareza e segurança.',
-    math: 'RLHF ajusta comportamento usando recompensas derivadas de avaliações humanas.',
-    use: 'Chatbots alinhados, segurança, tom e qualidade de resposta.',
-    human: 'Como um editor corrigindo respostas para melhorar qualidade.',
-    tech: 'RLHF • Reward Models • Alignment'
+{
+id:"descoberta", label:"Descoberta", tech:"Clustering",
+x:26, y:72,
+title:"Descoberta de Estrutura",
+subtitle:"Encontrar padrões ocultos sem respostas corretas.",
+funcao:"Identificar grupos, anomalias e estruturas escondidas nos dados.",
+problema:"Muitas bases não possuem rótulos. Ainda assim, podem conter segmentos, comportamentos e padrões relevantes.",
+tecnicas:["Aprendizado não supervisionado","Clustering","Redução dimensional","Detecção de anomalias","Segmentação"],
+analogia:"Como organizar objetos parecidos sem alguém explicar previamente as categorias.",
+exemplo:"Uma varejista analisa milhões de clientes e encontra grupos: alto ticket, compradores promocionais, clientes em risco de abandono e perfis recorrentes."
 },
-
-representacao: {
-    title: 'Representação Latente',
-    desc: 'IA transforma significado em coordenadas matemáticas.',
-    math: 'Vetores posicionam conceitos semanticamente próximos em espaços latentes.',
-    use: 'Busca, recomendação, multimodalidade e entendimento semântico.',
-    human: 'Como organizar ideias em um mapa mental de proximidade.',
-    tech: 'Embeddings • Espaços Latentes • Contrastive Learning'
+{
+id:"semi", label:"Poucos Rótulos", tech:"Semi-supervisionado",
+x:16, y:48,
+title:"Aprendizado Semi-Supervisionado",
+subtitle:"Aprender com poucos exemplos rotulados e muitos dados sem rótulo.",
+funcao:"Expandir aprendizado quando o custo humano de rotular tudo é alto.",
+problema:"Em muitos domínios, como medicina e jurídico, há poucos exemplos revisados por especialistas e muitos dados brutos disponíveis.",
+tecnicas:["Semi-supervised learning","Pseudo-labeling","Propagação de rótulos","Confiança de previsão"],
+analogia:"Como aprender uma língua com poucas frases traduzidas e muitos textos soltos.",
+exemplo:"Um hospital possui poucos exames com diagnóstico confirmado e milhões sem revisão. A IA aprende com os rotulados e usa previsões confiáveis para explorar o restante."
 },
-
-adaptacao: {
-    title: 'Adaptação por Recompensa',
-    desc: 'A IA ajusta comportamento conforme consequências e objetivos.',
-    math: 'Reinforcement learning maximiza recompensa acumulada ao longo do tempo.',
-    use: 'Jogos, robótica, agentes e otimização dinâmica.',
-    human: 'Como aprender hábitos pela consequência das ações.',
-    tech: 'Reinforcement Learning • Policy Optimization'
+{
+id:"auto", label:"Auto-supervisão", tech:"LLMs",
+x:24, y:24,
+title:"Aprendizado Auto-Supervisionado",
+subtitle:"O próprio dado cria o gabarito.",
+funcao:"Aprender padrões escondendo partes dos dados e tentando reconstruí-las.",
+problema:"Rotular manualmente bilhões de exemplos seria inviável. A IA precisa extrair supervisão da própria estrutura dos dados.",
+tecnicas:["Self-supervised learning","Masked prediction","Next-token prediction","Pré-treinamento de LLMs"],
+analogia:"Como um quebra-cabeça em que a própria imagem fornece a dica.",
+exemplo:"Um LLM lê bilhões de textos e aprende prevendo palavras ou tokens ausentes, absorvendo sintaxe, relações semânticas e padrões culturais."
+},
+{
+id:"imaginacao", label:"Imaginação", tech:"Diffusion / GANs",
+x:12, y:14,
+title:"Imaginação",
+subtitle:"Geração de novas possibilidades a partir de padrões aprendidos.",
+funcao:"Criar imagens, textos, vídeos, sons ou cenários sintéticos coerentes.",
+problema:"Sistemas inteligentes não apenas classificam o mundo; também simulam possibilidades e produzem novas configurações.",
+tecnicas:["Diffusion models","GANs","Geração multimodal","Modelos generativos"],
+analogia:"Como restaurar uma pintura borrada ou imaginar uma cena antes inexistente.",
+exemplo:"Ao pedir 'um samurai cyberpunk na chuva', um modelo de diffusion começa com ruído e remove esse ruído gradualmente até a imagem emergir."
+},
+{
+id:"adaptacao", label:"Adaptação", tech:"RL",
+x:88, y:14,
+title:"Adaptação",
+subtitle:"Aprender comportamento por recompensa e punição.",
+funcao:"Melhorar ações com base no retorno recebido do ambiente.",
+problema:"Alguns problemas não possuem gabarito fixo; exigem tentativa, erro, consequência e otimização de estratégia.",
+tecnicas:["Reinforcement Learning","Políticas de ação","Recompensas","Ambientes simulados","Otimização sequencial"],
+analogia:"Como treinar comportamento por reforço.",
+exemplo:"Um robô em armazém aprende a pegar caixas, evitar colisões e otimizar rotas. Entregou corretamente: +20. Bateu: -10."
+},
+{
+id:"alinhamento", label:"Alinhamento", tech:"RLHF",
+x:88, y:82,
+title:"Alinhamento",
+subtitle:"Ajustar comportamento a preferências humanas.",
+funcao:"Ensinar o modelo a produzir respostas mais úteis, claras, seguras e aceitáveis.",
+problema:"Um modelo pode gerar respostas estatisticamente prováveis, mas não necessariamente úteis, adequadas ou alinhadas ao julgamento humano.",
+tecnicas:["RLHF","Feedback humano","Modelos de recompensa","Preferência humana","Alinhamento"],
+analogia:"Como receber avaliações humanas sobre o que foi melhor ou pior.",
+exemplo:"Humanos comparam duas respostas sobre retenção de clientes. A resposta mais clara e estruturada é escolhida. O modelo aprende essa preferência."
+},
+{
+id:"especializacao", label:"Especialização", tech:"Fine-tuning",
+x:12, y:82,
+title:"Especialização",
+subtitle:"Adaptar um modelo geral a um domínio específico.",
+funcao:"Transferir capacidade geral para contextos técnicos, regulatórios ou corporativos.",
+problema:"Modelos gerais sabem muito, mas podem não dominar linguagem, regras e nuances de um domínio específico.",
+tecnicas:["Fine-tuning","Domain adaptation","Instruction tuning","Modelos especializados"],
+analogia:"Como um médico generalista fazendo residência.",
+exemplo:"Uma seguradora adapta um LLM com apólices, sinistros, regulação e linguagem técnica para melhorar respostas no domínio de seguros."
+},
+{
+id:"planejamento", label:"Planejamento", tech:"Agentes",
+x:50, y:4,
+title:"Planejamento",
+subtitle:"Organizar ação, ferramentas e execução iterativa.",
+funcao:"Transformar intenção em sequência de ações coordenadas.",
+problema:"Responder texto é diferente de executar tarefas. Sistemas úteis precisam planejar, chamar ferramentas, revisar saídas e iterar.",
+tecnicas:["Agentes de IA","Tool calling","Workflows","Orquestração","Multiagentes"],
+analogia:"Como funcionários digitais especializados cooperando.",
+exemplo:"Um agente busca documentos, outro resume, outro analisa risco e outro gera um relatório executivo automaticamente."
+},
+{
+id:"hibrido", label:"Sistema Híbrido", tech:"Orquestração",
+x:50, y:94,
+title:"Sistemas Híbridos",
+subtitle:"A IA moderna como ecossistema combinado.",
+funcao:"Integrar múltiplas capacidades cognitivas artificiais em um único sistema operacional.",
+problema:"Nenhuma técnica isolada resolve tudo. Sistemas modernos combinam memória, atenção, geração, alinhamento, busca, agentes e especialização.",
+tecnicas:["LLMs","RAG","Embeddings","RLHF","Agentes","Fine-tuning","Memória contextual"],
+analogia:"Como um organismo funcional composto por múltiplos sistemas interdependentes.",
+exemplo:"Um chatbot corporativo usa embeddings para busca, RAG para recuperar documentos, LLM autoregressivo para responder, agentes para executar tarefas e fine-tuning para linguagem jurídica."
 }
+];
 
-}
+const brain = document.getElementById("brain");
+const panel = document.getElementById("panel");
 
-function showNode(key) {
+modules.forEach(m=>{
+    const node=document.createElement("div");
+    node.className="node";
+    node.dataset.id=m.id;
+    node.style.left=`calc(${m.x}% - 54px)`;
+    node.style.top=`calc(${m.y}% - 54px)`;
+    node.innerHTML=`<div>${m.label}<small>${m.tech}</small></div>`;
+    node.onclick=()=>selectModule(m.id);
+    brain.appendChild(node);
+});
 
-    document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+function selectModule(id){
+    const m=modules.find(x=>x.id===id);
+    document.querySelectorAll(".node").forEach(n=>n.classList.toggle("active",n.dataset.id===id));
 
-    if(event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
+    panel.innerHTML=`
+        <div class="panel-tag">Região Cognitiva</div>
+        <h2>${m.title}</h2>
+        <p class="subtitle">${m.subtitle}</p>
 
-    const c = content[key];
-
-    document.getElementById('panel').innerHTML = `
-
-    <div class="panel-grid">
-
-        <div>
-            <h3>${c.title}</h3>
-            <p>${c.desc}</p>
+        <div class="section">
+            <h3>Função cognitiva</h3>
+            <p>${m.funcao}</p>
         </div>
 
-        <div>
-
-            <div class="info-box">
-                <strong>O que acontece matematicamente</strong>
-                <p>${c.math}</p>
-            </div>
-
-            <div class="info-box">
-                <strong>Como a IA usa isso</strong>
-                <p>${c.use}</p>
-            </div>
-
-            <div class="info-box">
-                <strong>Analogia humana</strong>
-                <p>${c.human}</p>
-            </div>
-
-            <div class="info-box">
-                <strong>Tecnologias relacionadas</strong>
-                <p>${c.tech}</p>
-            </div>
-
+        <div class="section">
+            <h3>Limitação computacional</h3>
+            <p>${m.problema}</p>
         </div>
 
-    </div>
+        <div class="section">
+            <h3>Mecanismos de IA</h3>
+            <div class="badges">
+                ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
+            </div>
+        </div>
 
+        <div class="section">
+            <h3>Analogia intuitiva</h3>
+            <p>${m.analogia}</p>
+        </div>
+
+        <div class="section">
+            <h3>Exemplo operacional</h3>
+            <p>${m.exemplo}</p>
+        </div>
+
+        <div class="section">
+            <h3>Conexão com o núcleo</h3>
+            <p>
+                Esta capacidade contribui para a decisão sob incerteza ao transformar dados,
+                contexto ou feedback em orientação mais estruturada para ação.
+            </p>
+        </div>
+
+        <p class="footer-note">
+            Atlas Cognitivo da IA — uma forma de ensinar inteligência artificial como sistema
+            integrado de capacidades, não como lista fragmentada de algoritmos.
+        </p>
     `;
 }
 
-showNode('memoria');
+/* Canvas neural background */
+const canvas=document.getElementById("network");
+const ctx=canvas.getContext("2d");
+let W,H,particles=[];
 
+function resize(){
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+for(let i=0;i<130;i++){
+    particles.push({
+        x:Math.random()*W,
+        y:Math.random()*H,
+        vx:(Math.random()-.5)*.25,
+        vy:(Math.random()-.5)*.25,
+        r:Math.random()*1.7+.6
+    });
+}
+
+function animate(){
+    ctx.clearRect(0,0,W,H);
+
+    particles.forEach(p=>{
+        p.x+=p.vx;
+        p.y+=p.vy;
+        if(p.x<0||p.x>W)p.vx*=-1;
+        if(p.y<0||p.y>H)p.vy*=-1;
+    });
+
+    for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+            const a=particles[i], b=particles[j];
+            const dx=a.x-b.x, dy=a.y-b.y;
+            const d=Math.sqrt(dx*dx+dy*dy);
+            if(d<130){
+                ctx.strokeStyle=`rgba(216,162,82,${(1-d/130)*.18})`;
+                ctx.lineWidth=.7;
+                ctx.beginPath();
+                ctx.moveTo(a.x,a.y);
+                ctx.lineTo(b.x,b.y);
+                ctx.stroke();
+            }
+        }
+    }
+
+    particles.forEach(p=>{
+        ctx.fillStyle="rgba(242,195,116,.52)";
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
 </script>
-
 </body>
 </html>
