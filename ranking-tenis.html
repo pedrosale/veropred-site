@@ -287,8 +287,28 @@ td:first-child, th:first-child {
     </section>
 </div>
 
-<script>
-const STORAGE_KEY = "ranking_tenis_app_v1";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBUcd4H3LoMED6LDVAr83UgUq0JuLWYB8c",
+    authDomain: "ranking-tenis-75f0d.firebaseapp.com",
+    projectId: "ranking-tenis-75f0d",
+    storageBucket: "ranking-tenis-75f0d.firebasestorage.app",
+    messagingSenderId: "915783780117",
+    appId: "1:915783780117:web:360b06af480f1a91e94b1c",
+    measurementId: "G-1MTW3W1597"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const rankingRef = doc(db, "tennisRanking", "main");
 
 let state = {
     players: [],
@@ -296,17 +316,24 @@ let state = {
     matches: []
 };
 
-function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+let firebaseLoaded = false;
+
+async function saveState() {
+    await setDoc(rankingRef, state);
 }
 
-function loadState() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) state = JSON.parse(saved);
+onSnapshot(rankingRef, async (snapshot) => {
+    if (snapshot.exists()) {
+        state = snapshot.data();
+    } else {
+        await saveState();
+    }
+
+    firebaseLoaded = true;
     render();
-}
+});
 
-function addPlayer() {
+window.addPlayer = async function () {
     const input = document.getElementById("playerName");
     const name = input.value.trim();
 
@@ -317,11 +344,10 @@ function addPlayer() {
     state.players.push(name);
     input.value = "";
 
-    saveState();
-    render();
-}
+    await saveState();
+};
 
-function generateSchedule() {
+window.generateSchedule = async function () {
     if (state.players.length !== 8) {
         return alert("Cadastre exatamente 8 jogadores antes de gerar os confrontos.");
     }
@@ -339,11 +365,10 @@ function generateSchedule() {
     }
 
     state.schedule = schedule;
-    saveState();
-    render();
-}
+    await saveState();
+};
 
-function saveMatch() {
+window.saveMatch = async function () {
     const matchId = document.getElementById("matchSelect").value;
     const scoreA = Number(document.getElementById("scoreA").value);
     const scoreB = Number(document.getElementById("scoreB").value);
@@ -372,16 +397,14 @@ function saveMatch() {
     document.getElementById("scoreA").value = "";
     document.getElementById("scoreB").value = "";
 
-    saveState();
-    render();
-}
+    await saveState();
+};
 
-function deleteMatch(id) {
+window.deleteMatch = async function (id) {
     if (!confirm("Excluir este resultado?")) return;
     state.matches = state.matches.filter(m => m.id !== id);
-    saveState();
-    render();
-}
+    await saveState();
+};
 
 function calculateRanking() {
     const table = {};
@@ -545,7 +568,7 @@ function renderStatus() {
         : `Cadastre 8 jogadores para iniciar o torneio.`;
 }
 
-function resetAll() {
+window.resetAll = async function () {
     if (!confirm("Tem certeza que deseja apagar todos os dados?")) return;
 
     state = {
@@ -554,19 +577,20 @@ function resetAll() {
         matches: []
     };
 
-    saveState();
-    render();
-}
+    await saveState();
+};
 
 function render() {
+    if (!firebaseLoaded) return;
+
     renderPlayers();
     renderMatchSelect();
     renderRanking();
     renderHistory();
     renderStatus();
 }
-
-loadState();
 </script>
+
+
 </body>
 </html>
