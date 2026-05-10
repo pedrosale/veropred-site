@@ -184,6 +184,30 @@ body{
     letter-spacing:.04em;
 }
 
+.case-card.no-image{
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.85));
+}
+
+.case-card.no-image::after{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.88)
+        );
+}
+
+.mini-formula{
+    font-family:'Cormorant Garamond',serif;
+    font-size:34px;
+    color:#c6922b;
+    margin-bottom:22px;
+    opacity:.95;
+    letter-spacing:.02em;
+}
+
 .featured{
     grid-column:1 / -1;
     min-height:560px;
@@ -375,6 +399,35 @@ body{
             </div>
         </a>
 
+<a class="case-card no-image" href="aluc_ia.html">
+
+    <div class="case-content">
+
+        <div class="case-tag">
+            IA GENERATIVA • PROBABILIDADE • VERDADE
+        </div>
+
+        <div class="mini-formula">
+            P(tokenₜ₊₁ | contexto)
+        </div>
+
+        <h2>
+            A IA não verifica o mundo.
+        </h2>
+
+        <p>
+            Alucinação não é um bug periférico.
+            É uma consequência estrutural da matemática que faz modelos generativos parecerem inteligentes.
+        </p>
+
+        <span class="case-link">
+            Ler análise →
+        </span>
+
+    </div>
+
+</a>
+		
     </section>
 
     <div class="footer">
