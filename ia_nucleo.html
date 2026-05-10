@@ -341,12 +341,11 @@ h1{
     <main class="hero">
         <div class="brand">VEROPRED • ATLAS COGNITIVO DA IA</div>
 
-        <h1>Inteligência artificial não é uma lista de técnicas.</h1>
+        <h1>Inteligência artificial como sistema de capacidades emergentes.</h1>
 
         <p class="lead">
-            É uma arquitetura de capacidades cognitivas artificiais: memória, associação,
-            atenção, previsão, imaginação, aprendizado, planejamento e alinhamento —
-            todas orbitando um núcleo comum: decisão sob incerteza.
+            Memória, Associação,
+            Atenção, Previsão, Imaginação, Aprendizado, Planejamento e Alinhamento.
         </p>
 
         <div class="brain" id="brain">
@@ -357,28 +356,24 @@ h1{
     </main>
 
     <aside class="panel" id="panel">
-        <div class="panel-tag">Núcleo do sistema</div>
+        <div class="panel-tag"></div>
         <h2>Atlas Cognitivo da IA</h2>
 
         <p class="subtitle">
-            Clique em uma região cognitiva do cérebro artificial para explorar como cada técnica
-            contribui para sistemas capazes de reduzir incerteza, ampliar contexto e orientar ação.
+Uma exploração das arquiteturas cognitivas artificiais utilizadas para ampliar contexto, reduzir incerteza e orientar ação sob complexidade.
         </p>
 
         <div class="section">
-            <h3>Ideia central</h3>
-            <p>
-                A forma mais madura de entender IA não é começar por algoritmos isolados,
-                mas pelas funções que esses algoritmos exercem dentro de um sistema inteligente.
-            </p>
+<h3>Perspectiva</h3>
+<p>
+    Uma visão de IA centrada em capacidades cognitivas artificiais: memória, atenção, previsão, geração, alinhamento e planejamento.
+</p>
         </div>
 
         <div class="section">
-            <h3>Como navegar</h3>
-            <p>
-                Cada região representa uma capacidade cognitiva artificial. Ao clicar, o painel
-                revela a função, o problema resolvido, as técnicas associadas e um exemplo operacional.
-            </p>
+<h3>Exploração Cognitiva</h3>
+<p>
+Uma exploração das capacidades cognitivas artificiais utilizadas para representar contexto, reduzir ambiguidade e orientar ação inteligente.</p>
         </div>
     </aside>
 </div>
@@ -574,35 +569,23 @@ function selectModule(id){
             <p>${m.problema}</p>
         </div>
 
-        <div class="section">
-            <h3>Mecanismos de IA</h3>
-            <div class="badges">
-                ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
-            </div>
-        </div>
+<div class="section">
+    <h3>Analogia</h3>
+    <p>${m.analogia}</p>
+</div>
 
-        <div class="section">
-            <h3>Analogia intuitiva</h3>
-            <p>${m.analogia}</p>
-        </div>
+<div class="section">
+    <h3>Exemplo</h3>
+    <p>${m.exemplo}</p>
+</div>
 
-        <div class="section">
-            <h3>Exemplo operacional</h3>
-            <p>${m.exemplo}</p>
-        </div>
+<div class="section">
+    <h3>Arquiteturas Relacionadas</h3>
+    <div class="badges">
+        ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
+    </div>
+</div>
 
-        <div class="section">
-            <h3>Conexão com o núcleo</h3>
-            <p>
-                Esta capacidade contribui para a decisão sob incerteza ao transformar dados,
-                contexto ou feedback em orientação mais estruturada para ação.
-            </p>
-        </div>
-
-        <p class="footer-note">
-            Atlas Cognitivo da IA — uma forma de ensinar inteligência artificial como sistema
-            integrado de capacidades, não como lista fragmentada de algoritmos.
-        </p>
     `;
 }
 
