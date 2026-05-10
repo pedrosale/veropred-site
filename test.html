@@ -1,1406 +1,937 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Veropred Treinamentos de IA In Company</title>
-
-  <style>
-    :root {
-      --bg: #070707;
-      --panel: #111;
-      --panel-2: #171717;
-      --text: #f4eee6;
-      --muted: #aaa29a;
-      --soft: #746d64;
-      --gold: #d6a85f;
-      --gold-2: #f0cf8a;
-      --copper: #b87333;
-      --danger: #d88775;
-      --success: #d6a85f;
-      --border: rgba(214,168,95,.24);
-      --border-strong: rgba(214,168,95,.46);
-      --shadow: rgba(0,0,0,.55);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 80% 0%, rgba(184,115,51,.18), transparent 32%),
-        radial-gradient(circle at 10% 90%, rgba(214,168,95,.10), transparent 30%),
-        linear-gradient(135deg, #030303, #090909 52%, #11100e);
-      color: var(--text);
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    }
-
-    .page {
-      width: min(1180px, 94vw);
-      margin: 0 auto;
-      padding: 28px 0 56px;
-    }
-
-    .shell {
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      background:
-        radial-gradient(circle at top right, rgba(214,168,95,.11), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
-      box-shadow: 0 32px 90px var(--shadow);
-      padding: 28px;
-      overflow: hidden;
-    }
-
-    .header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 20px;
-      align-items: end;
-      border-bottom: 1px solid rgba(214,168,95,.18);
-      padding-bottom: 22px;
-      margin-bottom: 22px;
-    }
-
-    .brand {
-      color: var(--gold);
-      font-size: 12px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(30px, 5vw, 52px);
-      line-height: 1.02;
-      letter-spacing: -.045em;
-      max-width: 850px;
-    }
-
-    .subtitle {
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 760px;
-      margin-top: 12px;
-      font-size: 15px;
-    }
-
-    .badge {
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 10px 14px;
-      color: var(--gold-2);
-      background: rgba(214,168,95,.07);
-      font-size: 12px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(320px, .7fr);
-      gap: 20px;
-      align-items: start;
-    }
-
-    .card {
-      border: 1px solid rgba(214,168,95,.20);
-      border-radius: 20px;
-      background: rgba(255,255,255,.028);
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-
-    .card h2 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      letter-spacing: -.02em;
-    }
-
-    .kicker {
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .phase {
-      display: inline-block;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 7px 11px;
-      color: var(--gold);
-      background: rgba(214,168,95,.07);
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-
-    .text {
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    .scenario {
-      white-space: pre-wrap;
-      border-left: 4px solid var(--copper);
-      border-radius: 16px;
-      padding: 18px;
-      background: linear-gradient(90deg, rgba(184,115,51,.10), transparent 42%), #090909;
-      color: #eadfce;
-      line-height: 1.65;
-      font-size: 15px;
-    }
-
-    .structure {
-      white-space: pre-wrap;
-      overflow-x: auto;
-      border: 1px solid rgba(214,168,95,.20);
-      border-radius: 16px;
-      padding: 16px;
-      background: rgba(214,168,95,.055);
-      color: #eadcc6;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 300px;
-      resize: vertical;
-      border: 1px solid rgba(214,168,95,.34);
-      border-radius: 18px;
-      background: #090909;
-      color: var(--text);
-      padding: 17px;
-      font-size: 15px;
-      line-height: 1.58;
-      outline: none;
-      margin: 12px 0;
-      font-family: inherit;
-    }
-
-    textarea:focus {
-      border-color: rgba(214,168,95,.75);
-      box-shadow: 0 0 0 3px rgba(214,168,95,.08);
-    }
-
-    button {
-      min-height: 46px;
-      border-radius: 14px;
-      border: 1px solid rgba(214,168,95,.28);
-      padding: 0 18px;
-      cursor: pointer;
-      font-weight: 750;
-      background: var(--gold);
-      color: #15100a;
-      transition: .18s ease;
-    }
-
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(0,0,0,.24);
-    }
-
-    button:disabled {
-      opacity: .35;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--gold);
-    }
-
-    .btn-dark {
-      background: #222;
-      color: var(--text);
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .mentor-wrap {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 20px;
-      align-items: stretch;
-      min-height: 430px;
-    }
-
-    .mentor-img {
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(214,168,95,.20), transparent 38%),
-        #111;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .mentor-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center top;
-      display: block;
-      min-height: 430px;
-    }
-
-    .mentor-id {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 14px;
-      padding: 13px;
-      border: 1px solid rgba(214,168,95,.22);
-      border-radius: 16px;
-      background: rgba(5,5,5,.72);
-      backdrop-filter: blur(12px);
-    }
-
-    .mentor-id b {
-      color: var(--gold-2);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .mentor-id span {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.4;
-    }
-
-    .dialogue {
-      border: 1px solid rgba(214,168,95,.25);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(214,168,95,.11), transparent 45%),
-        rgba(255,255,255,.035);
-      padding: 26px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .dialogue h2 {
-      font-size: clamp(24px, 4vw, 36px);
-      line-height: 1.1;
-      margin: 0 0 14px;
-    }
-
-    .speech {
-      color: #eadcc6;
-      line-height: 1.58;
-      font-size: clamp(17px, 2vw, 21px);
-      animation: fade .24s ease both;
-    }
-
-    .example {
-      margin-top: 16px;
-      background: rgba(214,168,95,.055);
-      border: 1px solid rgba(214,168,95,.18);
-      border-radius: 16px;
-      padding: 15px;
-      color: #eadcc6;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 13px;
-      white-space: pre-wrap;
-      line-height: 1.55;
-    }
-
-    .dots {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(214,168,95,.38);
-      background: rgba(255,255,255,.05);
-    }
-
-    .dot.active {
-      width: 24px;
-      background: var(--gold);
-      box-shadow: 0 0 18px rgba(214,168,95,.24);
-    }
-
-    .sidebar-title {
-      color: var(--gold);
-      font-size: 12px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .progress {
-      height: 10px;
-      background: #090909;
-      border: 1px solid rgba(214,168,95,.16);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #8a552b, #d6a85f, #f0cf8a);
-      transition: width .35s ease;
-    }
-
-    .mission-map {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .node {
-      border: 1px solid rgba(214,168,95,.18);
-      border-radius: 14px;
-      padding: 10px;
-      background: rgba(255,255,255,.025);
-      min-height: 78px;
-    }
-
-    .node.active {
-      border-color: var(--border-strong);
-      background: rgba(214,168,95,.07);
-    }
-
-    .node.done {
-      border-color: rgba(214,168,95,.34);
-      background: rgba(214,168,95,.045);
-    }
-
-    .node.locked {
-      opacity: .34;
-    }
-
-    .node small {
-      color: var(--soft);
-      font-size: 11px;
-    }
-
-    .node b {
-      display: block;
-      color: var(--text);
-      font-size: 12px;
-      line-height: 1.3;
-      margin-top: 4px;
-    }
-
-    .metric {
-      margin-bottom: 14px;
-    }
-
-    .metric-label {
-      display: flex;
-      justify-content: space-between;
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .feedback {
-      border-radius: 20px;
-      padding: 20px;
-      margin-top: 18px;
-    }
-
-    .success {
-      border: 1px solid rgba(214,168,95,.42);
-      background: rgba(214,168,95,.08);
-    }
-
-    .fail {
-      border: 1px solid rgba(216,135,117,.36);
-      background: rgba(216,135,117,.08);
-    }
-
-    .feedback-title {
-      font-size: 22px;
-      color: var(--gold-2);
-      font-weight: 760;
-      margin-bottom: 10px;
-    }
-
-    .score-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .score-box {
-      border: 1px solid rgba(214,168,95,.18);
-      border-radius: 15px;
-      padding: 12px;
-      background: rgba(255,255,255,.025);
-    }
-
-    .score-box b {
-      font-size: 12px;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .score-box span {
-      color: var(--gold);
-      font-size: 22px;
-      font-weight: 800;
-    }
-
-    .unlock {
-      border: 1px solid rgba(214,168,95,.18);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(255,255,255,.025);
-      margin-bottom: 10px;
-    }
-
-    .unlock.done {
-      border-color: var(--border-strong);
-      background: rgba(214,168,95,.06);
-    }
-
-    .unlock b {
-      display: block;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .unlock span {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .hint {
-      border: 1px solid rgba(214,168,95,.20);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(214,168,95,.05);
-      color: #eadcc6;
-      line-height: 1.55;
-      margin-top: 12px;
-    }
-
-    .hidden { display: none; }
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 920px) {
-      .header, .grid, .mentor-wrap {
-        grid-template-columns: 1fr;
-      }
-
-      .score-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .shell { padding: 20px; }
-      .actions button { width: 100%; }
-      .mission-map, .score-grid { grid-template-columns: 1fr; }
-      .mentor-img img { min-height: 320px; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Veropred Decision OS™ | Infraestrutura de Decisão</title>
+<meta name="description" content="Veropred Decision OS™ — infraestrutura operacional para decisões sob risco, incerteza, IA, capital e governança." />
+
+<style>
+:root {
+    --bg:#050504;
+    --bg-2:#0b0907;
+    --bg-3:#17100b;
+    --panel:rgba(255,255,255,.055);
+    --panel-2:rgba(255,255,255,.085);
+    --line:rgba(255,255,255,.13);
+    --line-gold:rgba(216,176,106,.34);
+    --copper:#c9783a;
+    --copper-soft:#e0a064;
+    --gold:#d8b06a;
+    --gold-2:#f1c77e;
+    --cream:#f6efe3;
+    --muted:#b9aa96;
+    --dim:#81766a;
+    --dark-text:#20120b;
+    --radius-xl:36px;
+    --radius-lg:24px;
+    --radius-md:18px;
+    --shadow:0 30px 90px rgba(0,0,0,.52);
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    --ease:cubic-bezier(.2,.8,.2,1);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    color:var(--cream);
+    background:
+        radial-gradient(circle at 12% -8%,rgba(201,120,58,.24),transparent 34%),
+        radial-gradient(circle at 88% 4%,rgba(216,176,106,.14),transparent 35%),
+        linear-gradient(135deg,var(--bg),var(--bg-2) 52%,var(--bg-3));
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 82%);
+    z-index:0;
+}
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:radial-gradient(circle at 50% 16%,transparent 0 26%,rgba(0,0,0,.22) 62%,rgba(0,0,0,.58));
+    z-index:0;
+}
+main,header,footer{position:relative;z-index:1}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit}
+.wrap,.nav{width:min(1180px,calc(100% - 36px));margin:0 auto}
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:60;
+    backdrop-filter:blur(18px);
+    background:rgba(5,5,4,.78);
+    border-bottom:1px solid rgba(255,255,255,.10);
+}
+.nav{
+    min-height:76px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+.brand{display:flex;align-items:center;gap:14px;min-width:240px}
+.logo-mark{
+    width:42px;height:42px;border-radius:50%;position:relative;flex:0 0 auto;
+    background:radial-gradient(circle at 34% 26%,#fff5d7,#d69d5b 30%,#7b3817 68%,#1d0d07);
+    box-shadow:0 0 32px rgba(216,176,106,.34);
+}
+.logo-mark::after{content:"";position:absolute;inset:8px;border:1px solid rgba(255,255,255,.44);border-radius:50%}
+.brand strong{display:block;font-size:14px;letter-spacing:.16em;text-transform:uppercase}
+.brand span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.nav-links{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.nav-link{
+    border:1px solid transparent;
+    color:var(--muted);
+    background:transparent;
+    padding:9px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:.22s var(--ease);
+    font-size:14px;
+}
+.nav-link:hover{color:var(--cream);border-color:var(--line);background:rgba(255,255,255,.07)}
+.nav-link.nav-cta{
+    color:#1b1009;
+    background:linear-gradient(135deg,#f1c77e,#c9783a);
+    border-color:rgba(255,255,255,.18);
+    font-weight:900;
+}
+
+.section{padding:clamp(46px,7vw,90px) 0}
+.section.compact{padding:clamp(34px,5vw,64px) 0}
+.kicker{
+    display:inline-flex;align-items:center;gap:10px;color:var(--copper-soft);
+    border:1px solid rgba(224,160,100,.32);
+    background:rgba(224,160,100,.07);
+    padding:9px 13px;border-radius:999px;
+    font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;
+}
+.kicker::before{
+    content:"";width:7px;height:7px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 18px var(--gold);
+}
+.btn{
+    display:inline-flex;justify-content:center;align-items:center;
+    border:1px solid var(--line);border-radius:999px;
+    padding:14px 18px;min-height:46px;cursor:pointer;font-weight:900;
+    color:var(--cream);background:rgba(255,255,255,.058);
+    transition:.24s var(--ease);line-height:1;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(0,0,0,.34)}
+.btn.primary{
+    color:#1b1009;background:linear-gradient(135deg,#f1c77e,#c9783a);
+    border-color:rgba(255,255,255,.18);box-shadow:0 18px 44px rgba(201,120,58,.22);
+}
+.btn.secondary{color:var(--gold);border-color:rgba(216,176,106,.42)}
+.btn.ghost{color:var(--muted)}
+.eyebrow{
+    color:var(--gold);letter-spacing:.12em;text-transform:uppercase;
+    font-size:12px;font-weight:900;margin-bottom:12px;
+}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.07em;margin:24px 0 22px}
+h2{font-size:clamp(32px,4.8vw,58px);line-height:.98;letter-spacing:-.056em;margin-bottom:0}
+h3{font-size:clamp(25px,3.2vw,40px);line-height:1;letter-spacing:-.045em;margin-bottom:12px}
+.lead{color:#d9cdbb;font-size:clamp(17px,2vw,21px);line-height:1.56;max-width:820px;margin-bottom:0}
+.muted{color:var(--muted);line-height:1.56}
+.grid{display:grid;gap:16px}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.section-head{
+    display:grid;
+    grid-template-columns:1fr minmax(280px,520px);
+    gap:26px;
+    align-items:end;
+    margin-bottom:26px;
+}
+.section-head.center{grid-template-columns:1fr;text-align:center;justify-items:center}
+
+.hero{
+    padding:clamp(58px,8vw,112px) 0 clamp(34px,5vw,58px);
+    display:grid;
+    grid-template-columns:1fr .88fr;
+    gap:clamp(30px,5vw,64px);
+    align-items:center;
+}
+.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:32px}
+.hero-note{color:var(--muted);font-size:14px;line-height:1.5;max-width:680px;margin-top:18px}
+.os-panel{
+    min-height:560px;
+    border:1px solid var(--line);
+    border-radius:42px;
+    background:
+        radial-gradient(circle at 50% 48%,rgba(216,176,106,.18),transparent 39%),
+        linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+}
+.os-panel::before{
+    content:"";
+    position:absolute;
+    inset:24px;
+    border:1px solid rgba(216,176,106,.13);
+    border-radius:32px;
+}
+.os-flow-line{
+    position:absolute;
+    left:50%;
+    top:8%;
+    bottom:8%;
+    width:1px;
+    background:linear-gradient(to bottom,transparent,rgba(216,176,106,.54),transparent);
+}
+.os-core{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:210px;
+    height:210px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 34% 23%,#fff5d7,#d69d5b 36%,#7b3817 72%,#211006);
+    box-shadow:0 0 78px rgba(216,176,106,.30),inset 0 0 0 1px rgba(255,255,255,.34);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:24px;
+    z-index:2;
+}
+.os-core strong{font-size:23px;line-height:1.02;letter-spacing:-.04em}
+.os-core span{color:#fff2dd;opacity:.86;font-size:12px;line-height:1.35;margin-top:10px}
+.os-node{
+    position:absolute;
+    width:172px;
+    min-height:82px;
+    z-index:3;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.42);
+    background:rgba(246,239,227,.94);
+    color:var(--dark-text);
+    padding:13px;
+    box-shadow:0 18px 44px rgba(0,0,0,.34);
+    cursor:pointer;
+    transition:.25s var(--ease);
+}
+.os-node:hover{transform:translateY(-5px) scale(1.025)}
+.os-node b{display:block;font-size:13px;line-height:1.18}
+.os-node span{display:block;color:#7e5a3d;font-size:11px;margin-top:6px}
+.l1{left:50%;top:30px;transform:translateX(-50%)}
+.l2{right:32px;top:142px}
+.l3{right:54px;bottom:170px}
+.l4{left:54px;bottom:170px}
+.l5{left:50%;bottom:30px;transform:translateX(-50%)}
+
+.manifesto-box{
+    border:1px solid rgba(216,176,106,.30);
+    border-radius:42px;
+    background:
+        radial-gradient(circle at 16% 22%,rgba(216,176,106,.14),transparent 38%),
+        rgba(255,255,255,.055);
+    box-shadow:var(--shadow);
+    padding:clamp(30px,5vw,58px);
+}
+.manifesto-box h2{max-width:900px}
+.manifesto-text{
+    margin-top:22px;
+    max-width:960px;
+    color:#e4d5c0;
+    font-size:clamp(19px,2.3vw,28px);
+    line-height:1.34;
+    letter-spacing:-.035em;
+}
+.thesis-line{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+    display:inline-flex;align-items:center;
+    border:1px solid rgba(216,176,106,.27);
+    background:rgba(216,176,106,.075);
+    color:var(--gold);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.03em;
+}
+
+.layer-map{
+    border:1px solid var(--line-gold);
+    border-radius:42px;
+    background:
+        linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.032));
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+.layer-tabs{
+    display:flex;
+    gap:8px;
+    padding:16px;
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+}
+.tab{
+    white-space:nowrap;
+    border:1px solid transparent;
+    border-radius:999px;
+    color:var(--muted);
+    background:rgba(255,255,255,.045);
+    padding:10px 13px;
+    cursor:pointer;
+    transition:.22s var(--ease);
+    font-size:13px;
+    font-weight:900;
+}
+.tab.active,.tab:hover{
+    color:#1b1009;
+    background:linear-gradient(135deg,#f1c77e,#c9783a);
+    border-color:rgba(255,255,255,.16);
+}
+.layer-body{padding:clamp(22px,4vw,42px)}
+.area{display:none;animation:fadeUp .34s var(--ease) both}
+.area.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.area-top{
+    display:grid;
+    grid-template-columns:1fr minmax(220px,360px);
+    gap:22px;
+    align-items:start;
+    margin-bottom:22px;
+}
+.area-quote{
+    border-left:3px solid var(--copper-soft);
+    background:rgba(224,160,100,.075);
+    border-radius:0 18px 18px 0;
+    color:#f3e4ce;
+    padding:18px;
+    line-height:1.5;
+}
+.card{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    background:var(--panel);
+    padding:22px;
+    transition:.25s var(--ease);
+    overflow:hidden;
+}
+.card::before{
+    content:"";
+    position:absolute;
+    inset:-80px -90px auto auto;
+    width:170px;height:170px;border-radius:50%;
+    background:radial-gradient(circle,rgba(216,176,106,.14),transparent 68%);
+    pointer-events:none;
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(216,176,106,.36);background:var(--panel-2)}
+.card small{
+    display:inline-flex;color:var(--copper-soft);font-size:12px;font-weight:900;
+    letter-spacing:.09em;text-transform:uppercase;margin-bottom:12px;
+}
+.card h4{position:relative;font-size:19px;margin:0 0 10px;letter-spacing:-.025em}
+.card p{position:relative;margin:0;color:var(--muted);line-height:1.52;font-size:14px}
+.deep-link-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+.command-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:18px;
+    align-items:stretch;
+}
+.command-card{
+    position:relative;
+    min-height:330px;
+    border-radius:var(--radius-xl);
+    border:1px solid rgba(216,176,106,.24);
+    background:
+        radial-gradient(circle at 18% 18%,rgba(216,176,106,.12),transparent 36%),
+        rgba(255,255,255,.055);
+    padding:clamp(24px,3vw,34px);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    transition:.26s var(--ease);
+}
+.command-card.featured{min-height:380px}
+.command-card:hover{transform:translateY(-5px);border-color:rgba(216,176,106,.46);background:rgba(255,255,255,.078)}
+.command-card small{
+    color:var(--copper-soft);
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.09em;
+    font-size:12px;
+    margin-bottom:14px;
+}
+.command-card h3{margin:0 0 12px;font-size:clamp(24px,3.2vw,40px);line-height:1;letter-spacing:-.045em}
+.command-card p{margin:0 0 18px;color:var(--muted);line-height:1.55}
+.command-card span{color:var(--gold);font-weight:900}
+.labs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+
+.proof-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.proof{
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    background:rgba(255,255,255,.052);
+    padding:21px;
+}
+.proof strong{display:block;color:var(--gold);font-size:24px;letter-spacing:-.035em;margin-bottom:8px}
+.proof span{display:block;color:var(--muted);font-size:14px;line-height:1.46}
+
+.cta-panel{
+    border:1px solid rgba(216,176,106,.31);
+    border-radius:44px;
+    background:
+        radial-gradient(circle at 18% 24%,rgba(216,176,106,.16),transparent 38%),
+        rgba(255,255,255,.06);
+    box-shadow:var(--shadow);
+    padding:clamp(28px,5vw,56px);
+    display:grid;
+    grid-template-columns:1fr minmax(280px,430px);
+    gap:28px;
+    align-items:start;
+}
+.contact-form{display:grid;gap:13px}
+.contact-form label{color:var(--muted);font-size:13px;display:grid;gap:7px}
+.contact-form input,.contact-form select,.contact-form textarea{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:rgba(255,255,255,.078);
+    color:var(--cream);
+    padding:14px 15px;
+    outline:none;
+}
+.contact-form select option{background:#15100d;color:var(--cream)}
+.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{
+    border-color:rgba(216,176,106,.55);
+    box-shadow:0 0 0 3px rgba(216,176,106,.12);
+}
+.contact-form textarea{resize:vertical}
+
+.ludovico{
+    margin-top:26px;
+    max-width:480px;
+    border:1px solid rgba(216,176,106,.28);
+    border-radius:30px;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 18% 18%,rgba(216,176,106,.10),transparent 36%),
+        linear-gradient(145deg,#120d0a,#21150f 55%,#0b0806);
+}
+.ludovico-head{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.035)}
+.ludovico-head img{width:62px;height:62px;border-radius:22px;object-fit:cover;border:1px solid rgba(216,176,106,.38)}
+.ludovico-head strong{display:block;color:var(--gold);font-size:17px}
+.ludovico-head span{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:5px}
+.ludovico-messages{max-height:220px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
+.ludovico-msg{max-width:88%;padding:12px 14px;border-radius:18px;line-height:1.42;font-size:13px;white-space:pre-wrap}
+.ludovico-msg.bot{align-self:flex-start;background:rgba(255,255,255,.075);color:#d7cbb9;border:1px solid rgba(255,255,255,.08)}
+.ludovico-msg.user{align-self:flex-end;background:rgba(216,176,106,.18);color:var(--cream);border:1px solid rgba(216,176,106,.22)}
+.ludovico-input{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
+.ludovico-input input{flex:1;min-width:0;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--cream);border-radius:999px;padding:12px 14px;outline:none}
+.ludovico-input button{border:0;border-radius:999px;padding:12px 16px;background:linear-gradient(135deg,#f1c77e,#c9783a);color:#1a0f09;font-weight:900;cursor:pointer}
+
+.footer-line{
+    width:min(1180px,calc(100% - 36px));
+    margin:24px auto 50px;
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:28px;
+    background:rgba(255,255,255,.042);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+.footer-line p{margin:0;color:var(--muted);line-height:1.45}
+.footer-line strong{color:var(--cream)}
+.footer-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+@media(max-width:1060px){
+    .hero,.section-head,.area-top,.command-grid,.cta-panel{grid-template-columns:1fr}
+    .grid.three,.grid.five,.proof-bar,.labs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .os-panel{min-height:650px}
+}
+@media(max-width:760px){
+    .wrap,.nav{width:min(100% - 28px,1180px)}
+    .nav{align-items:flex-start;flex-direction:column;padding:15px 0}
+    .nav-links{justify-content:flex-start}
+    .nav-link{font-size:13px;padding:8px 10px}
+    h1{font-size:clamp(42px,13vw,62px)}
+    .hero-actions .btn,.deep-link-row .btn{width:100%}
+    .os-panel{min-height:740px;border-radius:32px}
+    .os-core{width:172px;height:172px}
+    .os-node{width:138px;min-height:80px}
+    .l2{right:12px;top:160px}
+    .l3{right:12px;bottom:190px}
+    .l4{left:12px;bottom:190px}
+    .grid.two,.grid.three,.grid.five,.proof-bar,.labs-grid{grid-template-columns:1fr}
+    .layer-tabs{padding:12px}
+    .tab{font-size:12px}
+    .ludovico-input{flex-direction:column}
+    .ludovico-input button{width:100%}
+}
+</style>
 </head>
 
 <body>
-  <main class="page">
-    <section class="shell">
-      <header class="header">
-        <div>
-          <div class="brand">VEROPRED TREINAMENTOS DE IA IN COMPANY</div>
-          <h1>Curso interativo de maturidade operacional com IA</h1>
-          <p class="subtitle">
-            Uma jornada gamificada para ensinar colaboradores a transformar demandas confusas em respostas estruturadas,
-            prompts melhores, decisões mais claras e workflows assistidos por IA.
-          </p>
-        </div>
-        <div class="badge" id="rankBadge">Nível Inicial</div>
-      </header>
+<header class="header">
+    <nav class="nav">
+        <a href="#inicio" class="brand" aria-label="Veropred Analytics">
+            <div class="logo-mark" aria-hidden="true"></div>
+            <div>
+                <strong>Veropred Analytics</strong>
+                <span>Decision OS™ para ambientes complexos</span>
+            </div>
+        </a>
 
-      <div id="app"></div>
+        <div class="nav-links" aria-label="Navegação principal">
+            <button class="nav-link" onclick="scrollToId('decision-os')">Decision OS</button>
+            <button class="nav-link" onclick="scrollToId('layers')">Layers</button>
+            <button class="nav-link" onclick="scrollToId('engines')">Engines</button>
+            <button class="nav-link" onclick="scrollToId('labs')">Labs</button>
+            <a class="nav-link" href="aplicacoes.html">Aplicações</a>
+            <button class="nav-link nav-cta" onclick="scrollToId('assessment')">Architecture Assessment</button>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="wrap hero" id="inicio">
+        <div class="hero-copy">
+            <div class="kicker">Veropred Decision OS™</div>
+            <h1>Infraestrutura operacional para decisões críticas.</h1>
+            <p class="lead">
+                A Veropred organiza sinais, risco, IA, governança e execução em um sistema decisório integrado para ambientes de alta incerteza.
+            </p>
+
+            <div class="hero-actions">
+                <button class="btn primary" onclick="scrollToId('assessment')">Avaliar arquitetura de decisão</button>
+                <button class="btn secondary" onclick="scrollToId('layers')">Explorar as 5 layers</button>
+            </div>
+
+            <p class="hero-note">
+                Modelos estimam. Dashboards acompanham. IA acelera. Decisões críticas exigem arquitetura, critérios, rastreabilidade e ciclos de evolução.
+            </p>
+        </div>
+
+        <div class="os-panel" aria-label="Mapa do Veropred Decision OS">
+            <div class="os-flow-line"></div>
+            <div class="os-core">
+                <strong>Decision<br>OS™</strong>
+                <span>signal · risk · decision · governance · evolution</span>
+            </div>
+
+            <button class="os-node l1" onclick="openArea('signal'); scrollToId('layers')"><b>01 · Signal Layer</b><span>captura e priorização de sinais</span></button>
+            <button class="os-node l2" onclick="openArea('risk'); scrollToId('layers')"><b>02 · Risk Layer</b><span>exposição, impacto e incerteza</span></button>
+            <button class="os-node l3" onclick="openArea('decision'); scrollToId('layers')"><b>03 · Decision Layer</b><span>critérios, políticas e ação</span></button>
+            <button class="os-node l4" onclick="openArea('governance'); scrollToId('layers')"><b>04 · Governance Layer</b><span>controle, revisão e autonomia</span></button>
+            <button class="os-node l5" onclick="openArea('evolution'); scrollToId('layers')"><b>05 · Evolution Layer</b><span>feedback e aprendizado institucional</span></button>
+        </div>
     </section>
-  </main>
 
-  <script>
-    const LUDOVICO_IMAGE = "assets/ludovico_2.png";
-
-    const MISSIONS = [
-      {
-        title: "Missão 1 — O E-mail Caótico",
-        phase: "Fase 1 — Estrutura Operacional",
-        type: "Resposta operacional estruturada",
-        scenario:
-`Assunto: churn
-
-Pessoal, precisamos resolver rapidamente essa situação do churn porque os números pioraram nas últimas semanas.
-
-Ainda não tenho certeza se isso é produto, atendimento, preço, onboarding ou outra coisa. Mas a reunião de sexta com diretoria vai cobrar uma leitura minimamente madura.
-
-Não quero um relatório gigante. Quero algo acionável: onde está concentrado, o que pode estar causando, quem precisa atuar e o que conseguimos fazer nos próximos dias.
-
-Tentem não trazer só opinião. Precisamos chegar com alguma estrutura.`,
-        problem: "Transformar uma demanda ampla, urgente e ambígua em uma estrutura operacional mínima para decisão.",
-        expected:
-`Resumo executivo:
-(...)
-
-Prioridades:
-1. (...)
-2. (...)
-3. (...)
-
-Hipóteses iniciais:
-- (...)
-
-Ações imediatas:
-- (...)
-
-Responsáveis:
-- Área / pessoa: (...)
-
-Próximos passos:
-- Até quando?
-- O que será entregue?
-- Como isso será usado na reunião de sexta?`,
-        mentor: [
-          {
-            label: "O que será aprendido",
-            text: "Nesta missão, você vai aprender a transformar uma demanda ambígua em uma estrutura operacional clara, sem depender de opinião solta."
-          },
-          {
-            label: "Erro comum",
-            text: "O erro mais comum é responder com uma lista genérica de boas práticas. A diretoria não precisa de conselho abstrato. Precisa de leitura, prioridade e encaminhamento."
-          },
-          {
-            label: "O que deve ser feito",
-            text: "Organize a resposta em blocos: resumo executivo, prioridades, hipóteses, ações imediatas, responsáveis e próximos passos para a reunião de sexta."
-          },
-          {
-            label: "Exemplo mínimo",
-            text: "Você pode começar assim:",
-            example:
-`Resumo executivo:
-O aumento de churn exige diagnóstico rápido por segmento e plano de contenção até sexta.
-
-Prioridades:
-1. Identificar onde o churn se concentra.
-2. Separar hipóteses de produto, atendimento, preço e onboarding.
-3. Definir responsáveis por análise e ação.`
-          }
-        ],
-        requiredSections: ["resumo", "prioridades", "hipóteses", "ações", "responsáveis", "próximos"],
-        requiredTerms: ["churn", "diretoria", "sexta", "produto", "atendimento", "preço", "onboarding"],
-        minChars: 520,
-        minLines: 9,
-        forbidden: ["atue como", "papel da ia", "prompt", "formato da resposta"],
-        weights: {
-          estrutura: 26,
-          contexto: 20,
-          decisao: 18,
-          especificidade: 16,
-          confiabilidade: 10,
-          sintese: 10
-        }
-      },
-      {
-        title: "Missão 2 — O Prompt Operacional",
-        phase: "Fase 2 — Operação Assistida por IA",
-        type: "Prompt para IA externa",
-        scenario:
-`Você precisa usar uma IA externa para apoiar a análise de churn.
-
-A liderança precisa de uma análise executiva com hipóteses, segmentos prioritários, perguntas para os dados, riscos de interpretação e uma proposta de plano de ação para a reunião de sexta.
-
-A IA não terá acesso aos dados. Ela deve ajudar a estruturar o raciocínio, não fingir que conhece a base.`,
-        problem: "Escrever um prompt operacional forte para uma IA externa, deixando claro papel, contexto, objetivo, limites e formato.",
-        expected:
-`Papel da IA:
-(...)
-
-Contexto:
-(...)
-
-Objetivo:
-(...)
-
-Tarefa:
-(...)
-
-Limites:
-- Não inventar dados.
-- Separar fatos, hipóteses e recomendações.
-
-Formato esperado:
-1. Resumo executivo
-2. Hipóteses
-3. Segmentos prioritários
-4. Perguntas para os dados
-5. Riscos de interpretação
-6. Plano de ação
-
-Critérios de qualidade:
-(...)`,
-        mentor: [
-          {
-            label: "O que será aprendido",
-            text: "Nesta missão, você vai aprender a delegar melhor para uma IA externa, dando contexto, limites e formato de saída."
-          },
-          {
-            label: "Erro comum",
-            text: "O erro comum é pedir uma análise de churn como se a IA tivesse acesso aos dados reais. Isso aumenta o risco de resposta bonita, mas sem lastro."
-          },
-          {
-            label: "O que deve ser feito",
-            text: "Escreva um prompt que deixe claro o papel da IA, o contexto, o objetivo, a tarefa, os limites e os critérios de qualidade."
-          },
-          {
-            label: "Exemplo mínimo",
-            text: "Você pode começar assim:",
-            example:
-`Papel da IA:
-Atue como apoio executivo para estruturar uma análise de churn.
-
-Limite:
-Você não tem acesso à base real. Não invente números, segmentos ou causas.
-
-Tarefa:
-Organize hipóteses, perguntas para os dados, riscos de interpretação e plano de ação.`
-          }
-        ],
-        requiredSections: ["papel", "contexto", "objetivo", "tarefa", "limites", "formato", "critérios"],
-        requiredTerms: ["ia", "churn", "dados", "hipóteses", "segmentos", "sexta", "liderança"],
-        minChars: 720,
-        minLines: 12,
-        forbidden: ["análise concluída", "os dados mostram", "foi identificado que"],
-        weights: {
-          estrutura: 22,
-          contexto: 22,
-          decisao: 12,
-          especificidade: 14,
-          confiabilidade: 22,
-          sintese: 8
-        }
-      },
-      {
-        title: "Missão 3 — O Erro Grave da IA",
-        phase: "Fase 3 — Governança e Confiança",
-        type: "Correção executiva e protocolo",
-        scenario:
-`Uma IA externa gerou uma recomendação dizendo que o churn está concentrado em clientes enterprise.
-
-O problema: ninguém forneceu dados por segmento para a IA.
-
-Mesmo assim, a frase entrou em um rascunho de apresentação.
-
-Você percebeu o risco antes da reunião.`,
-        problem: "Criar uma correção executiva e um protocolo simples para evitar que inferências não verificadas sejam tratadas como fatos.",
-        expected:
-`Correção executiva:
-(...)
-
-Risco identificado:
-(...)
-
-Fato vs hipótese:
-- Fato: (...)
-- Hipótese: (...)
-
-Ajuste na apresentação:
-(...)
-
-Protocolo de validação:
-1. (...)
-2. (...)
-3. (...)
-
-Mensagem para o time:
-(...)`,
-        mentor: [
-          {
-            label: "O que será aprendido",
-            text: "Nesta missão, você vai aprender a proteger decisões contra respostas convincentes, porém não verificadas."
-          },
-          {
-            label: "Erro comum",
-            text: "O erro comum é demonizar a IA ou aceitar a frase falsa sem validação. O ponto maduro é corrigir o uso, não criar pânico."
-          },
-          {
-            label: "O que deve ser feito",
-            text: "Diferencie fato, hipótese e inferência. Ajuste a apresentação e crie uma regra simples de validação."
-          },
-          {
-            label: "Exemplo mínimo",
-            text: "Você pode começar assim:",
-            example:
-`Correção executiva:
-A afirmação sobre clientes enterprise deve ser tratada como hipótese, não como fato.
-
-Risco identificado:
-A IA não recebeu dados por segmento.
-
-Protocolo:
-1. Toda afirmação factual precisa de fonte.
-2. Toda hipótese deve ser marcada como hipótese.
-3. Recomendações devem indicar evidência faltante.`
-          }
-        ],
-        requiredSections: ["correção", "risco", "fato", "hipótese", "ajuste", "protocolo", "mensagem"],
-        requiredTerms: ["ia", "churn", "enterprise", "segmento", "dados", "apresentação", "validação"],
-        minChars: 780,
-        minLines: 14,
-        forbidden: ["confirmado", "com certeza", "os dados provam"],
-        weights: {
-          estrutura: 18,
-          contexto: 18,
-          decisao: 16,
-          especificidade: 14,
-          confiabilidade: 26,
-          sintese: 8
-        }
-      },
-      {
-        title: "Missão 4 — Arquitetura Final",
-        phase: "Fase 4 — Sistema Operacional com IA",
-        type: "Arquitetura operacional",
-        scenario:
-`Depois de várias semanas, a empresa percebeu que o problema não era apenas churn.
-
-O problema real era ausência de arquitetura operacional para transformar sinais em decisões.
-
-Agora querem institucionalizar um modelo de trabalho assistido por IA:
-
-- entrada de sinais;
-- organização de hipóteses;
-- análise assistida;
-- validação;
-- decisão;
-- execução;
-- revisão.`,
-        problem: "Desenhar uma arquitetura operacional completa para uso maduro de IA em decisões recorrentes.",
-        expected:
-`Princípio central:
-(...)
-
-Arquitetura operacional:
-1. Entrada de sinais
-2. Estruturação do problema
-3. Análise assistida por IA
-4. Validação humana
-5. Decisão
-6. Execução
-7. Revisão e aprendizado
-
-Papéis:
-(...)
-
-Controles:
-(...)
-
-Indicadores:
-(...)
-
-Cadência:
-(...)
-
-Resultado esperado:
-(...)`,
-        mentor: [
-          {
-            label: "O que será aprendido",
-            text: "Nesta missão, você vai sair da resposta isolada e construir um sistema replicável de trabalho assistido por IA."
-          },
-          {
-            label: "Erro comum",
-            text: "O erro comum é criar uma lista de boas práticas. Arquitetura operacional precisa de fluxo, papéis, controles, indicadores e cadência."
-          },
-          {
-            label: "O que deve ser feito",
-            text: "Conecte sinais, hipóteses, IA, validação humana, decisão, execução e aprendizado."
-          },
-          {
-            label: "Exemplo mínimo",
-            text: "Você pode começar assim:",
-            example:
-`Princípio central:
-IA não substitui decisão. IA organiza sinais, hipóteses e alternativas para decisão humana.
-
-Arquitetura:
-1. Entrada de sinais.
-2. Estruturação do problema.
-3. Análise assistida.
-4. Validação humana.
-5. Decisão.
-6. Execução.
-7. Revisão.`
-          }
-        ],
-        requiredSections: ["princípio", "arquitetura", "sinais", "hipóteses", "ia", "validação", "decisão", "execução", "revisão", "papéis", "controles"],
-        requiredTerms: ["churn", "sinais", "hipóteses", "ia", "decisão", "execução", "governança", "aprendizado"],
-        minChars: 950,
-        minLines: 18,
-        forbidden: ["basta usar ia", "automatizar tudo", "sem revisão"],
-        weights: {
-          estrutura: 26,
-          contexto: 14,
-          decisao: 16,
-          especificidade: 14,
-          confiabilidade: 18,
-          sintese: 12
-        }
-      }
-    ];
-
-    const UNLOCKS = [
-      { threshold: 1, title: "Modo Executivo", desc: "Síntese, prioridade e linguagem de decisão." },
-      { threshold: 2, title: "Controle de Qualidade", desc: "Validação de limites e redução de respostas genéricas." },
-      { threshold: 3, title: "Governança de IA", desc: "Separação entre fato, hipótese e inferência." },
-      { threshold: 4, title: "Arquitetura Operacional", desc: "Uso de IA como sistema de trabalho replicável." }
-    ];
-
-    const state = {
-      screen: "intro",
-      missionIndex: 0,
-      mentorStep: 0,
-      completed: 0,
-      scores: [],
-      attributes: {
-        Clareza: 0,
-        Estrutura: 0,
-        Contexto: 0,
-        Confiabilidade: 0,
-        Priorização: 0,
-        Orquestração: 0
-      },
-      lastFeedback: null
-    };
-
-    const app = document.getElementById("app");
-    const rankBadge = document.getElementById("rankBadge");
-
-    function normalize(text) {
-      return (text || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-    }
-
-    function countMatches(text, list) {
-      const t = normalize(text);
-      return list.filter(item => t.includes(normalize(item))).length;
-    }
-
-    function countLines(text) {
-      return text.split("\n").filter(l => l.trim().length > 0).length;
-    }
-
-    function scoreAnswer(answer, mission) {
-      const text = normalize(answer);
-      const chars = answer.trim().length;
-      const lines = countLines(answer);
-
-      const sectionRatio = countMatches(answer, mission.requiredSections) / mission.requiredSections.length;
-      const termRatio = countMatches(answer, mission.requiredTerms) / mission.requiredTerms.length;
-      const forbiddenCount = countMatches(answer, mission.forbidden);
-
-      const hasDecision =
-        text.includes("recomend") ||
-        text.includes("decis") ||
-        text.includes("prior") ||
-        text.includes("proximo") ||
-        text.includes("responsav") ||
-        text.includes("acao");
-
-      const hasEvidence =
-        text.includes("evidencia") ||
-        text.includes("valid") ||
-        text.includes("fato") ||
-        text.includes("hipotese") ||
-        text.includes("dados") ||
-        text.includes("limite");
-
-      const genericTerms = [
-        "melhorar a experiencia",
-        "analisar os dados",
-        "acompanhar indicadores",
-        "envolver as areas",
-        "comunicacao constante",
-        "boas praticas",
-        "de forma eficiente"
-      ];
-
-      const genericPenalty = countMatches(answer, genericTerms) * 5;
-      const forbiddenPenalty = forbiddenCount * 8;
-
-      const estrutura = Math.min(100, sectionRatio * 100);
-      const contexto = Math.min(100, termRatio * 100);
-      const decisao = hasDecision ? 85 : 35;
-      const especificidade = Math.min(100, (chars / mission.minChars) * 55 + (lines / mission.minLines) * 45);
-      const confiabilidade = hasEvidence ? 88 : 42;
-      const sintese = chars > mission.minChars * 2.6 ? 55 : chars >= mission.minChars ? 88 : 62;
-
-      const weighted =
-        estrutura * mission.weights.estrutura / 100 +
-        contexto * mission.weights.contexto / 100 +
-        decisao * mission.weights.decisao / 100 +
-        especificidade * mission.weights.especificidade / 100 +
-        confiabilidade * mission.weights.confiabilidade / 100 +
-        sintese * mission.weights.sintese / 100;
-
-      const finalScore = Math.max(0, Math.min(100, Math.round(weighted - genericPenalty - forbiddenPenalty)));
-
-      const missingSections = mission.requiredSections.filter(s => !normalize(answer).includes(normalize(s)));
-      const missingTerms = mission.requiredTerms.filter(s => !normalize(answer).includes(normalize(s)));
-
-      const passed = finalScore >= 72 && missingSections.length <= 2 && chars >= mission.minChars * 0.85;
-
-      return {
-        finalScore,
-        passed,
-        metrics: {
-          Estrutura: Math.round(estrutura),
-          Contexto: Math.round(contexto),
-          Decisão: Math.round(decisao),
-          Especificidade: Math.round(especificidade),
-          Confiabilidade: Math.round(confiabilidade),
-          Síntese: Math.round(sintese)
-        },
-        missingSections,
-        missingTerms,
-        penalties: {
-          genericPenalty,
-          forbiddenPenalty
-        }
-      };
-    }
-
-    function updateRank() {
-      const avg = state.scores.length
-        ? Math.round(state.scores.reduce((a, b) => a + b, 0) / state.scores.length)
-        : 0;
-
-      let rank = "Nível Inicial";
-      if (avg >= 85 && state.completed >= 4) rank = "Arquiteto Operacional";
-      else if (avg >= 78 && state.completed >= 3) rank = "Operador Avançado";
-      else if (avg >= 72 && state.completed >= 2) rank = "Praticante Maduro";
-      else if (state.completed >= 1) rank = "Em evolução";
-
-      rankBadge.textContent = rank;
-    }
-
-    function setScreen(screen) {
-      state.screen = screen;
-      render();
-    }
-
-    function currentMission() {
-      return MISSIONS[state.missionIndex];
-    }
-
-    function renderIntro() {
-      app.innerHTML = `
-        <div class="grid">
-          <div>
-            <div class="card">
-              <div class="kicker">Produto</div>
-              <h2>Treinamento corporativo gamificado para uso real de IA no trabalho</h2>
-              <p class="text">
-                O curso ensina o colaborador a usar IA com maturidade: estruturar problemas, criar prompts melhores,
-                revisar respostas, reduzir genericidade, validar hipóteses e transformar informação em decisão.
-              </p>
-              <div class="hint">
-                A proposta não é ensinar comandos soltos. A proposta é desenvolver maturidade operacional com IA.
-              </div>
+    <section class="wrap section compact" id="decision-os">
+        <div class="manifesto-box">
+            <div class="eyebrow">Manifesto Veropred</div>
+            <h2>A Veropred não é uma consultoria de analytics. É uma infraestrutura de decisão.</h2>
+            <p class="manifesto-text">
+                Um sistema operacional executivo para ambientes onde dados, risco, IA, capital e governança precisam convergir em critérios claros de ação.
+                Não entregamos apenas análises. Construímos a camada entre informação e decisão.
+            </p>
+            <div class="thesis-line">
+                <span class="pill">signal infrastructure</span>
+                <span class="pill">risk architecture</span>
+                <span class="pill">decision engines</span>
+                <span class="pill">controlled autonomy</span>
+                <span class="pill">institutional learning</span>
             </div>
-
-            <div class="card">
-              <div class="kicker">Jornada</div>
-              <div class="mission-map">
-                ${MISSIONS.map((m, i) => `
-                  <div class="node ${i === 0 ? "active" : "locked"}">
-                    <small>${m.phase}</small>
-                    <b>${m.title.replace("Missão " + (i+1) + " — ", "")}</b>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-
-            <div class="actions">
-              <button onclick="startMission()">Iniciar treinamento</button>
-            </div>
-          </div>
-
-          <aside>
-            <div class="card">
-              <div class="sidebar-title">Competências avaliadas</div>
-              ${Object.keys(state.attributes).map(k => metric(k, state.attributes[k])).join("")}
-            </div>
-
-            <div class="card">
-              <div class="sidebar-title">Desbloqueios</div>
-              ${UNLOCKS.map(u => unlock(u)).join("")}
-            </div>
-          </aside>
         </div>
-      `;
-    }
+    </section>
 
-    function metric(label, value) {
-      return `
-        <div class="metric">
-          <div class="metric-label">
-            <span>${label}</span>
-            <span>${value}</span>
-          </div>
-          <div class="progress"><div class="bar" style="width:${Math.min(100, value)}%"></div></div>
-        </div>
-      `;
-    }
-
-    function unlock(u) {
-      const done = state.completed >= u.threshold;
-      return `
-        <div class="unlock ${done ? "done" : ""}">
-          <b>${done ? "Liberado — " : "Bloqueado — "}${u.title}</b>
-          <span>${u.desc}</span>
-        </div>
-      `;
-    }
-
-    function startMission() {
-      state.mentorStep = 0;
-      setScreen("mentor");
-    }
-
-    function renderMentor() {
-      const m = currentMission();
-      const step = m.mentor[state.mentorStep];
-
-      app.innerHTML = `
-        <div class="mentor-wrap">
-          <div class="mentor-img">
-            <img src="${LUDOVICO_IMAGE}" onerror="this.style.display='none'; this.parentElement.style.display='flex'; this.parentElement.style.alignItems='center'; this.parentElement.style.justifyContent='center'; this.parentElement.innerHTML += '<div style=&quot;color:#d6a85f;padding:24px;text-align:center&quot;>Ludovico<br><span style=&quot;color:#aaa29a;font-size:13px&quot;>adicione a imagem em assets/ludovico_2.png</span></div>';" />
-            <div class="mentor-id">
-              <b>Ludovico</b>
-              <span>Mentor operacional de uso de IA no trabalho</span>
-            </div>
-          </div>
-
-          <div class="dialogue">
+    <section class="wrap section" id="layers">
+        <div class="section-head">
             <div>
-              <div class="kicker">${step.label}</div>
-              <h2>${m.title}</h2>
-              <div class="speech">${step.text}</div>
-              ${step.example ? `<div class="example">${step.example}</div>` : ""}
+                <div class="eyebrow">Operating Layers</div>
+                <h2>As 5 camadas do Veropred Decision OS™.</h2>
+            </div>
+            <p class="muted">
+                A navegação deixa de ser por pilares isolados e passa a seguir o fluxo decisório: Signal → Risk → Decision → Governance → Evolution.
+            </p>
+        </div>
+
+        <div class="layer-map">
+            <div class="layer-tabs" role="tablist" aria-label="Camadas do Decision OS">
+                <button class="tab active" data-area="signal" onclick="openArea('signal')">01 Signal</button>
+                <button class="tab" data-area="risk" onclick="openArea('risk')">02 Risk</button>
+                <button class="tab" data-area="decision" onclick="openArea('decision')">03 Decision</button>
+                <button class="tab" data-area="governance" onclick="openArea('governance')">04 Governance</button>
+                <button class="tab" data-area="evolution" onclick="openArea('evolution')">05 Evolution</button>
             </div>
 
+            <div class="layer-body">
+                <article class="area active" id="area-signal">
+                    <div class="area-top">
+                        <div>
+                            <h3>Signal Layer™</h3>
+                            <p class="lead">Captura, priorização e contextualização de sinais relevantes antes que eles virem ruído operacional.</p>
+                        </div>
+                        <div class="area-quote">O problema não é falta de dados. É ausência de hierarquia decisória entre sinais.</div>
+                    </div>
+                    <div class="grid three">
+                        <div class="card"><small>Assessment</small><h4>Signal Mapping</h4><p>Diagnóstico dos sinais existentes, lacunas, fontes e restrições de uso.</p></div>
+                        <div class="card"><small>Research</small><h4>Contextual Intelligence</h4><p>Leitura de mercado, risco, estratégia, comportamento e ambiente regulatório.</p></div>
+                        <div class="card"><small>IA Semântica</small><h4>Unstructured Signals</h4><p>Documentos, textos, demandas internas e conhecimento corporativo estruturados para decisão.</p></div>
+                    </div>
+                </article>
+
+                <article class="area" id="area-risk">
+                    <div class="area-top">
+                        <div>
+                            <h3>Risk Layer™</h3>
+                            <p class="lead">Modelagem de exposição, consequência, severidade, volatilidade e incerteza.</p>
+                        </div>
+                        <div class="area-quote">Nem todo sinal exige ação. A camada de risco mede consequência antes da decisão.</div>
+                    </div>
+                    <div class="grid three">
+                        <div class="card"><small>Crédito</small><h4>Expected Loss & Margin</h4><p>PD, LGD, aprovação, inadimplência, retorno ajustado e apetite a risco.</p></div>
+                        <div class="card"><small>Operacional</small><h4>Tail Exposure</h4><p>Eventos raros, severidade, cauda, dependência e capital econômico.</p></div>
+                        <div class="card"><small>IA</small><h4>Decision Risk</h4><p>Alucinação, falso positivo, automação excessiva, variância e risco de uso.</p></div>
+                    </div>
+                </article>
+
+                <article class="area" id="area-decision">
+                    <div class="area-top">
+                        <div>
+                            <h3>Decision Layer™</h3>
+                            <p class="lead">Transformação de análise em regra, política, corte, limite, prioridade e ação executiva.</p>
+                        </div>
+                        <div class="area-quote">A decisão não está no modelo. Está no critério que muda a execução.</div>
+                    </div>
+                    <div class="grid three">
+                        <div class="card"><small>Método</small><h4>Decision Architecture</h4><p>Formulação da decisão, atores, restrições, trade-offs e critérios de ação.</p></div>
+                        <div class="card"><small>Simuladores</small><h4>Decision Engines</h4><p>Ambientes interativos para testar políticas, cutoffs, risco, retorno e capital.</p></div>
+                        <div class="card"><small>Produtos Estratégicos</small><h4>Policy Systems</h4><p>Estruturas para elegibilidade, aprovação, limite, precificação, priorização e fallback.</p></div>
+                    </div>
+                </article>
+
+                <article class="area" id="area-governance">
+                    <div class="area-top">
+                        <div>
+                            <h3>Governance Layer™</h3>
+                            <p class="lead">Controle, rastreabilidade, revisão, accountability e autonomia governável.</p>
+                        </div>
+                        <div class="area-quote">Decisões críticas precisam explicar quem decide, com qual critério, sob qual limite e com qual revisão.</div>
+                    </div>
+                    <div class="grid three">
+                        <div class="card"><small>AI Governance</small><h4>Controlled Autonomy</h4><p>Guardrails, limites de uso, validação, fallback humano e critérios de confiança.</p></div>
+                        <div class="card"><small>Operação</small><h4>Ownership & Review</h4><p>Responsáveis, exceções, auditoria, documentação e ciclos de revisão.</p></div>
+                        <div class="card"><small>Assessment</small><h4>Maturity Check</h4><p>Avaliação da maturidade decisória, governança analítica e capacidade de execução.</p></div>
+                    </div>
+                </article>
+
+                <article class="area" id="area-evolution">
+                    <div class="area-top">
+                        <div>
+                            <h3>Evolution Layer™</h3>
+                            <p class="lead">Monitoramento, feedback, recalibração e aprendizado institucional contínuo.</p>
+                        </div>
+                        <div class="area-quote">Decisão boa hoje pode deteriorar amanhã. O sistema precisa aprender.</div>
+                    </div>
+                    <div class="grid three">
+                        <div class="card"><small>Treinamentos</small><h4>Operational Maturity</h4><p>Capacitação para equipes decidirem melhor com IA, dados, critérios e governança.</p></div>
+                        <div class="card"><small>Cases</small><h4>Applied Learning</h4><p>Biblioteca de aplicações que transforma experiência em repertório decisório.</p></div>
+                        <div class="card"><small>Research</small><h4>New Signals</h4><p>Novos paradigmas, frameworks, benchmarks e evolução da arquitetura.</p></div>
+                    </div>
+                </article>
+
+                <div class="deep-link-row" id="contextualCtas">
+                    <a class="btn secondary" id="ctaSecondaryOne"></a>
+                    <a class="btn secondary" id="ctaSecondaryTwo"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="wrap section" id="engines">
+        <div class="section-head">
             <div>
-              <div class="actions" style="justify-content:space-between; align-items:center; margin-top:26px;">
-                <div class="dots">
-                  ${m.mentor.map((_, i) => `<span class="dot ${i === state.mentorStep ? "active" : ""}"></span>`).join("")}
+                <div class="eyebrow">Decision Engines</div>
+                <h2>Simuladores reposicionados como motores decisórios.</h2>
+            </div>
+            <p class="muted">
+                Os simuladores deixam de ser experiências isoladas e passam a operar como ambientes de stress decisório dentro do OS.
+            </p>
+        </div>
+
+        <div class="command-grid">
+            <a class="command-card featured" href="simulador.html">
+                <small>Decision Engine · Crédito</small>
+                <h3>Credit Policy Engine</h3>
+                <p>Teste cutoff, PD, aprovação, perda esperada, RAROC, capital econômico e custo de oportunidade antes da execução real.</p>
+                <span>Entrar no engine →</span>
+            </a>
+
+            <div class="grid">
+                <a class="command-card" href="aplicacoes.html">
+                    <small>Decision Cases</small>
+                    <h3>Aplicações reais de decisão</h3>
+                    <p>Ensaios executivos sobre risco, IA, capital, modelagem, governança e arquitetura decisória.</p>
+                    <span>Ver aplicações →</span>
+                </a>
+                <a class="command-card" href="engenharia_prompts.html">
+                    <small>Operational Evolution</small>
+                    <h3>Treinamentos de IA In Company</h3>
+                    <p>Jornadas práticas para elevar maturidade operacional, clareza decisória e uso controlado de IA.</p>
+                    <span>Conhecer treinamentos →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="wrap section compact" id="labs">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Veropred Labs</div>
+                <h2>Laboratório aplicado de sistemas de decisão.</h2>
+            </div>
+            <p class="muted">
+                Espaço para protótipos, frameworks, visualizações executivas, experimentos de IA e modelos conceituais que expandem o Decision OS.
+            </p>
+        </div>
+
+        <div class="labs-grid">
+            <div class="card"><small>Prototype Systems</small><h4>Arquiteturas experimentais</h4><p>Protótipos para testar fluxos decisórios antes de virarem projetos formais.</p></div>
+            <div class="card"><small>AI Evaluation</small><h4>Guardrails e avaliação</h4><p>Experimentos para reduzir variância, alucinação e risco operacional em IA generativa.</p></div>
+            <div class="card"><small>Decision Research</small><h4>Frameworks proprietários</h4><p>Modelos conceituais para transformar sinais, risco e governança em sistemas replicáveis.</p></div>
+        </div>
+    </section>
+
+    <section class="wrap section compact" id="autoridade">
+        <div class="proof-bar">
+            <div class="proof"><strong>Decision OS™</strong><span>Linguagem proprietária para integrar dados, risco, IA, governança e execução.</span></div>
+            <div class="proof"><strong>Ambiente crítico</strong><span>Experiência em decisões sujeitas a risco, capital, rastreabilidade e consequência executiva.</span></div>
+            <div class="proof"><strong>IA com controle</strong><span>LLMs, RAG, agentes, avaliação semântica, guardrails e autonomia governável.</span></div>
+            <div class="proof"><strong>Quant aplicado</strong><span>Modelagem, validação, stress, backtesting, simulação e leitura executiva.</span></div>
+        </div>
+    </section>
+
+    <section class="wrap section" id="assessment">
+        <div class="cta-panel">
+            <div>
+                <div class="eyebrow">Architecture Assessment</div>
+                <h2>Avaliar sua arquitetura de decisão.</h2>
+                <p class="lead">
+                    Descreva a decisão crítica, os sinais disponíveis, o risco envolvido, a governança atual e onde a execução ainda falha.
+                    A leitura inicial identifica em qual layer o sistema decisório está mais frágil.
+                </p>
+
+                <div class="thesis-line">
+                    <span class="pill">Signal</span>
+                    <span class="pill">Risk</span>
+                    <span class="pill">Decision</span>
+                    <span class="pill">Governance</span>
+                    <span class="pill">Evolution</span>
                 </div>
-                <div class="actions">
-                  ${state.mentorStep > 0 ? `<button class="btn-secondary" onclick="prevMentor()">Voltar</button>` : ""}
-                  <button onclick="nextMentor()">${state.mentorStep === m.mentor.length - 1 ? "Entrar na missão" : "Próximo"}</button>
+
+                <div class="ludovico">
+                    <div class="ludovico-head">
+                        <img src="assets/ludovico_2.png" alt="Ludovico IA" onerror="this.style.display='none'">
+                        <div>
+                            <strong>Ludovico IA</strong>
+                            <span>Refinador de cenário para Architecture Assessment</span>
+                        </div>
+                    </div>
+                    <div class="ludovico-messages" id="ludovicoMessages">
+                        <div class="ludovico-msg bot">Descreva sua decisão crítica. Vou organizar o cenário em Signal, Risk, Decision, Governance e Evolution.</div>
+                    </div>
+                    <div class="ludovico-input">
+                        <input id="ludovicoInput" placeholder="Ex: precisamos revisar política de crédito, IA, risco ou priorização..." onkeydown="handleLudovicoEnter(event)">
+                        <button type="button" onclick="sendLudovicoMessage()">Refinar</button>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+
+            <form class="contact-form" action="https://formsubmit.co/pedrosale@hotmail.com" method="POST">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_subject" value="Architecture Assessment - Veropred Decision OS">
+                <input type="hidden" name="_next" value="https://seusite.com/obrigado.html">
+
+                <label>Nome<input type="text" name="nome" placeholder="Seu nome" required></label>
+                <label>E-mail<input type="email" name="email" placeholder="seu@email.com" required></label>
+                <label>Empresa<input type="text" name="empresa" placeholder="Nome da empresa"></label>
+                <label>Cargo<input type="text" name="cargo" placeholder="Ex: Diretor, Head, Gerente, Founder"></label>
+
+                <label>Layer mais crítica hoje
+                    <select name="layer_critica">
+                        <option value="">Selecione uma layer</option>
+                        <option>Signal Layer — sinais dispersos ou pouco confiáveis</option>
+                        <option>Risk Layer — risco, impacto ou incerteza mal medidos</option>
+                        <option>Decision Layer — falta de critério, corte, política ou regra</option>
+                        <option>Governance Layer — baixa rastreabilidade, controle ou accountability</option>
+                        <option>Evolution Layer — ausência de monitoramento, feedback ou recalibração</option>
+                        <option>Ainda não sei formular</option>
+                    </select>
+                </label>
+
+                <label>Cenário para assessment
+                    <textarea name="dor_da_empresa" rows="6" placeholder="Descreva a decisão em jogo, os sinais disponíveis, o risco envolvido, como a decisão é tomada hoje e onde a execução falha." required></textarea>
+                </label>
+
+                <button class="btn primary" type="submit">Enviar para Architecture Assessment</button>
+            </form>
         </div>
-      `;
+    </section>
+</main>
+
+<footer class="footer-line">
+    <p><strong>Veropred Analytics.</strong><br>Decision OS™ para ambientes complexos.</p>
+    <div class="footer-actions">
+        <button class="btn secondary" onclick="scrollToId('layers')">Layers</button>
+        <a class="btn secondary" href="simulador.html">Decision Engine</a>
+        <a class="btn secondary" href="engenharia_prompts.html">Treinamentos</a>
+        <button class="btn primary" onclick="scrollToId('assessment')">Architecture Assessment</button>
+    </div>
+</footer>
+
+<script>
+const areas = ["signal", "risk", "decision", "governance", "evolution"];
+
+function scrollToId(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+const ctaByArea = {
+    signal: {
+        oneText: "Solicitar Architecture Assessment",
+        oneHref: "#assessment",
+        twoText: "Ver aplicações de sinais",
+        twoHref: "aplicacoes.html"
+    },
+    risk: {
+        oneText: "Explorar Credit Policy Engine",
+        oneHref: "simulador.html",
+        twoText: "Ver aplicações de risco",
+        twoHref: "aplicacoes.html"
+    },
+    decision: {
+        oneText: "Entrar no Decision Engine",
+        oneHref: "simulador.html",
+        twoText: "Ver aplicações decisórias",
+        twoHref: "aplicacoes.html"
+    },
+    governance: {
+        oneText: "Avaliar governança decisória",
+        oneHref: "#assessment",
+        twoText: "Conhecer treinamentos de IA",
+        twoHref: "engenharia_prompts.html"
+    },
+    evolution: {
+        oneText: "Conhecer treinamentos de IA",
+        oneHref: "engenharia_prompts.html",
+        twoText: "Ver Veropred Labs",
+        twoHref: "#labs"
+    }
+};
+
+function updateContextualCtas(area) {
+    const config = ctaByArea[area] || {};
+    const ctaOne = document.getElementById("ctaSecondaryOne");
+    const ctaTwo = document.getElementById("ctaSecondaryTwo");
+
+    if (!ctaOne || !ctaTwo) return;
+
+    if (config.oneText && config.oneHref) {
+        ctaOne.style.display = "inline-flex";
+        ctaOne.textContent = config.oneText;
+        ctaOne.href = config.oneHref;
+    } else {
+        ctaOne.style.display = "none";
     }
 
-    function nextMentor() {
-      const m = currentMission();
-      if (state.mentorStep < m.mentor.length - 1) {
-        state.mentorStep++;
-        render();
-      } else {
-        setScreen("mission");
-      }
+    if (config.twoText && config.twoHref) {
+        ctaTwo.style.display = "inline-flex";
+        ctaTwo.textContent = config.twoText;
+        ctaTwo.href = config.twoHref;
+    } else {
+        ctaTwo.style.display = "none";
     }
+}
 
-    function prevMentor() {
-      if (state.mentorStep > 0) {
-        state.mentorStep--;
-        render();
-      }
+function openArea(area) {
+    areas.forEach(item => {
+        const panel = document.getElementById("area-" + item);
+        if (panel) panel.classList.toggle("active", item === area);
+    });
+
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.area === area);
+    });
+
+    updateContextualCtas(area);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateContextualCtas("signal");
+});
+
+function addLudovicoMessage(text, type) {
+    const messages = document.getElementById("ludovicoMessages");
+    if (!messages) return;
+
+    const div = document.createElement("div");
+    div.className = "ludovico-msg " + type;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+function mockLudovico(text) {
+    return `Architecture Assessment — cenário inicial:\n${text}\n\nFormulação estruturada:\nGostaria de avaliar uma decisão crítica que ainda não está suficientemente estruturada.\n\nSignal Layer:\nQuais sinais, dados, documentos, indicadores ou alertas sustentam a decisão?\n\nRisk Layer:\nQuais riscos, impactos, perdas, incertezas ou trade-offs estão envolvidos?\n\nDecision Layer:\nQuais critérios, cortes, regras, políticas ou prioridades orientam a ação hoje?\n\nGovernance Layer:\nQuem decide, com qual autonomia, sob qual limite e com qual mecanismo de revisão?\n\nEvolution Layer:\nComo essa decisão é monitorada, ajustada e aprendida ao longo do tempo?\n\nObjetivo:\nIdentificar a camada mais frágil da arquitetura decisória e definir o próximo passo para tornar a decisão mais clara, governável e executável.`;
+}
+
+function sendLudovicoMessage() {
+    const input = document.getElementById("ludovicoInput");
+    if (!input) return;
+
+    const text = input.value.trim();
+    if (!text) return;
+
+    addLudovicoMessage(text, "user");
+    input.value = "";
+
+    const reply = mockLudovico(text);
+    addLudovicoMessage(reply, "bot");
+
+    const field = document.querySelector('textarea[name="dor_da_empresa"]');
+    if (field) field.value = reply;
+}
+
+function handleLudovicoEnter(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        sendLudovicoMessage();
     }
-
-    function renderMission() {
-      const m = currentMission();
-
-      app.innerHTML = `
-        <div class="grid">
-          <div>
-            <div class="card">
-              <span class="phase">${m.phase}</span>
-              <h2>${m.title}</h2>
-              <p class="text"><b>Tipo de entrega:</b> ${m.type}</p>
-              <p class="text"><b>Problema:</b> ${m.problem}</p>
-            </div>
-
-            <div class="card">
-              <div class="kicker">Cenário</div>
-              <div class="scenario">${m.scenario}</div>
-            </div>
-
-            <div class="card">
-              <div class="kicker">Estrutura esperada</div>
-              <div class="structure">${m.expected}</div>
-            </div>
-
-            <div class="card">
-              <div class="kicker">Sua resposta</div>
-              <textarea id="answer" placeholder="Escreva sua entrega aqui. Você pode usar uma IA externa como apoio, mas a resposta final deve estar estruturada para o cenário."></textarea>
-              <div class="actions">
-                <button onclick="submitAnswer()">Avaliar resposta</button>
-                <button class="btn-secondary" onclick="setScreen('mentor')">Rever explicação do Ludovico</button>
-              </div>
-              <div id="feedback"></div>
-            </div>
-          </div>
-
-          <aside>
-            <div class="card">
-              <div class="sidebar-title">Progresso</div>
-              <p class="text">${state.completed} de ${MISSIONS.length} missões concluídas</p>
-              <div class="progress">
-                <div class="bar" style="width:${(state.completed / MISSIONS.length) * 100}%"></div>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="sidebar-title">Mapa da jornada</div>
-              <div class="mission-map">
-                ${MISSIONS.map((mission, i) => `
-                  <div class="node ${i === state.missionIndex ? "active" : i < state.completed ? "done" : "locked"}">
-                    <small>Missão ${i + 1}</small>
-                    <b>${mission.title.split("—")[1] || mission.title}</b>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="sidebar-title">Atributos</div>
-              ${Object.keys(state.attributes).map(k => metric(k, state.attributes[k])).join("")}
-            </div>
-          </aside>
-        </div>
-      `;
-    }
-
-    function submitAnswer() {
-      const answer = document.getElementById("answer").value;
-      const m = currentMission();
-      const result = scoreAnswer(answer, m);
-
-      const feedback = document.getElementById("feedback");
-
-      if (result.passed) {
-        applyProgress(result.finalScore);
-      }
-
-      feedback.innerHTML = `
-        <div class="feedback ${result.passed ? "success" : "fail"}">
-          <div class="feedback-title">${result.passed ? "Missão aprovada" : "Resposta ainda não madura"}</div>
-          <p class="text">
-            Score final: <b>${result.finalScore}/100</b>.
-            ${result.passed
-              ? "A resposta apresenta estrutura suficiente para uso operacional."
-              : "A resposta ainda precisa de mais estrutura, contexto ou confiabilidade."}
-          </p>
-
-          <div class="score-grid">
-            ${Object.entries(result.metrics).map(([k,v]) => `
-              <div class="score-box">
-                <b>${k}</b>
-                <span>${v}</span>
-              </div>
-            `).join("")}
-          </div>
-
-          ${result.missingSections.length ? `
-            <div class="hint">
-              <b>Blocos ausentes ou fracos:</b><br>
-              ${result.missingSections.slice(0, 6).join(", ")}
-            </div>
-          ` : ""}
-
-          ${result.missingTerms.length ? `
-            <div class="hint">
-              <b>Contexto pouco explorado:</b><br>
-              ${result.missingTerms.slice(0, 6).join(", ")}
-            </div>
-          ` : ""}
-
-          ${(result.penalties.genericPenalty || result.penalties.forbiddenPenalty) ? `
-            <div class="hint">
-              <b>Penalizações aplicadas:</b><br>
-              Genericidade: ${result.penalties.genericPenalty} pontos · Termos inadequados ao tipo de entrega: ${result.penalties.forbiddenPenalty} pontos.
-            </div>
-          ` : ""}
-
-          <div class="actions" style="margin-top:16px;">
-            ${result.passed
-              ? `<button onclick="nextMission()">Avançar</button>`
-              : `<button class="btn-dark" onclick="focusAnswer()">Revisar resposta</button>
-                 <button class="btn-secondary" onclick="setScreen('mentor')">Rever orientação</button>`}
-          </div>
-        </div>
-      `;
-
-      updateRank();
-    }
-
-    function applyProgress(score) {
-      if (state.missionIndex >= state.completed) {
-        state.completed++;
-        state.scores.push(score);
-
-        state.attributes.Clareza += 10;
-        state.attributes.Estrutura += 12;
-        state.attributes.Contexto += 8;
-        state.attributes.Confiabilidade += 10;
-        state.attributes.Priorização += 8;
-        state.attributes.Orquestração += 6;
-      }
-    }
-
-    function focusAnswer() {
-      document.getElementById("answer").focus();
-    }
-
-    function nextMission() {
-      if (state.missionIndex < MISSIONS.length - 1) {
-        state.missionIndex++;
-        state.mentorStep = 0;
-        setScreen("mentor");
-      } else {
-        setScreen("final");
-      }
-    }
-
-    function renderFinal() {
-      const avg = state.scores.length
-        ? Math.round(state.scores.reduce((a,b) => a+b, 0) / state.scores.length)
-        : 0;
-
-      app.innerHTML = `
-        <div class="grid">
-          <div>
-            <div class="card">
-              <div class="kicker">Conclusão</div>
-              <h2>Jornada concluída</h2>
-              <p class="text">
-                O participante concluiu a trilha inicial de maturidade operacional com IA.
-                A avaliação consolidada indica capacidade de estruturar problemas, delegar tarefas para IA,
-                revisar respostas e desenhar fluxos operacionais com validação humana.
-              </p>
-              <div class="hint">
-                Score médio final: <b>${avg}/100</b>
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="kicker">Relatório executivo</div>
-              <div class="structure">
-Participante: ______________________
-
-Curso: Veropred Treinamentos de IA In Company
-
-Resultado geral:
-Score médio: ${avg}/100
-Missões concluídas: ${state.completed}/${MISSIONS.length}
-
-Competências desenvolvidas:
-- Clareza operacional
-- Estruturação de problemas
-- Formulação de prompts
-- Validação de respostas de IA
-- Separação entre fato, hipótese e inferência
-- Comunicação executiva
-- Arquitetura operacional com IA
-
-Recomendação:
-Participante apto a aplicar IA em rotinas de trabalho com supervisão leve e critérios claros de validação.
-              </div>
-            </div>
-
-            <div class="actions">
-              <button onclick="restart()">Reiniciar demonstração</button>
-            </div>
-          </div>
-
-          <aside>
-            <div class="card">
-              <div class="sidebar-title">Atributos finais</div>
-              ${Object.keys(state.attributes).map(k => metric(k, state.attributes[k])).join("")}
-            </div>
-
-            <div class="card">
-              <div class="sidebar-title">Desbloqueios</div>
-              ${UNLOCKS.map(u => unlock(u)).join("")}
-            </div>
-          </aside>
-        </div>
-      `;
-    }
-
-    function restart() {
-      state.screen = "intro";
-      state.missionIndex = 0;
-      state.mentorStep = 0;
-      state.completed = 0;
-      state.scores = [];
-      state.lastFeedback = null;
-      state.attributes = {
-        Clareza: 0,
-        Estrutura: 0,
-        Contexto: 0,
-        Confiabilidade: 0,
-        Priorização: 0,
-        Orquestração: 0
-      };
-      updateRank();
-      render();
-    }
-
-    function render() {
-      updateRank();
-
-      if (state.screen === "intro") renderIntro();
-      if (state.screen === "mentor") renderMentor();
-      if (state.screen === "mission") renderMission();
-      if (state.screen === "final") renderFinal();
-    }
-
-    render();
-  </script>
+}
+</script>
 </body>
 </html>
