@@ -1,1109 +1,888 @@
+# HTML — Mapa Cognitivo da Inteligência Artificial
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Como a Inteligência Artificial Toma Decisões</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Como a Inteligência Artificial Toma Decisões</title>
 
-  <style>
-    :root {
-      --bg: #080706;
-      --panel: #14110e;
-      --panel2: #1c1712;
-      --text: #f4eee4;
-      --muted: #b8aa98;
-      --gold: #c9964a;
-      --gold2: #f1c27a;
-      --line: rgba(201, 150, 74, 0.28);
-      --red: #ff6b6b;
-      --green: #7ee2a8;
-      --blue: #7ab7ff;
-      --radius: 22px;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    * {
-      box-sizing: border-box;
-    }
+<style>
 
-    body {
-      margin: 0;
-      background:
-        radial-gradient(circle at top, rgba(201,150,74,.18), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(122,183,255,.08), transparent 30%),
+:root {
+    --bg: #070606;
+    --panel: #12100d;
+    --panel2: #1b1712;
+    --line: rgba(201,150,74,.18);
+    --gold: #c9964a;
+    --gold2: #f0c27a;
+    --text: #f4eee4;
+    --muted: #b4a796;
+    --green: #84e0a5;
+    --blue: #79b8ff;
+    --radius: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(circle at top, rgba(201,150,74,.12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(121,184,255,.06), transparent 25%),
         var(--bg);
-      color: var(--text);
-      font-family: Inter, Arial, sans-serif;
-      line-height: 1.6;
+    color: var(--text);
+    font-family: Inter, sans-serif;
+    overflow-x: hidden;
+}
+
+section {
+    padding: 90px 24px;
+}
+
+.wrap {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 60px 24px;
+}
+
+.eyebrow {
+    color: var(--gold2);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-size: .78rem;
+    margin-bottom: 18px;
+}
+
+h1 {
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: .92;
+    letter-spacing: -.08em;
+    max-width: 1000px;
+}
+
+.hero p {
+    max-width: 900px;
+    margin: 30px auto 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    line-height: 1.8;
+}
+
+.hero strong {
+    color: var(--text);
+}
+
+.hero-actions {
+    margin-top: 40px;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.03);
+    color: var(--text);
+    padding: 14px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: .25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    background: rgba(201,150,74,.1);
+}
+
+.section-title {
+    font-size: clamp(2.3rem, 5vw, 4.5rem);
+    line-height: .95;
+    letter-spacing: -.06em;
+    margin-bottom: 20px;
+}
+
+.section-lead {
+    color: var(--muted);
+    max-width: 850px;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    margin-bottom: 45px;
+}
+
+.core-layout {
+    position: relative;
+    min-height: 900px;
+    border: 1px solid var(--line);
+    border-radius: 40px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at center, rgba(201,150,74,.08), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+}
+
+.orbit-ring {
+    position: absolute;
+    border: 1px dashed rgba(201,150,74,.12);
+    border-radius: 50%;
+}
+
+.r1 {
+    inset: 8%;
+}
+
+.r2 {
+    inset: 21%;
+}
+
+.core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    min-height: 320px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px;
+    background:
+        radial-gradient(circle, rgba(240,194,122,.2), rgba(18,16,13,.96) 70%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 80px rgba(201,150,74,.16);
+}
+
+.core h2 {
+    font-size: 2rem;
+    line-height: 1.1;
+}
+
+.core p {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: .95rem;
+    line-height: 1.7;
+}
+
+.node {
+    position: absolute;
+    width: 200px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: rgba(18,16,13,.95);
+    padding: 18px;
+    cursor: pointer;
+    transition: .28s ease;
+}
+
+.node:hover,
+.node.active {
+    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: 0 30px 60px rgba(0,0,0,.35);
+}
+
+.node small {
+    display: block;
+    color: var(--gold2);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-size: .72rem;
+}
+
+.node h3 {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+}
+
+.node p {
+    color: var(--muted);
+    line-height: 1.45;
+    font-size: .88rem;
+}
+
+.n1 { top: 6%; left: 8%; }
+.n2 { top: 0%; left: 40%; }
+.n3 { top: 6%; right: 8%; }
+.n4 { top: 39%; right: 1%; }
+.n5 { bottom: 7%; right: 9%; }
+.n6 { bottom: 0%; left: 40%; }
+.n7 { bottom: 7%; left: 8%; }
+.n8 { top: 39%; left: 1%; }
+
+.panel {
+    margin-top: 28px;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 35px;
+    background: rgba(18,16,13,.85);
+}
+
+.panel-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 26px;
+}
+
+.panel h3 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+}
+
+.panel p {
+    color: var(--muted);
+    line-height: 1.85;
+}
+
+.info-box {
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 22px;
+    background: rgba(255,255,255,.02);
+    margin-bottom: 18px;
+}
+
+.info-box strong {
+    display: block;
+    color: var(--gold2);
+    margin-bottom: 10px;
+}
+
+.flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-top: 45px;
+}
+
+.step {
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 24px;
+    background: rgba(255,255,255,.03);
+}
+
+.step b {
+    display: block;
+    color: var(--gold2);
+    margin-bottom: 12px;
+}
+
+.step span {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: .95rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 40px;
+}
+
+.card {
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 28px;
+    background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+}
+
+.card-tag {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--gold2);
+    margin-bottom: 16px;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.card h3 {
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+}
+
+.card p,
+.card li {
+    color: var(--muted);
+    line-height: 1.75;
+}
+
+.card ul {
+    padding-left: 18px;
+    margin-top: 12px;
+}
+
+.highlight {
+    border-left: 3px solid var(--gold);
+    background: rgba(201,150,74,.06);
+    padding: 16px;
+    border-radius: 14px;
+    margin-top: 18px;
+}
+
+.compare {
+    margin-top: 45px;
+    border: 1px solid rgba(132,224,165,.2);
+    background: rgba(132,224,165,.05);
+    border-radius: 28px;
+    padding: 35px;
+}
+
+.compare h3 {
+    color: var(--green);
+    margin-bottom: 24px;
+}
+
+.compare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.compare-box {
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px;
+    padding: 22px;
+    background: rgba(255,255,255,.02);
+}
+
+.compare-box h4 {
+    margin-bottom: 14px;
+}
+
+.compare-box li {
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+footer {
+    padding: 90px 24px;
+    text-align: center;
+}
+
+footer p {
+    color: var(--muted);
+    max-width: 850px;
+    margin: 0 auto;
+    line-height: 1.9;
+    font-size: 1.05rem;
+}
+
+.mobile-nav {
+    display: none;
+}
+
+@media(max-width: 980px) {
+
+    .core-layout {
+        min-height: auto;
+        padding: 18px;
     }
 
-    header {
-      min-height: 92vh;
-      display: grid;
-      place-items: center;
-      padding: 56px 22px;
-      text-align: center;
-    }
-
-    .hero {
-      max-width: 980px;
-    }
-
-    .eyebrow {
-      color: var(--gold2);
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      font-size: .78rem;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: clamp(2.6rem, 7vw, 6.8rem);
-      line-height: .95;
-      margin: 0;
-      letter-spacing: -0.07em;
-    }
-
-    .hero p {
-      max-width: 780px;
-      margin: 28px auto 0;
-      color: var(--muted);
-      font-size: clamp(1.08rem, 2vw, 1.35rem);
-    }
-
-    .hero strong {
-      color: var(--text);
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 34px;
-    }
-
-    .btn {
-      border: 1px solid var(--line);
-      color: var(--text);
-      background: rgba(255,255,255,.04);
-      padding: 13px 18px;
-      border-radius: 999px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: .25s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      border-color: var(--gold);
-      background: rgba(201,150,74,.12);
-    }
-
-    section {
-      padding: 70px 22px;
-    }
-
-    .wrap {
-      max-width: 1180px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3.8rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      margin: 0 0 18px;
-    }
-
-    .section-lead {
-      color: var(--muted);
-      max-width: 820px;
-      font-size: 1.08rem;
-      margin-bottom: 34px;
-    }
-
-    .core-map {
-      position: relative;
-      min-height: 680px;
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at center, rgba(201,150,74,.18), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-      overflow: hidden;
-      padding: 28px;
-    }
-
-    .orbit-ring {
-      position: absolute;
-      inset: 8%;
-      border: 1px dashed rgba(201,150,74,.18);
-      border-radius: 50%;
-    }
-
-    .orbit-ring.r2 {
-      inset: 20%;
+    .orbit-ring,
+    .core,
+    .node {
+        position: static;
+        transform: none;
+        width: 100%;
     }
 
     .core {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 260px;
-      min-height: 260px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 28px;
-      background:
-        radial-gradient(circle, rgba(241,194,122,.25), rgba(20,17,14,.95) 70%);
-      border: 1px solid var(--gold);
-      box-shadow: 0 0 80px rgba(201,150,74,.22);
-    }
-
-    .core h2 {
-      margin: 0;
-      font-size: 1.55rem;
-      line-height: 1.1;
-    }
-
-    .core p {
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: .92rem;
+        border-radius: 28px;
+        min-height: auto;
+        margin-bottom: 18px;
     }
 
     .node {
-      position: absolute;
-      width: 170px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(20,17,14,.92);
-      color: var(--text);
-      padding: 14px;
-      cursor: pointer;
-      text-align: left;
-      transition: .25s ease;
+        margin-bottom: 12px;
     }
 
-    .node:hover,
-    .node.active {
-      border-color: var(--gold);
-      transform: translateY(-4px);
-      box-shadow: 0 18px 60px rgba(0,0,0,.35);
-      background: rgba(28,23,18,.98);
-    }
-
-    .node b {
-      display: block;
-      color: var(--gold2);
-      font-size: .82rem;
-      margin-bottom: 4px;
-    }
-
-    .node span {
-      display: block;
-      color: var(--muted);
-      font-size: .84rem;
-      line-height: 1.35;
-    }
-
-    .n1 { left: 8%; top: 9%; }
-    .n2 { left: 42%; top: 3%; }
-    .n3 { right: 8%; top: 10%; }
-    .n4 { right: 3%; top: 42%; }
-    .n5 { right: 10%; bottom: 10%; }
-    .n6 { left: 42%; bottom: 3%; }
-    .n7 { left: 8%; bottom: 10%; }
-    .n8 { left: 3%; top: 42%; }
-    .n9 { left: 42%; top: 42%; display:none; }
-
-    .explain-panel {
-      margin-top: 22px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      background: rgba(20,17,14,.82);
-    }
-
-    .explain-panel h3 {
-      margin: 0 0 8px;
-      color: var(--gold2);
-    }
-
-    .explain-panel p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
-      padding: 22px;
-      min-height: 260px;
-      transition: .25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--gold);
-    }
-
-    .tag {
-      display: inline-flex;
-      color: var(--gold2);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 5px 10px;
-      font-size: .72rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .card h3 {
-      margin: 0 0 10px;
-      font-size: 1.25rem;
-      line-height: 1.15;
-    }
-
-    .card p,
-    .card li {
-      color: var(--muted);
-      font-size: .94rem;
-    }
-
-    .card ul {
-      padding-left: 18px;
-    }
-
-    .analogy {
-      margin-top: 14px;
-      padding: 13px;
-      border-left: 3px solid var(--gold);
-      background: rgba(201,150,74,.08);
-      border-radius: 12px;
-      color: var(--text);
-      font-size: .93rem;
-    }
-
-    .flow {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-top: 30px;
-    }
-
-    .step {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      background: rgba(255,255,255,.035);
-    }
-
-    .step strong {
-      color: var(--gold2);
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .step span {
-      color: var(--muted);
-      font-size: .92rem;
-    }
-
-    .decision-box {
-      border: 1px solid rgba(126,226,168,.28);
-      background: rgba(126,226,168,.06);
-      border-radius: 26px;
-      padding: 28px;
-      margin-top: 26px;
-    }
-
-    .decision-box h3 {
-      color: var(--green);
-      margin-top: 0;
-    }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 28px 0 20px;
-    }
-
-    .tab {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
-
-    .tab.active {
-      background: rgba(201,150,74,.16);
-      border-color: var(--gold);
-    }
-
-    .tab-content {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 24px;
-      background: rgba(20,17,14,.86);
-      min-height: 260px;
-    }
-
-    .tab-content h3 {
-      color: var(--gold2);
-      margin-top: 0;
-    }
-
-    .two {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .mini {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      background: rgba(255,255,255,.03);
-    }
-
-    .mini h4 {
-      margin: 0 0 8px;
-      color: var(--text);
-    }
-
-    .mini p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    footer {
-      padding: 60px 22px 80px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    @media (max-width: 900px) {
-      .grid,
-      .flow,
-      .two {
+    .flow,
+    .cards,
+    .panel-grid,
+    .compare-grid {
         grid-template-columns: 1fr;
-      }
-
-      .core-map {
-        min-height: auto;
-        display: grid;
-        gap: 12px;
-      }
-
-      .orbit-ring,
-      .core,
-      .node {
-        position: static;
-        transform: none;
-        width: auto;
-      }
-
-      .core {
-        border-radius: 24px;
-        min-height: auto;
-      }
     }
-  </style>
-</head>
 
+    .mobile-nav {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 14px;
+        margin-bottom: 18px;
+    }
+
+    .mobile-nav button {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.03);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 12px 14px;
+    }
+}
+
+</style>
+</head>
 <body>
 
-<header>
-  <div class="hero">
-    <div class="eyebrow">IA • decisão • aprendizado • geração • ação</div>
-    <h1>Como a Inteligência Artificial toma decisões</h1>
-    <p>
-      A IA transforma dados em representações,
-      calcula padrões, estima probabilidades, gera alternativas, consulta conhecimento
-      e escolhe uma saída conforme um objetivo.
-      <br><br>
-      <strong>A decisão da IA é uma arquitetura.</strong>
-    </p>
+<section class="hero">
+<div>
+<div class="eyebrow">IA • cognição • decisão • representação • geração</div>
 
-    <div class="hero-actions">
-      <a href="#mapa" class="btn">Explorar o mapa</a>
-      <a href="#tecnicas" class="btn">Ver as técnicas</a>
-      <a href="#decisao" class="btn">Entender a decisão</a>
-    </div>
-  </div>
-</header>
+<h1>
+Como a Inteligência Artificial toma decisões
+</h1>
+
+<p>
+A IA moderna não é uma única técnica.
+Ela é uma arquitetura de capacidades cognitivas artificiais:
+perceber, representar, aprender, prever, imaginar, buscar conhecimento,
+planejar ações e se adaptar.
+<br><br>
+<strong>
+A inteligência emerge da combinação dessas capacidades.
+</strong>
+</p>
+
+<div class="hero-actions">
+<a href="#mapa" class="btn">Explorar o mapa</a>
+<a href="#aprendizado" class="btn">Entender aprendizado</a>
+<a href="#llm" class="btn">Ver como LLMs funcionam</a>
+</div>
+</div>
+</section>
 
 <section id="mapa">
-  <div class="wrap">
-    <h2 class="section-title">O mapa mental da IA</h2>
-    <p class="section-lead">
-      Em vez de começar por nomes difíceis, comece pela pergunta certa:
-      que tipo de capacidade artificial está sendo construída?
-    </p>
+<div class="wrap">
 
-    <div class="core-map">
-      <div class="orbit-ring"></div>
-      <div class="orbit-ring r2"></div>
+<h2 class="section-title">
+O mapa cognitivo da IA
+</h2>
 
-      <div class="core">
-        <div>
-          <h2>IA como núcleo de decisão</h2>
-          <p>Dados entram. Representações são criadas. Padrões são aprendidos. Uma saída é escolhida.</p>
-        </div>
-      </div>
+<p class="section-lead">
+O erro mais comum é aprender IA como uma lista de algoritmos.
+A forma mais intuitiva de entender inteligência artificial é pensar nela como um conjunto de capacidades artificiais inspiradas em cognição.
+</p>
 
-      <button class="node n1 active" onclick="showOrbit('perceber')">
-        <b>Perceber</b>
-        <span>Transformar dados brutos em sinais úteis.</span>
-      </button>
+<div class="mobile-nav">
+<button onclick="showNode('memoria')">Memória</button>
+<button onclick="showNode('atencao')">Atenção</button>
+<button onclick="showNode('previsao')">Previsão</button>
+<button onclick="showNode('imaginacao')">Imaginação</button>
+<button onclick="showNode('planejamento')">Planejamento</button>
+<button onclick="showNode('feedback')">Feedback</button>
+</div>
 
-      <button class="node n2" onclick="showOrbit('representar')">
-        <b>Representar</b>
-        <span>Converter significado em números.</span>
-      </button>
+<div class="core-layout">
 
-      <button class="node n3" onclick="showOrbit('aprender')">
-        <b>Aprender</b>
-        <span>Encontrar padrões a partir de exemplos.</span>
-      </button>
+<div class="orbit-ring r1"></div>
+<div class="orbit-ring r2"></div>
 
-      <button class="node n4" onclick="showOrbit('prever')">
-        <b>Prever</b>
-        <span>Estimar o que provavelmente acontece depois.</span>
-      </button>
+<div class="core">
+<div>
+<h2>
+INTELIGÊNCIA
+ARTIFICIAL
+</h2>
 
-      <button class="node n5" onclick="showOrbit('gerar')">
-        <b>Gerar</b>
-        <span>Criar texto, imagem, áudio, vídeo ou código.</span>
-      </button>
+<p>
+Um sistema capaz de transformar dados em representações matemáticas, reconhecer padrões, estimar probabilidades, gerar respostas e executar ações.
+</p>
+</div>
+</div>
 
-      <button class="node n6" onclick="showOrbit('buscar')">
-        <b>Buscar</b>
-        <span>Consultar conhecimento externo antes de responder.</span>
-      </button>
+<div class="node n1 active" onclick="showNode('memoria')">
+<small>Memória</small>
+<h3>RAG + Embeddings</h3>
+<p>A IA consulta conhecimento e recupera contexto.</p>
+</div>
 
-      <button class="node n7" onclick="showOrbit('agir')">
-        <b>Agir</b>
-        <span>Usar ferramentas, APIs e fluxos.</span>
-      </button>
+<div class="node n2" onclick="showNode('atencao')">
+<small>Atenção</small>
+<h3>Transformers</h3>
+<p>A IA aprende o que importa mais no contexto.</p>
+</div>
 
-      <button class="node n8" onclick="showOrbit('alinhar')">
-        <b>Alinhar</b>
-        <span>Receber feedback, limites e critérios humanos.</span>
-      </button>
-    </div>
+<div class="node n3" onclick="showNode('previsao')">
+<small>Previsão</small>
+<h3>Supervisionado</h3>
+<p>A IA estima o que provavelmente acontecerá.</p>
+</div>
 
-    <div class="explain-panel" id="orbitPanel">
-      <h3>Perceber</h3>
-      <p>
-        Antes de decidir, a IA precisa transformar dados brutos em sinais:
-        texto vira tokens, imagem vira pixels ou patches, áudio vira frequências,
-        eventos viram variáveis. Essa tradução inicial vira aprendizado.
-      </p>
-    </div>
-  </div>
+<div class="node n4" onclick="showNode('imaginacao')">
+<small>Imaginação</small>
+<h3>Diffusion Models</h3>
+<p>A IA cria novas imagens, textos e conteúdos.</p>
+</div>
+
+<div class="node n5" onclick="showNode('planejamento')">
+<small>Planejamento</small>
+<h3>Agentes</h3>
+<p>A IA organiza ações e usa ferramentas.</p>
+</div>
+
+<div class="node n6" onclick="showNode('feedback')">
+<small>Feedback</small>
+<h3>RLHF</h3>
+<p>A IA aprende preferências humanas.</p>
+</div>
+
+<div class="node n7" onclick="showNode('representacao')">
+<small>Representação</small>
+<h3>Espaços Latentes</h3>
+<p>A IA transforma significado em vetores.</p>
+</div>
+
+<div class="node n8" onclick="showNode('adaptacao')">
+<small>Adaptação</small>
+<h3>Reinforcement Learning</h3>
+<p>A IA ajusta comportamento via recompensa.</p>
+</div>
+
+</div>
+
+<div class="panel" id="panel">
+</div>
+
+</div>
 </section>
 
-<section id="decisao">
-  <div class="wrap">
-    <h2 class="section-title">A decisão da IA em 5 movimentos</h2>
-    <p class="section-lead">
-      Toda decisão artificial pode ser entendida como uma sequência simples.
-      A complexidade está nos métodos usados em cada etapa.
-    </p>
+<section id="aprendizado">
+<div class="wrap">
 
-    <div class="flow">
-      <div class="step">
-        <strong>1. Entrada</strong>
-        <span>A IA recebe texto, imagem, áudio, tabela, evento, pergunta ou comando.</span>
-      </div>
+<h2 class="section-title">
+Como a IA aprende
+</h2>
 
-      <div class="step">
-        <strong>2. Representação</strong>
-        <span>O dado é convertido em números, vetores, tokens ou estruturas matemáticas.</span>
-      </div>
+<p class="section-lead">
+Existem várias formas de aprendizado artificial.
+Cada uma resolve um tipo diferente de problema.
+</p>
 
-      <div class="step">
-        <strong>3. Cálculo</strong>
-        <span>O modelo aplica padrões aprendidos, pesos, regras, atenção ou probabilidades.</span>
-      </div>
+<div class="cards">
 
-      <div class="step">
-        <strong>4. Escolha</strong>
-        <span>A saída mais adequada é selecionada conforme objetivo, contexto e restrições.</span>
-      </div>
+<div class="card">
+<div class="card-tag">Aprendizado</div>
+<h3>Supervisionado</h3>
+<p>
+Aprende com exemplos rotulados.
+O sistema recebe entradas e respostas corretas.
+</p>
 
-      <div class="step">
-        <strong>5. Feedback</strong>
-        <span>A resposta pode ser avaliada, corrigida, refinada ou usada para nova ação.</span>
-      </div>
-    </div>
+<ul>
+<li>Classificação</li>
+<li>Risco de crédito</li>
+<li>Fraude</li>
+<li>Previsão</li>
+</ul>
 
-    <div class="decision-box">
-      <h3>A frase mais importante</h3>
-      <p>
-        IA opera sobre representações matemáticas que capturam regularidades dos dados.
-        Quando parece decidir, ela está escolhendo uma ação, previsão ou resposta
-        com base em padrões, objetivos e restrições.
-      </p>
-    </div>
-  </div>
+<div class="highlight">
+Como um aluno treinando exercícios com gabarito.
+</div>
+</div>
+
+<div class="card">
+<div class="card-tag">Aprendizado</div>
+<h3>Não supervisionado</h3>
+<p>
+A IA procura padrões escondidos sem respostas corretas explícitas.
+</p>
+
+<ul>
+<li>Clusters</li>
+<li>Segmentação</li>
+<li>Anomalias</li>
+<li>Compressão</li>
+</ul>
+
+<div class="highlight">
+Como organizar objetos parecidos sem conhecer as categorias.
+</div>
+</div>
+
+<div class="card">
+<div class="card-tag">Aprendizado</div>
+<h3>Auto-supervisionado</h3>
+<p>
+O próprio dado cria o exercício de aprendizado.
+Base dos LLMs modernos.
+</p>
+
+<ul>
+<li>Previsão do próximo token</li>
+<li>Reconstrução</li>
+<li>Máscaras</li>
+<li>Representações</li>
+</ul>
+
+<div class="highlight">
+Como completar partes escondidas de um quebra-cabeça.
+</div>
+</div>
+
+</div>
+
+</div>
 </section>
 
-<section id="tecnicas">
-  <div class="wrap">
-    <h2 class="section-title">As grandes famílias da IA</h2>
-    <p class="section-lead">
-      Aqui está o mapa completo: formas de aprendizado, arquiteturas, componentes,
-      técnicas de adaptação e sistemas de decisão.
-    </p>
+<section id="llm">
+<div class="wrap">
 
-    <div class="grid">
+<h2 class="section-title">
+O que realmente acontece em um LLM
+</h2>
 
-      <article class="card">
-        <span class="tag">Aprendizado</span>
-        <h3>1. Supervisionado</h3>
-        <p>A IA aprende com exemplos que já têm resposta correta.</p>
-        <ul>
-          <li>Entrada: dados do cliente.</li>
-          <li>Saída: inadimplente ou não inadimplente.</li>
-          <li>Objetivo: aprender a regra que liga entrada e resposta.</li>
-        </ul>
-        <div class="analogy">Como um aluno fazendo exercícios com gabarito.</div>
-      </article>
+<p class="section-lead">
+Modelos modernos de linguagem são arquiteturas compostas.
+A resposta final emerge de múltiplas camadas matemáticas trabalhando juntas.
+</p>
 
-      <article class="card">
-        <span class="tag">Aprendizado</span>
-        <h3>2. Não supervisionado</h3>
-        <p>A IA recebe dados sem resposta correta e procura estrutura escondida.</p>
-        <ul>
-          <li>Clusters.</li>
-          <li>Anomalias.</li>
-          <li>Segmentos.</li>
-          <li>Compressão.</li>
-        </ul>
-        <div class="analogy">Como organizar objetos parecidos sem ninguém dizer as categorias.</div>
-      </article>
+<div class="flow">
 
-      <article class="card">
-        <span class="tag">Aprendizado</span>
-        <h3>3. Semi-supervisionado</h3>
-        <p>Usa poucos dados rotulados e muitos dados sem rótulo.</p>
-        <ul>
-          <li>Útil quando rotular é caro.</li>
-          <li>Comum em saúde, imagens e linguagem.</li>
-          <li>Amplia aprendizado com pouca supervisão humana.</li>
-        </ul>
-        <div class="analogy">Como aprender uma língua com poucas frases traduzidas e muitos textos soltos.</div>
-      </article>
+<div class="step">
+<b>1. Tokenização</b>
+<span>
+Texto é quebrado em pedaços processáveis.
+</span>
+</div>
 
-      <article class="card">
-        <span class="tag">Aprendizado</span>
-        <h3>4. Auto-supervisionado</h3>
-        <p>O próprio dado cria o exercício de aprendizado.</p>
-        <ul>
-          <li>Esconde uma parte do dado.</li>
-          <li>O modelo tenta reconstruir ou prever.</li>
-          <li>Base de muitos modelos modernos.</li>
-        </ul>
-        <div class="analogy">Como um quebra-cabeça em que a própria imagem dá a pista.</div>
-      </article>
+<div class="step">
+<b>2. Embeddings</b>
+<span>
+Cada token vira um vetor numérico em espaço latente.
+</span>
+</div>
 
-      <article class="card">
-        <span class="tag">Sequência</span>
-        <h3>5. Autoregressivo</h3>
-        <p>Aprende a prever o próximo item de uma sequência.</p>
-        <ul>
-          <li>Próxima palavra.</li>
-          <li>Próximo token.</li>
-          <li>Próximo evento.</li>
-          <li>Próximo frame.</li>
-        </ul>
-        <div class="analogy">Como completar uma frase palavra por palavra.</div>
-      </article>
+<div class="step">
+<b>3. Atenção</b>
+<span>
+Transformers calculam relevância contextual entre partes da entrada.
+</span>
+</div>
 
-      <article class="card">
-        <span class="tag">Representação</span>
-        <h3>6. Contrastivo</h3>
-        <p>Aprende aproximando coisas parecidas e afastando coisas diferentes.</p>
-        <ul>
-          <li>Embeddings.</li>
-          <li>Busca semântica.</li>
-          <li>Recomendação.</li>
-          <li>Multimodalidade.</li>
-        </ul>
-        <div class="analogy">Como montar um mapa onde ideias parecidas ficam próximas.</div>
-      </article>
+<div class="step">
+<b>4. Predição</b>
+<span>
+O modelo estima probabilidades para o próximo token.
+</span>
+</div>
 
-      <article class="card">
-        <span class="tag">Ação</span>
-        <h3>7. Reinforcement Learning</h3>
-        <p>A IA aprende por recompensa, punição e tentativa.</p>
-        <ul>
-          <li>Robótica.</li>
-          <li>Jogos.</li>
-          <li>Otimização.</li>
-          <li>Agentes autônomos.</li>
-        </ul>
-        <div class="analogy">Como treinar comportamento por consequências.</div>
-      </article>
+<div class="step">
+<b>5. Alinhamento</b>
+<span>
+Feedback humano, regras e sistemas externos moldam a resposta.
+</span>
+</div>
 
-      <article class="card">
-        <span class="tag">Alinhamento</span>
-        <h3>8. RLHF</h3>
-        <p>Humanos avaliam respostas e o modelo aprende preferências humanas.</p>
-        <ul>
-          <li>Útil para tom.</li>
-          <li>Segurança.</li>
-          <li>Utilidade.</li>
-          <li>Alinhamento com intenção.</li>
-        </ul>
-        <div class="analogy">Como um editor dizendo quais respostas são melhores.</div>
-      </article>
+</div>
 
-      <article class="card">
-        <span class="tag">Geração</span>
-        <h3>9. Diffusion Models</h3>
-        <p>Aprendem a remover ruído até formar algo coerente.</p>
-        <ul>
-          <li>Imagem.</li>
-          <li>Vídeo.</li>
-          <li>Áudio.</li>
-          <li>Design generativo.</li>
-        </ul>
-        <div class="analogy">Como restaurar uma pintura borrada até aparecer uma cena.</div>
-      </article>
+<div class="compare">
 
-      <article class="card">
-        <span class="tag">Geração</span>
-        <h3>10. GANs</h3>
-        <p>Duas redes competem: uma cria, outra tenta detectar se é falso.</p>
-        <ul>
-          <li>Gerador.</li>
-          <li>Discriminador.</li>
-          <li>Competição.</li>
-          <li>Melhoria progressiva.</li>
-        </ul>
-        <div class="analogy">Como um falsificador tentando enganar um perito.</div>
-      </article>
+<h3>
+A IA não decide sozinha
+</h3>
 
-      <article class="card">
-        <span class="tag">Arquitetura</span>
-        <h3>11. Transformers</h3>
-        <p>Arquitetura baseada em atenção: o modelo decide quais partes do contexto importam mais agora.</p>
-        <ul>
-          <li>Atenção.</li>
-          <li>Contexto.</li>
-          <li>Paralelização.</li>
-          <li>Base de LLMs modernos.</li>
-        </ul>
-        <div class="analogy">Como ler uma frase olhando para várias palavras importantes ao mesmo tempo.</div>
-      </article>
+<div class="compare-grid">
 
-      <article class="card">
-        <span class="tag">Representação</span>
-        <h3>12. Embeddings</h3>
-        <p>Transformam texto, imagem, áudio ou entidades em vetores numéricos.</p>
-        <ul>
-          <li>Significado vira coordenada.</li>
-          <li>Coisas parecidas ficam próximas.</li>
-          <li>Base de busca semântica.</li>
-        </ul>
-        <div class="analogy">Como colocar ideias em um mapa de proximidade.</div>
-      </article>
+<div class="compare-box">
+<h4>O que a IA calcula</h4>
 
-      <article class="card">
-        <span class="tag">Conhecimento</span>
-        <h3>13. RAG</h3>
-        <p>A IA busca documentos antes de responder.</p>
-        <ul>
-          <li>Recupera trechos relevantes.</li>
-          <li>Usa contexto externo.</li>
-          <li>Reduz dependência da memória interna.</li>
-          <li>Ajuda em aplicações corporativas.</li>
-        </ul>
-        <div class="analogy">Como responder uma pergunta consultando livros antes.</div>
-      </article>
+<ul>
+<li>Probabilidades</li>
+<li>Padrões</li>
+<li>Semelhanças</li>
+<li>Representações</li>
+<li>Próximas ações prováveis</li>
+<li>Estimativas de risco</li>
+</ul>
+</div>
 
-      <article class="card">
-        <span class="tag">Especialização</span>
-        <h3>14. Fine-tuning</h3>
-        <p>Adapta um modelo geral para um domínio, tarefa, estilo ou critério específico.</p>
-        <ul>
-          <li>Jurídico.</li>
-          <li>Saúde.</li>
-          <li>Crédito.</li>
-          <li>Atendimento.</li>
-        </ul>
-        <div class="analogy">Como um generalista fazendo residência em uma especialidade.</div>
-      </article>
+<div class="compare-box">
+<h4>O que o sistema decide</h4>
 
-      <article class="card">
-        <span class="tag">Execução</span>
-        <h3>15. Agentes</h3>
-        <p>Sistemas que planejam, usam ferramentas, executam etapas e verificam resultados.</p>
-        <ul>
-          <li>Chamam APIs.</li>
-          <li>Pesquisam.</li>
-          <li>Escrevem código.</li>
-          <li>Orquestram tarefas.</li>
-        </ul>
-        <div class="analogy">Como funcionários digitais com ferramentas e objetivos.</div>
-      </article>
+<ul>
+<li>Aprovar ou negar</li>
+<li>Executar APIs</li>
+<li>Enviar mensagens</li>
+<li>Bloquear operações</li>
+<li>Solicitar revisão humana</li>
+<li>Aplicar regras de negócio</li>
+</ul>
+</div>
 
-      <article class="card">
-        <span class="tag">Ecossistema</span>
-        <h3>16. Sistemas híbridos</h3>
-        <p>Na prática, IA moderna combina várias técnicas ao mesmo tempo.</p>
-        <ul>
-          <li>Transformer.</li>
-          <li>Auto-supervisão.</li>
-          <li>RLHF.</li>
-          <li>Embeddings.</li>
-          <li>RAG.</li>
-          <li>Agentes.</li>
-        </ul>
-        <div class="analogy">Como uma empresa inteira, não uma única ferramenta.</div>
-      </article>
+</div>
 
-      <article class="card">
-        <span class="tag">Clássica</span>
-        <h3>17. IA simbólica</h3>
-        <p>Usa regras explícitas, lógica e conhecimento estruturado.</p>
-        <ul>
-          <li>Se X, então Y.</li>
-          <li>Sistemas especialistas.</li>
-          <li>Regras de negócio.</li>
-          <li>Ontologias.</li>
-        </ul>
-        <div class="analogy">Como um manual de decisão escrito em regras.</div>
-      </article>
+</div>
 
-      <article class="card">
-        <span class="tag">Probabilidade</span>
-        <h3>18. Modelos probabilísticos</h3>
-        <p>Tomam decisões estimando incerteza.</p>
-        <ul>
-          <li>Bayes.</li>
-          <li>Distribuições.</li>
-          <li>Risco.</li>
-          <li>Inferência.</li>
-        </ul>
-        <div class="analogy">Como decidir com graus de confiança, sem certeza absoluta.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Deep Learning</span>
-        <h3>19. Redes neurais</h3>
-        <p>Aprendem representações em camadas, combinando sinais simples em padrões complexos.</p>
-        <ul>
-          <li>Camadas.</li>
-          <li>Pesos.</li>
-          <li>Ativações.</li>
-          <li>Otimização.</li>
-        </ul>
-        <div class="analogy">Como montar uma interpretação complexa por filtros sucessivos.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Adaptação</span>
-        <h3>20. Transfer Learning</h3>
-        <p>Reaproveita conhecimento aprendido em uma tarefa para acelerar outra.</p>
-        <ul>
-          <li>Menos dados.</li>
-          <li>Menos custo.</li>
-          <li>Mais velocidade.</li>
-        </ul>
-        <div class="analogy">Como alguém que já sabe espanhol aprender italiano mais rápido.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Dados</span>
-        <h3>21. Active Learning</h3>
-        <p>O modelo escolhe quais exemplos precisam de rótulo humano.</p>
-        <ul>
-          <li>Reduz custo de anotação.</li>
-          <li>Foca nos casos difíceis.</li>
-          <li>Melhora aprendizado com menos esforço.</li>
-        </ul>
-        <div class="analogy">Como um aluno perguntando ao professor só o que realmente está confuso.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Evolução</span>
-        <h3>22. Online Learning</h3>
-        <p>O modelo aprende continuamente com dados novos.</p>
-        <ul>
-          <li>Ambientes dinâmicos.</li>
-          <li>Fraude.</li>
-          <li>Recomendação.</li>
-          <li>Mercados.</li>
-        </ul>
-        <div class="analogy">Como ajustar sua estratégia conforme o jogo acontece.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Privacidade</span>
-        <h3>23. Federated Learning</h3>
-        <p>Treina modelos usando dados distribuídos, sem centralizar tudo em um único lugar.</p>
-        <ul>
-          <li>Privacidade.</li>
-          <li>Dispositivos.</li>
-          <li>Instituições diferentes.</li>
-          <li>Menor exposição de dados.</li>
-        </ul>
-        <div class="analogy">Como aprender com várias bibliotecas sem levar os livros embora.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Eficiência</span>
-        <h3>24. Knowledge Distillation</h3>
-        <p>Um modelo menor aprende a imitar um modelo maior.</p>
-        <ul>
-          <li>Menor custo.</li>
-          <li>Menor latência.</li>
-          <li>Deploy mais leve.</li>
-        </ul>
-        <div class="analogy">Como transformar uma enciclopédia em um guia prático.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Escala</span>
-        <h3>25. Mixture of Experts</h3>
-        <p>O sistema ativa especialistas diferentes conforme o tipo de problema.</p>
-        <ul>
-          <li>Eficiência.</li>
-          <li>Especialização.</li>
-          <li>Escalabilidade.</li>
-        </ul>
-        <div class="analogy">Como chamar o especialista certo para cada pergunta.</div>
-      </article>
-
-      <article class="card">
-        <span class="tag">Controle</span>
-        <h3>26. Avaliação e governança</h3>
-        <p>Define critérios para saber se a IA está correta, segura, útil e aceitável.</p>
-        <ul>
-          <li>Métricas.</li>
-          <li>Testes.</li>
-          <li>Auditoria.</li>
-          <li>Limites.</li>
-          <li>Monitoramento.</li>
-        </ul>
-        <div class="analogy">Como freios, painel e revisão técnica de um carro potente.</div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="section-title">Técnica é deiferente de decisão</h2>
-    <p class="section-lead">
-      O erro comum é achar que um modelo decide sozinho.
-      Na prática, a decisão depende da combinação entre objetivo, dados, arquitetura,
-      contexto, critério de erro, restrições e validação.
-    </p>
-
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('credito')">Crédito</button>
-      <button class="tab" onclick="showTab('email')">E-mail</button>
-      <button class="tab" onclick="showTab('imagem')">Imagem</button>
-      <button class="tab" onclick="showTab('agente')">Agente</button>
-    </div>
-
-    <div class="tab-content" id="tabContent">
-      <h3>Exemplo: decisão de crédito</h3>
-      <div class="two">
-        <div class="mini">
-          <h4>O que a IA calcula</h4>
-          <p>Probabilidade de inadimplência, risco esperado, perfil semelhante, limite recomendado e possíveis sinais de fraude.</p>
-        </div>
-        <div class="mini">
-          <h4>O que a empresa decide</h4>
-          <p>Aprovar, negar, pedir garantia, reduzir limite, precificar melhor ou mandar para análise humana.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2 class="section-title">O que realmente acontece em um LLM moderno</h2>
-    <p class="section-lead">
-      Um modelo de linguagem moderno vai além de "chatbot”.
-      Ele é resultado da combinação de várias camadas técnicas.
-    </p>
-
-    <div class="flow">
-      <div class="step">
-        <strong>1. Texto vira tokens</strong>
-        <span>A frase é quebrada em pedaços processáveis.</span>
-      </div>
-
-      <div class="step">
-        <strong>2. Tokens viram vetores</strong>
-        <span>Cada pedaço recebe uma representação numérica.</span>
-      </div>
-
-      <div class="step">
-        <strong>3. Atenção organiza contexto</strong>
-        <span>O transformer calcula quais partes importam mais.</span>
-      </div>
-
-      <div class="step">
-        <strong>4. Próximo token é previsto</strong>
-        <span>O modelo gera uma continuação provável e coerente.</span>
-      </div>
-
-      <div class="step">
-        <strong>5. O sistema controla a resposta</strong>
-        <span>Instruções, segurança, ferramentas e feedback moldam a saída.</span>
-      </div>
-    </div>
-
-    <div class="decision-box">
-      <h3>Conclusão</h3>
-      <p>
-        A inteligência está em várias técnicas.
-        Está na arquitetura que conecta aprendizado, representação, busca,
-        geração, feedback, ferramentas e governança.
-      </p>
-    </div>
-  </div>
+</div>
 </section>
 
 <footer>
-  <p>
-    Inteligência Artificial é uma arquitetura de transformação: dados → representação → padrão → decisão → feedback.
-  </p>
+<p>
+A IA moderna não é um algoritmo isolado.
+É uma arquitetura de cognição artificial composta por representação, atenção, memória, previsão, geração, adaptação, alinhamento e execução.
+</p>
 </footer>
 
 <script>
-  const orbitTexts = {
-    perceber: {
-      title: "Perceber",
-      text: "Antes de decidir, a IA precisa transformar dados brutos em sinais: texto vira tokens, imagem vira pixels ou patches, áudio vira frequências, eventos viram variáveis. Essa tradução inicial vira aprendizado."
-    },
-    representar: {
-      title: "Representar",
-      text: "A IA converte significado em números. Embeddings, vetores e espaços latentes permitem que conceitos parecidos fiquem próximos, mesmo quando aparecem em formatos diferentes."
-    },
-    aprender: {
-      title: "Aprender",
-      text: "Aprender significa ajustar parâmetros internos para reduzir erro, encontrar padrões, separar grupos, prever sequências ou melhorar recompensas. Existem várias formas de aprendizado, não uma só."
-    },
-    prever: {
-      title: "Prever",
-      text: "Muitos sistemas de IA tomam decisões estimando probabilidades: chance de inadimplência, risco de fraude, próxima palavra, próxima compra ou próxima ação."
-    },
-    gerar: {
-      title: "Gerar",
-      text: "Modelos generativos criam novas saídas: texto, imagem, áudio, vídeo, código. Eles não copiam apenas; combinam padrões aprendidos para produzir algo novo e plausível."
-    },
-    buscar: {
-      title: "Buscar",
-      text: "Com RAG e busca semântica, a IA pode consultar documentos externos antes de responder. Isso conecta geração com conhecimento atualizado ou privado."
-    },
-    agir: {
-      title: "Agir",
-      text: "Agentes de IA podem planejar etapas, chamar ferramentas, consultar APIs, executar tarefas e revisar resultados."
-    },
-    alinhar: {
-      title: "Alinhar",
-      text: "Feedback humano, regras, métricas, testes e governança ajudam a aproximar a IA do comportamento desejado. Sem alinhamento, inteligência vira risco operacional."
-    }
-  };
 
-  function showOrbit(key) {
+const content = {
+
+memoria: {
+    title: 'Memória Artificial',
+    desc: 'A IA moderna não depende apenas da memória interna do modelo. Ela pode consultar documentos, bancos vetoriais e bases externas antes de responder.',
+    math: 'Embeddings transformam significado em vetores numéricos. Busca vetorial encontra conteúdos semanticamente próximos.',
+    use: 'Chatbots corporativos, RAG, busca semântica, copilots empresariais e recuperação de conhecimento.',
+    human: 'Como consultar livros antes de responder uma pergunta.',
+    tech: 'Embeddings • Vector Databases • RAG • Busca Semântica'
+},
+
+atencao: {
+    title: 'Atenção Artificial',
+    desc: 'Transformers aprendem quais partes do contexto são mais relevantes naquele momento.',
+    math: 'Self-attention calcula pesos de relevância entre tokens da entrada.',
+    use: 'LLMs, tradução, resumo, contexto conversacional e multimodalidade.',
+    human: 'Como prestar mais atenção nas palavras importantes de uma frase.',
+    tech: 'Transformers • Self-Attention • LLMs'
+},
+
+previsao: {
+    title: 'Previsão Artificial',
+    desc: 'Grande parte da IA moderna funciona estimando probabilidades futuras.',
+    math: 'Modelos minimizam erro ajustando parâmetros para prever saídas mais prováveis.',
+    use: 'Fraude, crédito, previsão de demanda, recomendação e linguagem.',
+    human: 'Como prever chuva observando padrões anteriores.',
+    tech: 'Supervisionado • Autoregressivo • Redes Neurais'
+},
+
+imaginacao: {
+    title: 'Imaginação Artificial',
+    desc: 'Modelos generativos criam novas saídas coerentes a partir de padrões aprendidos.',
+    math: 'Diffusion models aprendem a remover ruído progressivamente até formar algo plausível.',
+    use: 'Imagem, vídeo, áudio, design e geração de conteúdo.',
+    human: 'Como imaginar uma cena nunca vista combinando referências conhecidas.',
+    tech: 'Diffusion • GANs • Generative Models'
+},
+
+planejamento: {
+    title: 'Planejamento Artificial',
+    desc: 'Agentes organizam etapas, escolhem ferramentas e executam ações.',
+    math: 'Modelos estimam sequência ótima de ações baseada em contexto e objetivo.',
+    use: 'Automação corporativa, workflows, APIs, copilots e execução operacional.',
+    human: 'Como um analista organizando tarefas antes de agir.',
+    tech: 'Agentes • Tool Calling • Workflows'
+},
+
+feedback: {
+    title: 'Feedback Humano',
+    desc: 'Modelos aprendem preferências humanas sobre utilidade, clareza e segurança.',
+    math: 'RLHF ajusta comportamento usando recompensas derivadas de avaliações humanas.',
+    use: 'Chatbots alinhados, segurança, tom e qualidade de resposta.',
+    human: 'Como um editor corrigindo respostas para melhorar qualidade.',
+    tech: 'RLHF • Reward Models • Alignment'
+},
+
+representacao: {
+    title: 'Representação Latente',
+    desc: 'IA transforma significado em coordenadas matemáticas.',
+    math: 'Vetores posicionam conceitos semanticamente próximos em espaços latentes.',
+    use: 'Busca, recomendação, multimodalidade e entendimento semântico.',
+    human: 'Como organizar ideias em um mapa mental de proximidade.',
+    tech: 'Embeddings • Espaços Latentes • Contrastive Learning'
+},
+
+adaptacao: {
+    title: 'Adaptação por Recompensa',
+    desc: 'A IA ajusta comportamento conforme consequências e objetivos.',
+    math: 'Reinforcement learning maximiza recompensa acumulada ao longo do tempo.',
+    use: 'Jogos, robótica, agentes e otimização dinâmica.',
+    human: 'Como aprender hábitos pela consequência das ações.',
+    tech: 'Reinforcement Learning • Policy Optimization'
+}
+
+}
+
+function showNode(key) {
+
     document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
-    event.currentTarget.classList.add('active');
 
-    const item = orbitTexts[key];
-    document.getElementById('orbitPanel').innerHTML = `
-      <h3>${item.title}</h3>
-      <p>${item.text}</p>
+    if(event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+
+    const c = content[key];
+
+    document.getElementById('panel').innerHTML = `
+
+    <div class="panel-grid">
+
+        <div>
+            <h3>${c.title}</h3>
+            <p>${c.desc}</p>
+        </div>
+
+        <div>
+
+            <div class="info-box">
+                <strong>O que acontece matematicamente</strong>
+                <p>${c.math}</p>
+            </div>
+
+            <div class="info-box">
+                <strong>Como a IA usa isso</strong>
+                <p>${c.use}</p>
+            </div>
+
+            <div class="info-box">
+                <strong>Analogia humana</strong>
+                <p>${c.human}</p>
+            </div>
+
+            <div class="info-box">
+                <strong>Tecnologias relacionadas</strong>
+                <p>${c.tech}</p>
+            </div>
+
+        </div>
+
+    </div>
+
     `;
-  }
+}
 
-  const tabs = {
-    credito: `
-      <h3>Exemplo: decisão de crédito</h3>
-      <div class="two">
-        <div class="mini">
-          <h4>O que a IA calcula</h4>
-          <p>Probabilidade de inadimplência, risco esperado, perfil semelhante, limite recomendado e possíveis sinais de fraude.</p>
-        </div>
-        <div class="mini">
-          <h4>O que a empresa decide</h4>
-          <p>Aprovar, negar, pedir garantia, reduzir limite, precificar melhor ou mandar para análise humana.</p>
-        </div>
-      </div>
-    `,
-    email: `
-      <h3>Exemplo: classificação de e-mail</h3>
-      <div class="two">
-        <div class="mini">
-          <h4>O que a IA calcula</h4>
-          <p>Padrões de palavras, remetente, links, histórico, similaridade com spam e intenção provável.</p>
-        </div>
-        <div class="mini">
-          <h4>O que o sistema decide</h4>
-          <p>Enviar para caixa principal, spam, quarentena, revisão ou bloqueio.</p>
-        </div>
-      </div>
-    `,
-    imagem: `
-      <h3>Exemplo: geração de imagem</h3>
-      <div class="two">
-        <div class="mini">
-          <h4>O que a IA calcula</h4>
-          <p>Representações visuais, relação entre texto e imagem, remoção de ruído e coerência estética.</p>
-        </div>
-        <div class="mini">
-          <h4>O que o sistema entrega</h4>
-          <p>Uma imagem nova, construída a partir de padrões aprendidos e instruções do usuário.</p>
-        </div>
-      </div>
-    `,
-    agente: `
-      <h3>Exemplo: agente corporativo</h3>
-      <div class="two">
-        <div class="mini">
-          <h4>O que a IA calcula</h4>
-          <p>Plano de ação, ferramenta adequada, próxima etapa, resultado esperado e necessidade de revisão.</p>
-        </div>
-        <div class="mini">
-          <h4>O que o sistema executa</h4>
-          <p>Busca dados, chama APIs, resume documentos, gera relatórios e encaminha decisões.</p>
-        </div>
-      </div>
-    `
-  };
+showNode('memoria');
 
-  function showTab(key) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    document.getElementById('tabContent').innerHTML = tabs[key];
-  }
 </script>
 
 </body>
 </html>
+```
