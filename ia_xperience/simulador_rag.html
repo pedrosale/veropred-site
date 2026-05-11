@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de RAG | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.rag-space{
+    position:relative;
+    min-height:660px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.question-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.question{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:20px;
+    padding:16px;
+    min-height:118px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.step strong{
+    display:block;
+    font-size:15px;
+    color:#fff;
+    margin-bottom:8px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.45;
+}
+
+.docs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:18px;
+}
+
+.doc{
+    border:1px solid rgba(255,211,142,.14);
+    background:rgba(0,0,0,.24);
+    border-radius:22px;
+    padding:18px;
+    cursor:pointer;
+    transition:.28s ease;
+    min-height:160px;
+}
+
+.doc:hover,
+.doc.selected{
+    border-color:rgba(255,218,145,.62);
+    background:rgba(255,205,120,.075);
+    box-shadow:0 0 42px rgba(244,190,98,.18);
+}
+
+.doc.relevant{
+    border-color:rgba(255,218,145,.46);
+}
+
+.doc small{
+    display:block;
+    color:#9f927f;
+    font-size:11px;
+    margin-bottom:8px;
+}
+
+.doc h4{
+    color:#f4d59d;
+    font-size:15px;
+    margin-bottom:10px;
+}
+
+.doc p{
+    color:#d9cdbc;
+    font-size:13px;
+    line-height:1.48;
+}
+
+.score{
+    display:inline-flex;
+    margin-top:12px;
+    border:1px solid rgba(255,211,142,.22);
+    border-radius:999px;
+    padding:5px 8px;
+    color:#f4d59d;
+    font-size:11px;
+}
+
+.answer-box{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:26px;
+    padding:22px;
+    background:linear-gradient(180deg, rgba(17,12,8,.72), rgba(5,5,5,.82));
+}
+
+.answer-box p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.citation{
+    color:var(--gold2);
+    font-size:12px;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:660px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:720px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .docs{
+        grid-template-columns:1fr;
+    }
+
+    .rag-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .question{
+        font-size:23px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • RAG</div>
+
+        <h1>Quando memória externa vira resposta.</h1>
+
+        <p class="lead">
+            RAG permite que um modelo consulte informações externas antes de responder.
+            A IA deixa de depender apenas do que aprendeu no treinamento e passa a usar contexto recuperado.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Recuperar informações relevantes para ampliar o contexto antes da geração da resposta.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Em vez de responder “de memória”, o sistema busca documentos, seleciona trechos relevantes
+                e responde com base neles.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                pergunta → busca → contexto → resposta
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Fluxo RAG</h2>
+                <p>
+                    Escolha um cenário para observar como a pergunta ativa uma busca, seleciona trechos e
+                    gera uma resposta fundamentada. A simulação é ilustrativa: não executa um LLM real.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('reembolso', this)">Reembolso</button>
+                <button onclick="setScenario('ferias', this)">Férias</button>
+                <button onclick="setScenario('risco', this)">Risco</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="rag-space" id="space">
+
+                <div class="question-box">
+                    <div class="label">Pergunta do usuário</div>
+                    <div class="question" id="question"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active" id="step1">
+                        <small>Etapa 1</small>
+                        <strong>Pergunta</strong>
+                        <p>O sistema interpreta a intenção da consulta.</p>
+                    </div>
+
+                    <div class="step active" id="step2">
+                        <small>Etapa 2</small>
+                        <strong>Recuperação</strong>
+                        <p>Busca trechos semanticamente relevantes.</p>
+                    </div>
+
+                    <div class="step active" id="step3">
+                        <small>Etapa 3</small>
+                        <strong>Contexto</strong>
+                        <p>Seleciona documentos para apoiar a resposta.</p>
+                    </div>
+
+                    <div class="step active" id="step4">
+                        <small>Etapa 4</small>
+                        <strong>Resposta</strong>
+                        <p>Gera saída baseada no contexto recuperado.</p>
+                    </div>
+                </div>
+
+                <div class="label">Trechos recuperados</div>
+                <div class="docs" id="docs"></div>
+
+                <div class="answer-box">
+                    <div class="label">Resposta gerada</div>
+                    <p id="answer"></p>
+                </div>
+
+                <div class="legend">
+                    Em um RAG real, os documentos seriam recuperados por embeddings, busca vetorial, filtros,
+                    metadados e regras de relevância. Aqui a simulação mostra a lógica operacional.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>RAG</h3>
+                <p>
+                    Retrieval-Augmented Generation combina recuperação de informação com geração de linguagem.
+                    O objetivo é reduzir respostas genéricas e aproximar a saída de uma base documental específica.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        antes de responder, o sistema consulta fontes relevantes e usa esses trechos como contexto.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">Busca semântica</span>
+                    <span class="badge">Embeddings</span>
+                    <span class="badge">Chunks</span>
+                    <span class="badge">Contexto</span>
+                    <span class="badge">LLM</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    reembolso: {
+        title: "Reembolso internacional",
+        question: "Qual é a política de reembolso para viagens internacionais?",
+        docs: [
+            {
+                title:"Política de Viagens Internacionais",
+                source:"Documento RH-014",
+                score:94,
+                relevant:true,
+                text:"Despesas internacionais devem ser apresentadas em até 10 dias úteis após o retorno, com comprovante fiscal e conversão cambial da data da compra."
+            },
+            {
+                title:"Política de Reembolso Corporativo",
+                source:"Documento FIN-022",
+                score:88,
+                relevant:true,
+                text:"Reembolsos acima de R$ 2.000 exigem aprovação do gestor direto e validação da área financeira antes do pagamento."
+            },
+            {
+                title:"Manual de Benefícios",
+                source:"Documento RH-003",
+                score:41,
+                relevant:false,
+                text:"Benefícios recorrentes incluem vale-refeição, plano de saúde, auxílio-transporte e política de bem-estar."
+            },
+            {
+                title:"Norma de Compras",
+                source:"Documento SUP-009",
+                score:33,
+                relevant:false,
+                text:"Compras corporativas devem seguir alçada de aprovação conforme categoria de fornecedor e centro de custo."
+            }
+        ],
+        answer:"Para viagens internacionais, as despesas devem ser apresentadas em até 10 dias úteis após o retorno, acompanhadas de comprovante fiscal e conversão cambial da data da compra. Caso o reembolso ultrapasse R$ 2.000, também é necessária aprovação do gestor direto e validação financeira. [RH-014, FIN-022]"
+    },
+
+    ferias: {
+        title: "Política de férias",
+        question: "Com quanto tempo de antecedência devo solicitar férias?",
+        docs: [
+            {
+                title:"Política de Férias",
+                source:"Documento RH-006",
+                score:96,
+                relevant:true,
+                text:"Solicitações de férias devem ser registradas com pelo menos 30 dias de antecedência e aprovadas pelo gestor direto."
+            },
+            {
+                title:"Calendário Operacional",
+                source:"Documento OPS-011",
+                score:72,
+                relevant:true,
+                text:"Áreas críticas devem evitar sobreposição de férias em períodos de fechamento mensal ou entregas regulatórias."
+            },
+            {
+                title:"Política de Reembolso",
+                source:"Documento FIN-022",
+                score:29,
+                relevant:false,
+                text:"Reembolsos devem ser acompanhados de nota fiscal e respeitar limites de aprovação."
+            },
+            {
+                title:"Manual de Segurança",
+                source:"Documento SEC-004",
+                score:18,
+                relevant:false,
+                text:"Acesso remoto deve seguir autenticação multifator e políticas de proteção de dados."
+            }
+        ],
+        answer:"As férias devem ser solicitadas com pelo menos 30 dias de antecedência e precisam ser aprovadas pelo gestor direto. Em áreas críticas, também é recomendado evitar sobreposição em períodos de fechamento mensal ou entregas regulatórias. [RH-006, OPS-011]"
+    },
+
+    risco: {
+        title: "Política de crédito",
+        question: "Quando uma proposta deve ser enviada para revisão manual?",
+        docs: [
+            {
+                title:"Política de Crédito PJ",
+                source:"Documento CRED-018",
+                score:93,
+                relevant:true,
+                text:"Propostas com score intermediário, divergência cadastral ou exposição acima do limite operacional devem ser encaminhadas para revisão manual."
+            },
+            {
+                title:"Manual de Fraude",
+                source:"Documento FRD-007",
+                score:84,
+                relevant:true,
+                text:"Sinais de inconsistência documental, comportamento atípico ou alteração recente de dados cadastrais devem gerar alerta para análise especializada."
+            },
+            {
+                title:"Política de Férias",
+                source:"Documento RH-006",
+                score:22,
+                relevant:false,
+                text:"Solicitações de férias devem ser registradas com pelo menos 30 dias de antecedência."
+            },
+            {
+                title:"Manual de Marca",
+                source:"Documento MKT-002",
+                score:14,
+                relevant:false,
+                text:"Materiais institucionais devem seguir a paleta visual e diretrizes de comunicação da empresa."
+            }
+        ],
+        answer:"Uma proposta deve ser enviada para revisão manual quando apresentar score intermediário, divergência cadastral, exposição acima do limite operacional ou sinais de inconsistência documental e comportamento atípico. [CRED-018, FRD-007]"
+    }
+};
+
+const questionEl = document.getElementById("question");
+const docsEl = document.getElementById("docs");
+const answerEl = document.getElementById("answer");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const scenario = scenarios[name];
+
+    questionEl.innerText = scenario.question;
+    answerEl.innerText = scenario.answer;
+    docsEl.innerHTML = "";
+
+    scenario.docs.forEach((doc, index)=>{
+        const el = document.createElement("div");
+        el.className = `doc ${doc.relevant ? "relevant" : ""} ${index < 2 ? "selected" : ""}`;
+
+        el.innerHTML = `
+            <small>${doc.source}</small>
+            <h4>${doc.title}</h4>
+            <p>${doc.text}</p>
+            <span class="score">similaridade: ${doc.score}%</span>
+        `;
+
+        el.onclick = () => selectDoc(doc, el);
+
+        docsEl.appendChild(el);
+    });
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${scenario.title}</h3>
+        <p>
+            A pergunta é convertida em uma busca. Os documentos mais relevantes são recuperados
+            e usados como contexto para orientar a resposta.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O modelo não responde apenas com base no treinamento. Ele usa trechos encontrados
+                na base documental para reduzir incerteza e aumentar aderência ao contexto.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">pergunta</span>
+            <span class="badge">recuperação</span>
+            <span class="badge">contexto</span>
+            <span class="badge">resposta</span>
+        </div>
+    `;
+}
+
+function selectDoc(doc, el){
+    document.querySelectorAll(".doc").forEach(d=>d.classList.remove("selected"));
+    el.classList.add("selected");
+
+    info.innerHTML = `
+        <div class="info-tag">Trecho selecionado</div>
+        <h3>${doc.title}</h3>
+        <p>${doc.text}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Fonte:</strong><br>
+                ${doc.source}
+            </p>
+            <p>
+                <strong>Similaridade:</strong><br>
+                ${doc.score}% em relação à pergunta ativa.
+            </p>
+            <p>
+                <strong>Uso no RAG:</strong><br>
+                ${doc.relevant
+                    ? "Este trecho entra como contexto útil para fundamentar a resposta."
+                    : "Este trecho tem baixa relevância e tende a ser descartado ou receber menor peso."
+                }
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">chunk</span>
+            <span class="badge">fonte</span>
+            <span class="badge">similaridade</span>
+            <span class="badge">contexto</span>
+        </div>
+    `;
+}
+
+setScenario("reembolso", document.querySelector("button"));
+</script>
+
+</body>
+</html>
