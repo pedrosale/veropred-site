@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -168,6 +169,29 @@ h1{
     color:var(--muted);
     font-size:9px;
     font-weight:400;
+}
+
+.sim-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.sim-link{
+    display:inline-flex;
+    color:#f4d59d;
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 14px;
+    text-decoration:none;
+    transition:.25s ease;
+    font-size:13px;
+}
+
+.sim-link:hover{
+    background:rgba(255,205,120,.08);
+    border-color:rgba(255,218,145,.55);
+    color:white;
 }
 
 .panel{
@@ -379,8 +403,17 @@ Uma exploração das capacidades cognitivas artificiais utilizadas para represen
 <script>
 const modules = [
 {
-id:"memoria", label:"Memória", tech:"RAG",
-x:50, y:14,
+
+id:"memoria",
+label:"Memória",
+tech:"RAG",
+
+simuladores:[
+    {label:"Explorar RAG", url:"ia_xperience/simulador_rag.html"}
+],
+
+x:50,
+y:14,
 title:"Memória",
 subtitle:"Recuperação contextual e persistência informacional.",
 funcao:"Recuperar informações relevantes para ampliar o contexto decisório.",
@@ -389,9 +422,18 @@ tecnicas:["RAG","Bancos vetoriais","Busca semântica","Memória contextual","Emb
 analogia:"Como consultar livros, normas e documentos antes de responder.",
 exemplo:"Um funcionário pergunta sobre política de reembolso internacional. O sistema busca a regra correta em documentos internos, envia os trechos relevantes ao LLM e gera uma resposta contextualizada."
 },
+
 {
-id:"associacao", label:"Associação", tech:"Embeddings",
-x:76, y:24,
+id:"associacao",
+label:"Associação",
+tech:"Embeddings",
+
+simuladores:[
+    {label:"Explorar Embeddings", url:"ia_xperience/simulador_embeddings.html"}
+],
+
+x:76,
+y:24,
 title:"Associação",
 subtitle:"Transformação de significado em proximidade matemática.",
 funcao:"Aproximar conceitos semelhantes e afastar conceitos diferentes em espaços vetoriais.",
@@ -400,9 +442,18 @@ tecnicas:["Embeddings","Aprendizado contrastivo","Espaços latentes","Recomenda�
 analogia:"Como aproximar ideias com significados parecidos, mesmo usando palavras diferentes.",
 exemplo:"Uma empresa transforma contratos, e-mails e normas em vetores. Quando alguém busca 'política de férias', o sistema encontra trechos semanticamente próximos mesmo sem palavras idênticas."
 },
+
 {
-id:"atencao", label:"Atenção", tech:"Transformers",
-x:84, y:48,
+id:"atencao",
+label:"Atenção",
+tech:"Transformers",
+
+simuladores:[
+    {label:"Explorar Attention", url:"ia_xperience/simulador_attention.html"}
+],
+
+x:84,
+y:48,
 title:"Atenção",
 subtitle:"Seleção dinâmica de relevância contextual.",
 funcao:"Identificar quais partes da informação devem receber mais peso em cada momento.",
@@ -411,9 +462,18 @@ tecnicas:["Transformers","Self-attention","Context window","LLMs","Modelagem seq
 analogia:"Como focar continuamente nas partes mais relevantes de uma informação para compreender corretamente o contexto.",
 exemplo:"Na frase 'o troféu não coube na mala porque ela era pequena', o modelo precisa entender que 'ela' se refere à mala, não ao troféu."
 },
+
 {
-id:"previsao", label:"Previsão", tech:"Supervisionado",
-x:73, y:72,
+id:"previsao",
+label:"Previsão",
+tech:"Supervisionado",
+
+simuladores:[
+    {label:"Explorar Supervisionado", url:"ia_xperience/simulador_supervisionado.html"}
+],
+
+x:73,
+y:72,
 title:"Previsão",
 subtitle:"Aprender padrões a partir de exemplos corrigidos.",
 funcao:"Estimar classes, probabilidades ou valores futuros com base em dados históricos.",
@@ -422,9 +482,18 @@ tecnicas:["Aprendizado supervisionado","Classificação","Regressão","Séries t
 analogia:"Como identificar padrões em eventos passados para estimar comportamentos e resultados futuros.",
 exemplo:"Um banco usa dados históricos de clientes para estimar a probabilidade de inadimplência de novos proponentes."
 },
+
 {
-id:"sequencia", label:"Sequência", tech:"Autoregressivo",
-x:50, y:84,
+id:"sequencia",
+label:"Sequência",
+tech:"Autoregressivo",
+
+simuladores:[
+    {label:"Explorar Autoregressivo", url:"ia_xperience/simulador_autoregressivo.html"}
+],
+
+x:50,
+y:84,
 title:"Aprendizado Autoregressivo",
 subtitle:"Geração passo a passo baseada no histórico anterior.",
 funcao:"Prever o próximo token, palavra, frame ou evento a partir do contexto acumulado.",
@@ -433,9 +502,18 @@ tecnicas:["Modelos autoregressivos","LLMs","Next-token prediction","Modelagem de
 analogia:"Como escrever uma frase olhando sempre para o que já foi dito antes, escolhendo a próxima parte mais provável.",
 exemplo:"Ao responder uma pergunta, o ChatGPT prevê um token, adiciona ao contexto, prevê o próximo e repete o processo até formar a resposta inteira."
 },
+
 {
-id:"descoberta", label:"Descoberta", tech:"Clustering",
-x:26, y:72,
+id:"descoberta",
+label:"Descoberta",
+tech:"Clustering",
+
+simuladores:[
+    {label:"Explorar Clustering", url:"ia_xperience/simulador_clustering.html"}
+],
+
+x:26,
+y:72,
 title:"Descoberta de Estrutura",
 subtitle:"Encontrar padrões ocultos sem respostas corretas.",
 funcao:"Identificar grupos, anomalias e estruturas escondidas nos dados.",
@@ -444,9 +522,18 @@ tecnicas:["Aprendizado não supervisionado","Clustering","Redução dimensional"
 analogia:"Como agrupar elementos apenas pela semelhança entre eles.",
 exemplo:"Uma varejista analisa milhões de clientes e encontra grupos: alto ticket, compradores promocionais, clientes em risco de abandono e perfis recorrentes."
 },
+
 {
-id:"semi", label:"Poucos Rótulos", tech:"Semi-supervisionado",
-x:16, y:48,
+id:"semi",
+label:"Poucos Rótulos",
+tech:"Semi-supervisionado",
+
+simuladores:[
+    {label:"Explorar Semi-supervisionado", url:"ia_xperience/simulador_semi_supervisionado.html"}
+],
+
+x:16,
+y:48,
 title:"Aprendizado Semi-Supervisionado",
 subtitle:"Aprender com poucos exemplos rotulados e muitos dados sem rótulo.",
 funcao:"Expandir aprendizado quando o custo humano de rotular tudo é alto.",
@@ -455,9 +542,18 @@ tecnicas:["Semi-supervised learning","Pseudo-labeling","Propagação de rótulos
 analogia:"Como aprender uma língua com poucas frases traduzidas e muitos textos soltos.",
 exemplo:"Um hospital possui poucos exames com diagnóstico confirmado e milhões sem revisão. A IA aprende com os rotulados e usa previsões confiáveis para explorar o restante."
 },
+
 {
-id:"auto", label:"Auto-supervisão", tech:"LLMs",
-x:24, y:24,
+id:"auto",
+label:"Auto-supervisão",
+tech:"LLMs",
+
+simuladores:[
+    {label:"Explorar Auto-supervisão", url:"ia_xperience/simulador_self_supervised.html"}
+],
+
+x:24,
+y:24,
 title:"Aprendizado Auto-Supervisionado",
 subtitle:"O próprio dado cria o gabarito.",
 funcao:"Aprender padrões escondendo partes dos dados e tentando reconstruí-las.",
@@ -466,9 +562,19 @@ tecnicas:["Self-supervised learning","Masked prediction","Next-token prediction"
 analogia:"Como um quebra-cabeça em que a própria imagem fornece a dica.",
 exemplo:"Um LLM lê bilhões de textos e aprende prevendo palavras ou tokens ausentes, absorvendo sintaxe, relações semânticas e padrões culturais."
 },
+
 {
-id:"imaginacao", label:"Imaginação", tech:"Diffusion / GANs",
-x:12, y:14,
+id:"imaginacao",
+label:"Imaginação",
+tech:"Diffusion / GANs",
+
+simuladores:[
+    {label:"Explorar Diffusion", url:"ia_xperience/simulador_diffusion.html"},
+    {label:"Explorar GANs", url:"ia_xperience/simulador_gans.html"}
+],
+
+x:12,
+y:14,
 title:"Imaginação",
 subtitle:"Geração de novas possibilidades a partir de padrões aprendidos.",
 funcao:"Criar imagens, textos, vídeos, sons ou cenários sintéticos coerentes.",
@@ -477,9 +583,18 @@ tecnicas:["Diffusion models","GANs","Geração multimodal","Modelos generativos"
 analogia:"Como restaurar uma pintura borrada ou imaginar uma cena antes inexistente.",
 exemplo:"Ao pedir 'um samurai cyberpunk na chuva', um modelo de diffusion começa com ruído e remove esse ruído gradualmente até a imagem emergir."
 },
+
 {
-id:"adaptacao", label:"Adaptação", tech:"RL",
-x:88, y:14,
+id:"adaptacao",
+label:"Adaptação",
+tech:"RL",
+
+simuladores:[
+    {label:"Explorar RL", url:"ia_xperience/simulador_rl.html"}
+],
+
+x:88,
+y:14,
 title:"Adaptação",
 subtitle:"Aprender comportamento por recompensa e punição.",
 funcao:"Melhorar ações com base no retorno recebido do ambiente.",
@@ -488,9 +603,18 @@ tecnicas:["Reinforcement Learning","Políticas de ação","Recompensas","Ambient
 analogia:"Como alguém aprendendo a tomar decisões melhores após acumular experiência, erros e acertos ao longo do tempo.",
 exemplo:"Um robô em armazém aprende a pegar caixas, evitar colisões e otimizar rotas. Entregou corretamente: +20. Bateu: -10."
 },
+
 {
-id:"alinhamento", label:"Alinhamento", tech:"RLHF",
-x:88, y:82,
+id:"alinhamento",
+label:"Alinhamento",
+tech:"RLHF",
+
+simuladores:[
+    {label:"Explorar RLHF", url:"ia_xperience/simulador_rlhf.html"}
+],
+
+x:88,
+y:82,
 title:"Alinhamento",
 subtitle:"Ajustar comportamento a preferências humanas.",
 funcao:"Ensinar o modelo a produzir respostas mais úteis, claras, seguras e aceitáveis.",
@@ -499,9 +623,18 @@ tecnicas:["RLHF","Feedback humano","Modelos de recompensa","Preferência humana"
 analogia:"Como aproximar o comportamento do sistema das preferências e expectativas humanas.",
 exemplo:"Ao receber feedback humano contínuo sobre clareza, utilidade e adequação, o modelo ajusta gradualmente seu comportamento para produzir respostas mais alinhadas às expectativas humanas."
 },
+
 {
-id:"especializacao", label:"Especialização", tech:"Fine-tuning",
-x:12, y:82,
+id:"especializacao",
+label:"Especialização",
+tech:"Fine-tuning",
+
+simuladores:[
+    {label:"Explorar Fine-tuning", url:"ia_xperience/simulador_finetuning.html"}
+],
+
+x:12,
+y:82,
 title:"Especialização",
 subtitle:"Adaptar um modelo geral a um domínio específico.",
 funcao:"Transferir capacidade geral para contextos técnicos, regulatórios ou corporativos.",
@@ -510,9 +643,18 @@ tecnicas:["Fine-tuning","Domain adaptation","Instruction tuning","Modelos especi
 analogia:"Como um médico generalista fazendo residência.",
 exemplo:"Uma seguradora adapta um LLM com apólices, sinistros, regulação e linguagem técnica para melhorar respostas no domínio de seguros."
 },
+
 {
-id:"planejamento", label:"Planejamento", tech:"Agentes",
-x:50, y:4,
+id:"planejamento",
+label:"Planejamento",
+tech:"Agentes",
+
+simuladores:[
+    {label:"Explorar Agentes", url:"ia_xperience/simulador_agentes.html"}
+],
+
+x:50,
+y:4,
 title:"Planejamento",
 subtitle:"Organizar ação, ferramentas e execução iterativa.",
 funcao:"Transformar intenção em sequência de ações coordenadas.",
@@ -521,9 +663,18 @@ tecnicas:["Agentes de IA","Tool calling","Workflows","Orquestração","Multiagen
 analogia:"Como um centro de comando que divide objetivos complexos em múltiplas etapas executáveis, coordena especialistas e ajusta estratégias continuamente.",
 exemplo:"Um agente busca documentos, outro resume, outro analisa risco e outro gera um relatório executivo automaticamente."
 },
+
 {
-id:"hibrido", label:"Sistema Híbrido", tech:"Orquestração",
-x:50, y:94,
+id:"hibrido",
+label:"Sistema Híbrido",
+tech:"Orquestração",
+
+simuladores:[
+    {label:"Explorar Sistemas Híbridos", url:"ia_xperience/simulador_sistemas_hibridos.html"}
+],
+
+x:50,
+y:94,
 title:"Sistemas Híbridos",
 subtitle:"A IA moderna como ecossistema combinado.",
 funcao:"Integrar múltiplas capacidades cognitivas artificiais em um único sistema operacional.",
@@ -577,8 +728,23 @@ function selectModule(id){
     <p>${m.exemplo}</p>
 </div>
 
+${m.simuladores ? `
+<div class="section">
+    <h3>Simulação Interativa</h3>
+
+    <div class="sim-links">
+        ${m.simuladores.map(s=>`
+            <a class="sim-link" href="${s.url}">
+                ${s.label} →
+            </a>
+        `).join("")}
+    </div>
+</div>
+` : ""}
+
 <div class="section">
     <h3>Arquiteturas Relacionadas</h3>
+
     <div class="badges">
         ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
     </div>
