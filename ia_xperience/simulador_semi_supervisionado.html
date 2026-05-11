@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Aprendizado Semi-Supervisionado | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+    --neutral:#f1c27a;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.semi-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.task-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.task-title{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.chart-wrap{
+    display:grid;
+    grid-template-columns:1fr 250px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.chart{
+    position:relative;
+    min-height:430px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.026) 1px, transparent 1px),
+        rgba(0,0,0,.18);
+    background-size:42px 42px;
+    overflow:hidden;
+}
+
+.axis{
+    position:absolute;
+    background:rgba(255,220,160,.18);
+}
+
+.axis.x{
+    left:9%;
+    right:9%;
+    bottom:12%;
+    height:1px;
+}
+
+.axis.y{
+    top:9%;
+    bottom:12%;
+    left:10%;
+    width:1px;
+}
+
+.axis-label{
+    position:absolute;
+    color:#8f806a;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.label-x{right:28px;bottom:20px}
+.label-y{left:20px;top:20px}
+
+.boundary{
+    position:absolute;
+    left:8%;
+    top:56%;
+    width:86%;
+    height:2px;
+    background:linear-gradient(90deg, transparent, rgba(255,211,142,.66), transparent);
+    transform:rotate(-28deg);
+    transform-origin:center;
+    filter:drop-shadow(0 0 12px rgba(244,190,98,.38));
+    opacity:.45;
+    transition:.45s ease;
+}
+
+.chart.expanded .boundary{
+    opacity:.95;
+}
+
+.point{
+    position:absolute;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(255,255,255,.55);
+    cursor:pointer;
+    transition:.28s ease;
+}
+
+.point.labeled.good{
+    background:var(--good);
+    box-shadow:0 0 20px rgba(143,211,167,.45);
+}
+
+.point.labeled.bad{
+    background:var(--bad);
+    box-shadow:0 0 20px rgba(228,147,115,.45);
+}
+
+.point.unlabeled{
+    background:rgba(255,255,255,.18);
+    border-color:rgba(255,255,255,.25);
+    box-shadow:0 0 12px rgba(255,255,255,.08);
+}
+
+.point.pseudo.good{
+    background:rgba(143,211,167,.72);
+    border-color:rgba(143,211,167,.70);
+    box-shadow:0 0 24px rgba(143,211,167,.42);
+}
+
+.point.pseudo.bad{
+    background:rgba(228,147,115,.72);
+    border-color:rgba(228,147,115,.70);
+    box-shadow:0 0 24px rgba(228,147,115,.42);
+}
+
+.point.lowconf{
+    opacity:.42;
+}
+
+.point:hover,
+.point.active{
+    transform:translate(-50%,-50%) scale(1.55);
+    z-index:12;
+}
+
+.legend-chart{
+    position:absolute;
+    left:24px;
+    bottom:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    color:#d8c7ac;
+    font-size:12px;
+}
+
+.legend-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+}
+
+.legend-dot::before{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    display:inline-block;
+}
+
+.legend-dot.labeled::before{background:var(--good)}
+.legend-dot.unlabeled::before{background:rgba(255,255,255,.28)}
+.legend-dot.pseudo::before{background:var(--neutral)}
+
+.side-panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.side-panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.stage-cards{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.stage-card{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:18px;
+    padding:14px;
+    background:rgba(255,205,120,.045);
+    transition:.25s ease;
+}
+
+.stage-card.active{
+    border-color:rgba(255,218,145,.58);
+    background:rgba(255,205,120,.13);
+    box-shadow:0 0 34px rgba(244,190,98,.18);
+}
+
+.stage-card small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.stage-card p{
+    color:#d9cdbc;
+    font-size:12.5px;
+    line-height:1.45;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .chart-wrap{grid-template-columns:1fr}
+
+    .stage-cards{grid-template-columns:1fr}
+
+    .semi-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .task-title{font-size:23px}
+
+    .chart{min-height:380px}
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Semi-Supervisionado</div>
+
+        <h1>Quando poucos rótulos iluminam muitos dados.</h1>
+
+        <p class="lead">
+            Aprendizado semi-supervisionado combina uma pequena base rotulada com uma grande base sem rótulo.
+            O modelo usa os exemplos confirmados para estimar rótulos confiáveis no restante dos dados.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Expandir aprendizado quando existem poucos exemplos corrigidos e muitos dados ainda não classificados.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Como aprender com poucas respostas confirmadas e usar essa base para interpretar muitos casos parecidos.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                poucos rótulos → confiança → pseudo-rótulos
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Expansão por Pseudo-rótulos</h2>
+                <p>
+                    Escolha um cenário e avance as etapas. A simulação mostra como previsões confiáveis
+                    podem ser incorporadas ao treinamento.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('exames', this)">Exames</button>
+                <button onclick="setScenario('credito', this)">Crédito</button>
+                <button onclick="setScenario('documentos', this)">Documentos</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="semi-space">
+
+                <div class="task-box">
+                    <div class="label">Problema semi-supervisionado</div>
+                    <div class="task-title" id="taskTitle"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Rótulos</strong>
+                        <p>Poucos exemplos possuem resposta confirmada.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Sem rótulo</strong>
+                        <p>Muitos casos ainda não foram analisados.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Confiança</strong>
+                        <p>O modelo prevê e separa casos confiáveis.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Expansão</strong>
+                        <p>Pseudo-rótulos ampliam a base de treino.</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrap">
+
+                    <div class="chart" id="chart">
+                        <div class="axis x"></div>
+                        <div class="axis y"></div>
+                        <div class="boundary"></div>
+
+                        <div class="axis-label label-y" id="yLabel"></div>
+                        <div class="axis-label label-x" id="xLabel"></div>
+
+                        <div class="legend-chart">
+                            <span class="legend-dot labeled">Rotulado</span>
+                            <span class="legend-dot unlabeled">Sem rótulo</span>
+                            <span class="legend-dot pseudo">Pseudo-rótulo</span>
+                        </div>
+                    </div>
+
+                    <aside class="side-panel">
+                        <h3>Aprendizado</h3>
+
+                        <div class="metric">
+                            <small>etapa atual</small>
+                            <strong id="stageValue">Base inicial</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>casos rotulados</small>
+                            <strong id="labeledValue">4</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>cobertura confiável</small>
+                            <strong id="coverageValue">0%</strong>
+                            <div class="bar"><div class="fill" id="coverageBar" style="width:0%"></div></div>
+                        </div>
+
+                        <button style="width:100%;margin-top:14px" onclick="advanceStage()">Avançar etapa</button>
+                    </aside>
+                </div>
+
+                <div class="stage-cards">
+                    <div class="stage-card active" id="card1">
+                        <small>base inicial</small>
+                        <p>Poucos casos possuem rótulo confiável.</p>
+                    </div>
+
+                    <div class="stage-card" id="card2">
+                        <small>previsão</small>
+                        <p>O modelo estima rótulos para casos sem resposta.</p>
+                    </div>
+
+                    <div class="stage-card" id="card3">
+                        <small>expansão</small>
+                        <p>Casos de alta confiança entram como pseudo-rótulos.</p>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    Em uso real, pseudo-rótulos precisam de controle de confiança. Incorporar previsões erradas
+                    pode propagar erro e degradar o modelo.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Aprendizado Semi-Supervisionado</h3>
+                <p>
+                    O modelo começa com poucos exemplos rotulados. Depois usa a estrutura dos dados sem rótulo
+                    e suas próprias previsões confiáveis para ampliar o aprendizado.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        poucos rótulos humanos orientam a interpretação de muitos dados não rotulados.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">poucos rótulos</span>
+                    <span class="badge">dados sem rótulo</span>
+                    <span class="badge">pseudo-labeling</span>
+                    <span class="badge">confiança</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    exames:{
+        title:"Poucos exames têm diagnóstico confirmado; milhares ainda aguardam revisão.",
+        xLabel:"maior marcador A",
+        yLabel:"maior marcador B",
+        explanation:"A IA aprende com exames revisados por especialistas e tenta estimar diagnósticos prováveis nos exames ainda não avaliados.",
+        points:[
+            {x:26,y:70,type:"labeled",cls:"good",name:"E01",desc:"Exame confirmado como normal."},
+            {x:34,y:62,type:"labeled",cls:"good",name:"E02",desc:"Exame revisado e confirmado como normal."},
+            {x:72,y:30,type:"labeled",cls:"bad",name:"E03",desc:"Exame confirmado como alterado."},
+            {x:80,y:38,type:"labeled",cls:"bad",name:"E04",desc:"Exame revisado e confirmado como alterado."},
+            {x:30,y:58,type:"unlabeled",cls:"good",conf:91,name:"U01",desc:"Sem rótulo, mas muito parecido com exames normais."},
+            {x:40,y:66,type:"unlabeled",cls:"good",conf:84,name:"U02",desc:"Sem rótulo, com alta confiança para normal."},
+            {x:68,y:42,type:"unlabeled",cls:"bad",conf:87,name:"U03",desc:"Sem rótulo, mas próximo de exames alterados."},
+            {x:78,y:26,type:"unlabeled",cls:"bad",conf:93,name:"U04",desc:"Sem rótulo, com alta confiança para alterado."},
+            {x:50,y:50,type:"unlabeled",cls:"lowconf",conf:52,name:"U05",desc:"Zona incerta. Não deveria virar pseudo-rótulo ainda."}
+        ]
+    },
+
+    credito:{
+        title:"Poucas propostas têm desfecho observado; muitas ainda não têm histórico suficiente.",
+        xLabel:"maior endividamento",
+        yLabel:"maior renda",
+        explanation:"O modelo usa clientes com atraso já observado para inferir sinais em propostas novas ainda sem desfecho.",
+        points:[
+            {x:28,y:30,type:"labeled",cls:"good",name:"C01",desc:"Cliente confirmado como bom pagador."},
+            {x:36,y:40,type:"labeled",cls:"good",name:"C02",desc:"Cliente sem atraso observado."},
+            {x:72,y:68,type:"labeled",cls:"bad",name:"C03",desc:"Cliente confirmado como inadimplente."},
+            {x:80,y:60,type:"labeled",cls:"bad",name:"C04",desc:"Cliente com atraso relevante."},
+            {x:32,y:36,type:"unlabeled",cls:"good",conf:88,name:"U01",desc:"Sem desfecho, mas próximo de bons pagadores."},
+            {x:44,y:34,type:"unlabeled",cls:"good",conf:81,name:"U02",desc:"Alta confiança de baixo risco."},
+            {x:70,y:58,type:"unlabeled",cls:"bad",conf:86,name:"U03",desc:"Sem desfecho, mas próximo de inadimplentes."},
+            {x:84,y:70,type:"unlabeled",cls:"bad",conf:92,name:"U04",desc:"Alta confiança de risco elevado."},
+            {x:56,y:50,type:"unlabeled",cls:"lowconf",conf:55,name:"U05",desc:"Zona cinzenta. Exige cautela."}
+        ]
+    },
+
+    documentos:{
+        title:"Poucos documentos foram classificados manualmente; muitos ainda estão sem categoria.",
+        xLabel:"mais operacional",
+        yLabel:"mais regulatório",
+        explanation:"A IA usa documentos classificados por humanos para sugerir categorias em documentos semelhantes ainda não classificados.",
+        points:[
+            {x:28,y:26,type:"labeled",cls:"good",name:"D01",desc:"Documento classificado como governança."},
+            {x:36,y:32,type:"labeled",cls:"good",name:"D02",desc:"Norma interna revisada."},
+            {x:70,y:70,type:"labeled",cls:"bad",name:"D03",desc:"Documento operacional classificado."},
+            {x:78,y:62,type:"labeled",cls:"bad",name:"D04",desc:"Manual de execução classificado."},
+            {x:32,y:38,type:"unlabeled",cls:"good",conf:89,name:"U01",desc:"Sem categoria, mas similar a governança."},
+            {x:42,y:28,type:"unlabeled",cls:"good",conf:83,name:"U02",desc:"Alta confiança de categoria regulatória."},
+            {x:68,y:60,type:"unlabeled",cls:"bad",conf:86,name:"U03",desc:"Provável documento operacional."},
+            {x:82,y:74,type:"unlabeled",cls:"bad",conf:91,name:"U04",desc:"Alta confiança de rotina operacional."},
+            {x:54,y:50,type:"unlabeled",cls:"lowconf",conf:50,name:"U05",desc:"Documento ambíguo; não deve ser incorporado automaticamente."}
+        ]
+    }
+};
+
+let currentScenario = scenarios.exames;
+let stage = 1;
+
+const taskTitle = document.getElementById("taskTitle");
+const chart = document.getElementById("chart");
+const yLabel = document.getElementById("yLabel");
+const xLabel = document.getElementById("xLabel");
+const stageValue = document.getElementById("stageValue");
+const labeledValue = document.getElementById("labeledValue");
+const coverageValue = document.getElementById("coverageValue");
+const coverageBar = document.getElementById("coverageBar");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    stage = 1;
+
+    taskTitle.innerText = currentScenario.title;
+    xLabel.innerText = currentScenario.xLabel;
+    yLabel.innerText = currentScenario.yLabel;
+
+    renderChart();
+    updateStage();
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "exames" ? "Exames médicos" : name === "credito" ? "Propostas de crédito" : "Classificação documental"}</h3>
+        <p>${currentScenario.explanation}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O modelo usa poucos exemplos confirmados para estimar rótulos nos casos ainda sem resposta.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">rotulados</span>
+            <span class="badge">não rotulados</span>
+            <span class="badge">confiança</span>
+            <span class="badge">pseudo-rótulos</span>
+        </div>
+    `;
+}
+
+function renderChart(){
+    [...chart.querySelectorAll(".point")].forEach(el=>el.remove());
+    chart.classList.remove("expanded");
+
+    currentScenario.points.forEach(p=>{
+        const el = document.createElement("div");
+        el.className = `point ${pointClass(p)}`;
+        el.style.left = `${p.x}%`;
+        el.style.top = `${p.y}%`;
+        el.onclick = () => selectPoint(p, el);
+        chart.appendChild(el);
+    });
+}
+
+function pointClass(p){
+    if(p.type === "labeled") return `labeled ${p.cls}`;
+    return "unlabeled";
+}
+
+function updatePointClasses(){
+    document.querySelectorAll(".point").forEach((el, i)=>{
+        const p = currentScenario.points[i];
+
+        if(p.type === "labeled"){
+            el.className = `point labeled ${p.cls}`;
+            return;
+        }
+
+        if(stage < 3){
+            el.className = "point unlabeled";
+            return;
+        }
+
+        if(p.cls === "lowconf"){
+            el.className = "point unlabeled lowconf";
+            return;
+        }
+
+        el.className = `point pseudo ${p.cls}`;
+    });
+}
+
+function advanceStage(){
+    stage++;
+    if(stage > 3) stage = 1;
+    updateStage();
+}
+
+function updateStage(){
+    updatePointClasses();
+
+    chart.classList.toggle("expanded", stage >= 2);
+
+    document.querySelectorAll(".stage-card").forEach(c=>c.classList.remove("active"));
+    document.getElementById(`card${stage}`).classList.add("active");
+
+    if(stage === 1){
+        stageValue.innerText = "Base inicial";
+        labeledValue.innerText = "4";
+        coverageValue.innerText = "0%";
+        coverageBar.style.width = "0%";
+    }
+
+    if(stage === 2){
+        stageValue.innerText = "Previsão";
+        labeledValue.innerText = "4";
+        coverageValue.innerText = "54%";
+        coverageBar.style.width = "54%";
+    }
+
+    if(stage === 3){
+        stageValue.innerText = "Base expandida";
+        labeledValue.innerText = "8";
+        coverageValue.innerText = "82%";
+        coverageBar.style.width = "82%";
+    }
+
+    info.innerHTML = `
+        <div class="info-tag">Etapa atual</div>
+        <h3>${stage === 1 ? "Poucos rótulos confirmados" : stage === 2 ? "Previsões com confiança" : "Pseudo-rótulos incorporados"}</h3>
+        <p>
+            ${stage === 1
+                ? "A base começa com poucos exemplos confiáveis. Eles servem como referência inicial para o modelo."
+                : stage === 2
+                ? "O modelo estima rótulos para os casos sem resposta e calcula confiança em cada previsão."
+                : "Casos com alta confiança são incorporados como pseudo-rótulos, ampliando a base de aprendizado."
+            }
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Cuidado:</strong><br>
+                Casos de baixa confiança devem permanecer fora da expansão para evitar propagação de erro.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">${stage === 1 ? "base pequena" : stage === 2 ? "confiança" : "pseudo-labeling"}</span>
+            <span class="badge">controle de erro</span>
+            <span class="badge">expansão gradual</span>
+        </div>
+    `;
+}
+
+function selectPoint(p, el){
+    document.querySelectorAll(".point").forEach(x=>x.classList.remove("active"));
+    el.classList.add("active");
+
+    const status =
+        p.type === "labeled" ? "Rótulo confirmado" :
+        stage < 3 ? "Sem rótulo" :
+        p.cls === "lowconf" ? "Baixa confiança" :
+        "Pseudo-rótulo";
+
+    info.innerHTML = `
+        <div class="info-tag">Caso selecionado</div>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Status:</strong><br>
+                ${status}
+            </p>
+            <p>
+                <strong>Confiança:</strong><br>
+                ${p.conf ? p.conf + "%" : "confirmado manualmente"}
+            </p>
+            <p>
+                <strong>Uso no aprendizado:</strong><br>
+                ${
+                    p.type === "labeled"
+                    ? "Entra como exemplo confiável inicial."
+                    : p.cls === "lowconf"
+                    ? "Deve permanecer fora da expansão automática."
+                    : stage >= 3
+                    ? "Pode entrar como pseudo-rótulo por alta confiança."
+                    : "Ainda aguarda previsão ou seleção por confiança."
+                }
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">${status}</span>
+            <span class="badge">confiança</span>
+            <span class="badge">aprendizado</span>
+        </div>
+    `;
+}
+
+setScenario("exames", document.querySelector("button"));
+</script>
+
+</body>
+</html>
