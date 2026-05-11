@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Self-Supervised Learning | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.ssl-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.task-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.task-title{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.ssl-wrap{
+    display:grid;
+    grid-template-columns:1fr 250px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.prediction-box{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:24px;
+    background:rgba(0,0,0,.20);
+    min-height:420px;
+}
+
+.context-label{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    margin-bottom:12px;
+}
+
+.masked-sentence{
+    min-height:130px;
+    color:#f6efe3;
+    font-family:Georgia,serif;
+    font-size:31px;
+    line-height:1.38;
+}
+
+.word{
+    display:inline-flex;
+    margin:4px 4px 4px 0;
+    padding:4px 7px;
+    border-radius:10px;
+    background:rgba(255,205,120,.07);
+    border:1px solid rgba(255,211,142,.14);
+}
+
+.mask{
+    color:#1b1009;
+    background:linear-gradient(135deg,#f1c27a,#c8944f);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 26px rgba(244,190,98,.28);
+}
+
+.revealed{
+    color:#b7f0c7;
+    background:rgba(143,211,167,.10);
+    border-color:rgba(143,211,167,.35);
+}
+
+.candidates-panel{
+    border-top:1px solid rgba(255,220,160,.13);
+    margin-top:22px;
+    padding-top:18px;
+}
+
+.candidates-title{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.candidates{
+    display:grid;
+    gap:10px;
+}
+
+.candidate{
+    display:grid;
+    grid-template-columns:100px 1fr 45px;
+    gap:10px;
+    align-items:center;
+    font-size:13px;
+    color:#ded4c3;
+    cursor:pointer;
+}
+
+.candidate strong{
+    color:#fff1d0;
+    font-weight:600;
+}
+
+.candidate.correct strong{
+    color:#b7f0c7;
+}
+
+.bar{
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.45s ease;
+}
+
+.control-panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.control-panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.action-stack{
+    display:grid;
+    gap:10px;
+    margin-top:14px;
+}
+
+.action-stack button{
+    width:100%;
+}
+
+.training-log{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:26px;
+    overflow:hidden;
+    background:rgba(0,0,0,.18);
+}
+
+.log-row{
+    display:grid;
+    grid-template-columns:90px 1fr 90px;
+    gap:10px;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.075);
+    color:#ded4c3;
+    font-size:13px;
+}
+
+.log-row.head{
+    color:var(--gold2);
+    background:rgba(255,205,120,.055);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.log-row:last-child{
+    border-bottom:0;
+}
+
+.good{color:var(--good)}
+.bad{color:var(--bad)}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .ssl-wrap{grid-template-columns:1fr}
+
+    .ssl-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .task-title{font-size:23px}
+
+    .masked-sentence{font-size:25px}
+
+    .candidate{
+        grid-template-columns:90px 1fr 42px;
+    }
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Self-Supervised Learning</div>
+
+        <h1>Quando o próprio dado cria o gabarito.</h1>
+
+        <p class="lead">
+            Aprendizado auto-supervisionado extrai supervisão da própria estrutura dos dados.
+            O sistema esconde uma parte da informação e aprende tentando reconstruí-la.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Aprender padrões escondendo partes dos dados e tentando prever o que falta.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Como um quebra-cabeça em que a própria imagem fornece pistas para completar a peça ausente.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                dado → máscara → previsão → aprendizado
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Reconstrução Auto-Supervisionada</h2>
+                <p>
+                    Escolha um cenário e revele a parte escondida. A simulação mostra como o modelo aprende
+                    sem rótulos humanos explícitos.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('texto', this)">Texto</button>
+                <button onclick="setScenario('dominio', this)">Domínio</button>
+                <button onclick="setScenario('imagem', this)">Imagem</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="ssl-space">
+
+                <div class="task-box">
+                    <div class="label">Tarefa criada pelo próprio dado</div>
+                    <div class="task-title" id="taskTitle"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Dado bruto</strong>
+                        <p>Texto, imagem ou sinal sem rótulo humano.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Máscara</strong>
+                        <p>Parte do dado é escondida artificialmente.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Previsão</strong>
+                        <p>O modelo tenta reconstruir o trecho ausente.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Aprendizado</strong>
+                        <p>O erro ensina padrões internos do dado.</p>
+                    </div>
+                </div>
+
+                <div class="ssl-wrap">
+
+                    <div class="prediction-box">
+                        <div class="context-label">Exemplo mascarado</div>
+
+                        <div class="masked-sentence" id="maskedSentence"></div>
+
+                        <div class="candidates-panel">
+                            <div class="candidates-title">Previsões candidatas</div>
+                            <div class="candidates" id="candidates"></div>
+                        </div>
+                    </div>
+
+                    <aside class="control-panel">
+                        <h3>Treinamento</h3>
+
+                        <div class="metric">
+                            <small>resposta escondida</small>
+                            <strong id="hiddenAnswer">—</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>confiança correta</small>
+                            <strong id="confidenceValue">0%</strong>
+                            <div class="bar"><div class="fill" id="confidenceBar" style="width:0%"></div></div>
+                        </div>
+
+                        <div class="metric">
+                            <small>tipo de tarefa</small>
+                            <strong id="taskType">Máscara</strong>
+                        </div>
+
+                        <div class="action-stack">
+                            <button onclick="revealAnswer()">Revelar resposta</button>
+                            <button onclick="nextTrainingStep()">Simular aprendizado</button>
+                            <button onclick="resetScenario()">Reiniciar</button>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="training-log">
+                    <div class="log-row head">
+                        <span>Rodada</span>
+                        <span>O que o modelo aprende</span>
+                        <span>Ganho</span>
+                    </div>
+                    <div id="logBody"></div>
+                </div>
+
+                <div class="legend">
+                    Em larga escala, esse processo permite pré-treinar modelos com enormes volumes de dados sem rótulos manuais.
+                    LLMs, modelos de visão e modelos multimodais usam variações dessa lógica.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Self-Supervised Learning</h3>
+                <p>
+                    O modelo cria uma tarefa de previsão a partir do próprio dado. Ao tentar reconstruir partes escondidas,
+                    aprende estrutura, linguagem, padrões e relações sem depender de rótulos humanos explícitos.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        o dado vira professor de si mesmo.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">masked prediction</span>
+                    <span class="badge">pré-treinamento</span>
+                    <span class="badge">LLMs</span>
+                    <span class="badge">representação</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    texto:{
+        title:"Completar uma palavra escondida dentro de uma frase.",
+        type:"Masked prediction",
+        hidden:"Brasília",
+        confidence:86,
+        words:["O","presidente","do","Brasil","mora","em","[MASK]"],
+        candidates:[
+            ["Brasília",86,true],
+            ["São Paulo",7,false],
+            ["Rio",4,false],
+            ["Lisboa",2,false]
+        ],
+        logs:[
+            ["1","relações entre país, cargo político e capital",18],
+            ["2","estrutura sintática de frases em português",21],
+            ["3","associações culturais e factuais recorrentes",24]
+        ],
+        explanation:"A frase fornece pistas suficientes para o modelo prever o termo escondido. O gabarito não veio de uma pessoa: veio da própria frase."
+    },
+
+    dominio:{
+        title:"Reconstruir um termo técnico escondido em contexto corporativo.",
+        type:"Domain masking",
+        hidden:"inadimplência",
+        confidence:79,
+        words:["O","modelo","estima","probabilidade","de","[MASK]","com","base","no","histórico","do","cliente"],
+        candidates:[
+            ["inadimplência",79,true],
+            ["faturamento",9,false],
+            ["cadastro",7,false],
+            ["contrato",3,false]
+        ],
+        logs:[
+            ["1","vocabulário técnico do domínio de crédito",17],
+            ["2","relações entre probabilidade, histórico e evento de risco",23],
+            ["3","padrões de linguagem usados em decisões financeiras",20]
+        ],
+        explanation:"O contexto técnico orienta a reconstrução. O modelo aprende relações de domínio sem precisar que cada frase seja rotulada manualmente."
+    },
+
+    imagem:{
+        title:"Reconstruir uma parte ausente de uma estrutura visual.",
+        type:"Masked image modeling",
+        hidden:"janela",
+        confidence:74,
+        words:["fachada","prédio","porta","[MASK]","telhado","parede","varanda"],
+        candidates:[
+            ["janela",74,true],
+            ["árvore",11,false],
+            ["carro",8,false],
+            ["nuvem",5,false]
+        ],
+        logs:[
+            ["1","partes visuais que costumam aparecer juntas",16],
+            ["2","estrutura espacial de objetos em uma cena",19],
+            ["3","relações entre composição, forma e contexto visual",22]
+        ],
+        explanation:"Mesmo em imagens, o sistema pode esconder regiões e aprender a reconstruí-las usando o restante da cena como pista."
+    }
+};
+
+let currentScenario = scenarios.texto;
+let revealed = false;
+let stepIndex = 0;
+
+const taskTitle = document.getElementById("taskTitle");
+const maskedSentence = document.getElementById("maskedSentence");
+const candidates = document.getElementById("candidates");
+const hiddenAnswer = document.getElementById("hiddenAnswer");
+const confidenceValue = document.getElementById("confidenceValue");
+const confidenceBar = document.getElementById("confidenceBar");
+const taskType = document.getElementById("taskType");
+const logBody = document.getElementById("logBody");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    resetScenario();
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "texto" ? "Texto natural" : name === "dominio" ? "Linguagem de domínio" : "Estrutura visual"}</h3>
+        <p>${currentScenario.explanation}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O sistema aprende porque compara sua previsão com a parte real que foi escondida artificialmente.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">máscara</span>
+            <span class="badge">previsão</span>
+            <span class="badge">erro</span>
+            <span class="badge">representação</span>
+        </div>
+    `;
+}
+
+function render(){
+    taskTitle.innerText = currentScenario.title;
+    hiddenAnswer.innerText = revealed ? currentScenario.hidden : "—";
+    confidenceValue.innerText = `${revealed ? currentScenario.confidence : 0}%`;
+    confidenceBar.style.width = `${revealed ? currentScenario.confidence : 0}%`;
+    taskType.innerText = currentScenario.type;
+
+    maskedSentence.innerHTML = currentScenario.words.map(w=>{
+        if(w === "[MASK]"){
+            return `<span class="word ${revealed ? "revealed" : "mask"}">${revealed ? currentScenario.hidden : "[MASK]"}</span>`;
+        }
+        return `<span class="word">${w}</span>`;
+    }).join(" ");
+
+    candidates.innerHTML = currentScenario.candidates.map(c=>`
+        <div class="candidate ${revealed && c[2] ? "correct" : ""}" onclick="selectCandidate('${c[0]}', ${c[2]})">
+            <strong>${c[0]}</strong>
+            <div class="bar"><div class="fill" style="width:${revealed ? c[1] : Math.max(8, Math.round(c[1]/3))}%"></div></div>
+            <span>${revealed ? c[1] : Math.max(8, Math.round(c[1]/3))}%</span>
+        </div>
+    `).join("");
+}
+
+function revealAnswer(){
+    revealed = true;
+    render();
+
+    info.innerHTML = `
+        <div class="info-tag">Resposta revelada</div>
+        <h3>${currentScenario.hidden}</h3>
+        <p>
+            A parte escondida é usada como gabarito automático. O modelo tenta prever esse termo
+            e compara sua previsão com o conteúdo real.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Confiança correta:</strong><br>
+                ${currentScenario.confidence}%
+            </p>
+            <p>
+                <strong>Aprendizado:</strong><br>
+                Ao repetir esse processo em milhões ou bilhões de exemplos, o modelo aprende padrões internos dos dados.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">gabarito automático</span>
+            <span class="badge">previsão</span>
+            <span class="badge">contexto</span>
+        </div>
+    `;
+}
+
+function selectCandidate(word, correct){
+    info.innerHTML = `
+        <div class="info-tag">Previsão selecionada</div>
+        <h3>${word}</h3>
+        <p>
+            ${correct
+                ? "Esta previsão coincide com a parte real escondida. O sinal de erro seria baixo."
+                : "Esta previsão não coincide com a parte real escondida. O erro ajudaria o modelo a ajustar suas representações."
+            }
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                No aprendizado auto-supervisionado, o erro entre previsão e trecho real vira sinal de treinamento.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">${correct ? "correta" : "erro"}</span>
+            <span class="badge">sinal de treinamento</span>
+            <span class="badge">representação</span>
+        </div>
+    `;
+}
+
+function nextTrainingStep(){
+    if(stepIndex >= currentScenario.logs.length) return;
+
+    const row = currentScenario.logs[stepIndex];
+
+    const div = document.createElement("div");
+    div.className = "log-row";
+    div.innerHTML = `
+        <span>${row[0]}</span>
+        <span>${row[1]}</span>
+        <span class="good">+${row[2]}%</span>
+    `;
+
+    logBody.appendChild(div);
+    stepIndex++;
+
+    info.innerHTML = `
+        <div class="info-tag">Rodada de aprendizado</div>
+        <h3>${row[1]}</h3>
+        <p>
+            O modelo melhora sua representação interna ao tentar reconstruir partes escondidas
+            e comparar a previsão com o conteúdo real.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Ganho simbólico:</strong><br>
+                +${row[2]}% de compreensão estrutural neste aspecto.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">pré-treinamento</span>
+            <span class="badge">estrutura</span>
+            <span class="badge">padrão</span>
+        </div>
+    `;
+}
+
+function resetScenario(){
+    revealed = false;
+    stepIndex = 0;
+    logBody.innerHTML = `
+        <div class="log-row">
+            <span>—</span>
+            <span>Revele a resposta ou simule rodadas de aprendizado.</span>
+            <span>0%</span>
+        </div>
+    `;
+    render();
+}
+
+setScenario("texto", document.querySelector("button"));
+</script>
+
+</body>
+</html>
