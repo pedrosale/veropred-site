@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Reinforcement Learning | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.rl-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.goal-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.goal{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.env-wrap{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.grid-world{
+    position:relative;
+    min-height:420px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.026) 1px, transparent 1px),
+        rgba(0,0,0,.18);
+    background-size:20% 20%;
+    overflow:hidden;
+    padding:18px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    grid-template-rows:repeat(5,1fr);
+    gap:8px;
+}
+
+.cell{
+    position:relative;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    background:rgba(255,255,255,.025);
+    min-height:60px;
+}
+
+.cell.start{
+    background:rgba(241,194,122,.08);
+    border-color:rgba(241,194,122,.22);
+}
+
+.cell.goal{
+    background:rgba(143,211,167,.12);
+    border-color:rgba(143,211,167,.35);
+}
+
+.cell.obstacle{
+    background:rgba(228,147,115,.12);
+    border-color:rgba(228,147,115,.35);
+}
+
+.cell.path{
+    background:rgba(255,205,120,.09);
+    border-color:rgba(255,211,142,.28);
+}
+
+.agent-dot{
+    position:absolute;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff3c8, #f1c27a 45%, #8a4d20);
+    box-shadow:0 0 34px rgba(244,190,98,.8);
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:5;
+}
+
+.cell-label{
+    position:absolute;
+    left:8px;
+    top:6px;
+    color:#9f927f;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+}
+
+.reward{
+    position:absolute;
+    right:7px;
+    bottom:6px;
+    color:#f4d59d;
+    font-size:11px;
+}
+
+.panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.action-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-top:12px;
+}
+
+.action{
+    border-radius:14px;
+    padding:10px 8px;
+    font-size:12px;
+}
+
+.action.best{
+    border-color:rgba(143,211,167,.45);
+    color:#b7f0c7;
+    background:rgba(143,211,167,.08);
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.log{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:26px;
+    overflow:hidden;
+    background:rgba(0,0,0,.18);
+}
+
+.log-row{
+    display:grid;
+    grid-template-columns:80px 1fr 70px;
+    gap:10px;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.075);
+    color:#ded4c3;
+    font-size:13px;
+}
+
+.log-row.head{
+    color:var(--gold2);
+    background:rgba(255,205,120,.055);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.log-row:last-child{
+    border-bottom:0;
+}
+
+.positive{color:var(--good)}
+.negative{color:var(--bad)}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .env-wrap{grid-template-columns:1fr}
+
+    .rl-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .goal{font-size:23px}
+
+    .grid-world{
+        min-height:360px;
+        gap:6px;
+        padding:12px;
+    }
+
+    .cell{
+        border-radius:12px;
+        min-height:50px;
+    }
+
+    .agent-dot{
+        width:28px;
+        height:28px;
+    }
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Reinforcement Learning</div>
+
+        <h1>Quando consequência vira estratégia.</h1>
+
+        <p class="lead">
+            Reinforcement Learning aprende por interação com um ambiente. O sistema executa ações,
+            recebe recompensas ou punições e ajusta sua estratégia ao longo do tempo.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Melhorar decisões com base nas consequências geradas pelas próprias ações.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                O agente não recebe um gabarito fixo. Ele aprende tentando caminhos,
+                acumulando recompensas e evitando ações que geram perdas.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                ação → consequência → recompensa → estratégia
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Ambiente de Recompensa</h2>
+                <p>
+                    Escolha um cenário e execute episódios. A simulação mostra como a estratégia melhora
+                    quando o agente aprende com recompensas e punições.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('armazem', this)">Armazém</button>
+                <button onclick="setScenario('credito', this)">Política</button>
+                <button onclick="setScenario('atendimento', this)">Atendimento</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="rl-space">
+
+                <div class="goal-box">
+                    <div class="label">Objetivo do agente</div>
+                    <div class="goal" id="goalText"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Ambiente</strong>
+                        <p>O agente observa o estado atual.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Ação</strong>
+                        <p>Escolhe uma ação possível.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Recompensa</strong>
+                        <p>Recebe ganho, perda ou sinal neutro.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Estratégia</strong>
+                        <p>Ajusta o próximo comportamento.</p>
+                    </div>
+                </div>
+
+                <div class="env-wrap">
+
+                    <div class="grid-world" id="gridWorld"></div>
+
+                    <aside class="panel">
+                        <h3>Aprendizado</h3>
+
+                        <div class="metric">
+                            <small>episódio</small>
+                            <strong id="episodeValue">1</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>recompensa acumulada</small>
+                            <strong id="rewardValue">0</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>qualidade da estratégia</small>
+                            <strong id="strategyValue">20%</strong>
+                            <div class="bar"><div class="fill" id="strategyBar" style="width:20%"></div></div>
+                        </div>
+
+                        <div class="metric">
+                            <small>ações disponíveis</small>
+                            <div class="action-row" id="actions"></div>
+                        </div>
+
+                        <button style="width:100%;margin-top:14px" onclick="runEpisode()">Rodar episódio</button>
+                    </aside>
+                </div>
+
+                <div class="log">
+                    <div class="log-row head">
+                        <span>Etapa</span>
+                        <span>Ação</span>
+                        <span>Recompensa</span>
+                    </div>
+                    <div id="logBody"></div>
+                </div>
+
+                <div class="legend">
+                    Em RL real, o agente aprende por muitos episódios. Ele testa ações, observa consequências
+                    e ajusta uma política para maximizar recompensa acumulada ao longo do tempo.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Reinforcement Learning</h3>
+                <p>
+                    O agente aprende interagindo com o ambiente. Cada ação altera o estado e gera uma recompensa,
+                    permitindo que o sistema melhore sua estratégia por experiência.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        não existe gabarito direto; existe consequência acumulada.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">agente</span>
+                    <span class="badge">ambiente</span>
+                    <span class="badge">ação</span>
+                    <span class="badge">recompensa</span>
+                    <span class="badge">política</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    armazem:{
+        title:"Entregar uma caixa no menor caminho evitando obstáculos.",
+        start:0,
+        goal:24,
+        obstacles:[7,13,17],
+        labels:{
+            start:"início",
+            goal:"entrega",
+            obstacle:"colisão"
+        },
+        actions:[
+            {name:"andar", reward:5, best:true},
+            {name:"desviar", reward:8, best:true},
+            {name:"bater", reward:-10, best:false},
+            {name:"esperar", reward:-2, best:false}
+        ],
+        logs:[
+            ["1","anda sem direção e encontra obstáculo",-10],
+            ["2","desvia, mas faz caminho longo",-2],
+            ["3","evita colisão e aproxima da entrega",8],
+            ["4","entrega a caixa corretamente",50]
+        ],
+        finalReward:46,
+        strategy:84,
+        interpretation:"O agente aprende que colisões reduzem recompensa e que desviar de obstáculos aumenta a chance de completar a entrega."
+    },
+    credito:{
+        title:"Ajustar política de aprovação para maximizar retorno ajustado ao risco.",
+        start:0,
+        goal:24,
+        obstacles:[6,12,18],
+        labels:{
+            start:"proposta",
+            goal:"retorno",
+            obstacle:"perda"
+        },
+        actions:[
+            {name:"aprovar bom risco", reward:18, best:true},
+            {name:"revisar zona cinza", reward:10, best:true},
+            {name:"aprovar alto risco", reward:-20, best:false},
+            {name:"recusar bom cliente", reward:-8, best:false}
+        ],
+        logs:[
+            ["1","aprova cliente de alto risco",-20],
+            ["2","recusa cliente rentável por excesso de corte",-8],
+            ["3","envia zona cinza para revisão",10],
+            ["4","aprova perfil de baixo risco e bom retorno",18]
+        ],
+        finalReward:0,
+        strategy:76,
+        interpretation:"O agente aprende que a melhor política não é aprovar tudo nem recusar tudo, mas diferenciar risco, retorno e zona cinzenta."
+    },
+    atendimento:{
+        title:"Escolher a melhor ação para resolver um problema de cliente.",
+        start:0,
+        goal:24,
+        obstacles:[8,14,20],
+        labels:{
+            start:"chamado",
+            goal:"resolução",
+            obstacle:"insatisfação"
+        },
+        actions:[
+            {name:"resolver causa raiz", reward:25, best:true},
+            {name:"encaminhar corretamente", reward:12, best:true},
+            {name:"resposta genérica", reward:-6, best:false},
+            {name:"ignorar urgência", reward:-15, best:false}
+        ],
+        logs:[
+            ["1","responde de forma genérica",-6],
+            ["2","ignora urgência do cliente",-15],
+            ["3","encaminha para área correta",12],
+            ["4","resolve a causa raiz",25]
+        ],
+        finalReward:16,
+        strategy:81,
+        interpretation:"O agente aprende que respostas superficiais geram punição e que resolver a causa raiz maximiza a recompensa."
+    }
+};
+
+let currentScenario = scenarios.armazem;
+let episode = 1;
+
+const goalText = document.getElementById("goalText");
+const gridWorld = document.getElementById("gridWorld");
+const actionsEl = document.getElementById("actions");
+const logBody = document.getElementById("logBody");
+const episodeValue = document.getElementById("episodeValue");
+const rewardValue = document.getElementById("rewardValue");
+const strategyValue = document.getElementById("strategyValue");
+const strategyBar = document.getElementById("strategyBar");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    episode = 1;
+
+    goalText.innerText = currentScenario.title;
+    episodeValue.innerText = episode;
+    rewardValue.innerText = "0";
+    strategyValue.innerText = "20%";
+    strategyBar.style.width = "20%";
+
+    renderGrid(currentScenario);
+    renderActions(currentScenario);
+    clearLog();
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "armazem" ? "Robô em armazém" : name === "credito" ? "Política de crédito" : "Atendimento inteligente"}</h3>
+        <p>
+            O agente começa sem uma estratégia ótima. Ele precisa testar ações, observar recompensas
+            e ajustar seu comportamento ao longo dos episódios.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                ${currentScenario.interpretation}
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">tentativa</span>
+            <span class="badge">consequência</span>
+            <span class="badge">recompensa</span>
+            <span class="badge">adaptação</span>
+        </div>
+    `;
+}
+
+function renderGrid(s){
+    gridWorld.innerHTML = "";
+
+    for(let i=0;i<25;i++){
+        const cell = document.createElement("div");
+        cell.className = "cell";
+
+        if(i === s.start){
+            cell.classList.add("start");
+            cell.innerHTML = `<span class="cell-label">${s.labels.start}</span>`;
+        }
+
+        if(i === s.goal){
+            cell.classList.add("goal");
+            cell.innerHTML = `<span class="cell-label">${s.labels.goal}</span><span class="reward">+50</span>`;
+        }
+
+        if(s.obstacles.includes(i)){
+            cell.classList.add("obstacle");
+            cell.innerHTML = `<span class="cell-label">${s.labels.obstacle}</span><span class="reward">-10</span>`;
+        }
+
+        if([1,2,3,4,9,14,19,24].includes(i) && !s.obstacles.includes(i)){
+            cell.classList.add("path");
+        }
+
+        if(i === s.start){
+            const dot = document.createElement("div");
+            dot.className = "agent-dot";
+            cell.appendChild(dot);
+        }
+
+        gridWorld.appendChild(cell);
+    }
+}
+
+function renderActions(s){
+    actionsEl.innerHTML = "";
+
+    s.actions.forEach(a=>{
+        const btn = document.createElement("button");
+        btn.className = `action ${a.best ? "best" : ""}`;
+        btn.innerText = `${a.name} (${a.reward > 0 ? "+" : ""}${a.reward})`;
+        btn.onclick = () => selectAction(a);
+        actionsEl.appendChild(btn);
+    });
+}
+
+function selectAction(a){
+    info.innerHTML = `
+        <div class="info-tag">Ação selecionada</div>
+        <h3>${a.name}</h3>
+        <p>
+            Esta ação gera recompensa de <strong>${a.reward > 0 ? "+" : ""}${a.reward}</strong>.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Interpretação:</strong><br>
+                ${a.best
+                    ? "A ação tende a melhorar a estratégia porque aproxima o agente do objetivo."
+                    : "A ação tende a piorar a estratégia porque gera custo, atraso, risco ou erro."
+                }
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">ação</span>
+            <span class="badge">recompensa</span>
+            <span class="badge">${a.best ? "reforço positivo" : "punição"}</span>
+        </div>
+    `;
+}
+
+function clearLog(){
+    logBody.innerHTML = `
+        <div class="log-row">
+            <span>—</span>
+            <span>Rode um episódio para observar a sequência de aprendizado.</span>
+            <span>0</span>
+        </div>
+    `;
+}
+
+function runEpisode(){
+    episode += 1;
+    episodeValue.innerText = episode;
+
+    logBody.innerHTML = "";
+
+    let accumulated = 0;
+
+    currentScenario.logs.forEach(row=>{
+        accumulated += row[2];
+
+        const div = document.createElement("div");
+        div.className = "log-row";
+        div.innerHTML = `
+            <span>${row[0]}</span>
+            <span>${row[1]}</span>
+            <span class="${row[2] >= 0 ? "positive" : "negative"}">${row[2] > 0 ? "+" : ""}${row[2]}</span>
+        `;
+        logBody.appendChild(div);
+    });
+
+    rewardValue.innerText = currentScenario.finalReward > 0 ? `+${currentScenario.finalReward}` : currentScenario.finalReward;
+    strategyValue.innerText = `${currentScenario.strategy}%`;
+    strategyBar.style.width = `${currentScenario.strategy}%`;
+
+    moveAgentToGoal();
+
+    info.innerHTML = `
+        <div class="info-tag">Episódio executado</div>
+        <h3>Estratégia atualizada</h3>
+        <p>
+            O agente acumulou recompensas e punições durante a sequência. Com o tempo,
+            ações que aproximam do objetivo passam a ser favorecidas.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Resultado:</strong><br>
+                Recompensa acumulada: ${currentScenario.finalReward > 0 ? "+" : ""}${currentScenario.finalReward}
+            </p>
+            <p>
+                <strong>Leitura:</strong><br>
+                ${currentScenario.interpretation}
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">episódio</span>
+            <span class="badge">aprendizado</span>
+            <span class="badge">política melhorada</span>
+            <span class="badge">recompensa acumulada</span>
+        </div>
+    `;
+}
+
+function moveAgentToGoal(){
+    document.querySelectorAll(".agent-dot").forEach(d=>d.remove());
+
+    const cells = document.querySelectorAll(".cell");
+    const dot = document.createElement("div");
+    dot.className = "agent-dot";
+    cells[currentScenario.goal].appendChild(dot);
+}
+
+setScenario("armazem", document.querySelector("button"));
+</script>
+
+</body>
+</html>
