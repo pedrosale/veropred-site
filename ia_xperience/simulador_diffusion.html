@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Diffusion | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.diff-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.prompt-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.prompt{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.canvas-wrap{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.image-stage{
+    position:relative;
+    min-height:420px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    background:rgba(0,0,0,.22);
+    overflow:hidden;
+}
+
+.noise-field{
+    position:absolute;
+    inset:0;
+    background-size:14px 14px;
+    opacity:1;
+    transition:.65s ease;
+}
+
+.shape{
+    position:absolute;
+    inset:42px;
+    opacity:0;
+    transition:.7s ease;
+    filter:blur(18px);
+}
+
+.shape.samurai{
+    background:
+        radial-gradient(circle at 50% 20%, rgba(241,194,122,.75), transparent 10%),
+        linear-gradient(90deg, transparent 40%, rgba(241,194,122,.55) 41% 45%, transparent 46%),
+        radial-gradient(ellipse at 50% 52%, rgba(120,75,38,.88), transparent 34%),
+        radial-gradient(ellipse at 50% 78%, rgba(45,28,16,.95), transparent 46%);
+}
+
+.shape.city{
+    background:
+        linear-gradient(to top, rgba(241,194,122,.85) 0 12%, transparent 12%),
+        linear-gradient(to top, rgba(95,61,32,.9) 0 38%, transparent 38%),
+        repeating-linear-gradient(90deg, transparent 0 10%, rgba(241,194,122,.35) 10% 13%, transparent 13% 20%),
+        radial-gradient(circle at 50% 28%, rgba(241,194,122,.48), transparent 35%);
+}
+
+.shape.product{
+    background:
+        radial-gradient(ellipse at 50% 56%, rgba(241,194,122,.82), transparent 28%),
+        linear-gradient(145deg, transparent 38%, rgba(255,230,180,.45) 39% 44%, transparent 45%),
+        radial-gradient(circle at 50% 46%, rgba(60,36,18,.9), transparent 22%);
+}
+
+.image-stage.final .shape{
+    opacity:1;
+    filter:blur(0);
+}
+
+.image-stage.final .noise-field{
+    opacity:.18;
+}
+
+.image-stage.mid .shape{
+    opacity:.62;
+    filter:blur(8px);
+}
+
+.image-stage.mid .noise-field{
+    opacity:.48;
+}
+
+.image-stage.low .shape{
+    opacity:.28;
+    filter:blur(15px);
+}
+
+.image-stage.low .noise-field{
+    opacity:.78;
+}
+
+.stage-label{
+    position:absolute;
+    left:22px;
+    top:20px;
+    color:#f4d59d;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    z-index:5;
+    border:1px solid rgba(255,211,142,.20);
+    background:rgba(5,5,5,.50);
+    border-radius:999px;
+    padding:7px 10px;
+    backdrop-filter:blur(8px);
+}
+
+.caption{
+    position:absolute;
+    left:22px;
+    right:22px;
+    bottom:20px;
+    color:#ded4c3;
+    line-height:1.5;
+    font-size:13px;
+    z-index:5;
+    border:1px solid rgba(255,211,142,.16);
+    background:rgba(5,5,5,.52);
+    border-radius:18px;
+    padding:14px;
+    backdrop-filter:blur(8px);
+}
+
+.denoise-panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.denoise-panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.slider-row{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:16px 0;
+}
+
+.slider-row:first-of-type{
+    border-top:0;
+}
+
+.slider-row small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.slider-row strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+input[type="range"]{
+    width:100%;
+    margin-top:12px;
+    accent-color:#f1c27a;
+}
+
+.phase-list{
+    margin-top:12px;
+    display:grid;
+    gap:10px;
+}
+
+.phase{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:16px;
+    padding:12px;
+    background:rgba(255,205,120,.045);
+    transition:.25s ease;
+}
+
+.phase.active{
+    border-color:rgba(255,218,145,.52);
+    background:rgba(255,205,120,.12);
+}
+
+.phase small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:5px;
+}
+
+.phase p{
+    color:#d9cdbc;
+    font-size:12.5px;
+    line-height:1.42;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .canvas-wrap{
+        grid-template-columns:1fr;
+    }
+
+    .diff-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .prompt{
+        font-size:23px;
+    }
+
+    .image-stage{
+        min-height:360px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Diffusion</div>
+
+        <h1>Quando imagem emerge do ruído.</h1>
+
+        <p class="lead">
+            Modelos de diffusion aprendem a remover ruído progressivamente. A geração começa como
+            uma estrutura indefinida e ganha forma a cada etapa de refinamento.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Criar novas imagens, cenas ou composições a partir de um processo gradual de reconstrução.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Em vez de desenhar tudo de uma vez, o sistema parte de ruído e vai removendo incerteza
+                até a imagem se tornar coerente com o prompt.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                ruído → refinamento → imagem
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Processo de Denoising</h2>
+                <p>
+                    Escolha um prompt e mova o estágio de geração. A simulação é visual e conceitual:
+                    mostra a lógica de remoção progressiva de ruído sem executar um modelo real.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('samurai', this)">Samurai</button>
+                <button onclick="setScenario('city', this)">Cidade</button>
+                <button onclick="setScenario('product', this)">Produto</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="diff-space">
+
+                <div class="prompt-box">
+                    <div class="label">Prompt visual</div>
+                    <div class="prompt" id="prompt"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Ruído</strong>
+                        <p>O processo começa sem forma clara.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Sinal</strong>
+                        <p>Traços iniciais começam a aparecer.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Estrutura</strong>
+                        <p>Composição e formas ganham coerência.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Imagem</strong>
+                        <p>O resultado final emerge refinado.</p>
+                    </div>
+                </div>
+
+                <div class="canvas-wrap">
+                    <div class="image-stage low" id="imageStage">
+                        <div class="noise-field" id="noiseField"></div>
+                        <div class="shape samurai" id="shape"></div>
+                        <div class="stage-label" id="stageLabel">Ruído inicial</div>
+                        <div class="caption" id="caption">
+                            O sistema ainda possui muita incerteza visual. A imagem está mais próxima de ruído do que de uma cena coerente.
+                        </div>
+                    </div>
+
+                    <aside class="denoise-panel">
+                        <h3>Denoising</h3>
+
+                        <div class="slider-row">
+                            <small>estágio de geração</small>
+                            <strong id="stageValue">25%</strong>
+                            <input type="range" min="0" max="100" value="25" id="slider" oninput="setStage(this.value)">
+                        </div>
+
+                        <div class="phase-list">
+                            <div class="phase active" id="phase1">
+                                <small>ruído</small>
+                                <p>O campo visual começa quase sem estrutura identificável.</p>
+                            </div>
+
+                            <div class="phase" id="phase2">
+                                <small>sinal</small>
+                                <p>O modelo começa a separar padrões úteis do ruído.</p>
+                            </div>
+
+                            <div class="phase" id="phase3">
+                                <small>estrutura</small>
+                                <p>A cena passa a apresentar composição, volume e direção.</p>
+                            </div>
+
+                            <div class="phase" id="phase4">
+                                <small>refino</small>
+                                <p>Detalhes finais tornam o resultado mais coerente com o prompt.</p>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="legend">
+                    Em diffusion real, o modelo aprende durante o treinamento como adicionar e remover ruído.
+                    Na geração, ele executa o caminho inverso: parte do ruído e aproxima a imagem do prompt.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Diffusion Models</h3>
+                <p>
+                    Modelos de diffusion geram imagens por refinamento gradual. Eles aprendem a reconstruir
+                    dados limpos a partir de versões ruidosas.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        a geração é um processo de redução progressiva de incerteza visual.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">ruído</span>
+                    <span class="badge">denoising</span>
+                    <span class="badge">geração</span>
+                    <span class="badge">imagem</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    samurai:{
+        prompt:"um samurai cyberpunk na chuva",
+        className:"samurai",
+        description:"A composição sugere uma figura central, atmosfera escura e presença dramática."
+    },
+    city:{
+        prompt:"uma cidade futurista ao pôr do sol",
+        className:"city",
+        description:"A estrutura sugere silhuetas urbanas, luzes verticais e atmosfera arquitetônica."
+    },
+    product:{
+        prompt:"um produto premium iluminado em estúdio escuro",
+        className:"product",
+        description:"A forma central sugere objeto destacado, iluminação controlada e estética de luxo."
+    }
+};
+
+const promptEl = document.getElementById("prompt");
+const imageStage = document.getElementById("imageStage");
+const noiseField = document.getElementById("noiseField");
+const shape = document.getElementById("shape");
+const stageLabel = document.getElementById("stageLabel");
+const caption = document.getElementById("caption");
+const slider = document.getElementById("slider");
+const stageValue = document.getElementById("stageValue");
+const info = document.getElementById("info");
+
+let currentScenario = scenarios.samurai;
+
+function generateNoise(){
+    const colors = [
+        "rgba(241,194,122,.20)",
+        "rgba(255,255,255,.10)",
+        "rgba(85,51,25,.35)",
+        "rgba(0,0,0,.55)"
+    ];
+
+    let bg = "";
+    for(let i=0;i<80;i++){
+        const x = Math.floor(Math.random()*100);
+        const y = Math.floor(Math.random()*100);
+        const c = colors[Math.floor(Math.random()*colors.length)];
+        bg += `radial-gradient(circle at ${x}% ${y}%, ${c}, transparent 8%),`;
+    }
+
+    bg += "linear-gradient(135deg, rgba(0,0,0,.6), rgba(80,45,20,.35))";
+    noiseField.style.backgroundImage = bg;
+}
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+
+    promptEl.innerText = currentScenario.prompt;
+
+    shape.className = `shape ${currentScenario.className}`;
+
+    generateNoise();
+    setStage(slider.value);
+
+    info.innerHTML = `
+        <div class="info-tag">Prompt ativo</div>
+        <h3>${currentScenario.prompt}</h3>
+        <p>${currentScenario.description}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O prompt orienta a direção do refinamento. A cada etapa, o sistema remove ruído
+                e aproxima a imagem de uma composição semanticamente coerente.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">prompt</span>
+            <span class="badge">ruído</span>
+            <span class="badge">estrutura</span>
+            <span class="badge">refinamento</span>
+        </div>
+    `;
+}
+
+function setStage(value){
+    value = Number(value);
+
+    stageValue.innerText = `${value}%`;
+
+    imageStage.classList.remove("low","mid","final");
+
+    document.querySelectorAll(".phase").forEach(p=>p.classList.remove("active"));
+
+    if(value < 35){
+        imageStage.classList.add("low");
+        stageLabel.innerText = "Ruído inicial";
+        caption.innerText = "O sistema ainda possui muita incerteza visual. A imagem está mais próxima de ruído do que de uma cena coerente.";
+        document.getElementById("phase1").classList.add("active");
+    } else if(value < 70){
+        imageStage.classList.add("mid");
+        stageLabel.innerText = "Estrutura emergente";
+        caption.innerText = "Traços de forma, composição e direção visual começam a aparecer. O ruído já contém sinal interpretável.";
+        document.getElementById("phase2").classList.add("active");
+        document.getElementById("phase3").classList.add("active");
+    } else {
+        imageStage.classList.add("final");
+        stageLabel.innerText = "Imagem refinada";
+        caption.innerText = "A imagem se aproxima do prompt. O processo de denoising reduziu incerteza e consolidou uma composição coerente.";
+        document.getElementById("phase4").classList.add("active");
+    }
+}
+
+generateNoise();
+setScenario("samurai", document.querySelector("button"));
+setStage(25);
+</script>
+
+</body>
+</html>
