@@ -143,6 +143,61 @@ h1{
     pointer-events:auto;
     transition:.35s ease;
 }
+
+.node.related{
+    transform:scale(1.06);
+    box-shadow:0 0 46px rgba(244,190,98,.34);
+    border-color:rgba(255,218,145,.48);
+    color:#fff3d9;
+}
+
+.node.dimmed{
+    opacity:.32;
+}
+
+.cognitive-svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:1;
+}
+
+.cognitive-line{
+    stroke:rgba(241,194,122,.55);
+    stroke-width:1.4;
+    fill:none;
+    stroke-dasharray:6 8;
+    filter:drop-shadow(0 0 8px rgba(241,194,122,.55));
+    animation:flowLine 2.4s linear infinite;
+}
+
+@keyframes flowLine{
+    from{stroke-dashoffset:80}
+    to{stroke-dashoffset:0}
+}
+
+.flow-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.flow-item{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.055);
+    border-radius:16px;
+    padding:11px 13px;
+    color:#f4d59d;
+    font-size:13px;
+}
+
+.flow-arrow{
+    color:#8f806a;
+    font-size:14px;
+    padding-left:12px;
+}
 .core{
     backdrop-filter:blur(12px);
 }
@@ -370,11 +425,13 @@ h1{
         <p class="lead">
             Selecione cada capacidade para detalhar.        </p>
 
-        <div class="brain" id="brain">
-            <div class="core">
-                <span>DECISÃO<br>SOB INCERTEZA</span>
-            </div>
-        </div>
+<div class="brain" id="brain">
+    <svg class="cognitive-svg" id="cognitiveSvg"></svg>
+
+    <div class="core">
+        <span>DECISÃO<br>SOB INCERTEZA</span>
+    </div>
+</div>
     </main>
 
     <aside class="panel" id="panel">
@@ -403,15 +460,13 @@ Uma exploração das capacidades cognitivas artificiais utilizadas para represen
 <script>
 const modules = [
 {
-
 id:"memoria",
 label:"Memória",
 tech:"RAG",
-
+relacoes:["associacao","atencao","planejamento"],
 simuladores:[
     {label:"Explorar RAG", url:"ia_xperience/simulador_rag.html"}
 ],
-
 x:50,
 y:14,
 title:"Memória",
@@ -427,11 +482,10 @@ exemplo:"Um funcionário pergunta sobre política de reembolso internacional. O 
 id:"associacao",
 label:"Associação",
 tech:"Embeddings",
-
+relacoes:["memoria","atencao"],
 simuladores:[
     {label:"Explorar Embeddings", url:"ia_xperience/simulador_embeddings.html"}
 ],
-
 x:76,
 y:24,
 title:"Associação",
@@ -447,11 +501,10 @@ exemplo:"Uma empresa transforma contratos, e-mails e normas em vetores. Quando a
 id:"atencao",
 label:"Atenção",
 tech:"Transformers",
-
+relacoes:["memoria","sequencia","hibrido"],
 simuladores:[
     {label:"Explorar Attention", url:"ia_xperience/simulador_attention.html"}
 ],
-
 x:84,
 y:48,
 title:"Atenção",
@@ -467,11 +520,10 @@ exemplo:"Na frase 'o troféu não coube na mala porque ela era pequena', o model
 id:"previsao",
 label:"Previsão",
 tech:"Supervisionado",
-
+relacoes:["semi","descoberta","hibrido"],
 simuladores:[
     {label:"Explorar Supervisionado", url:"ia_xperience/simulador_supervisionado.html"}
 ],
-
 x:73,
 y:72,
 title:"Previsão",
@@ -487,11 +539,10 @@ exemplo:"Um banco usa dados históricos de clientes para estimar a probabilidade
 id:"sequencia",
 label:"Sequência",
 tech:"Autoregressivo",
-
+relacoes:["atencao","alinhamento","hibrido"],
 simuladores:[
     {label:"Explorar Autoregressivo", url:"ia_xperience/simulador_autoregressivo.html"}
 ],
-
 x:50,
 y:84,
 title:"Aprendizado Autoregressivo",
@@ -507,11 +558,10 @@ exemplo:"Ao responder uma pergunta, o ChatGPT prevê um token, adiciona ao conte
 id:"descoberta",
 label:"Descoberta",
 tech:"Clustering",
-
+relacoes:["previsao","semi","hibrido"],
 simuladores:[
     {label:"Explorar Clustering", url:"ia_xperience/simulador_clustering.html"}
 ],
-
 x:26,
 y:72,
 title:"Descoberta de Estrutura",
@@ -527,11 +577,10 @@ exemplo:"Uma varejista analisa milhões de clientes e encontra grupos: alto tick
 id:"semi",
 label:"Poucos Rótulos",
 tech:"Semi-supervisionado",
-
+relacoes:["previsao","auto"],
 simuladores:[
     {label:"Explorar Semi-supervisionado", url:"ia_xperience/simulador_semi_supervisionado.html"}
 ],
-
 x:16,
 y:48,
 title:"Aprendizado Semi-Supervisionado",
@@ -547,11 +596,10 @@ exemplo:"Um hospital possui poucos exames com diagnóstico confirmado e milhões
 id:"auto",
 label:"Auto-supervisão",
 tech:"LLMs",
-
+relacoes:["sequencia","atencao"],
 simuladores:[
     {label:"Explorar Auto-supervisão", url:"ia_xperience/simulador_self_supervised.html"}
 ],
-
 x:24,
 y:24,
 title:"Aprendizado Auto-Supervisionado",
@@ -567,12 +615,11 @@ exemplo:"Um LLM lê bilhões de textos e aprende prevendo palavras ou tokens aus
 id:"imaginacao",
 label:"Imaginação",
 tech:"Diffusion / GANs",
-
+relacoes:["auto","hibrido"],
 simuladores:[
     {label:"Explorar Diffusion", url:"ia_xperience/simulador_diffusion.html"},
     {label:"Explorar GANs", url:"ia_xperience/simulador_gans.html"}
 ],
-
 x:12,
 y:14,
 title:"Imaginação",
@@ -588,11 +635,10 @@ exemplo:"Ao pedir 'um samurai cyberpunk na chuva', um modelo de diffusion começ
 id:"adaptacao",
 label:"Adaptação",
 tech:"RL",
-
+relacoes:["alinhamento","planejamento"],
 simuladores:[
     {label:"Explorar RL", url:"ia_xperience/simulador_rl.html"}
 ],
-
 x:88,
 y:14,
 title:"Adaptação",
@@ -608,11 +654,10 @@ exemplo:"Um robô em armazém aprende a pegar caixas, evitar colisões e otimiza
 id:"alinhamento",
 label:"Alinhamento",
 tech:"RLHF",
-
+relacoes:["sequencia","adaptacao","planejamento"],
 simuladores:[
     {label:"Explorar RLHF", url:"ia_xperience/simulador_rlhf.html"}
 ],
-
 x:88,
 y:82,
 title:"Alinhamento",
@@ -628,11 +673,10 @@ exemplo:"Ao receber feedback humano contínuo sobre clareza, utilidade e adequa�
 id:"especializacao",
 label:"Especialização",
 tech:"Fine-tuning",
-
+relacoes:["memoria","hibrido"],
 simuladores:[
     {label:"Explorar Fine-tuning", url:"ia_xperience/simulador_finetuning.html"}
 ],
-
 x:12,
 y:82,
 title:"Especialização",
@@ -648,11 +692,10 @@ exemplo:"Uma seguradora adapta um LLM com apólices, sinistros, regulação e li
 id:"planejamento",
 label:"Planejamento",
 tech:"Agentes",
-
+relacoes:["memoria","alinhamento","hibrido"],
 simuladores:[
     {label:"Explorar Agentes", url:"ia_xperience/simulador_agentes.html"}
 ],
-
 x:50,
 y:4,
 title:"Planejamento",
@@ -668,11 +711,10 @@ exemplo:"Um agente busca documentos, outro resume, outro analisa risco e outro g
 id:"hibrido",
 label:"Sistema Híbrido",
 tech:"Orquestração",
-
+relacoes:["memoria","associacao","atencao","sequencia","planejamento","alinhamento"],
 simuladores:[
     {label:"Explorar Sistemas Híbridos", url:"ia_xperience/simulador_sistemas_hibridos.html"}
 ],
-
 x:50,
 y:94,
 title:"Sistemas Híbridos",
@@ -698,10 +740,22 @@ node.style.top=`calc(${m.y}% - 50px)`;
     node.onclick=()=>selectModule(m.id);
     brain.appendChild(node);
 });
-
 function selectModule(id){
     const m=modules.find(x=>x.id===id);
-    document.querySelectorAll(".node").forEach(n=>n.classList.toggle("active",n.dataset.id===id));
+
+    document.querySelectorAll(".node").forEach(n=>{
+        n.classList.remove("active","related","dimmed");
+
+        if(n.dataset.id===id){
+            n.classList.add("active");
+        }else if(m.relacoes && m.relacoes.includes(n.dataset.id)){
+            n.classList.add("related");
+        }else{
+            n.classList.add("dimmed");
+        }
+    });
+
+    drawCognitiveLines(m);
 
     panel.innerHTML=`
         <div class="panel-tag">Região Cognitiva</div>
@@ -718,41 +772,88 @@ function selectModule(id){
             <p>${m.problema}</p>
         </div>
 
-<div class="section">
-    <h3>Analogia</h3>
-    <p>${m.analogia}</p>
-</div>
+        <div class="section">
+            <h3>Analogia</h3>
+            <p>${m.analogia}</p>
+        </div>
 
-<div class="section">
-    <h3>Exemplo</h3>
-    <p>${m.exemplo}</p>
-</div>
+        <div class="section">
+            <h3>Exemplo</h3>
+            <p>${m.exemplo}</p>
+        </div>
 
-${m.simuladores ? `
-<div class="section">
-    <h3>Simulação Interativa</h3>
+        ${m.relacoes ? `
+        <div class="section">
+            <h3>Fluxo Cognitivo Relacionado</h3>
+            <div class="flow-list">
+                <div class="flow-item">${m.title}</div>
+                ${m.relacoes.map(r=>{
+                    const rel=modules.find(x=>x.id===r);
+                    return `
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-item">${rel.title}</div>
+                    `;
+                }).join("")}
+            </div>
+        </div>
+        ` : ""}
 
-    <div class="sim-links">
-        ${m.simuladores.map(s=>`
-            <a class="sim-link" href="${s.url}">
-                ${s.label} →
-            </a>
-        `).join("")}
-    </div>
-</div>
-` : ""}
+        ${m.simuladores ? `
+        <div class="section">
+            <h3>Simulação Interativa</h3>
 
-<div class="section">
-    <h3>Arquiteturas Relacionadas</h3>
+            <div class="sim-links">
+                ${m.simuladores.map(s=>`
+                    <a class="sim-link" href="${s.url}">
+                        ${s.label} →
+                    </a>
+                `).join("")}
+            </div>
+        </div>
+        ` : ""}
 
-    <div class="badges">
-        ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
-    </div>
-</div>
+        <div class="section">
+            <h3>Arquiteturas Relacionadas</h3>
 
+            <div class="badges">
+                ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
+            </div>
+        </div>
     `;
 }
 
+function drawCognitiveLines(m){
+    const svg=document.getElementById("cognitiveSvg");
+    svg.innerHTML="";
+
+    if(!m.relacoes) return;
+
+    const source=document.querySelector(`.node[data-id="${m.id}"]`);
+    const brainRect=brain.getBoundingClientRect();
+    const sourceRect=source.getBoundingClientRect();
+
+    const x1=sourceRect.left + sourceRect.width/2 - brainRect.left;
+    const y1=sourceRect.top + sourceRect.height/2 - brainRect.top;
+
+    m.relacoes.forEach(relId=>{
+        const target=document.querySelector(`.node[data-id="${relId}"]`);
+        if(!target) return;
+
+        const targetRect=target.getBoundingClientRect();
+
+        const x2=targetRect.left + targetRect.width/2 - brainRect.left;
+        const y2=targetRect.top + targetRect.height/2 - brainRect.top;
+
+        const midX=(x1+x2)/2;
+        const midY=(y1+y2)/2 - 38;
+
+        const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+        path.setAttribute("class","cognitive-line");
+        path.setAttribute("d",`M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`);
+
+        svg.appendChild(path);
+    });
+}
 /* Canvas neural background */
 const canvas=document.getElementById("network");
 const ctx=canvas.getContext("2d");
@@ -764,6 +865,14 @@ function resize(){
 }
 window.addEventListener("resize",resize);
 resize();
+
+window.addEventListener("resize",()=>{
+    const active=document.querySelector(".node.active");
+    if(active){
+        const m=modules.find(x=>x.id===active.dataset.id);
+        drawCognitiveLines(m);
+    }
+});
 
 for(let i=0;i<130;i++){
     particles.push({
