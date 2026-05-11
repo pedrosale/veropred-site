@@ -758,26 +758,15 @@ function selectModule(id){
 
     drawCognitiveLines(m);
 
-panel.innerHTML=`
-    <div class="panel-tag">Região Cognitiva</div>
-    <h2>${m.title}</h2>
-    <p class="subtitle">${m.subtitle}</p>
+    panel.innerHTML=`
+        <div class="panel-tag">Região Cognitiva</div>
+        <h2>${m.title}</h2>
+        <p class="subtitle">${m.subtitle}</p>
 
-    ${m.relacoes ? `
-    <div class="section">
-        <h3>Ativação Cognitiva</h3>
-
-        <p>
-            As linhas douradas representam capacidades cognitivas artificialmente relacionadas.
-            Elas indicam como diferentes arquiteturas podem complementar, ativar ou ampliar esta região dentro de sistemas inteligentes.
-        </p>
-    </div>
-    ` : ""}
-
-    <div class="section">
-        <h3>Função cognitiva</h3>
-        <p>${m.funcao}</p>
-    </div>
+        <div class="section">
+            <h3>Função cognitiva</h3>
+            <p>${m.funcao}</p>
+        </div>
 
         <div class="section">
             <h3>Limitação computacional</h3>
@@ -794,21 +783,15 @@ panel.innerHTML=`
             <p>${m.exemplo}</p>
         </div>
 
-        ${m.relacoes ? `
-        <div class="section">
-            <h3>Capacidades Cognitivas Relacionadas</h3>
-            <div class="flow-list">
-                <div class="flow-item">${m.title}</div>
-                ${m.relacoes.map(r=>{
-                    const rel=modules.find(x=>x.id===r);
-                    return `
-                        <div class="flow-arrow">↓</div>
-                        <div class="flow-item">${rel.title}</div>
-                    `;
-                }).join("")}
-            </div>
-        </div>
-        ` : ""}
+${m.relacoes ? `
+<div class="section">
+    <h3>Ativação Cognitiva</h3>
+
+    <p>
+        As conexões neurais representam capacidades cognitivas artificialmente relacionadas.
+    </p>
+</div>
+` : ""}
 
         ${m.simuladores ? `
         <div class="section">
