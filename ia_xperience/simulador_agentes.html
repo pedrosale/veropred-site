@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Agentes | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.agent-space{
+    position:relative;
+    min-height:700px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.objective-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.objective{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.agent-map{
+    position:relative;
+    min-height:340px;
+    margin-top:20px;
+    border:1px solid rgba(255,211,142,.13);
+    border-radius:28px;
+    background:rgba(0,0,0,.18);
+    overflow:hidden;
+}
+
+.core{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    border:1px solid rgba(255,211,142,.42);
+    background:
+        radial-gradient(circle, rgba(255,214,139,.36), rgba(200,148,79,.13) 48%, rgba(10,8,6,.72));
+    box-shadow:0 0 70px rgba(220,159,78,.28);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:22px;
+    color:#fff1d0;
+    font-family:Georgia,serif;
+    font-size:19px;
+    line-height:1.08;
+}
+
+.agent{
+    position:absolute;
+    width:122px;
+    min-height:86px;
+    border-radius:22px;
+    border:1px solid rgba(255,211,142,.20);
+    background:rgba(255,205,120,.065);
+    backdrop-filter:blur(8px);
+    box-shadow:0 0 28px rgba(206,143,63,.12);
+    padding:13px;
+    cursor:pointer;
+    transition:.3s ease;
+}
+
+.agent:hover,
+.agent.active{
+    transform:scale(1.08);
+    border-color:rgba(255,218,145,.64);
+    box-shadow:0 0 58px rgba(244,190,98,.34);
+    background:rgba(255,205,120,.12);
+}
+
+.agent small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    margin-bottom:6px;
+}
+
+.agent strong{
+    display:block;
+    color:#fff;
+    font-size:14px;
+    line-height:1.15;
+}
+
+.agent span{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.35;
+    margin-top:6px;
+}
+
+.a1{left:50%;top:20px;transform:translateX(-50%)}
+.a2{right:34px;top:112px}
+.a3{right:78px;bottom:30px}
+.a4{left:78px;bottom:30px}
+.a5{left:34px;top:112px}
+
+.agent-line{
+    position:absolute;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,211,142,.45), transparent);
+    transform-origin:left center;
+    opacity:.55;
+    pointer-events:none;
+}
+
+.output{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:26px;
+    padding:22px;
+    background:linear-gradient(180deg, rgba(17,12,8,.72), rgba(5,5,5,.82));
+}
+
+.output p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:700px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:720px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .agent-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .agent-map{
+        min-height:430px;
+    }
+
+    .core{
+        width:126px;
+        height:126px;
+        font-size:16px;
+    }
+
+    .agent{
+        width:108px;
+        min-height:82px;
+        padding:11px;
+    }
+
+    .a1{top:18px}
+    .a2{right:18px;top:132px}
+    .a3{right:42px;bottom:28px}
+    .a4{left:42px;bottom:28px}
+    .a5{left:18px;top:132px}
+
+    .objective{
+        font-size:23px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Agentes</div>
+
+        <h1>Quando intenção vira execução coordenada.</h1>
+
+        <p class="lead">
+            Agentes de IA transformam objetivos em etapas, usam ferramentas, delegam tarefas,
+            revisam resultados e iteram até produzir uma entrega.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Transformar uma intenção em sequência de ações coordenadas.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Em vez de apenas responder, o sistema organiza um plano, executa partes do trabalho,
+                consulta recursos e ajusta o caminho conforme os resultados.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                objetivo → plano → ferramentas → revisão → entrega
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Orquestração de Agentes</h2>
+                <p>
+                    Escolha um objetivo para ver como agentes especializados dividem o trabalho,
+                    trocam contexto e convergem para uma saída final.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('relatorio', this)">Relatório</button>
+                <button onclick="setScenario('credito', this)">Crédito</button>
+                <button onclick="setScenario('juridico', this)">Jurídico</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="agent-space" id="space">
+
+                <div class="objective-box">
+                    <div class="label">Objetivo do usuário</div>
+                    <div class="objective" id="objective"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Planejar</strong>
+                        <p>Quebrar o objetivo em etapas executáveis.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Distribuir</strong>
+                        <p>Enviar tarefas para agentes especializados.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Executar</strong>
+                        <p>Usar ferramentas, dados e documentos.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Revisar</strong>
+                        <p>Verificar coerência, riscos e lacunas.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 5</small>
+                        <strong>Entregar</strong>
+                        <p>Consolidar a resposta final.</p>
+                    </div>
+                </div>
+
+                <div class="agent-map" id="agentMap">
+                    <div class="core">Objetivo<br>Central</div>
+                </div>
+
+                <div class="output">
+                    <div class="label">Entrega consolidada</div>
+                    <p id="outputText"></p>
+                </div>
+
+                <div class="legend">
+                    Em sistemas reais, agentes podem chamar APIs, consultar documentos, escrever código,
+                    revisar respostas, acionar ferramentas externas e coordenar múltiplas etapas.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Agentes de IA</h3>
+                <p>
+                    Agentes expandem o papel do modelo: em vez de apenas gerar texto,
+                    eles planejam, executam, usam ferramentas e iteram sobre resultados.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        um agente transforma uma intenção em um fluxo organizado de ações.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">Planejamento</span>
+                    <span class="badge">Tool calling</span>
+                    <span class="badge">Workflow</span>
+                    <span class="badge">Revisão</span>
+                    <span class="badge">Orquestração</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    relatorio: {
+        title:"Relatório executivo",
+        objective:"Criar um relatório executivo sobre queda de retenção de clientes.",
+        output:"O sistema consolida um relatório com diagnóstico inicial, hipóteses de churn, evidências nos dados, riscos operacionais, prioridades de ação e recomendações executivas.",
+        agents:[
+            {
+                role:"Planejador",
+                task:"Decompõe o objetivo em perguntas analíticas e define a sequência de trabalho.",
+                detail:"Transforma uma solicitação ampla em subtarefas: entender queda, buscar evidências, formular hipóteses, revisar riscos e consolidar narrativa."
+            },
+            {
+                role:"Buscador",
+                task:"Localiza dados, documentos e sinais relevantes.",
+                detail:"Busca indicadores de churn, reclamações, tickets de suporte, pesquisas NPS e histórico de contato com clientes."
+            },
+            {
+                role:"Analista",
+                task:"Interpreta evidências e identifica padrões.",
+                detail:"Compara segmentos, canais, períodos, reclamações e perfis de clientes para encontrar sinais que expliquem a queda."
+            },
+            {
+                role:"Revisor",
+                task:"Verifica coerência, lacunas e riscos de interpretação.",
+                detail:"Testa se as hipóteses estão sustentadas por evidências e sinaliza pontos frágeis antes da entrega final."
+            },
+            {
+                role:"Redator",
+                task:"Consolida a entrega em linguagem executiva.",
+                detail:"Transforma análises dispersas em um relatório claro, priorizado e orientado à decisão."
+            }
+        ]
+    },
+
+    credito: {
+        title:"Decisão de crédito",
+        objective:"Avaliar uma proposta de crédito PJ com sinais mistos de risco.",
+        output:"O sistema consolida uma recomendação com leitura de score, sinais de alerta, capacidade financeira, inconsistências cadastrais, justificativa da decisão e encaminhamento para aprovação, recusa ou revisão manual.",
+        agents:[
+            {
+                role:"Planejador",
+                task:"Define critérios da análise de crédito.",
+                detail:"Organiza a avaliação em score, renda, endividamento, histórico, inconsistências e exposição potencial."
+            },
+            {
+                role:"Coletor",
+                task:"Busca dados cadastrais, financeiros e comportamentais.",
+                detail:"Consulta bases internas, histórico de pagamento, documentos, limites e informações declaradas."
+            },
+            {
+                role:"Analista de Risco",
+                task:"Avalia probabilidade de inadimplência e sinais de alerta.",
+                detail:"Interpreta score, atrasos, concentração de risco, divergências e exposição esperada."
+            },
+            {
+                role:"Validador",
+                task:"Revisa inconsistências e necessidade de análise manual.",
+                detail:"Identifica se a proposta possui sinais que impedem decisão automática segura."
+            },
+            {
+                role:"Decisor",
+                task:"Consolida recomendação de crédito.",
+                detail:"Traduz a análise em decisão acionável: aprovar, negar ou encaminhar para revisão."
+            }
+        ]
+    },
+
+    juridico: {
+        title:"Análise contratual",
+        objective:"Revisar um contrato para identificar riscos relevantes antes da assinatura.",
+        output:"O sistema consolida uma leitura de riscos contratuais, destacando cláusulas críticas, obrigações sensíveis, penalidades, pontos de negociação e recomendações para revisão jurídica.",
+        agents:[
+            {
+                role:"Planejador",
+                task:"Define a estrutura da revisão contratual.",
+                detail:"Organiza a análise em escopo, obrigações, penalidades, confidencialidade, propriedade intelectual e rescisão."
+            },
+            {
+                role:"Leitor",
+                task:"Extrai cláusulas e termos relevantes.",
+                detail:"Identifica trechos que tratam de prazo, exclusividade, multa, responsabilidade, sigilo e direitos sobre entregáveis."
+            },
+            {
+                role:"Analista Jurídico",
+                task:"Interpreta riscos e ambiguidades.",
+                detail:"Avalia se as cláusulas geram exposição desproporcional, obrigações amplas ou margem para disputa."
+            },
+            {
+                role:"Revisor",
+                task:"Confere lacunas, conflitos e pontos sensíveis.",
+                detail:"Verifica incoerências internas, ausência de limites e termos que precisam ser renegociados."
+            },
+            {
+                role:"Sintetizador",
+                task:"Gera resumo executivo para decisão.",
+                detail:"Transforma a análise jurídica em pontos claros para aprovar, negociar ou rejeitar."
+            }
+        ]
+    }
+};
+
+const objectiveEl = document.getElementById("objective");
+const outputText = document.getElementById("outputText");
+const agentMap = document.getElementById("agentMap");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const scenario = scenarios[name];
+
+    objectiveEl.innerText = scenario.objective;
+    outputText.innerText = scenario.output;
+
+    renderAgents(scenario);
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${scenario.title}</h3>
+        <p>
+            O objetivo é dividido entre agentes especializados. Cada agente executa uma parte
+            da tarefa e contribui para a entrega consolidada.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                Agentes não são apenas respostas em sequência. Eles representam uma forma de
+                organizar planejamento, execução, revisão e síntese em um mesmo fluxo.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">objetivo</span>
+            <span class="badge">plano</span>
+            <span class="badge">execução</span>
+            <span class="badge">revisão</span>
+            <span class="badge">entrega</span>
+        </div>
+    `;
+}
+
+function renderAgents(scenario){
+    [...agentMap.querySelectorAll(".agent,.agent-line")].forEach(el=>el.remove());
+
+    const classes = ["a1","a2","a3","a4","a5"];
+
+    scenario.agents.forEach((agent, index)=>{
+        const el = document.createElement("div");
+        el.className = `agent ${classes[index]}`;
+        el.innerHTML = `
+            <small>Agente ${index + 1}</small>
+            <strong>${agent.role}</strong>
+            <span>${agent.task}</span>
+        `;
+        el.onclick = () => selectAgent(agent, el);
+        agentMap.appendChild(el);
+    });
+
+    setTimeout(drawLines, 30);
+}
+
+function drawLines(){
+    [...agentMap.querySelectorAll(".agent-line")].forEach(el=>el.remove());
+
+    const core = agentMap.querySelector(".core");
+    const coreRect = core.getBoundingClientRect();
+    const mapRect = agentMap.getBoundingClientRect();
+
+    const x1 = coreRect.left + coreRect.width/2 - mapRect.left;
+    const y1 = coreRect.top + coreRect.height/2 - mapRect.top;
+
+    document.querySelectorAll(".agent").forEach(agent=>{
+        const rect = agent.getBoundingClientRect();
+        const x2 = rect.left + rect.width/2 - mapRect.left;
+        const y2 = rect.top + rect.height/2 - mapRect.top;
+
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+        const line = document.createElement("div");
+        line.className = "agent-line";
+        line.style.left = `${x1}px`;
+        line.style.top = `${y1}px`;
+        line.style.width = `${dist}px`;
+        line.style.transform = `rotate(${angle}deg)`;
+
+        agentMap.appendChild(line);
+    });
+}
+
+function selectAgent(agent, el){
+    document.querySelectorAll(".agent").forEach(a=>a.classList.remove("active"));
+    el.classList.add("active");
+
+    info.innerHTML = `
+        <div class="info-tag">Agente selecionado</div>
+        <h3>${agent.role}</h3>
+        <p>${agent.task}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Papel no fluxo:</strong><br>
+                ${agent.detail}
+            </p>
+            <p>
+                <strong>Contribuição cognitiva:</strong><br>
+                Este agente reduz complexidade ao assumir uma parte especializada do trabalho
+                dentro da cadeia de execução.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">especialização</span>
+            <span class="badge">coordenação</span>
+            <span class="badge">contexto</span>
+            <span class="badge">execução</span>
+        </div>
+    `;
+}
+
+window.addEventListener("resize", drawLines);
+
+setScenario("relatorio", document.querySelector("button"));
+</script>
+
+</body>
+</html>
