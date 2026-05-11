@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Fine-tuning | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.ft-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.domain-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.domain-title{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.model-flow{
+    display:grid;
+    grid-template-columns:1fr 90px 1fr;
+    gap:16px;
+    margin-top:18px;
+    align-items:stretch;
+}
+
+.model-card{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+    min-height:330px;
+}
+
+.model-card h3{
+    font-family:Georgia,serif;
+    font-size:30px;
+    font-weight:500;
+    margin-bottom:10px;
+}
+
+.model-card p{
+    color:#ded4c3;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f1c27a;
+    font-family:Georgia,serif;
+    font-size:34px;
+    opacity:.92;
+}
+
+.response{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.16);
+    border-radius:22px;
+    padding:18px;
+    background:rgba(5,5,5,.36);
+    min-height:170px;
+}
+
+.response small{
+    display:block;
+    color:#9f927f;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.response p{
+    color:#ded4c3;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.training-data{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.data-card{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:18px;
+    padding:14px;
+    background:rgba(255,205,120,.045);
+    transition:.25s ease;
+}
+
+.data-card.active{
+    border-color:rgba(255,218,145,.58);
+    background:rgba(255,205,120,.13);
+    box-shadow:0 0 34px rgba(244,190,98,.18);
+}
+
+.data-card small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.data-card p{
+    color:#d9cdbc;
+    font-size:12.5px;
+    line-height:1.45;
+}
+
+.metrics{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:26px;
+    padding:20px;
+    background:rgba(0,0,0,.18);
+}
+
+.metrics h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:13px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:22px;
+    margin-top:4px;
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .model-flow{grid-template-columns:1fr}
+
+    .arrow{padding:4px}
+
+    .training-data{grid-template-columns:1fr}
+
+    .ft-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .domain-title{font-size:23px}
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Fine-tuning</div>
+
+        <h1>Quando um modelo geral aprende um domínio.</h1>
+
+        <p class="lead">
+            Fine-tuning adapta um modelo já treinado para um contexto específico.
+            Em vez de ensinar tudo do zero, o ajuste fino especializa comportamento, linguagem e critérios.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Transferir uma capacidade geral para um domínio técnico, regulatório ou operacional específico.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                O modelo já possui conhecimento amplo. O fine-tuning ajusta sua forma de responder
+                para ficar mais aderente a exemplos e padrões de um domínio.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                modelo geral → exemplos do domínio → modelo especializado
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Ajuste Fino de Domínio</h2>
+                <p>
+                    Escolha um domínio para comparar como um modelo geral responderia antes e depois
+                    de receber exemplos especializados.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('seguros', this)">Seguros</button>
+                <button onclick="setScenario('credito', this)">Crédito</button>
+                <button onclick="setScenario('juridico', this)">Jurídico</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="ft-space">
+
+                <div class="domain-box">
+                    <div class="label">Domínio de especialização</div>
+                    <div class="domain-title" id="domainTitle"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Base geral</strong>
+                        <p>Modelo amplo, treinado em muitos tipos de dados.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Exemplos</strong>
+                        <p>Casos, linguagem e padrões do domínio.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Ajuste</strong>
+                        <p>O comportamento é calibrado pelos exemplos.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Especialização</strong>
+                        <p>As respostas ficam mais aderentes ao contexto.</p>
+                    </div>
+                </div>
+
+                <div class="model-flow">
+                    <div class="model-card">
+                        <h3>Antes</h3>
+                        <p>Modelo geral: responde de forma ampla, plausível, mas pouco aderente ao domínio.</p>
+
+                        <div class="response">
+                            <small>Resposta geral</small>
+                            <p id="beforeResponse"></p>
+                        </div>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="model-card">
+                        <h3>Depois</h3>
+                        <p>Modelo ajustado: usa linguagem, critérios e estrutura mais próximos do domínio.</p>
+
+                        <div class="response">
+                            <small>Resposta especializada</small>
+                            <p id="afterResponse"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="training-data" id="trainingData"></div>
+
+                <div class="metrics">
+                    <h3>Ganho de aderência</h3>
+
+                    <div class="metric">
+                        <small>linguagem do domínio</small>
+                        <strong id="metricLanguage">0%</strong>
+                        <div class="bar"><div class="fill" id="barLanguage"></div></div>
+                    </div>
+
+                    <div class="metric">
+                        <small>critério técnico</small>
+                        <strong id="metricCriteria">0%</strong>
+                        <div class="bar"><div class="fill" id="barCriteria"></div></div>
+                    </div>
+
+                    <div class="metric">
+                        <small>estrutura da resposta</small>
+                        <strong id="metricStructure">0%</strong>
+                        <div class="bar"><div class="fill" id="barStructure"></div></div>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    Fine-tuning não é “dar documentos para o modelo consultar”. Isso seria mais próximo de RAG.
+                    Fine-tuning altera o comportamento aprendido do modelo a partir de exemplos de treinamento.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Fine-tuning</h3>
+                <p>
+                    Fine-tuning especializa um modelo geral para responder melhor em um domínio específico.
+                    Ele ajusta padrões de linguagem, formato, critérios e comportamento.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        não é buscar contexto externo; é alterar a forma como o modelo responde.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">domain adaptation</span>
+                    <span class="badge">instruction tuning</span>
+                    <span class="badge">modelo especializado</span>
+                    <span class="badge">ajuste fino</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    seguros:{
+        title:"Modelo especializado em análise de sinistros e apólices.",
+        before:"O sinistro deve ser analisado com base nas informações fornecidas pelo cliente e nas regras gerais da seguradora.",
+        after:"A análise deve verificar cobertura contratada, exclusões da apólice, prazo de aviso, documentação comprobatória, nexo entre evento e dano, franquia aplicável e eventual necessidade de regulação técnica.",
+        examples:[
+            ["Apólices","cláusulas, coberturas, exclusões e franquias"],
+            ["Sinistros","evento, dano, documentação e nexo causal"],
+            ["Regulação","critérios técnicos para aceite, pendência ou negativa"]
+        ],
+        metrics:{language:88, criteria:91, structure:86},
+        explanation:"O modelo passa a usar termos e critérios próprios do mercado segurador, deixando de responder apenas de forma genérica."
+    },
+
+    credito:{
+        title:"Modelo especializado em decisão de crédito PJ.",
+        before:"A proposta deve ser aprovada se o cliente apresentar bom perfil financeiro e baixa chance de inadimplência.",
+        after:"A decisão deve considerar score, capacidade de pagamento, exposição agregada, garantias, histórico de atraso, concentração setorial, divergências cadastrais e política de alçadas para aprovação automática ou revisão manual.",
+        examples:[
+            ["Score","probabilidade de inadimplência e ordenação de risco"],
+            ["Política","cutoff, alçadas, exceções e zona cinzenta"],
+            ["Exposição","limite, garantias e perda esperada"]
+        ],
+        metrics:{language:90, criteria:94, structure:89},
+        explanation:"O modelo aprende a estruturar respostas com lógica de risco, política de crédito e critérios decisórios."
+    },
+
+    juridico:{
+        title:"Modelo especializado em revisão contratual.",
+        before:"O contrato deve ser revisado para verificar se existem riscos, obrigações excessivas ou cláusulas prejudiciais.",
+        after:"A revisão deve identificar obrigações principais, penalidades, limitação de responsabilidade, exclusividade, confidencialidade, propriedade intelectual, hipóteses de rescisão, foro, prazo e cláusulas que exigem renegociação.",
+        examples:[
+            ["Cláusulas","obrigações, penalidades e responsabilidade"],
+            ["Risco jurídico","ambiguidade, assimetria e exposição futura"],
+            ["Negociação","pontos críticos para revisão antes da assinatura"]
+        ],
+        metrics:{language:86, criteria:89, structure:92},
+        explanation:"O modelo passa a organizar a resposta como uma análise contratual, com tópicos de risco e pontos de negociação."
+    }
+};
+
+const domainTitle = document.getElementById("domainTitle");
+const beforeResponse = document.getElementById("beforeResponse");
+const afterResponse = document.getElementById("afterResponse");
+const trainingData = document.getElementById("trainingData");
+const metricLanguage = document.getElementById("metricLanguage");
+const metricCriteria = document.getElementById("metricCriteria");
+const metricStructure = document.getElementById("metricStructure");
+const barLanguage = document.getElementById("barLanguage");
+const barCriteria = document.getElementById("barCriteria");
+const barStructure = document.getElementById("barStructure");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const s = scenarios[name];
+
+    domainTitle.innerText = s.title;
+    beforeResponse.innerText = s.before;
+    afterResponse.innerText = s.after;
+
+    trainingData.innerHTML = "";
+    s.examples.forEach((item, index)=>{
+        const card = document.createElement("div");
+        card.className = "data-card active";
+        card.innerHTML = `
+            <small>Exemplo ${index + 1}</small>
+            <p><strong style="color:#f4d59d">${item[0]}</strong><br>${item[1]}</p>
+        `;
+        trainingData.appendChild(card);
+    });
+
+    setMetric(metricLanguage, barLanguage, s.metrics.language);
+    setMetric(metricCriteria, barCriteria, s.metrics.criteria);
+    setMetric(metricStructure, barStructure, s.metrics.structure);
+
+    info.innerHTML = `
+        <div class="info-tag">Domínio ativo</div>
+        <h3>${name === "seguros" ? "Seguros" : name === "credito" ? "Crédito PJ" : "Jurídico"}</h3>
+        <p>${s.explanation}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O fine-tuning aumenta aderência ao domínio porque o modelo aprende exemplos
+                de linguagem, estrutura e critérios esperados naquele contexto.
+            </p>
+            <p>
+                <strong>Diferença para RAG:</strong><br>
+                RAG recupera contexto externo. Fine-tuning altera o comportamento do modelo.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">especialização</span>
+            <span class="badge">exemplos</span>
+            <span class="badge">domínio</span>
+            <span class="badge">comportamento</span>
+        </div>
+    `;
+}
+
+function setMetric(labelEl, barEl, value){
+    labelEl.innerText = `${value}%`;
+    barEl.style.width = `${value}%`;
+}
+
+setScenario("seguros", document.querySelector("button"));
+</script>
+
+</body>
+</html>
