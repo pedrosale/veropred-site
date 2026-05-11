@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Embeddings | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:620px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 300px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.space{
+    position:relative;
+    min-height:620px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(200,148,79,.12), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+}
+
+.axis{
+    position:absolute;
+    background:rgba(255,220,160,.10);
+}
+
+.axis.x{
+    left:8%;
+    right:8%;
+    top:50%;
+    height:1px;
+}
+
+.axis.y{
+    top:8%;
+    bottom:8%;
+    left:50%;
+    width:1px;
+}
+
+.axis-label{
+    position:absolute;
+    color:#8f806a;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.label-top{left:52%;top:22px}
+.label-bottom{left:52%;bottom:22px}
+.label-left{left:22px;top:52%}
+.label-right{right:22px;top:52%}
+
+.point{
+    position:absolute;
+    transform:translate(-50%,-50%);
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    border:1px solid rgba(255,211,142,.28);
+    background:radial-gradient(circle, rgba(238,188,105,.28), rgba(70,44,18,.34) 45%, rgba(10,8,6,.72));
+    box-shadow:0 0 34px rgba(206,143,63,.22);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px;
+    color:#ffe6b8;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.35s ease;
+    backdrop-filter:blur(8px);
+}
+
+.point:hover,
+.point.active{
+    transform:translate(-50%,-50%) scale(1.16);
+    box-shadow:0 0 72px rgba(244,190,98,.58);
+    border-color:rgba(255,218,145,.75);
+    color:#fff;
+    z-index:10;
+}
+
+.cluster{
+    position:absolute;
+    border:1px solid rgba(255,211,142,.13);
+    border-radius:50%;
+    background:rgba(255,205,120,.025);
+    pointer-events:none;
+}
+
+.line{
+    position:absolute;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,211,142,.45), transparent);
+    transform-origin:left center;
+    pointer-events:none;
+    opacity:.55;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:620px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.legend{
+    position:absolute;
+    left:24px;
+    bottom:22px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+    max-width:440px;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .space{
+        min-height:560px;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:640px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .space{
+        min-height:520px;
+        border-radius:26px;
+    }
+
+    .point{
+        width:72px;
+        height:72px;
+        font-size:10px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Embeddings</div>
+
+        <h1>Quando significado vira posição.</h1>
+
+        <p class="lead">
+            Embeddings transformam palavras, documentos, imagens ou eventos em vetores.
+            A ideia central é simples: elementos com significados parecidos ficam próximos
+            no espaço matemático.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Aproximar ideias com significados parecidos, mesmo usando palavras diferentes.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Em vez de buscar apenas palavras iguais, o sistema passa a comparar proximidade
+                de significado.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                significado → vetor → distância
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Espaço Semântico</h2>
+                <p>
+                    Clique nas palavras para observar como conceitos próximos compartilham regiões.
+                    A simulação é ilustrativa: mostra a lógica dos embeddings sem executar um modelo real.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('geral', this)">Geral</button>
+                <button onclick="setScenario('empresa', this)">Empresa</button>
+                <button onclick="setScenario('risco', this)">Risco</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="space" id="space">
+                <div class="axis x"></div>
+                <div class="axis y"></div>
+
+                <div class="axis-label label-top">mais institucional</div>
+                <div class="axis-label label-bottom">mais cotidiano</div>
+                <div class="axis-label label-left">mais humano</div>
+                <div class="axis-label label-right">mais técnico</div>
+
+                <div class="legend">
+                    Quanto menor a distância entre os pontos, maior a proximidade semântica.
+                    Palavras diferentes podem ficar próximas quando carregam sentido parecido.
+                </div>
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Embeddings</h3>
+                <p>
+                    Embeddings permitem que sistemas comparem significado matematicamente.
+                    Eles são a base de busca semântica, recomendação, RAG e memória vetorial.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        não é comparar palavras iguais; é comparar proximidade de sentido.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">Busca semântica</span>
+                    <span class="badge">RAG</span>
+                    <span class="badge">Recomendação</span>
+                    <span class="badge">Memória vetorial</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    geral: [
+        {word:"rei", x:38, y:30, group:"poder", desc:"Conceito associado a autoridade, hierarquia e monarquia."},
+        {word:"rainha", x:43, y:32, group:"poder", desc:"Fica próxima de rei por compartilhar significado institucional e relacional."},
+        {word:"princesa", x:47, y:38, group:"poder", desc:"Relacionada ao mesmo campo semântico de monarquia e família real."},
+        {word:"banana", x:24, y:76, group:"alimento", desc:"Distante de monarquia; próxima de conceitos alimentares e cotidianos."},
+        {word:"maçã", x:30, y:72, group:"alimento", desc:"Próxima de banana por pertencer ao campo semântico de frutas."},
+        {word:"carro", x:72, y:62, group:"objeto", desc:"Objeto técnico/cotidiano, distante de frutas e de monarquia."},
+        {word:"motor", x:80, y:55, group:"objeto", desc:"Mais próximo de carro por relação técnica e funcional."}
+    ],
+    empresa: [
+        {word:"contrato", x:67, y:34, group:"juridico", desc:"Documento formal ligado a obrigações, cláusulas e relações institucionais."},
+        {word:"cláusula", x:74, y:30, group:"juridico", desc:"Próxima de contrato por fazer parte da estrutura jurídica do documento."},
+        {word:"norma", x:62, y:26, group:"juridico", desc:"Relacionada a regras, governança e obrigações formais."},
+        {word:"férias", x:36, y:64, group:"rh", desc:"Conceito de RH ligado a direito trabalhista e gestão de pessoas."},
+        {word:"licença", x:42, y:58, group:"rh", desc:"Próxima de férias por relação com ausência formal e política interna."},
+        {word:"reembolso", x:56, y:54, group:"financeiro", desc:"Ligado a política corporativa, despesas e aprovação."},
+        {word:"despesa", x:62, y:58, group:"financeiro", desc:"Próxima de reembolso por relação financeira e operacional."}
+    ],
+    risco: [
+        {word:"inadimplência", x:70, y:36, group:"credito", desc:"Conceito ligado a atraso, risco de crédito e perda esperada."},
+        {word:"atraso", x:65, y:42, group:"credito", desc:"Próximo de inadimplência por relação direta com descumprimento financeiro."},
+        {word:"score", x:78, y:48, group:"credito", desc:"Medida técnica usada para estimar risco e ordenar decisões."},
+        {word:"fraude", x:44, y:36, group:"risco", desc:"Evento associado a comportamento anômalo e intenção de enganar."},
+        {word:"anomalia", x:38, y:43, group:"risco", desc:"Próxima de fraude porque indica padrão incomum que exige investigação."},
+        {word:"capital", x:56, y:70, group:"financeiro", desc:"Conceito econômico ligado a alocação, retorno e proteção contra perdas."},
+        {word:"RAROC", x:64, y:74, group:"financeiro", desc:"Próximo de capital por relacionar retorno ajustado ao risco."}
+    ]
+};
+
+const space = document.getElementById("space");
+const info = document.getElementById("info");
+
+function clearSpace(){
+    [...space.querySelectorAll(".point,.cluster,.line")].forEach(el=>el.remove());
+}
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    clearSpace();
+
+    const data = scenarios[name];
+
+    drawClusters(data);
+    drawLines(data);
+    drawPoints(data);
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "geral" ? "Significados próximos" : name === "empresa" ? "Busca corporativa" : "Risco e decisão"}</h3>
+        <p>
+            Os pontos representam conceitos convertidos em posições. Quanto mais próximos,
+            maior a semelhança de significado dentro deste cenário.
+        </p>
+        <div class="explain">
+            <p>
+                <strong>Use a simulação:</strong><br>
+                clique em qualquer ponto para ver por que ele está próximo de alguns conceitos
+                e distante de outros.
+            </p>
+        </div>
+    `;
+}
+
+function drawClusters(data){
+    const groups = {};
+    data.forEach(d=>{
+        if(!groups[d.group]) groups[d.group] = [];
+        groups[d.group].push(d);
+    });
+
+    Object.values(groups).forEach(group=>{
+        const avgX = group.reduce((s,d)=>s+d.x,0)/group.length;
+        const avgY = group.reduce((s,d)=>s+d.y,0)/group.length;
+
+        const cluster = document.createElement("div");
+        cluster.className = "cluster";
+        cluster.style.left = `${avgX - 15}%`;
+        cluster.style.top = `${avgY - 15}%`;
+        cluster.style.width = `30%`;
+        cluster.style.height = `30%`;
+        space.appendChild(cluster);
+    });
+}
+
+function drawLines(data){
+    for(let i=0;i<data.length;i++){
+        for(let j=i+1;j<data.length;j++){
+            if(data[i].group === data[j].group){
+                const line = document.createElement("div");
+                line.className = "line";
+
+                const x1 = data[i].x;
+                const y1 = data[i].y;
+                const x2 = data[j].x;
+                const y2 = data[j].y;
+
+                const dx = x2 - x1;
+                const dy = y2 - y1;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+                line.style.left = `${x1}%`;
+                line.style.top = `${y1}%`;
+                line.style.width = `${dist}%`;
+                line.style.transform = `rotate(${angle}deg)`;
+
+                space.appendChild(line);
+            }
+        }
+    }
+}
+
+function drawPoints(data){
+    data.forEach(d=>{
+        const point = document.createElement("div");
+        point.className = "point";
+        point.style.left = `${d.x}%`;
+        point.style.top = `${d.y}%`;
+        point.innerText = d.word;
+
+        point.onclick = () => selectPoint(d, point, data);
+
+        space.appendChild(point);
+    });
+}
+
+function selectPoint(d, el, data){
+    document.querySelectorAll(".point").forEach(p=>p.classList.remove("active"));
+    el.classList.add("active");
+
+    const nearest = data
+        .filter(x=>x.word !== d.word)
+        .map(x=>({
+            word:x.word,
+            dist:Math.hypot(x.x - d.x, x.y - d.y)
+        }))
+        .sort((a,b)=>a.dist-b.dist)
+        .slice(0,2);
+
+    info.innerHTML = `
+        <div class="info-tag">Ponto selecionado</div>
+        <h3>${d.word}</h3>
+        <p>${d.desc}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Mais próximos:</strong><br>
+                ${nearest.map(n=>n.word).join(" • ")}
+            </p>
+            <p>
+                <strong>Leitura:</strong><br>
+                O sistema não está procurando a mesma palavra. Está aproximando conceitos
+                que compartilham sentido, uso ou contexto.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">vetor</span>
+            <span class="badge">distância</span>
+            <span class="badge">semelhança</span>
+            <span class="badge">significado</span>
+        </div>
+    `;
+}
+
+setScenario("geral", document.querySelector("button"));
+</script>
+
+</body>
+</html>
