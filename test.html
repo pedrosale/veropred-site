@@ -1,936 +1,817 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Veropred Decision OS™ | Infraestrutura de Decisão</title>
-<meta name="description" content="Veropred Decision OS™ — infraestrutura operacional para decisões sob risco, incerteza, IA, capital e governança." />
+<title>Atlas Cognitivo da IA</title>
 
 <style>
-:root {
-    --bg:#050504;
-    --bg-2:#0b0907;
-    --bg-3:#17100b;
-    --panel:rgba(255,255,255,.055);
-    --panel-2:rgba(255,255,255,.085);
-    --line:rgba(255,255,255,.13);
-    --line-gold:rgba(216,176,106,.34);
-    --copper:#c9783a;
-    --copper-soft:#e0a064;
-    --gold:#d8b06a;
-    --gold-2:#f1c77e;
-    --cream:#f6efe3;
-    --muted:#b9aa96;
-    --dim:#81766a;
-    --dark-text:#20120b;
-    --radius-xl:36px;
-    --radius-lg:24px;
-    --radius-md:18px;
-    --shadow:0 30px 90px rgba(0,0,0,.52);
-    --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
-    --ease:cubic-bezier(.2,.8,.2,1);
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
 }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0;padding:0}
+
 body{
-    margin:0;
     min-height:100vh;
-    font-family:Inter,Segoe UI,Arial,sans-serif;
-    color:var(--cream);
     background:
-        radial-gradient(circle at 12% -8%,rgba(201,120,58,.24),transparent 34%),
-        radial-gradient(circle at 88% 4%,rgba(216,176,106,.14),transparent 35%),
-        linear-gradient(135deg,var(--bg),var(--bg-2) 52%,var(--bg-3));
-    overflow-x:hidden;
-}
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-    background-size:44px 44px;
-    mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 82%);
-    z-index:0;
-}
-body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background:radial-gradient(circle at 50% 16%,transparent 0 26%,rgba(0,0,0,.22) 62%,rgba(0,0,0,.58));
-    z-index:0;
-}
-main,header,footer{position:relative;z-index:1}
-a{color:inherit;text-decoration:none}
-button,input,textarea,select{font:inherit}
-.wrap,.nav{width:min(1180px,calc(100% - 36px));margin:0 auto}
-
-.header{
-    position:sticky;
-    top:0;
-    z-index:60;
-    backdrop-filter:blur(18px);
-    background:rgba(5,5,4,.78);
-    border-bottom:1px solid rgba(255,255,255,.10);
-}
-.nav{
-    min-height:76px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-}
-.brand{display:flex;align-items:center;gap:14px;min-width:240px}
-.logo-mark{
-    width:42px;height:42px;border-radius:50%;position:relative;flex:0 0 auto;
-    background:radial-gradient(circle at 34% 26%,#fff5d7,#d69d5b 30%,#7b3817 68%,#1d0d07);
-    box-shadow:0 0 32px rgba(216,176,106,.34);
-}
-.logo-mark::after{content:"";position:absolute;inset:8px;border:1px solid rgba(255,255,255,.44);border-radius:50%}
-.brand strong{display:block;font-size:14px;letter-spacing:.16em;text-transform:uppercase}
-.brand span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.nav-links{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.nav-link{
-    border:1px solid transparent;
-    color:var(--muted);
-    background:transparent;
-    padding:9px 12px;
-    border-radius:999px;
-    cursor:pointer;
-    transition:.22s var(--ease);
-    font-size:14px;
-}
-.nav-link:hover{color:var(--cream);border-color:var(--line);background:rgba(255,255,255,.07)}
-.nav-link.nav-cta{
-    color:#1b1009;
-    background:linear-gradient(135deg,#f1c77e,#c9783a);
-    border-color:rgba(255,255,255,.18);
-    font-weight:900;
+        radial-gradient(circle at 38% 54%, rgba(200,148,79,.16), transparent 34%),
+        radial-gradient(circle at 18% 18%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow:hidden;
 }
 
-.section{padding:clamp(46px,7vw,90px) 0}
-.section.compact{padding:clamp(34px,5vw,64px) 0}
-.kicker{
-    display:inline-flex;align-items:center;gap:10px;color:var(--copper-soft);
-    border:1px solid rgba(224,160,100,.32);
-    background:rgba(224,160,100,.07);
-    padding:9px 13px;border-radius:999px;
-    font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:900;
+canvas{
+    position:fixed;
+    inset:0;
+    z-index:0;
 }
-.kicker::before{
-    content:"";width:7px;height:7px;border-radius:50%;
-    background:var(--gold);box-shadow:0 0 18px var(--gold);
-}
-.btn{
-    display:inline-flex;justify-content:center;align-items:center;
-    border:1px solid var(--line);border-radius:999px;
-    padding:14px 18px;min-height:46px;cursor:pointer;font-weight:900;
-    color:var(--cream);background:rgba(255,255,255,.058);
-    transition:.24s var(--ease);line-height:1;
-}
-.btn:hover{transform:translateY(-2px);box-shadow:0 18px 46px rgba(0,0,0,.34)}
-.btn.primary{
-    color:#1b1009;background:linear-gradient(135deg,#f1c77e,#c9783a);
-    border-color:rgba(255,255,255,.18);box-shadow:0 18px 44px rgba(201,120,58,.22);
-}
-.btn.secondary{color:var(--gold);border-color:rgba(216,176,106,.42)}
-.btn.ghost{color:var(--muted)}
-.eyebrow{
-    color:var(--gold);letter-spacing:.12em;text-transform:uppercase;
-    font-size:12px;font-weight:900;margin-bottom:12px;
-}
-h1,h2,h3,p{margin-top:0}
-h1{font-size:clamp(44px,7vw,88px);line-height:.92;letter-spacing:-.07em;margin:24px 0 22px}
-h2{font-size:clamp(32px,4.8vw,58px);line-height:.98;letter-spacing:-.056em;margin-bottom:0}
-h3{font-size:clamp(25px,3.2vw,40px);line-height:1;letter-spacing:-.045em;margin-bottom:12px}
-.lead{color:#d9cdbb;font-size:clamp(17px,2vw,21px);line-height:1.56;max-width:820px;margin-bottom:0}
-.muted{color:var(--muted);line-height:1.56}
-.grid{display:grid;gap:16px}
-.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}
-.section-head{
+
+.page{
+    position:relative;
+    z-index:2;
+    width:100vw;
+    height:100vh;
     display:grid;
-    grid-template-columns:1fr minmax(280px,520px);
-    gap:26px;
-    align-items:end;
-    margin-bottom:26px;
+    grid-template-columns:minmax(680px,1fr) minmax(520px,620px);
 }
-.section-head.center{grid-template-columns:1fr;text-align:center;justify-items:center}
 
 .hero{
-    padding:clamp(58px,8vw,112px) 0 clamp(34px,5vw,58px);
-    display:grid;
-    grid-template-columns:1fr .88fr;
-    gap:clamp(30px,5vw,64px);
-    align-items:center;
-}
-.hero-actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:32px}
-.hero-note{color:var(--muted);font-size:14px;line-height:1.5;max-width:680px;margin-top:18px}
-.os-panel{
-    min-height:560px;
-    border:1px solid var(--line);
-    border-radius:42px;
-    background:
-        radial-gradient(circle at 50% 48%,rgba(216,176,106,.18),transparent 39%),
-        linear-gradient(145deg,rgba(255,255,255,.10),rgba(255,255,255,.035));
-    box-shadow:var(--shadow);
     position:relative;
+    padding:28px 44px 34px;
     overflow:hidden;
-}
-.os-panel::before{
-    content:"";
-    position:absolute;
-    inset:24px;
-    border:1px solid rgba(216,176,106,.13);
-    border-radius:32px;
-}
-.os-flow-line{
-    position:absolute;
-    left:50%;
-    top:8%;
-    bottom:8%;
-    width:1px;
-    background:linear-gradient(to bottom,transparent,rgba(216,176,106,.54),transparent);
-}
-.os-core{
-    position:absolute;
-    left:50%;
-    top:50%;
-    width:210px;
-    height:210px;
-    border-radius:50%;
-    transform:translate(-50%,-50%);
-    background:radial-gradient(circle at 34% 23%,#fff5d7,#d69d5b 36%,#7b3817 72%,#211006);
-    box-shadow:0 0 78px rgba(216,176,106,.30),inset 0 0 0 1px rgba(255,255,255,.34);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:24px;
-    z-index:2;
-}
-.os-core strong{font-size:23px;line-height:1.02;letter-spacing:-.04em}
-.os-core span{color:#fff2dd;opacity:.86;font-size:12px;line-height:1.35;margin-top:10px}
-.os-node{
-    position:absolute;
-    width:172px;
-    min-height:82px;
-    z-index:3;
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,.42);
-    background:rgba(246,239,227,.94);
-    color:var(--dark-text);
-    padding:13px;
-    box-shadow:0 18px 44px rgba(0,0,0,.34);
-    cursor:pointer;
-    transition:.25s var(--ease);
-}
-.os-node:hover{transform:translateY(-5px) scale(1.025)}
-.os-node b{display:block;font-size:13px;line-height:1.18}
-.os-node span{display:block;color:#7e5a3d;font-size:11px;margin-top:6px}
-.l1{left:50%;top:30px;transform:translateX(-50%)}
-.l2{right:32px;top:142px}
-.l3{right:54px;bottom:170px}
-.l4{left:54px;bottom:170px}
-.l5{left:50%;bottom:30px;transform:translateX(-50%)}
-
-.manifesto-box{
-    border:1px solid rgba(216,176,106,.30);
-    border-radius:42px;
-    background:
-        radial-gradient(circle at 16% 22%,rgba(216,176,106,.14),transparent 38%),
-        rgba(255,255,255,.055);
-    box-shadow:var(--shadow);
-    padding:clamp(30px,5vw,58px);
-}
-.manifesto-box h2{max-width:900px}
-.manifesto-text{
-    margin-top:22px;
-    max-width:960px;
-    color:#e4d5c0;
-    font-size:clamp(19px,2.3vw,28px);
-    line-height:1.34;
-    letter-spacing:-.035em;
-}
-.thesis-line{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-    display:inline-flex;align-items:center;
-    border:1px solid rgba(216,176,106,.27);
-    background:rgba(216,176,106,.075);
-    color:var(--gold);
-    border-radius:999px;
-    padding:8px 12px;
-    font-size:12px;
-    font-weight:900;
-    letter-spacing:.03em;
+    display:grid;
+    grid-template-rows:auto 1fr;
 }
 
-.layer-map{
-    border:1px solid var(--line-gold);
-    border-radius:42px;
-    background:
-        linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.032));
-    box-shadow:var(--shadow);
-    overflow:hidden;
-}
-.layer-tabs{
-    display:flex;
-    gap:8px;
-    padding:16px;
-    border-bottom:1px solid var(--line);
-    overflow-x:auto;
-}
-.tab{
-    white-space:nowrap;
-    border:1px solid transparent;
-    border-radius:999px;
-    color:var(--muted);
-    background:rgba(255,255,255,.045);
-    padding:10px 13px;
-    cursor:pointer;
-    transition:.22s var(--ease);
-    font-size:13px;
-    font-weight:900;
-}
-.tab.active,.tab:hover{
-    color:#1b1009;
-    background:linear-gradient(135deg,#f1c77e,#c9783a);
-    border-color:rgba(255,255,255,.16);
-}
-.layer-body{padding:clamp(22px,4vw,42px)}
-.area{display:none;animation:fadeUp .34s var(--ease) both}
-.area.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.area-top{
-    display:grid;
-    grid-template-columns:1fr minmax(220px,360px);
-    gap:22px;
-    align-items:start;
-    margin-bottom:22px;
-}
-.area-quote{
-    border-left:3px solid var(--copper-soft);
-    background:rgba(224,160,100,.075);
-    border-radius:0 18px 18px 0;
-    color:#f3e4ce;
-    padding:18px;
-    line-height:1.5;
-}
-.card{
-    position:relative;
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    background:var(--panel);
-    padding:22px;
-    transition:.25s var(--ease);
-    overflow:hidden;
-}
-.card::before{
-    content:"";
-    position:absolute;
-    inset:-80px -90px auto auto;
-    width:170px;height:170px;border-radius:50%;
-    background:radial-gradient(circle,rgba(216,176,106,.14),transparent 68%);
-    pointer-events:none;
-}
-.card:hover{transform:translateY(-4px);border-color:rgba(216,176,106,.36);background:var(--panel-2)}
-.card small{
-    display:inline-flex;color:var(--copper-soft);font-size:12px;font-weight:900;
-    letter-spacing:.09em;text-transform:uppercase;margin-bottom:12px;
-}
-.card h4{position:relative;font-size:19px;margin:0 0 10px;letter-spacing:-.025em}
-.card p{position:relative;margin:0;color:var(--muted);line-height:1.52;font-size:14px}
-.deep-link-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
-
-.command-grid{
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:18px;
-    align-items:stretch;
-}
-.command-card{
-    position:relative;
-    min-height:330px;
-    border-radius:var(--radius-xl);
-    border:1px solid rgba(216,176,106,.24);
-    background:
-        radial-gradient(circle at 18% 18%,rgba(216,176,106,.12),transparent 36%),
-        rgba(255,255,255,.055);
-    padding:clamp(24px,3vw,34px);
-    box-shadow:var(--shadow);
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    transition:.26s var(--ease);
-}
-.command-card.featured{min-height:380px}
-.command-card:hover{transform:translateY(-5px);border-color:rgba(216,176,106,.46);background:rgba(255,255,255,.078)}
-.command-card small{
-    color:var(--copper-soft);
-    font-weight:900;
+.brand{
+    letter-spacing:.16em;
     text-transform:uppercase;
-    letter-spacing:.09em;
+    color:var(--gold2);
     font-size:12px;
     margin-bottom:14px;
 }
-.command-card h3{margin:0 0 12px;font-size:clamp(24px,3.2vw,40px);line-height:1;letter-spacing:-.045em}
-.command-card p{margin:0 0 18px;color:var(--muted);line-height:1.55}
-.command-card span{color:var(--gold);font-weight:900}
-.labs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 
-.proof-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.proof{
-    border:1px solid var(--line);
-    border-radius:var(--radius-lg);
-    background:rgba(255,255,255,.052);
-    padding:21px;
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(34px,3.4vw,52px);
+    line-height:1.02;
+    max-width:560px;
+    font-weight:500;
 }
-.proof strong{display:block;color:var(--gold);font-size:24px;letter-spacing:-.035em;margin-bottom:8px}
-.proof span{display:block;color:var(--muted);font-size:14px;line-height:1.46}
 
-.cta-panel{
-    border:1px solid rgba(216,176,106,.31);
-    border-radius:44px;
+.lead{
+    max-width:540px;
+    margin-top:16px;
+    color:var(--muted);
+    font-size:15.5px;
+    line-height:1.45;
+    opacity:.92;
+}
+
+.brain{
+    position:absolute;
+    left:56%;
+    top:66%;
+    transform:translate(-50%,-50%);
+    width:min(48vw,580px);
+    height:min(48vw,580px);
+    border-radius:50%;
+    pointer-events:none;
+}
+
+.core{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:190px;
+    height:190px;
+    border-radius:50%;
     background:
-        radial-gradient(circle at 18% 24%,rgba(216,176,106,.16),transparent 38%),
-        rgba(255,255,255,.06);
-    box-shadow:var(--shadow);
-    padding:clamp(28px,5vw,56px);
-    display:grid;
-    grid-template-columns:1fr minmax(280px,430px);
-    gap:28px;
-    align-items:start;
-}
-.contact-form{display:grid;gap:13px}
-.contact-form label{color:var(--muted);font-size:13px;display:grid;gap:7px}
-.contact-form input,.contact-form select,.contact-form textarea{
-    width:100%;
-    border:1px solid var(--line);
-    border-radius:16px;
-    background:rgba(255,255,255,.078);
-    color:var(--cream);
-    padding:14px 15px;
-    outline:none;
-}
-.contact-form select option{background:#15100d;color:var(--cream)}
-.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{
-    border-color:rgba(216,176,106,.55);
-    box-shadow:0 0 0 3px rgba(216,176,106,.12);
-}
-.contact-form textarea{resize:vertical}
-
-.ludovico{
-    margin-top:26px;
-    max-width:480px;
-    border:1px solid rgba(216,176,106,.28);
-    border-radius:30px;
-    overflow:hidden;
-    background:
-        radial-gradient(circle at 18% 18%,rgba(216,176,106,.10),transparent 36%),
-        linear-gradient(145deg,#120d0a,#21150f 55%,#0b0806);
-}
-.ludovico-head{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.035)}
-.ludovico-head img{width:62px;height:62px;border-radius:22px;object-fit:cover;border:1px solid rgba(216,176,106,.38)}
-.ludovico-head strong{display:block;color:var(--gold);font-size:17px}
-.ludovico-head span{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:5px}
-.ludovico-messages{max-height:220px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px}
-.ludovico-msg{max-width:88%;padding:12px 14px;border-radius:18px;line-height:1.42;font-size:13px;white-space:pre-wrap}
-.ludovico-msg.bot{align-self:flex-start;background:rgba(255,255,255,.075);color:#d7cbb9;border:1px solid rgba(255,255,255,.08)}
-.ludovico-msg.user{align-self:flex-end;background:rgba(216,176,106,.18);color:var(--cream);border:1px solid rgba(216,176,106,.22)}
-.ludovico-input{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
-.ludovico-input input{flex:1;min-width:0;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--cream);border-radius:999px;padding:12px 14px;outline:none}
-.ludovico-input button{border:0;border-radius:999px;padding:12px 16px;background:linear-gradient(135deg,#f1c77e,#c9783a);color:#1a0f09;font-weight:900;cursor:pointer}
-
-.footer-line{
-    width:min(1180px,calc(100% - 36px));
-    margin:24px auto 50px;
-    padding:24px;
-    border:1px solid var(--line);
-    border-radius:28px;
-    background:rgba(255,255,255,.042);
+        radial-gradient(circle, rgba(255,214,139,.45), rgba(200,148,79,.14) 42%, transparent 72%);
+    border:1px solid rgba(255,211,142,.34);
+    box-shadow:0 0 80px rgba(220,159,78,.34), inset 0 0 40px rgba(255,211,142,.18);
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    gap:18px;
-    flex-wrap:wrap;
+    justify-content:center;
+    text-align:center;
+    padding:28px;
+    animation:pulse 4s ease-in-out infinite;
+    pointer-events:auto;
 }
-.footer-line p{margin:0;color:var(--muted);line-height:1.45}
-.footer-line strong{color:var(--cream)}
-.footer-actions{display:flex;gap:12px;flex-wrap:wrap}
 
-@media(max-width:1060px){
-    .hero,.section-head,.area-top,.command-grid,.cta-panel{grid-template-columns:1fr}
-    .grid.three,.grid.five,.proof-bar,.labs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .os-panel{min-height:650px}
+.core span{
+    font-family:Georgia,serif;
+    font-size:19px;
+    color:#fff3d9;
+    letter-spacing:.04em;
+    line-height:1.1;
 }
-@media(max-width:760px){
-    .wrap,.nav{width:min(100% - 28px,1180px)}
-    .nav{align-items:flex-start;flex-direction:column;padding:15px 0}
-    .nav-links{justify-content:flex-start}
-    .nav-link{font-size:13px;padding:8px 10px}
-    h1{font-size:clamp(42px,13vw,62px)}
-    .hero-actions .btn,.deep-link-row .btn{width:100%}
-    .os-panel{min-height:740px;border-radius:32px}
-    .os-core{width:172px;height:172px}
-    .os-node{width:138px;min-height:80px}
-    .l2{right:12px;top:160px}
-    .l3{right:12px;bottom:190px}
-    .l4{left:12px;bottom:190px}
-    .grid.two,.grid.three,.grid.five,.proof-bar,.labs-grid{grid-template-columns:1fr}
-    .layer-tabs{padding:12px}
-    .tab{font-size:12px}
-    .ludovico-input{flex-direction:column}
-    .ludovico-input button{width:100%}
+
+@keyframes pulse{
+    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}
+    50%{transform:translate(-50%,-50%) scale(1.045);opacity:1}
+}
+
+.node{
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:radial-gradient(circle, rgba(238,188,105,.28), rgba(70,44,18,.34) 45%, rgba(10,8,6,.62));
+    box-shadow:0 0 38px rgba(206,143,63,.24);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:12px;
+    color:#ffe6b8;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.04em;
+    cursor:pointer;
+    pointer-events:auto;
+    transition:.35s ease;
+}
+.core{
+    backdrop-filter:blur(12px);
+}
+
+.node{
+    backdrop-filter:blur(8px);
+}
+
+.node:hover{
+    z-index:10;
+}
+
+.node:hover,
+.node.active{
+    transform:scale(1.12);
+    box-shadow:0 0 68px rgba(244,190,98,.55);
+    border-color:rgba(255,218,145,.72);
+    color:white;
+}
+
+.node small{
+    display:block;
+    margin-top:5px;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:400;
+}
+
+.sim-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.sim-link{
+    display:inline-flex;
+    color:#f4d59d;
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 14px;
+    text-decoration:none;
+    transition:.25s ease;
+    font-size:13px;
+}
+
+.sim-link:hover{
+    background:rgba(255,205,120,.08);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.panel{
+    height:100vh;
+    background:linear-gradient(180deg, rgba(17,12,8,.9), rgba(5,5,5,.94));
+    border-left:1px solid var(--border);
+    backdrop-filter:blur(20px);
+    padding:42px 44px;
+    overflow-y:auto;
+    box-shadow:-30px 0 80px rgba(0,0,0,.35);
+}
+
+.panel-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.panel h2{
+    font-family:Georgia,serif;
+    font-size:42px;
+    font-weight:500;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:var(--muted);
+    line-height:1.55;
+    margin-bottom:28px;
+    font-size:17px;
+}
+
+.section{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:20px 0;
+}
+
+.section h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.section p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15.5px;
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.footer-note{
+    margin-top:28px;
+    color:#8f806a;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1100px){
+    body{overflow:auto}
+
+    .page{
+        display:block;
+        height:auto;
+        width:100%;
+    }
+
+    .hero{
+        min-height:880px;
+        height:auto;
+        padding:28px 20px;
+        overflow:hidden;
+    }
+
+    h1{
+        font-size:clamp(34px,9vw,48px);
+        max-width:100%;
+    }
+
+    .lead{
+        max-width:100%;
+        font-size:15px;
+        line-height:1.45;
+    }
+
+    .brain{
+        position:relative;
+        left:50%;
+        top:auto;
+        margin-top:70px;
+        transform:translateX(-50%);
+        width:92vw;
+        height:92vw;
+        max-width:680px;
+        max-height:680px;
+    }
+
+    .panel{
+        height:auto;
+        border-left:0;
+        border-top:1px solid var(--border);
+        padding:36px 24px;
+    }
+}
+
+@media(max-width:680px){
+    .hero{
+        min-height:720px;
+        padding:24px 18px;
+    }
+
+    .brain{
+        width:96vw;
+        height:96vw;
+        margin-top:48px;
+        transform:translateX(-50%) scale(.82);
+        transform-origin:center;
+    }
+
+    .node{
+        width:78px;
+        height:78px;
+        font-size:9.5px;
+        padding:8px;
+    }
+
+    .node small{
+        font-size:8px;
+    }
+
+    .core{
+        width:128px;
+        height:128px;
+        padding:18px;
+    }
+
+    .core span{
+        font-size:13px;
+        line-height:1.1;
+    }
+
+    .panel h2{
+        font-size:34px;
+    }
 }
 </style>
+
 </head>
 
 <body>
-<header class="header">
-    <nav class="nav">
-        <a href="#inicio" class="brand" aria-label="Veropred Analytics">
-            <div class="logo-mark" aria-hidden="true"></div>
-            <div>
-                <strong>Veropred Analytics</strong>
-                <span>Decision OS™ para ambientes complexos</span>
-            </div>
-        </a>
+<canvas id="network"></canvas>
 
-        <div class="nav-links" aria-label="Navegação principal">
-            <button class="nav-link" onclick="scrollToId('decision-os')">Decision OS</button>
-            <button class="nav-link" onclick="scrollToId('layers')">Layers</button>
-            <button class="nav-link" onclick="scrollToId('engines')">Engines</button>
-            <button class="nav-link" onclick="scrollToId('labs')">Labs</button>
-            <a class="nav-link" href="aplicacoes.html">Aplicações</a>
-            <button class="nav-link nav-cta" onclick="scrollToId('assessment')">Architecture Assessment</button>
-        </div>
-    </nav>
-</header>
+<div class="page">
+    <main class="hero">
+        <div class="brand">VEROPRED • ATLAS COGNITIVO DA IA</div>
 
-<main>
-    <section class="wrap hero" id="inicio">
-        <div class="hero-copy">
-            <div class="kicker">Veropred Decision OS™</div>
-            <h1>Infraestrutura operacional para decisões críticas.</h1>
-            <p class="lead">
-                A Veropred estrutura decisões sob risco, incerteza, IA, capital e governança. Sinais viram critérios. Critérios viram políticas. Políticas viram execução controlada.
-            </p>
+        <h1>Inteligência artificial como sistema de capacidades emergentes.</h1>
 
-            <div class="hero-actions">
-                <button class="btn primary" onclick="scrollToId('assessment')">Avaliar arquitetura de decisão</button>
-                <button class="btn secondary" onclick="scrollToId('layers')">Explorar as 5 layers</button>
-            </div>
+        <p class="lead">
+            Selecione cada capacidade para detalhar.        </p>
 
-            <p class="hero-note">
-                Para diretorias que precisam reduzir ruído, governar risco, testar políticas e transformar inteligência analítica em decisão executável.
-            </p>
-        </div>
-
-        <div class="os-panel" aria-label="Mapa do Veropred Decision OS">
-            <div class="os-flow-line"></div>
-            <div class="os-core">
-                <strong>Decision<br>OS™</strong>
-                <span>signal · risk · decision · governance · evolution</span>
-            </div>
-
-            <button class="os-node l1" onclick="openArea('signal'); scrollToId('layers')"><b>01 · Signal Layer</b><span>sinais críticos e contexto decisório</span></button>
-            <button class="os-node l2" onclick="openArea('risk'); scrollToId('layers')"><b>02 · Risk Layer</b><span>exposição, impacto e incerteza</span></button>
-            <button class="os-node l3" onclick="openArea('decision'); scrollToId('layers')"><b>03 · Decision Layer</b><span>políticas, critérios e ação</span></button>
-            <button class="os-node l4" onclick="openArea('governance'); scrollToId('layers')"><b>04 · Governance Layer</b><span>controle, revisão e autonomia</span></button>
-            <button class="os-node l5" onclick="openArea('evolution'); scrollToId('layers')"><b>05 · Evolution Layer</b><span>feedback, adaptação e aprendizado</span></button>
-        </div>
-    </section>
-
-    <section class="wrap section compact" id="decision-os">
-        <div class="manifesto-box">
-            <div class="eyebrow">Manifesto Veropred</div>
-            <h2>A Veropred não é uma consultoria de analytics. É uma infraestrutura de decisão.</h2>
-            <p class="manifesto-text">
-                Um sistema operacional executivo para ambientes onde dados, risco, IA, capital e governança precisam convergir em critérios claros de ação.
-                Modelos estimam. Dashboards acompanham. IA acelera. Decisões críticas exigem arquitetura.
-            </p>
-            <div class="thesis-line">
-                <span class="pill">signal infrastructure</span>
-                <span class="pill">risk architecture</span>
-                <span class="pill">decision engines</span>
-                <span class="pill">controlled autonomy</span>
-                <span class="pill">institutional learning</span>
+        <div class="brain" id="brain">
+            <div class="core">
+                <span>DECISÃO<br>SOB INCERTEZA</span>
             </div>
         </div>
-    </section>
+    </main>
 
-    <section class="wrap section" id="layers">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Operating Layers</div>
-                <h2>As 5 camadas do Veropred Decision OS™.</h2>
-            </div>
-            <p class="muted">
-                Uma arquitetura para conectar sinais, risco, decisão, governança e evolução em um fluxo decisório único, rastreável e executável.
-            </p>
+    <aside class="panel" id="panel">
+        <div class="panel-tag"></div>
+        <h2>Atlas Cognitivo da IA</h2>
+
+        <p class="subtitle">
+Uma exploração das arquiteturas cognitivas artificiais utilizadas para ampliar contexto, reduzir incerteza e orientar ação sob complexidade.
+        </p>
+
+        <div class="section">
+<h3>Perspectiva</h3>
+<p>
+    Uma visão de IA centrada em capacidades cognitivas artificiais.
+</p>
         </div>
 
-        <div class="layer-map">
-            <div class="layer-tabs" role="tablist" aria-label="Camadas do Decision OS">
-                <button class="tab active" data-area="signal" onclick="openArea('signal')">01 Signal</button>
-                <button class="tab" data-area="risk" onclick="openArea('risk')">02 Risk</button>
-                <button class="tab" data-area="decision" onclick="openArea('decision')">03 Decision</button>
-                <button class="tab" data-area="governance" onclick="openArea('governance')">04 Governance</button>
-                <button class="tab" data-area="evolution" onclick="openArea('evolution')">05 Evolution</button>
-            </div>
-
-            <div class="layer-body">
-                <article class="area active" id="area-signal">
-                    <div class="area-top">
-                        <div>
-                            <h3>Signal Layer™</h3>
-                            <p class="lead">Mapeamos os sinais que sustentam decisões críticas: dados, indicadores, documentos, eventos, comportamento e contexto executivo.</p>
-                        </div>
-                        <div class="area-quote">O excesso de informação só gera valor quando existe hierarquia decisória.</div>
-                    </div>
-                    <div class="grid three">
-                        <div class="card"><small>Signal Mapping</small><h4>Sinais relevantes</h4><p>Identificação dos dados, indicadores e eventos que realmente alteram a decisão.</p></div>
-                        <div class="card"><small>Context Intelligence</small><h4>Leitura contextual</h4><p>Integração de cenário, mercado, regulação, estratégia e restrições operacionais.</p></div>
-                        <div class="card"><small>Semantic Inputs</small><h4>Conhecimento não estruturado</h4><p>Documentos, textos e demandas internas convertidos em insumos decisórios rastreáveis.</p></div>
-                    </div>
-                </article>
-
-                <article class="area" id="area-risk">
-                    <div class="area-top">
-                        <div>
-                            <h3>Risk Layer™</h3>
-                            <p class="lead">Medimos exposição, severidade, perda esperada, incerteza e consequências antes que a decisão seja executada.</p>
-                        </div>
-                        <div class="area-quote">Decisão sem risco explícito vira opinião operacional.</div>
-                    </div>
-                    <div class="grid three">
-                        <div class="card"><small>Credit Risk</small><h4>Risco, margem e capital</h4><p>PD, LGD, aprovação, perda esperada, retorno ajustado e apetite a risco.</p></div>
-                        <div class="card"><small>Operational Risk</small><h4>Cauda e severidade</h4><p>Eventos raros, perdas extremas, stress, dependência e capital econômico.</p></div>
-                        <div class="card"><small>AI Risk</small><h4>Risco decisório em IA</h4><p>Variância, alucinação, falso positivo, falso negativo e automação excessiva.</p></div>
-                    </div>
-                </article>
-
-                <article class="area" id="area-decision">
-                    <div class="area-top">
-                        <div>
-                            <h3>Decision Layer™</h3>
-                            <p class="lead">Transformamos análise em política: cortes, limites, regras, prioridades, elegibilidade, exceções e ações executáveis.</p>
-                        </div>
-                        <div class="area-quote">O valor não está no score. Está na decisão que muda quando o score aparece.</div>
-                    </div>
-                    <div class="grid three">
-                        <div class="card"><small>Decision Architecture</small><h4>Critérios de ação</h4><p>Formulação da decisão, trade-offs, restrições, responsáveis e consequências.</p></div>
-                        <div class="card"><small>Decision Engines</small><h4>Stress de políticas</h4><p>Teste de cutoffs, risco, retorno, capital, aprovação e resiliência sob cenários extremos.</p></div>
-                        <div class="card"><small>Policy Systems</small><h4>Regras executáveis</h4><p>Estruturas para aprovação, limite, preço, priorização, roteamento e fallback.</p></div>
-                    </div>
-                </article>
-
-                <article class="area" id="area-governance">
-                    <div class="area-top">
-                        <div>
-                            <h3>Governance Layer™</h3>
-                            <p class="lead">Definimos controle, rastreabilidade, autonomia, revisão humana, accountability e limites de execução.</p>
-                        </div>
-                        <div class="area-quote">Decisões críticas precisam explicar quem decide, com qual critério e sob qual limite.</div>
-                    </div>
-                    <div class="grid three">
-                        <div class="card"><small>Controlled Autonomy</small><h4>IA com limites</h4><p>Guardrails, validação, fallback humano, critérios de confiança e níveis de autonomia.</p></div>
-                        <div class="card"><small>Decision Traceability</small><h4>Rastreabilidade</h4><p>Registro de critérios, exceções, revisões, responsáveis e mudanças de política.</p></div>
-                        <div class="card"><small>Operating Control</small><h4>Governança operacional</h4><p>Rotinas de revisão, documentação, ownership e monitoramento executivo.</p></div>
-                    </div>
-                </article>
-
-                <article class="area" id="area-evolution">
-                    <div class="area-top">
-                        <div>
-                            <h3>Evolution Layer™</h3>
-                            <p class="lead">Monitoramos estabilidade, drift, performance, feedback operacional e ciclos de recalibração.</p>
-                        </div>
-                        <div class="area-quote">Toda decisão deteriora quando o ambiente muda e o sistema não aprende.</div>
-                    </div>
-                    <div class="grid three">
-                        <div class="card"><small>Monitoring</small><h4>Estabilidade decisória</h4><p>Acompanhamento de drift, comportamento, indicadores, exceções e perda de performance.</p></div>
-                        <div class="card"><small>Learning Loops</small><h4>Feedback institucional</h4><p>Integração entre execução, revisão, aprendizado e ajuste de política.</p></div>
-                        <div class="card"><small>Operational Maturity</small><h4>Capacitação executiva</h4><p>Treinamentos para elevar clareza, critério, governança e uso maduro de IA.</p></div>
-                    </div>
-                </article>
-
-                <div class="deep-link-row" id="contextualCtas">
-                    <a class="btn secondary" id="ctaSecondaryOne"></a>
-                    <a class="btn secondary" id="ctaSecondaryTwo"></a>
-                </div>
-            </div>
+        <div class="section">
+<h3>Exploração Cognitiva</h3>
+<p>
+Uma exploração das capacidades cognitivas artificiais utilizadas para representar contexto, reduzir ambiguidade e orientar ação inteligente.</p>
         </div>
-    </section>
-
-    <section class="wrap section" id="engines">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Decision Engines</div>
-                <h2>Ambientes executivos para testar decisões antes da execução real.</h2>
-            </div>
-            <p class="muted">
-                Testamos a resiliência de políticas sob cenários de stress, variação de risco, pressão de margem, custo de capital e mudança de apetite.
-            </p>
-        </div>
-
-        <div class="command-grid">
-            <a class="command-card featured" href="simulador.html">
-                <small>Credit Policy Engine</small>
-                <h3>Cutoff, PD, aprovação, RAROC e capital econômico.</h3>
-                <p>Simule decisões de crédito sob diferentes níveis de risco, margem, perda esperada, aprovação e custo de oportunidade do capital.</p>
-                <span>Entrar no engine →</span>
-            </a>
-
-            <div class="grid">
-                <a class="command-card" href="aplicacoes.html">
-                    <small>Decision Cases</small>
-                    <h3>Aplicações críticas de decisão</h3>
-                    <p>Ensaios executivos sobre crédito, risco operacional, IA, capital, governança, modelagem e arquitetura decisória.</p>
-                    <span>Ver aplicações →</span>
-                </a>
-                <a class="command-card" href="engenharia_prompts.html">
-                    <small>Operational Evolution</small>
-                    <h3>Treinamentos de IA In Company</h3>
-                    <p>Jornadas práticas para equipes usarem IA com clareza, critério, segurança, rastreabilidade e qualidade operacional.</p>
-                    <span>Conhecer treinamentos →</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="wrap section compact" id="labs">
-        <div class="section-head">
-            <div>
-                <div class="eyebrow">Veropred Labs</div>
-                <h2>Pesquisa aplicada para decisões sob incerteza.</h2>
-            </div>
-            <p class="muted">
-                Protótipos, frameworks, visualizações executivas e experimentos para expandir a infraestrutura decisória de risco, IA e governança.
-            </p>
-        </div>
-
-        <div class="labs-grid">
-            <div class="card"><small>Prototype Systems</small><h4>Arquiteturas experimentais</h4><p>Modelos de decisão, fluxos e sistemas analíticos testados antes da implantação executiva.</p></div>
-            <div class="card"><small>AI Evaluation</small><h4>IA sob controle</h4><p>Critérios de qualidade, testes semânticos, guardrails e avaliação de confiabilidade operacional.</p></div>
-            <div class="card"><small>Decision Research</small><h4>Frameworks proprietários</h4><p>Estruturas para transformar sinais, risco, política e governança em capacidade institucional.</p></div>
-        </div>
-    </section>
-
-    <section class="wrap section compact" id="autoridade">
-        <div class="proof-bar">
-            <div class="proof"><strong>Decision OS™</strong><span>Infraestrutura proprietária para integrar dados, risco, IA, governança e execução.</span></div>
-            <div class="proof"><strong>Ambiente crítico</strong><span>Experiência em decisões sujeitas a risco, capital, rastreabilidade e consequência executiva.</span></div>
-            <div class="proof"><strong>IA com controle</strong><span>LLMs, RAG, agentes, avaliação semântica, guardrails e autonomia governável.</span></div>
-            <div class="proof"><strong>Quant aplicado</strong><span>Modelagem, validação, stress, backtesting, simulação e leitura executiva.</span></div>
-        </div>
-    </section>
-
-    <section class="wrap section" id="assessment">
-        <div class="cta-panel">
-            <div>
-                <div class="eyebrow">Architecture Assessment</div>
-                <h2>Avaliar sua arquitetura de decisão.</h2>
-                <p class="lead">
-                    Identificamos a camada mais frágil da sua decisão crítica: sinal, risco, critério, governança ou evolução. O objetivo é tornar a decisão mais clara, rastreável e executável.
-                </p>
-
-                <div class="thesis-line">
-                    <span class="pill">Signal</span>
-                    <span class="pill">Risk</span>
-                    <span class="pill">Decision</span>
-                    <span class="pill">Governance</span>
-                    <span class="pill">Evolution</span>
-                </div>
-
-                <div class="ludovico">
-                    <div class="ludovico-head">
-                        <img src="assets/ludovico_2.png" alt="Ludovico IA" onerror="this.style.display='none'">
-                        <div>
-                            <strong>Ludovico IA</strong>
-                            <span>Refinador de cenário para Architecture Assessment</span>
-                        </div>
-                    </div>
-                    <div class="ludovico-messages" id="ludovicoMessages">
-                        <div class="ludovico-msg bot">Descreva sua decisão crítica. Vou organizar o cenário em Signal, Risk, Decision, Governance e Evolution.</div>
-                    </div>
-                    <div class="ludovico-input">
-                        <input id="ludovicoInput" placeholder="Ex: precisamos revisar política de crédito, IA, risco ou priorização..." onkeydown="handleLudovicoEnter(event)">
-                        <button type="button" onclick="sendLudovicoMessage()">Refinar</button>
-                    </div>
-                </div>
-            </div>
-
-            <form class="contact-form" action="https://formsubmit.co/pedrosale@hotmail.com" method="POST">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_subject" value="Architecture Assessment - Veropred Decision OS">
-                <input type="hidden" name="_next" value="https://seusite.com/obrigado.html">
-
-                <label>Nome<input type="text" name="nome" placeholder="Seu nome" required></label>
-                <label>E-mail<input type="email" name="email" placeholder="seu@email.com" required></label>
-                <label>Empresa<input type="text" name="empresa" placeholder="Nome da empresa"></label>
-                <label>Cargo<input type="text" name="cargo" placeholder="Ex: Diretor, Head, Gerente, Founder"></label>
-
-                <label>Layer mais crítica hoje
-                    <select name="layer_critica">
-                        <option value="">Selecione uma layer</option>
-                        <option>Signal Layer — sinais dispersos ou pouco confiáveis</option>
-                        <option>Risk Layer — risco, impacto ou incerteza mal medidos</option>
-                        <option>Decision Layer — falta de critério, corte, política ou regra</option>
-                        <option>Governance Layer — baixa rastreabilidade, controle ou accountability</option>
-                        <option>Evolution Layer — ausência de monitoramento, feedback ou recalibração</option>
-                        <option>Ainda não sei formular</option>
-                    </select>
-                </label>
-
-                <label>Cenário para assessment
-                    <textarea name="dor_da_empresa" rows="6" placeholder="Descreva a decisão em jogo, os sinais disponíveis, o risco envolvido, como a decisão é tomada hoje e onde a execução falha." required></textarea>
-                </label>
-
-                <button class="btn primary" type="submit">Enviar para Architecture Assessment</button>
-            </form>
-        </div>
-    </section>
-</main>
-
-<footer class="footer-line">
-    <p><strong>Veropred Analytics.</strong><br>Decision OS™ para ambientes complexos.</p>
-    <div class="footer-actions">
-        <button class="btn secondary" onclick="scrollToId('layers')">Layers</button>
-        <a class="btn secondary" href="simulador.html">Decision Engine</a>
-        <a class="btn secondary" href="engenharia_prompts.html">Treinamentos</a>
-        <button class="btn primary" onclick="scrollToId('assessment')">Architecture Assessment</button>
-    </div>
-</footer>
+    </aside>
+</div>
 
 <script>
-const areas = ["signal", "risk", "decision", "governance", "evolution"];
+const modules = [
+{
 
-function scrollToId(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+id:"memoria",
+label:"Memória",
+tech:"RAG",
+
+simuladores:[
+    {label:"Explorar RAG", url:"ia_xperience/simulador_rag.html"}
+],
+
+x:50,
+y:14,
+title:"Memória",
+subtitle:"Recuperação contextual e persistência informacional.",
+funcao:"Recuperar informações relevantes para ampliar o contexto decisório.",
+problema:"Modelos possuem janela de contexto limitada e não conseguem carregar todo o conhecimento necessário em cada resposta.",
+tecnicas:["RAG","Bancos vetoriais","Busca semântica","Memória contextual","Embeddings"],
+analogia:"Como consultar livros, normas e documentos antes de responder.",
+exemplo:"Um funcionário pergunta sobre política de reembolso internacional. O sistema busca a regra correta em documentos internos, envia os trechos relevantes ao LLM e gera uma resposta contextualizada."
+},
+
+{
+id:"associacao",
+label:"Associação",
+tech:"Embeddings",
+
+simuladores:[
+    {label:"Explorar Embeddings", url:"ia_xperience/simulador_embeddings.html"}
+],
+
+x:76,
+y:24,
+title:"Associação",
+subtitle:"Transformação de significado em proximidade matemática.",
+funcao:"Aproximar conceitos semelhantes e afastar conceitos diferentes em espaços vetoriais.",
+problema:"Computadores não entendem significado diretamente; precisam converter textos, imagens e eventos em representações numéricas comparáveis.",
+tecnicas:["Embeddings","Aprendizado contrastivo","Espaços latentes","Recomendação","Busca semântica"],
+analogia:"Como aproximar ideias com significados parecidos, mesmo usando palavras diferentes.",
+exemplo:"Uma empresa transforma contratos, e-mails e normas em vetores. Quando alguém busca 'política de férias', o sistema encontra trechos semanticamente próximos mesmo sem palavras idênticas."
+},
+
+{
+id:"atencao",
+label:"Atenção",
+tech:"Transformers",
+
+simuladores:[
+    {label:"Explorar Attention", url:"ia_xperience/simulador_attention.html"}
+],
+
+x:84,
+y:48,
+title:"Atenção",
+subtitle:"Seleção dinâmica de relevância contextual.",
+funcao:"Identificar quais partes da informação devem receber mais peso em cada momento.",
+problema:"Em sequências longas, nem tudo importa igualmente. O sistema precisa conectar elementos distantes e selecionar dependências relevantes.",
+tecnicas:["Transformers","Self-attention","Context window","LLMs","Modelagem sequencial"],
+analogia:"Como focar continuamente nas partes mais relevantes de uma informação para compreender corretamente o contexto.",
+exemplo:"Na frase 'o troféu não coube na mala porque ela era pequena', o modelo precisa entender que 'ela' se refere à mala, não ao troféu."
+},
+
+{
+id:"previsao",
+label:"Previsão",
+tech:"Supervisionado",
+
+simuladores:[
+    {label:"Explorar Supervisionado", url:"ia_xperience/simulador_supervisionado.html"}
+],
+
+x:73,
+y:72,
+title:"Previsão",
+subtitle:"Aprender padrões a partir de exemplos corrigidos.",
+funcao:"Estimar classes, probabilidades ou valores futuros com base em dados históricos.",
+problema:"Organizações precisam antecipar risco, fraude, inadimplência, demanda, churn e eventos relevantes antes que eles aconteçam.",
+tecnicas:["Aprendizado supervisionado","Classificação","Regressão","Séries temporais","Modelos de score"],
+analogia:"Como identificar padrões em eventos passados para estimar comportamentos e resultados futuros.",
+exemplo:"Um banco usa dados históricos de clientes para estimar a probabilidade de inadimplência de novos proponentes."
+},
+
+{
+id:"sequencia",
+label:"Sequência",
+tech:"Autoregressivo",
+
+simuladores:[
+    {label:"Explorar Autoregressivo", url:"ia_xperience/simulador_autoregressivo.html"}
+],
+
+x:50,
+y:84,
+title:"Aprendizado Autoregressivo",
+subtitle:"Geração passo a passo baseada no histórico anterior.",
+funcao:"Prever o próximo token, palavra, frame ou evento a partir do contexto acumulado.",
+problema:"Textos e conversas são sequenciais. A resposta precisa nascer progressivamente, mantendo coerência com tudo que veio antes.",
+tecnicas:["Modelos autoregressivos","LLMs","Next-token prediction","Modelagem de linguagem"],
+analogia:"Como escrever uma frase olhando sempre para o que já foi dito antes, escolhendo a próxima parte mais provável.",
+exemplo:"Ao responder uma pergunta, o ChatGPT prevê um token, adiciona ao contexto, prevê o próximo e repete o processo até formar a resposta inteira."
+},
+
+{
+id:"descoberta",
+label:"Descoberta",
+tech:"Clustering",
+
+simuladores:[
+    {label:"Explorar Clustering", url:"ia_xperience/simulador_clustering.html"}
+],
+
+x:26,
+y:72,
+title:"Descoberta de Estrutura",
+subtitle:"Encontrar padrões ocultos sem respostas corretas.",
+funcao:"Identificar grupos, anomalias e estruturas escondidas nos dados.",
+problema:"Muitas bases não possuem rótulos. Ainda assim, podem conter segmentos, comportamentos e padrões relevantes.",
+tecnicas:["Aprendizado não supervisionado","Clustering","Redução dimensional","Detecção de anomalias","Segmentação"],
+analogia:"Como agrupar elementos apenas pela semelhança entre eles.",
+exemplo:"Uma varejista analisa milhões de clientes e encontra grupos: alto ticket, compradores promocionais, clientes em risco de abandono e perfis recorrentes."
+},
+
+{
+id:"semi",
+label:"Poucos Rótulos",
+tech:"Semi-supervisionado",
+
+simuladores:[
+    {label:"Explorar Semi-supervisionado", url:"ia_xperience/simulador_semi_supervisionado.html"}
+],
+
+x:16,
+y:48,
+title:"Aprendizado Semi-Supervisionado",
+subtitle:"Aprender com poucos exemplos rotulados e muitos dados sem rótulo.",
+funcao:"Expandir aprendizado quando o custo humano de rotular tudo é alto.",
+problema:"Em muitos domínios, como medicina e jurídico, há poucos exemplos revisados por especialistas e muitos dados brutos disponíveis.",
+tecnicas:["Semi-supervised learning","Pseudo-labeling","Propagação de rótulos","Confiança de previsão"],
+analogia:"Como aprender uma língua com poucas frases traduzidas e muitos textos soltos.",
+exemplo:"Um hospital possui poucos exames com diagnóstico confirmado e milhões sem revisão. A IA aprende com os rotulados e usa previsões confiáveis para explorar o restante."
+},
+
+{
+id:"auto",
+label:"Auto-supervisão",
+tech:"LLMs",
+
+simuladores:[
+    {label:"Explorar Auto-supervisão", url:"ia_xperience/simulador_self_supervised.html"}
+],
+
+x:24,
+y:24,
+title:"Aprendizado Auto-Supervisionado",
+subtitle:"O próprio dado cria o gabarito.",
+funcao:"Aprender padrões escondendo partes dos dados e tentando reconstruí-las.",
+problema:"Rotular manualmente bilhões de exemplos seria inviável. A IA precisa extrair supervisão da própria estrutura dos dados.",
+tecnicas:["Self-supervised learning","Masked prediction","Next-token prediction","Pré-treinamento de LLMs"],
+analogia:"Como um quebra-cabeça em que a própria imagem fornece a dica.",
+exemplo:"Um LLM lê bilhões de textos e aprende prevendo palavras ou tokens ausentes, absorvendo sintaxe, relações semânticas e padrões culturais."
+},
+
+{
+id:"imaginacao",
+label:"Imaginação",
+tech:"Diffusion / GANs",
+
+simuladores:[
+    {label:"Explorar Diffusion", url:"ia_xperience/simulador_diffusion.html"},
+    {label:"Explorar GANs", url:"ia_xperience/simulador_gans.html"}
+],
+
+x:12,
+y:14,
+title:"Imaginação",
+subtitle:"Geração de novas possibilidades a partir de padrões aprendidos.",
+funcao:"Criar imagens, textos, vídeos, sons ou cenários sintéticos coerentes.",
+problema:"Sistemas inteligentes não apenas classificam o mundo; também simulam possibilidades e produzem novas configurações.",
+tecnicas:["Diffusion models","GANs","Geração multimodal","Modelos generativos"],
+analogia:"Como restaurar uma pintura borrada ou imaginar uma cena antes inexistente.",
+exemplo:"Ao pedir 'um samurai cyberpunk na chuva', um modelo de diffusion começa com ruído e remove esse ruído gradualmente até a imagem emergir."
+},
+
+{
+id:"adaptacao",
+label:"Adaptação",
+tech:"RL",
+
+simuladores:[
+    {label:"Explorar RL", url:"ia_xperience/simulador_rl.html"}
+],
+
+x:88,
+y:14,
+title:"Adaptação",
+subtitle:"Aprender comportamento por recompensa e punição.",
+funcao:"Melhorar ações com base no retorno recebido do ambiente.",
+problema:"Alguns problemas não possuem gabarito fixo; exigem tentativa, erro, consequência e otimização de estratégia.",
+tecnicas:["Reinforcement Learning","Políticas de ação","Recompensas","Ambientes simulados","Otimização sequencial"],
+analogia:"Como alguém aprendendo a tomar decisões melhores após acumular experiência, erros e acertos ao longo do tempo.",
+exemplo:"Um robô em armazém aprende a pegar caixas, evitar colisões e otimizar rotas. Entregou corretamente: +20. Bateu: -10."
+},
+
+{
+id:"alinhamento",
+label:"Alinhamento",
+tech:"RLHF",
+
+simuladores:[
+    {label:"Explorar RLHF", url:"ia_xperience/simulador_rlhf.html"}
+],
+
+x:88,
+y:82,
+title:"Alinhamento",
+subtitle:"Ajustar comportamento a preferências humanas.",
+funcao:"Ensinar o modelo a produzir respostas mais úteis, claras, seguras e aceitáveis.",
+problema:"Um modelo pode gerar respostas estatisticamente prováveis, mas não necessariamente úteis, adequadas ou alinhadas ao julgamento humano.",
+tecnicas:["RLHF","Feedback humano","Modelos de recompensa","Preferência humana","Alinhamento"],
+analogia:"Como aproximar o comportamento do sistema das preferências e expectativas humanas.",
+exemplo:"Ao receber feedback humano contínuo sobre clareza, utilidade e adequação, o modelo ajusta gradualmente seu comportamento para produzir respostas mais alinhadas às expectativas humanas."
+},
+
+{
+id:"especializacao",
+label:"Especialização",
+tech:"Fine-tuning",
+
+simuladores:[
+    {label:"Explorar Fine-tuning", url:"ia_xperience/simulador_finetuning.html"}
+],
+
+x:12,
+y:82,
+title:"Especialização",
+subtitle:"Adaptar um modelo geral a um domínio específico.",
+funcao:"Transferir capacidade geral para contextos técnicos, regulatórios ou corporativos.",
+problema:"Modelos gerais sabem muito, mas podem não dominar linguagem, regras e nuances de um domínio específico.",
+tecnicas:["Fine-tuning","Domain adaptation","Instruction tuning","Modelos especializados"],
+analogia:"Como um médico generalista fazendo residência.",
+exemplo:"Uma seguradora adapta um LLM com apólices, sinistros, regulação e linguagem técnica para melhorar respostas no domínio de seguros."
+},
+
+{
+id:"planejamento",
+label:"Planejamento",
+tech:"Agentes",
+
+simuladores:[
+    {label:"Explorar Agentes", url:"ia_xperience/simulador_agentes.html"}
+],
+
+x:50,
+y:4,
+title:"Planejamento",
+subtitle:"Organizar ação, ferramentas e execução iterativa.",
+funcao:"Transformar intenção em sequência de ações coordenadas.",
+problema:"Responder texto é diferente de executar tarefas. Sistemas úteis precisam planejar, chamar ferramentas, revisar saídas e iterar.",
+tecnicas:["Agentes de IA","Tool calling","Workflows","Orquestração","Multiagentes"],
+analogia:"Como um centro de comando que divide objetivos complexos em múltiplas etapas executáveis, coordena especialistas e ajusta estratégias continuamente.",
+exemplo:"Um agente busca documentos, outro resume, outro analisa risco e outro gera um relatório executivo automaticamente."
+},
+
+{
+id:"hibrido",
+label:"Sistema Híbrido",
+tech:"Orquestração",
+
+simuladores:[
+    {label:"Explorar Sistemas Híbridos", url:"ia_xperience/simulador_sistemas_hibridos.html"}
+],
+
+x:50,
+y:94,
+title:"Sistemas Híbridos",
+subtitle:"A IA moderna como ecossistema combinado.",
+funcao:"Integrar múltiplas capacidades cognitivas artificiais em um único sistema operacional.",
+problema:"Nenhuma técnica isolada resolve tudo. Sistemas modernos combinam memória, atenção, geração, alinhamento, busca, agentes e especialização.",
+tecnicas:["LLMs","RAG","Embeddings","RLHF","Agentes","Fine-tuning","Memória contextual"],
+analogia:"Como um organismo funcional composto por múltiplos sistemas interdependentes.",
+exemplo:"Um chatbot corporativo usa embeddings para busca, RAG para recuperar documentos, LLM autoregressivo para responder, agentes para executar tarefas e fine-tuning para linguagem jurídica."
 }
+];
 
-const ctaByArea = {
-    signal: {
-        oneText: "Solicitar Architecture Assessment",
-        oneHref: "#assessment",
-        twoText: "Ver aplicações de sinais",
-        twoHref: "aplicacoes.html"
-    },
-    risk: {
-        oneText: "Explorar Credit Policy Engine",
-        oneHref: "simulador.html",
-        twoText: "Ver aplicações de risco",
-        twoHref: "aplicacoes.html"
-    },
-    decision: {
-        oneText: "Entrar no Decision Engine",
-        oneHref: "simulador.html",
-        twoText: "Ver aplicações decisórias",
-        twoHref: "aplicacoes.html"
-    },
-    governance: {
-        oneText: "Avaliar governança decisória",
-        oneHref: "#assessment",
-        twoText: "Conhecer treinamentos de IA",
-        twoHref: "engenharia_prompts.html"
-    },
-    evolution: {
-        oneText: "Conhecer treinamentos de IA",
-        oneHref: "engenharia_prompts.html",
-        twoText: "Ver Veropred Labs",
-        twoHref: "#labs"
-    }
-};
+const brain = document.getElementById("brain");
+const panel = document.getElementById("panel");
 
-function updateContextualCtas(area) {
-    const config = ctaByArea[area] || {};
-    const ctaOne = document.getElementById("ctaSecondaryOne");
-    const ctaTwo = document.getElementById("ctaSecondaryTwo");
-
-    if (!ctaOne || !ctaTwo) return;
-
-    if (config.oneText && config.oneHref) {
-        ctaOne.style.display = "inline-flex";
-        ctaOne.textContent = config.oneText;
-        ctaOne.href = config.oneHref;
-    } else {
-        ctaOne.style.display = "none";
-    }
-
-    if (config.twoText && config.twoHref) {
-        ctaTwo.style.display = "inline-flex";
-        ctaTwo.textContent = config.twoText;
-        ctaTwo.href = config.twoHref;
-    } else {
-        ctaTwo.style.display = "none";
-    }
-}
-
-function openArea(area) {
-    areas.forEach(item => {
-        const panel = document.getElementById("area-" + item);
-        if (panel) panel.classList.toggle("active", item === area);
-    });
-
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.classList.toggle("active", tab.dataset.area === area);
-    });
-
-    updateContextualCtas(area);
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    updateContextualCtas("signal");
+modules.forEach(m=>{
+    const node=document.createElement("div");
+    node.className="node";
+    node.dataset.id=m.id;
+node.style.left=`calc(${m.x}% - 50px)`;
+node.style.top=`calc(${m.y}% - 50px)`;
+    node.innerHTML=`<div>${m.label}<small>${m.tech}</small></div>`;
+    node.onclick=()=>selectModule(m.id);
+    brain.appendChild(node);
 });
 
-function addLudovicoMessage(text, type) {
-    const messages = document.getElementById("ludovicoMessages");
-    if (!messages) return;
+function selectModule(id){
+    const m=modules.find(x=>x.id===id);
+    document.querySelectorAll(".node").forEach(n=>n.classList.toggle("active",n.dataset.id===id));
 
-    const div = document.createElement("div");
-    div.className = "ludovico-msg " + type;
-    div.textContent = text;
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
+    panel.innerHTML=`
+        <div class="panel-tag">Região Cognitiva</div>
+        <h2>${m.title}</h2>
+        <p class="subtitle">${m.subtitle}</p>
+
+        <div class="section">
+            <h3>Função cognitiva</h3>
+            <p>${m.funcao}</p>
+        </div>
+
+        <div class="section">
+            <h3>Limitação computacional</h3>
+            <p>${m.problema}</p>
+        </div>
+
+<div class="section">
+    <h3>Analogia</h3>
+    <p>${m.analogia}</p>
+</div>
+
+<div class="section">
+    <h3>Exemplo</h3>
+    <p>${m.exemplo}</p>
+</div>
+
+${m.simuladores ? `
+<div class="section">
+    <h3>Simulação Interativa</h3>
+
+    <div class="sim-links">
+        ${m.simuladores.map(s=>`
+            <a class="sim-link" href="${s.url}">
+                ${s.label} →
+            </a>
+        `).join("")}
+    </div>
+</div>
+` : ""}
+
+<div class="section">
+    <h3>Arquiteturas Relacionadas</h3>
+
+    <div class="badges">
+        ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
+    </div>
+</div>
+
+    `;
 }
 
-function mockLudovico(text) {
-    return `Architecture Assessment — cenário inicial:\n${text}\n\nFormulação estruturada:\nGostaria de avaliar uma decisão crítica que ainda não está suficientemente estruturada.\n\nSignal Layer:\nQuais sinais, dados, documentos, indicadores ou alertas sustentam a decisão?\n\nRisk Layer:\nQuais riscos, impactos, perdas, incertezas ou trade-offs estão envolvidos?\n\nDecision Layer:\nQuais critérios, cortes, regras, políticas ou prioridades orientam a ação hoje?\n\nGovernance Layer:\nQuem decide, com qual autonomia, sob qual limite e com qual mecanismo de revisão?\n\nEvolution Layer:\nComo essa decisão é monitorada, ajustada e aprendida ao longo do tempo?\n\nObjetivo:\nIdentificar a camada mais frágil da arquitetura decisória e definir o próximo passo para tornar a decisão mais clara, governável e executável.`;
+/* Canvas neural background */
+const canvas=document.getElementById("network");
+const ctx=canvas.getContext("2d");
+let W,H,particles=[];
+
+function resize(){
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
+}
+window.addEventListener("resize",resize);
+resize();
+
+for(let i=0;i<130;i++){
+    particles.push({
+        x:Math.random()*W,
+        y:Math.random()*H,
+        vx:(Math.random()-.5)*.25,
+        vy:(Math.random()-.5)*.25,
+        r:Math.random()*1.7+.6
+    });
 }
 
-function sendLudovicoMessage() {
-    const input = document.getElementById("ludovicoInput");
-    if (!input) return;
+function animate(){
+    ctx.clearRect(0,0,W,H);
 
-    const text = input.value.trim();
-    if (!text) return;
+    particles.forEach(p=>{
+        p.x+=p.vx;
+        p.y+=p.vy;
+        if(p.x<0||p.x>W)p.vx*=-1;
+        if(p.y<0||p.y>H)p.vy*=-1;
+    });
 
-    addLudovicoMessage(text, "user");
-    input.value = "";
-
-    const reply = mockLudovico(text);
-    addLudovicoMessage(reply, "bot");
-
-    const field = document.querySelector('textarea[name="dor_da_empresa"]');
-    if (field) field.value = reply;
-}
-
-function handleLudovicoEnter(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        sendLudovicoMessage();
+    for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+            const a=particles[i], b=particles[j];
+            const dx=a.x-b.x, dy=a.y-b.y;
+            const d=Math.sqrt(dx*dx+dy*dy);
+            if(d<130){
+                ctx.strokeStyle=`rgba(216,162,82,${(1-d/130)*.18})`;
+                ctx.lineWidth=.7;
+                ctx.beginPath();
+                ctx.moveTo(a.x,a.y);
+                ctx.lineTo(b.x,b.y);
+                ctx.stroke();
+            }
+        }
     }
+
+    particles.forEach(p=>{
+        ctx.fillStyle="rgba(242,195,116,.52)";
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(animate);
 }
+
+animate();
 </script>
 </body>
 </html>
