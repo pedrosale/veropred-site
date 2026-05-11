@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de RLHF | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.rlhf-space{
+    position:relative;
+    min-height:700px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.prompt-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.prompt{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.responses{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:18px;
+}
+
+.response-card{
+    border:1px solid rgba(255,211,142,.16);
+    background:rgba(0,0,0,.24);
+    border-radius:24px;
+    padding:20px;
+    min-height:230px;
+    cursor:pointer;
+    transition:.28s ease;
+}
+
+.response-card:hover,
+.response-card.selected{
+    border-color:rgba(255,218,145,.62);
+    background:rgba(255,205,120,.075);
+    box-shadow:0 0 42px rgba(244,190,98,.18);
+    transform:translateY(-3px);
+}
+
+.response-card.bad{
+    opacity:.82;
+}
+
+.response-card.good.selected{
+    box-shadow:0 0 58px rgba(244,190,98,.30);
+}
+
+.response-card small{
+    display:block;
+    color:#9f927f;
+    font-size:11px;
+    margin-bottom:8px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.response-card h4{
+    color:#f4d59d;
+    font-size:16px;
+    margin-bottom:12px;
+}
+
+.response-card p{
+    color:#d9cdbc;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.feedback-panel{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:26px;
+    padding:22px;
+    background:linear-gradient(180deg, rgba(17,12,8,.72), rgba(5,5,5,.82));
+}
+
+.feedback-panel p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.reward-bars{
+    margin-top:18px;
+    display:grid;
+    gap:12px;
+}
+
+.reward-row{
+    display:grid;
+    grid-template-columns:110px 1fr 42px;
+    gap:10px;
+    align-items:center;
+}
+
+.reward-row span{
+    color:#d8c7ac;
+    font-size:12px;
+}
+
+.bar{
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.final-answer{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:26px;
+    padding:22px;
+    background:rgba(255,205,120,.045);
+}
+
+.final-answer p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:700px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:720px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .responses{
+        grid-template-columns:1fr;
+    }
+
+    .rlhf-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .prompt{
+        font-size:23px;
+    }
+
+    .reward-row{
+        grid-template-columns:90px 1fr 38px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • RLHF</div>
+
+        <h1>Quando preferência humana calibra comportamento.</h1>
+
+        <p class="lead">
+            RLHF ajusta modelos com base em avaliações humanas. O objetivo não é apenas gerar
+            algo provável, mas produzir respostas mais úteis, claras, seguras e apropriadas.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Aprender quais respostas humanos consideram mais úteis, claras, seguras e apropriadas.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                O modelo recebe sinais de preferência e ajusta seu comportamento para se aproximar
+                das expectativas humanas.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                resposta → avaliação → preferência → alinhamento
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Preferência Humana</h2>
+                <p>
+                    Compare duas respostas candidatas. A escolha humana gera um sinal de preferência
+                    que orienta o comportamento futuro do modelo.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('cliente', this)">Cliente</button>
+                <button onclick="setScenario('risco', this)">Risco</button>
+                <button onclick="setScenario('seguranca', this)">Segurança</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="rlhf-space">
+
+                <div class="prompt-box">
+                    <div class="label">Pergunta do usuário</div>
+                    <div class="prompt" id="prompt"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Gerar</strong>
+                        <p>O modelo cria respostas candidatas.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Avaliar</strong>
+                        <p>Humanos indicam qual resposta é melhor.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Aprender</strong>
+                        <p>O sistema atualiza padrões de preferência.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Alinhar</strong>
+                        <p>Respostas futuras ficam mais adequadas.</p>
+                    </div>
+                </div>
+
+                <div class="label">Respostas candidatas</div>
+                <div class="responses" id="responses"></div>
+
+                <div class="feedback-panel">
+                    <div class="label">Sinal de preferência</div>
+                    <p id="feedbackText"></p>
+
+                    <div class="reward-bars">
+                        <div class="reward-row">
+                            <span>Clareza</span>
+                            <div class="bar"><div class="fill" id="barClareza"></div></div>
+                            <span id="scoreClareza">0%</span>
+                        </div>
+
+                        <div class="reward-row">
+                            <span>Utilidade</span>
+                            <div class="bar"><div class="fill" id="barUtilidade"></div></div>
+                            <span id="scoreUtilidade">0%</span>
+                        </div>
+
+                        <div class="reward-row">
+                            <span>Segurança</span>
+                            <div class="bar"><div class="fill" id="barSeguranca"></div></div>
+                            <span id="scoreSeguranca">0%</span>
+                        </div>
+
+                        <div class="reward-row">
+                            <span>Adequação</span>
+                            <div class="bar"><div class="fill" id="barAdequacao"></div></div>
+                            <span id="scoreAdequacao">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="final-answer">
+                    <div class="label">Comportamento alinhado</div>
+                    <p id="finalAnswer"></p>
+                </div>
+
+                <div class="legend">
+                    Em um RLHF real, milhares ou milhões de avaliações humanas alimentam modelos de recompensa
+                    e ajudam a ajustar o comportamento do sistema.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>RLHF</h3>
+                <p>
+                    Reinforcement Learning from Human Feedback usa julgamentos humanos para aproximar
+                    o comportamento do modelo daquilo que pessoas consideram útil, seguro e apropriado.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        probabilidade estatística não basta. A resposta também precisa ser aceitável
+                        segundo critérios humanos.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">Feedback humano</span>
+                    <span class="badge">Preferência</span>
+                    <span class="badge">Recompensa</span>
+                    <span class="badge">Alinhamento</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    cliente:{
+        title:"Retenção de clientes",
+        prompt:"Como melhorar a retenção de clientes em uma empresa com aumento de churn?",
+        responses:[
+            {
+                type:"bad",
+                label:"Resposta A",
+                title:"Resposta genérica",
+                text:"A empresa deve melhorar o atendimento, oferecer descontos e acompanhar os clientes com frequência para reduzir cancelamentos.",
+                reason:"A resposta é plausível, mas genérica. Não organiza diagnóstico, segmentação, hipóteses ou plano de ação.",
+                scores:{clareza:54, utilidade:42, seguranca:70, adequacao:46}
+            },
+            {
+                type:"good",
+                label:"Resposta B",
+                title:"Resposta alinhada",
+                text:"Primeiro, segmente o churn por perfil, canal e momento da jornada. Depois, identifique causas recorrentes, priorize grupos de maior valor e teste ações específicas de retenção com métricas de acompanhamento.",
+                reason:"A resposta é mais útil porque estrutura diagnóstico, segmentação, priorização e ação mensurável.",
+                scores:{clareza:88, utilidade:92, seguranca:84, adequacao:90}
+            }
+        ],
+        final:"Após feedback humano, o modelo tende a preferir respostas que estruturam o problema, indicam critérios de priorização e conectam recomendação com ação mensurável."
+    },
+
+    risco:{
+        title:"Análise de risco",
+        prompt:"Explique se uma proposta de crédito com score intermediário deve ser aprovada automaticamente.",
+        responses:[
+            {
+                type:"bad",
+                label:"Resposta A",
+                title:"Resposta precipitada",
+                text:"Se o score não for baixo, a proposta pode ser aprovada, pois clientes intermediários geralmente não representam risco elevado.",
+                reason:"A resposta simplifica demais o problema e ignora exposição, garantias, renda, histórico e regras de política.",
+                scores:{clareza:58, utilidade:36, seguranca:38, adequacao:40}
+            },
+            {
+                type:"good",
+                label:"Resposta B",
+                title:"Resposta prudente",
+                text:"Score intermediário não deve ser critério único para aprovação automática. A decisão deve considerar exposição, capacidade de pagamento, histórico, garantias, divergências cadastrais e política de alçadas.",
+                reason:"A resposta é mais segura porque evita automatismo indevido e incorpora critérios relevantes de decisão.",
+                scores:{clareza:86, utilidade:90, seguranca:94, adequacao:91}
+            }
+        ],
+        final:"Com feedback humano, o modelo aprende a evitar respostas excessivamente conclusivas quando o contexto exige prudência, critérios adicionais e avaliação de risco."
+    },
+
+    seguranca:{
+        title:"Resposta segura",
+        prompt:"Como devo lidar com uma solicitação que pede dados sensíveis de clientes?",
+        responses:[
+            {
+                type:"bad",
+                label:"Resposta A",
+                title:"Resposta insegura",
+                text:"Você pode enviar os dados se a pessoa parecer autorizada, principalmente se a solicitação vier de alguém da empresa.",
+                reason:"A resposta é perigosa porque assume autorização sem validação formal e ignora controles de acesso.",
+                scores:{clareza:62, utilidade:34, seguranca:18, adequacao:28}
+            },
+            {
+                type:"good",
+                label:"Resposta B",
+                title:"Resposta segura",
+                text:"Não compartilhe dados sensíveis sem validação formal de autorização, finalidade, canal seguro e necessidade de acesso. Encaminhe a solicitação ao fluxo interno de segurança ou privacidade.",
+                reason:"A resposta é mais alinhada porque prioriza segurança, governança e validação antes de qualquer compartilhamento.",
+                scores:{clareza:90, utilidade:88, seguranca:98, adequacao:95}
+            }
+        ],
+        final:"O feedback humano reforça que respostas sobre dados sensíveis devem priorizar validação, segurança, finalidade, necessidade de acesso e conformidade."
+    }
+};
+
+const promptEl = document.getElementById("prompt");
+const responsesEl = document.getElementById("responses");
+const feedbackText = document.getElementById("feedbackText");
+const finalAnswer = document.getElementById("finalAnswer");
+const info = document.getElementById("info");
+
+let currentScenario = scenarios.cliente;
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+
+    promptEl.innerText = currentScenario.prompt;
+    finalAnswer.innerText = currentScenario.final;
+    responsesEl.innerHTML = "";
+
+    currentScenario.responses.forEach((response, index)=>{
+        const card = document.createElement("div");
+        card.className = `response-card ${response.type} ${response.type === "good" ? "selected" : ""}`;
+        card.innerHTML = `
+            <small>${response.label}</small>
+            <h4>${response.title}</h4>
+            <p>${response.text}</p>
+        `;
+        card.onclick = () => selectResponse(response, card);
+        responsesEl.appendChild(card);
+    });
+
+    const preferred = currentScenario.responses.find(r=>r.type === "good");
+    applyFeedback(preferred);
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${currentScenario.title}</h3>
+        <p>
+            O sistema compara respostas candidatas e usa a preferência humana como sinal
+            para ajustar padrões futuros de comportamento.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                A resposta escolhida não é apenas a mais provável. Ela é a que melhor atende
+                critérios humanos de clareza, utilidade, segurança e adequação.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">avaliação</span>
+            <span class="badge">preferência</span>
+            <span class="badge">recompensa</span>
+            <span class="badge">ajuste</span>
+        </div>
+    `;
+}
+
+function selectResponse(response, card){
+    document.querySelectorAll(".response-card").forEach(c=>c.classList.remove("selected"));
+    card.classList.add("selected");
+    applyFeedback(response);
+}
+
+function applyFeedback(response){
+    feedbackText.innerText = response.reason;
+
+    setBar("Clareza", response.scores.clareza);
+    setBar("Utilidade", response.scores.utilidade);
+    setBar("Seguranca", response.scores.seguranca);
+    setBar("Adequacao", response.scores.adequacao);
+
+    info.innerHTML = `
+        <div class="info-tag">Resposta selecionada</div>
+        <h3>${response.title}</h3>
+        <p>${response.text}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Avaliação humana:</strong><br>
+                ${response.reason}
+            </p>
+            <p>
+                <strong>Contribuição para o alinhamento:</strong><br>
+                Esse feedback ajuda o modelo a favorecer padrões de resposta mais claros,
+                úteis, seguros e adequados em situações semelhantes.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">clareza ${response.scores.clareza}%</span>
+            <span class="badge">utilidade ${response.scores.utilidade}%</span>
+            <span class="badge">segurança ${response.scores.seguranca}%</span>
+            <span class="badge">adequação ${response.scores.adequacao}%</span>
+        </div>
+    `;
+}
+
+function setBar(name, value){
+    const bar = document.getElementById(`bar${name}`);
+    const score = document.getElementById(`score${name}`);
+    bar.style.width = `${value}%`;
+    score.innerText = `${value}%`;
+}
+
+setScenario("cliente", document.querySelector("button"));
+</script>
+
+</body>
+</html>
