@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Aprendizado Autoregressivo | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.ar-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.prompt-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.prompt{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.generation-wrap{
+    display:grid;
+    grid-template-columns:1fr 250px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.generation-box{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:24px;
+    background:rgba(0,0,0,.20);
+    min-height:420px;
+}
+
+.context-label{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    margin-bottom:12px;
+}
+
+.generated-text{
+    min-height:220px;
+    color:#f6efe3;
+    font-family:Georgia,serif;
+    font-size:30px;
+    line-height:1.35;
+}
+
+.token{
+    display:inline-flex;
+    margin:4px 4px 4px 0;
+    padding:4px 7px;
+    border-radius:10px;
+    background:rgba(255,205,120,.07);
+    border:1px solid rgba(255,211,142,.14);
+}
+
+.token.current{
+    color:#fff;
+    background:rgba(255,205,120,.20);
+    border-color:rgba(255,218,145,.56);
+    box-shadow:0 0 26px rgba(244,190,98,.30);
+}
+
+.cursor{
+    display:inline-block;
+    width:10px;
+    height:28px;
+    margin-left:4px;
+    background:#f1c27a;
+    vertical-align:-4px;
+    animation:blink 1s infinite;
+    border-radius:2px;
+}
+
+@keyframes blink{
+    0%,50%{opacity:1}
+    51%,100%{opacity:.2}
+}
+
+.prob-panel{
+    border-top:1px solid rgba(255,220,160,.13);
+    margin-top:22px;
+    padding-top:18px;
+}
+
+.prob-title{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.candidates{
+    display:grid;
+    gap:10px;
+}
+
+.candidate{
+    display:grid;
+    grid-template-columns:90px 1fr 45px;
+    gap:10px;
+    align-items:center;
+    font-size:13px;
+    color:#ded4c3;
+}
+
+.candidate strong{
+    color:#fff1d0;
+    font-weight:600;
+}
+
+.bar{
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.45s ease;
+}
+
+.control-panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.control-panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.action-stack{
+    display:grid;
+    gap:10px;
+    margin-top:14px;
+}
+
+.action-stack button{
+    width:100%;
+}
+
+.token-stream{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:26px;
+    overflow:hidden;
+    background:rgba(0,0,0,.18);
+}
+
+.stream-row{
+    display:grid;
+    grid-template-columns:70px 1fr 80px;
+    gap:10px;
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.075);
+    color:#ded4c3;
+    font-size:13px;
+}
+
+.stream-row.head{
+    color:var(--gold2);
+    background:rgba(255,205,120,.055);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.stream-row:last-child{
+    border-bottom:0;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .generation-wrap{grid-template-columns:1fr}
+
+    .ar-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .prompt{font-size:23px}
+
+    .generated-text{font-size:25px}
+
+    .candidate{
+        grid-template-columns:80px 1fr 42px;
+    }
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Autoregressivo</div>
+
+        <h1>Quando uma resposta nasce em sequência.</h1>
+
+        <p class="lead">
+            Modelos autoregressivos geram conteúdo passo a passo. Cada novo token produzido
+            passa a fazer parte do contexto usado para prever o próximo.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Prever o próximo token, palavra ou evento a partir do contexto acumulado.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Como escrever uma frase olhando sempre para o que já foi dito antes,
+                escolhendo a próxima parte mais provável.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                contexto → próximo token → novo contexto
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Geração Token por Token</h2>
+                <p>
+                    Escolha um cenário e avance a geração. A simulação mostra como cada token
+                    altera o contexto e influencia a próxima previsão.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('risco', this)">Risco</button>
+                <button onclick="setScenario('ia', this)">IA</button>
+                <button onclick="setScenario('credito', this)">Crédito</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="ar-space">
+
+                <div class="prompt-box">
+                    <div class="label">Prompt inicial</div>
+                    <div class="prompt" id="prompt"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Contexto</strong>
+                        <p>O modelo lê tudo que veio antes.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Distribuição</strong>
+                        <p>Calcula próximos tokens prováveis.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Escolha</strong>
+                        <p>Seleciona uma continuação.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Atualização</strong>
+                        <p>O novo token vira contexto.</p>
+                    </div>
+                </div>
+
+                <div class="generation-wrap">
+
+                    <div class="generation-box">
+                        <div class="context-label">Resposta em formação</div>
+
+                        <div class="generated-text" id="generatedText"></div>
+
+                        <div class="prob-panel">
+                            <div class="prob-title">Próximos tokens candidatos</div>
+                            <div class="candidates" id="candidates"></div>
+                        </div>
+                    </div>
+
+                    <aside class="control-panel">
+                        <h3>Sequência</h3>
+
+                        <div class="metric">
+                            <small>token atual</small>
+                            <strong id="tokenIndex">0</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>contexto acumulado</small>
+                            <strong id="contextSize">0</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>probabilidade escolhida</small>
+                            <strong id="chosenProb">—</strong>
+                            <div class="bar"><div class="fill" id="chosenBar" style="width:0%"></div></div>
+                        </div>
+
+                        <div class="action-stack">
+                            <button onclick="nextToken()">Gerar próximo token</button>
+                            <button onclick="autoGenerate()">Gerar resposta completa</button>
+                            <button onclick="resetGeneration()">Reiniciar</button>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="token-stream">
+                    <div class="stream-row head">
+                        <span>Passo</span>
+                        <span>Token gerado</span>
+                        <span>Prob.</span>
+                    </div>
+                    <div id="streamBody"></div>
+                </div>
+
+                <div class="legend">
+                    Em um LLM real, cada token é escolhido a partir de uma distribuição probabilística sobre milhares de possibilidades.
+                    Aqui a simulação usa uma sequência fixa para mostrar a lógica autoregressiva.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Aprendizado Autoregressivo</h3>
+                <p>
+                    A resposta não aparece inteira de uma vez. Ela nasce em sequência:
+                    cada token gerado entra no contexto e influencia a próxima decisão.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        gerar é repetir a pergunta: “dado tudo que veio antes, qual é o próximo token mais provável?”
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">next-token prediction</span>
+                    <span class="badge">contexto</span>
+                    <span class="badge">sequência</span>
+                    <span class="badge">LLM</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    risco:{
+        prompt:"Explique risco operacional.",
+        tokens:[
+            {t:"Risco", p:94, candidates:[["Risco",94],["A",3],["O",2]]},
+            {t:"operacional", p:91, candidates:[["operacional",91],["financeiro",5],["de",3]]},
+            {t:"é", p:88, candidates:[["é",88],["representa",7],["envolve",4]]},
+            {t:"a", p:81, candidates:[["a",81],["um",10],["uma",7]]},
+            {t:"possibilidade", p:76, candidates:[["possibilidade",76],["perda",13],["exposição",8]]},
+            {t:"de", p:92, candidates:[["de",92],["que",4],["em",2]]},
+            {t:"perdas", p:83, candidates:[["perdas",83],["falhas",9],["eventos",5]]},
+            {t:"causadas", p:78, candidates:[["causadas",78],["associadas",12],["decorrentes",7]]},
+            {t:"por", p:90, candidates:[["por",90],["em",5],["com",3]]},
+            {t:"falhas", p:86, candidates:[["falhas",86],["processos",8],["eventos",4]]},
+            {t:"em", p:84, candidates:[["em",84],["de",9],["nos",4]]},
+            {t:"processos,", p:79, candidates:[["processos,",79],["sistemas,",11],["controles,",7]]},
+            {t:"pessoas", p:73, candidates:[["pessoas",73],["sistemas",15],["controles",8]]},
+            {t:"ou", p:90, candidates:[["ou",90],["e",6],["com",2]]},
+            {t:"sistemas.", p:82, candidates:[["sistemas.",82],["eventos.",10],["controles.",5]]}
+        ]
+    },
+
+    ia:{
+        prompt:"Defina inteligência artificial.",
+        tokens:[
+            {t:"Inteligência", p:93, candidates:[["Inteligência",93],["A",4],["IA",2]]},
+            {t:"artificial", p:96, candidates:[["artificial",96],["computacional",2],["moderna",1]]},
+            {t:"é", p:89, candidates:[["é",89],["representa",6],["envolve",3]]},
+            {t:"um", p:78, candidates:[["um",78],["uma",17],["o",3]]},
+            {t:"conjunto", p:80, candidates:[["conjunto",80],["sistema",11],["campo",7]]},
+            {t:"de", p:94, candidates:[["de",94],["com",3],["para",2]]},
+            {t:"métodos", p:72, candidates:[["métodos",72],["técnicas",16],["modelos",9]]},
+            {t:"capazes", p:83, candidates:[["capazes",83],["voltados",8],["usados",5]]},
+            {t:"de", p:95, candidates:[["de",95],["para",3],["em",1]]},
+            {t:"perceber,", p:67, candidates:[["perceber,",67],["aprender,",18],["processar,",10]]},
+            {t:"aprender", p:76, candidates:[["aprender",76],["prever",13],["gerar",8]]},
+            {t:"e", p:91, candidates:[["e",91],["ou",5],["para",2]]},
+            {t:"tomar", p:70, candidates:[["tomar",70],["apoiar",17],["orientar",10]]},
+            {t:"decisões.", p:82, candidates:[["decisões.",82],["ações.",10],["respostas.",5]]}
+        ]
+    },
+
+    credito:{
+        prompt:"Avalie uma proposta de crédito.",
+        tokens:[
+            {t:"A", p:88, candidates:[["A",88],["Uma",7],["Para",3]]},
+            {t:"proposta", p:90, candidates:[["proposta",90],["análise",5],["decisão",3]]},
+            {t:"deve", p:82, candidates:[["deve",82],["precisa",10],["pode",6]]},
+            {t:"considerar", p:86, candidates:[["considerar",86],["avaliar",8],["integrar",4]]},
+            {t:"score,", p:78, candidates:[["score,",78],["renda,",11],["risco,",8]]},
+            {t:"capacidade", p:74, candidates:[["capacidade",74],["histórico",13],["exposição",9]]},
+            {t:"de", p:94, candidates:[["de",94],["para",3],["em",2]]},
+            {t:"pagamento,", p:84, candidates:[["pagamento,",84],["crédito,",8],["endividamento,",5]]},
+            {t:"exposição", p:76, candidates:[["exposição",76],["garantias",12],["atrasos",8]]},
+            {t:"e", p:91, candidates:[["e",91],["com",5],["ou",3]]},
+            {t:"política", p:82, candidates:[["política",82],["alçada",10],["limite",6]]},
+            {t:"de", p:93, candidates:[["de",93],["para",4],["com",2]]},
+            {t:"aprovação.", p:85, candidates:[["aprovação.",85],["crédito.",8],["risco.",4]]}
+        ]
+    }
+};
+
+const promptEl = document.getElementById("prompt");
+const generatedText = document.getElementById("generatedText");
+const candidatesEl = document.getElementById("candidates");
+const tokenIndex = document.getElementById("tokenIndex");
+const contextSize = document.getElementById("contextSize");
+const chosenProb = document.getElementById("chosenProb");
+const chosenBar = document.getElementById("chosenBar");
+const streamBody = document.getElementById("streamBody");
+const info = document.getElementById("info");
+
+let currentScenario = scenarios.risco;
+let currentIndex = 0;
+let generated = [];
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    resetGeneration();
+
+    promptEl.innerText = currentScenario.prompt;
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "risco" ? "Explicação técnica" : name === "ia" ? "Definição conceitual" : "Análise de crédito"}</h3>
+        <p>
+            A geração começa com o prompt inicial. A cada passo, o modelo estima candidatos
+            para o próximo token e adiciona o escolhido ao contexto.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O comportamento autoregressivo é sequencial: cada nova palavra muda o estado
+                usado para prever a próxima.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">contexto</span>
+            <span class="badge">token</span>
+            <span class="badge">probabilidade</span>
+            <span class="badge">sequência</span>
+        </div>
+    `;
+}
+
+function render(){
+    generatedText.innerHTML = generated.map((item, idx)=>{
+        const cls = idx === generated.length - 1 ? "token current" : "token";
+        return `<span class="${cls}">${item.t}</span>`;
+    }).join(" ") + `<span class="cursor"></span>`;
+
+    tokenIndex.innerText = currentIndex;
+    contextSize.innerText = `${generated.length} tokens`;
+
+    const current = currentScenario.tokens[currentIndex];
+
+    if(current){
+        renderCandidates(current);
+    } else {
+        candidatesEl.innerHTML = `
+            <div class="candidate">
+                <strong>fim</strong>
+                <div class="bar"><div class="fill" style="width:100%"></div></div>
+                <span>100%</span>
+            </div>
+        `;
+    }
+}
+
+function renderCandidates(tokenObj){
+    candidatesEl.innerHTML = tokenObj.candidates.map(c=>`
+        <div class="candidate">
+            <strong>${c[0]}</strong>
+            <div class="bar"><div class="fill" style="width:${c[1]}%"></div></div>
+            <span>${c[1]}%</span>
+        </div>
+    `).join("");
+}
+
+function nextToken(){
+    if(currentIndex >= currentScenario.tokens.length) return;
+
+    const next = currentScenario.tokens[currentIndex];
+    generated.push(next);
+
+    chosenProb.innerText = `${next.p}%`;
+    chosenBar.style.width = `${next.p}%`;
+
+    const row = document.createElement("div");
+    row.className = "stream-row";
+    row.innerHTML = `
+        <span>${currentIndex + 1}</span>
+        <span>${next.t}</span>
+        <span>${next.p}%</span>
+    `;
+    streamBody.appendChild(row);
+
+    currentIndex++;
+
+    render();
+
+    info.innerHTML = `
+        <div class="info-tag">Token gerado</div>
+        <h3>${next.t}</h3>
+        <p>
+            Este token foi escolhido porque tinha alta probabilidade dado o contexto acumulado até o momento.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Probabilidade escolhida:</strong><br>
+                ${next.p}%
+            </p>
+            <p>
+                <strong>Contexto atualizado:</strong><br>
+                Agora este token passa a influenciar a próxima previsão.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">próximo token</span>
+            <span class="badge">contexto atualizado</span>
+            <span class="badge">probabilidade</span>
+        </div>
+    `;
+}
+
+function autoGenerate(){
+    const interval = setInterval(()=>{
+        if(currentIndex >= currentScenario.tokens.length){
+            clearInterval(interval);
+            return;
+        }
+        nextToken();
+    }, 260);
+}
+
+function resetGeneration(){
+    currentIndex = 0;
+    generated = [];
+    streamBody.innerHTML = "";
+    chosenProb.innerText = "—";
+    chosenBar.style.width = "0%";
+    render();
+}
+
+setScenario("risco", document.querySelector("button"));
+</script>
+
+</body>
+</html>
