@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Clustering | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.cluster-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.dataset-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.dataset-title{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.chart-wrap{
+    display:grid;
+    grid-template-columns:1fr 250px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.chart{
+    position:relative;
+    min-height:430px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.026) 1px, transparent 1px),
+        rgba(0,0,0,.18);
+    background-size:42px 42px;
+    overflow:hidden;
+}
+
+.axis{
+    position:absolute;
+    background:rgba(255,220,160,.18);
+}
+
+.axis.x{
+    left:9%;
+    right:9%;
+    bottom:12%;
+    height:1px;
+}
+
+.axis.y{
+    top:9%;
+    bottom:12%;
+    left:10%;
+    width:1px;
+}
+
+.axis-label{
+    position:absolute;
+    color:#8f806a;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.label-x{right:28px;bottom:20px}
+.label-y{left:20px;top:20px}
+
+.cluster-region{
+    position:absolute;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:50%;
+    background:rgba(255,205,120,.035);
+    opacity:0;
+    transition:.5s ease;
+    pointer-events:none;
+}
+
+.chart.grouped .cluster-region{
+    opacity:1;
+}
+
+.point{
+    position:absolute;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(255,255,255,.55);
+    cursor:pointer;
+    transition:.28s ease;
+    background:#f1c27a;
+    box-shadow:0 0 18px rgba(241,194,122,.35);
+}
+
+.chart.grouped .point.g1{
+    background:#f1c27a;
+    box-shadow:0 0 20px rgba(241,194,122,.50);
+}
+
+.chart.grouped .point.g2{
+    background:#8fd3a7;
+    box-shadow:0 0 20px rgba(143,211,167,.45);
+}
+
+.chart.grouped .point.g3{
+    background:#e49373;
+    box-shadow:0 0 20px rgba(228,147,115,.45);
+}
+
+.point:hover,
+.point.active{
+    transform:translate(-50%,-50%) scale(1.55);
+    z-index:12;
+}
+
+.centroid{
+    position:absolute;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    border:2px solid rgba(255,255,255,.78);
+    background:rgba(5,5,5,.72);
+    box-shadow:0 0 36px rgba(244,190,98,.55);
+    opacity:0;
+    transition:.5s ease;
+    z-index:8;
+}
+
+.centroid::after{
+    content:"×";
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f1c27a;
+    font-size:24px;
+}
+
+.chart.grouped .centroid{
+    opacity:1;
+}
+
+.legend-chart{
+    position:absolute;
+    left:24px;
+    bottom:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    color:#d8c7ac;
+    font-size:12px;
+}
+
+.legend-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+}
+
+.legend-dot::before{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    display:inline-block;
+    background:#f1c27a;
+}
+
+.legend-dot.g2::before{background:#8fd3a7}
+.legend-dot.g3::before{background:#e49373}
+
+.side-panel{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.side-panel h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.cluster-list{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.cluster-card{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:18px;
+    padding:14px;
+    background:rgba(255,205,120,.045);
+    transition:.25s ease;
+    cursor:pointer;
+}
+
+.cluster-card.active{
+    border-color:rgba(255,218,145,.58);
+    background:rgba(255,205,120,.13);
+    box-shadow:0 0 34px rgba(244,190,98,.18);
+}
+
+.cluster-card small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.cluster-card p{
+    color:#d9cdbc;
+    font-size:12.5px;
+    line-height:1.45;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .chart-wrap{grid-template-columns:1fr}
+
+    .cluster-list{grid-template-columns:1fr}
+
+    .cluster-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .dataset-title{font-size:23px}
+
+    .chart{min-height:380px}
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Clustering</div>
+
+        <h1>Quando grupos surgem sem gabarito.</h1>
+
+        <p class="lead">
+            Clustering encontra estruturas escondidas em dados sem respostas corretas.
+            O sistema aproxima elementos semelhantes e revela grupos que não foram definidos previamente.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Identificar grupos, perfis, anomalias e padrões naturalmente presentes nos dados.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Como agrupar elementos apenas pela semelhança entre eles.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                dados sem rótulo → semelhança → grupos
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Grupos Emergentes</h2>
+                <p>
+                    Escolha um cenário e revele os clusters. A simulação mostra como grupos podem surgir
+                    por semelhança, mesmo sem categorias definidas antes.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('clientes', this)">Clientes</button>
+                <button onclick="setScenario('transacoes', this)">Transações</button>
+                <button onclick="setScenario('documentos', this)">Documentos</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="cluster-space">
+
+                <div class="dataset-box">
+                    <div class="label">Base sem rótulo</div>
+                    <div class="dataset-title" id="datasetTitle"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Dados</strong>
+                        <p>Entram sem resposta correta.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Distância</strong>
+                        <p>O sistema mede semelhanças.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Grupos</strong>
+                        <p>Elementos próximos se agrupam.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Interpretação</strong>
+                        <p>Os clusters ganham significado de negócio.</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrap">
+
+                    <div class="chart" id="chart">
+                        <div class="axis x"></div>
+                        <div class="axis y"></div>
+
+                        <div class="axis-label label-y" id="yLabel"></div>
+                        <div class="axis-label label-x" id="xLabel"></div>
+
+                        <div class="legend-chart">
+                            <span class="legend-dot">Grupo 1</span>
+                            <span class="legend-dot g2">Grupo 2</span>
+                            <span class="legend-dot g3">Grupo 3</span>
+                        </div>
+                    </div>
+
+                    <aside class="side-panel">
+                        <h3>Clustering</h3>
+
+                        <div class="metric">
+                            <small>modo atual</small>
+                            <strong id="modeValue">Sem grupos</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>clusters encontrados</small>
+                            <strong id="clusterCount">—</strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>separação visual</small>
+                            <strong id="separationValue">0%</strong>
+                            <div class="bar"><div class="fill" id="separationBar" style="width:0%"></div></div>
+                        </div>
+
+                        <button style="width:100%;margin-top:14px" onclick="toggleClusters()">Revelar clusters</button>
+                    </aside>
+                </div>
+
+                <div class="cluster-list" id="clusterList"></div>
+
+                <div class="legend">
+                    Em modelos reais, os grupos podem ser encontrados por algoritmos como K-means,
+                    DBSCAN, clustering hierárquico ou técnicas em espaços vetoriais.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Aprendizado Não Supervisionado</h3>
+                <p>
+                    O sistema não recebe resposta correta. Ele observa os dados e tenta descobrir
+                    estruturas internas com base em semelhança, distância e densidade.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        os grupos não são dados antecipadamente; eles emergem da própria estrutura dos dados.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">clustering</span>
+                    <span class="badge">sem rótulo</span>
+                    <span class="badge">distância</span>
+                    <span class="badge">segmentação</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    clientes:{
+        title:"Milhões de clientes sem classificação prévia.",
+        xLabel:"maior frequência",
+        yLabel:"maior ticket",
+        points:[
+            {x:24,y:28,g:"g1",name:"C01",desc:"Cliente de alto ticket e baixa frequência."},
+            {x:30,y:34,g:"g1",name:"C02",desc:"Cliente premium com compras menos frequentes."},
+            {x:36,y:25,g:"g1",name:"C03",desc:"Cliente de maior valor médio."},
+            {x:66,y:66,g:"g2",name:"C04",desc:"Cliente promocional e recorrente."},
+            {x:74,y:72,g:"g2",name:"C05",desc:"Cliente de baixa margem e alta frequência."},
+            {x:60,y:76,g:"g2",name:"C06",desc:"Cliente sensível a preço."},
+            {x:78,y:30,g:"g3",name:"C07",desc:"Cliente com sinais de abandono."},
+            {x:84,y:38,g:"g3",name:"C08",desc:"Cliente com queda de engajamento."},
+            {x:72,y:24,g:"g3",name:"C09",desc:"Cliente em risco de churn."}
+        ],
+        clusters:[
+            {id:"Grupo 1",title:"Alto valor",text:"Ticket alto, menor frequência e maior potencial de relacionamento."},
+            {id:"Grupo 2",title:"Promocionais",text:"Compram com frequência, mas respondem fortemente a preço e promoção."},
+            {id:"Grupo 3",title:"Risco de abandono",text:"Redução de engajamento e sinais de possível churn."}
+        ],
+        separation:84
+    },
+
+    transacoes:{
+        title:"Transações financeiras sem marcação prévia de fraude.",
+        xLabel:"maior valor",
+        yLabel:"maior atipicidade",
+        points:[
+            {x:28,y:70,g:"g1",name:"T01",desc:"Transação comum de baixo valor."},
+            {x:34,y:64,g:"g1",name:"T02",desc:"Comportamento recorrente e esperado."},
+            {x:22,y:76,g:"g1",name:"T03",desc:"Baixa atipicidade operacional."},
+            {x:64,y:42,g:"g2",name:"T04",desc:"Valor intermediário com alguns sinais incomuns."},
+            {x:72,y:36,g:"g2",name:"T05",desc:"Transação que exige monitoramento."},
+            {x:58,y:48,g:"g2",name:"T06",desc:"Comportamento parcialmente atípico."},
+            {x:80,y:18,g:"g3",name:"T07",desc:"Valor alto e comportamento muito incomum."},
+            {x:86,y:26,g:"g3",name:"T08",desc:"Transação potencialmente anômala."},
+            {x:76,y:12,g:"g3",name:"T09",desc:"Forte sinal de investigação."}
+        ],
+        clusters:[
+            {id:"Grupo 1",title:"Rotina",text:"Transações comuns e próximas ao comportamento esperado."},
+            {id:"Grupo 2",title:"Monitoramento",text:"Sinais intermediários que merecem acompanhamento."},
+            {id:"Grupo 3",title:"Anomalias",text:"Padrões incomuns que exigem análise especializada."}
+        ],
+        separation:79
+    },
+
+    documentos:{
+        title:"Documentos corporativos agrupados por conteúdo.",
+        xLabel:"mais operacional",
+        yLabel:"mais regulatório",
+        points:[
+            {x:24,y:24,g:"g1",name:"D01",desc:"Política regulatória formal."},
+            {x:32,y:30,g:"g1",name:"D02",desc:"Norma interna de conformidade."},
+            {x:28,y:38,g:"g1",name:"D03",desc:"Documento de governança."},
+            {x:60,y:64,g:"g2",name:"D04",desc:"Procedimento operacional."},
+            {x:68,y:70,g:"g2",name:"D05",desc:"Manual de execução."},
+            {x:56,y:76,g:"g2",name:"D06",desc:"Rotina de atendimento."},
+            {x:76,y:30,g:"g3",name:"D07",desc:"Relatório analítico."},
+            {x:84,y:38,g:"g3",name:"D08",desc:"Estudo gerencial."},
+            {x:72,y:22,g:"g3",name:"D09",desc:"Sumário executivo."}
+        ],
+        clusters:[
+            {id:"Grupo 1",title:"Governança",text:"Normas, políticas e documentos de controle."},
+            {id:"Grupo 2",title:"Operação",text:"Procedimentos, rotinas e instruções práticas."},
+            {id:"Grupo 3",title:"Análise",text:"Relatórios, estudos e documentos de decisão."}
+        ],
+        separation:82
+    }
+};
+
+let currentScenario = scenarios.clientes;
+let grouped = false;
+
+const datasetTitle = document.getElementById("datasetTitle");
+const chart = document.getElementById("chart");
+const clusterList = document.getElementById("clusterList");
+const xLabel = document.getElementById("xLabel");
+const yLabel = document.getElementById("yLabel");
+const modeValue = document.getElementById("modeValue");
+const clusterCount = document.getElementById("clusterCount");
+const separationValue = document.getElementById("separationValue");
+const separationBar = document.getElementById("separationBar");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    grouped = false;
+
+    datasetTitle.innerText = currentScenario.title;
+    xLabel.innerText = currentScenario.xLabel;
+    yLabel.innerText = currentScenario.yLabel;
+
+    renderChart();
+    renderClusters();
+    updateMode();
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "clientes" ? "Segmentação de clientes" : name === "transacoes" ? "Anomalias transacionais" : "Organização documental"}</h3>
+        <p>
+            Os dados entram sem rótulos. O sistema observa proximidade e forma grupos
+            com base na semelhança entre os próprios elementos.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                Clique em “Revelar clusters” para ver como padrões escondidos podem emergir
+                sem uma resposta correta pré-definida.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">sem rótulo</span>
+            <span class="badge">semelhança</span>
+            <span class="badge">grupos</span>
+            <span class="badge">interpretação</span>
+        </div>
+    `;
+}
+
+function renderChart(){
+    [...chart.querySelectorAll(".point,.cluster-region,.centroid")].forEach(el=>el.remove());
+    chart.classList.remove("grouped");
+
+    const clusters = getClusterStats();
+
+    clusters.forEach(c=>{
+        const region = document.createElement("div");
+        region.className = "cluster-region";
+        region.style.left = `${c.cx - 17}%`;
+        region.style.top = `${c.cy - 17}%`;
+        region.style.width = "34%";
+        region.style.height = "34%";
+        chart.appendChild(region);
+
+        const centroid = document.createElement("div");
+        centroid.className = "centroid";
+        centroid.style.left = `${c.cx}%`;
+        centroid.style.top = `${c.cy}%`;
+        chart.appendChild(centroid);
+    });
+
+    currentScenario.points.forEach(p=>{
+        const point = document.createElement("div");
+        point.className = `point ${p.g}`;
+        point.style.left = `${p.x}%`;
+        point.style.top = `${p.y}%`;
+        point.onclick = () => selectPoint(p, point);
+        chart.appendChild(point);
+    });
+}
+
+function renderClusters(){
+    clusterList.innerHTML = "";
+
+    currentScenario.clusters.forEach(c=>{
+        const card = document.createElement("div");
+        card.className = "cluster-card";
+        card.innerHTML = `
+            <small>${c.id}</small>
+            <p><strong style="color:#f4d59d">${c.title}</strong><br>${c.text}</p>
+        `;
+        card.onclick = () => selectCluster(c, card);
+        clusterList.appendChild(card);
+    });
+}
+
+function toggleClusters(){
+    grouped = !grouped;
+    updateMode();
+}
+
+function updateMode(){
+    chart.classList.toggle("grouped", grouped);
+
+    modeValue.innerText = grouped ? "Clusters revelados" : "Sem grupos";
+    clusterCount.innerText = grouped ? "3" : "—";
+    separationValue.innerText = grouped ? `${currentScenario.separation}%` : "0%";
+    separationBar.style.width = grouped ? `${currentScenario.separation}%` : "0%";
+
+    document.querySelectorAll(".cluster-card").forEach(c=>{
+        c.classList.toggle("active", grouped);
+    });
+}
+
+function getClusterStats(){
+    const groups = {};
+
+    currentScenario.points.forEach(p=>{
+        if(!groups[p.g]) groups[p.g] = [];
+        groups[p.g].push(p);
+    });
+
+    return Object.entries(groups).map(([g, arr])=>{
+        return {
+            g,
+            cx: arr.reduce((s,p)=>s+p.x,0)/arr.length,
+            cy: arr.reduce((s,p)=>s+p.y,0)/arr.length
+        };
+    });
+}
+
+function selectPoint(p, el){
+    document.querySelectorAll(".point").forEach(x=>x.classList.remove("active"));
+    el.classList.add("active");
+
+    info.innerHTML = `
+        <div class="info-tag">Elemento selecionado</div>
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                Este elemento fica próximo de outros dados com características parecidas.
+                No clustering, essa proximidade ajuda a formar grupos.
+            </p>
+            <p>
+                <strong>Grupo estimado:</strong><br>
+                ${grouped ? p.g.toUpperCase() : "Ainda não revelado"}
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">elemento</span>
+            <span class="badge">posição</span>
+            <span class="badge">semelhança</span>
+            <span class="badge">cluster</span>
+        </div>
+    `;
+}
+
+function selectCluster(c, card){
+    document.querySelectorAll(".cluster-card").forEach(x=>x.classList.remove("active"));
+    card.classList.add("active");
+
+    if(!grouped){
+        grouped = true;
+        updateMode();
+    }
+
+    info.innerHTML = `
+        <div class="info-tag">Cluster interpretado</div>
+        <h3>${c.title}</h3>
+        <p>${c.text}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Importante:</strong><br>
+                O algoritmo encontra o agrupamento. A interpretação do que esse grupo significa
+                ainda exige leitura humana ou critério de negócio.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">grupo</span>
+            <span class="badge">padrão</span>
+            <span class="badge">segmentação</span>
+            <span class="badge">interpretação</span>
+        </div>
+    `;
+}
+
+setScenario("clientes", document.querySelector("button"));
+</script>
+
+</body>
+</html>
