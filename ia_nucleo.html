@@ -758,15 +758,26 @@ function selectModule(id){
 
     drawCognitiveLines(m);
 
-    panel.innerHTML=`
-        <div class="panel-tag">Região Cognitiva</div>
-        <h2>${m.title}</h2>
-        <p class="subtitle">${m.subtitle}</p>
+panel.innerHTML=`
+    <div class="panel-tag">Região Cognitiva</div>
+    <h2>${m.title}</h2>
+    <p class="subtitle">${m.subtitle}</p>
 
-        <div class="section">
-            <h3>Função cognitiva</h3>
-            <p>${m.funcao}</p>
-        </div>
+    ${m.relacoes ? `
+    <div class="section">
+        <h3>Ativação Cognitiva</h3>
+
+        <p>
+            As linhas douradas representam capacidades cognitivas artificialmente relacionadas.
+            Elas indicam como diferentes arquiteturas podem complementar, ativar ou ampliar esta região dentro de sistemas inteligentes.
+        </p>
+    </div>
+    ` : ""}
+
+    <div class="section">
+        <h3>Função cognitiva</h3>
+        <p>${m.funcao}</p>
+    </div>
 
         <div class="section">
             <h3>Limitação computacional</h3>
