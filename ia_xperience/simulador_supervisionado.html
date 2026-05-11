@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de Aprendizado Supervisionado | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.sup-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.case-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.case-title{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.chart-wrap{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    gap:18px;
+    margin-top:18px;
+}
+
+.chart{
+    position:relative;
+    min-height:390px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.026) 1px, transparent 1px),
+        rgba(0,0,0,.18);
+    background-size:42px 42px;
+    overflow:hidden;
+}
+
+.axis{
+    position:absolute;
+    background:rgba(255,220,160,.18);
+}
+
+.axis.x{
+    left:9%;
+    right:9%;
+    bottom:12%;
+    height:1px;
+}
+
+.axis.y{
+    top:9%;
+    bottom:12%;
+    left:10%;
+    width:1px;
+}
+
+.axis-label{
+    position:absolute;
+    color:#8f806a;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+}
+
+.label-x{right:28px;bottom:20px}
+.label-y{left:20px;top:20px}
+
+.boundary{
+    position:absolute;
+    left:7%;
+    top:58%;
+    width:88%;
+    height:2px;
+    background:linear-gradient(90deg, transparent, rgba(255,211,142,.72), transparent);
+    transform:rotate(-32deg);
+    transform-origin:center;
+    filter:drop-shadow(0 0 12px rgba(244,190,98,.45));
+}
+
+.zone-good,
+.zone-bad{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+}
+
+.zone-good{
+    background:linear-gradient(145deg, rgba(143,211,167,.10), transparent 48%);
+}
+
+.zone-bad{
+    background:linear-gradient(325deg, rgba(228,147,115,.10), transparent 48%);
+}
+
+.point{
+    position:absolute;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    border:1px solid rgba(255,255,255,.55);
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.point.good{
+    background:var(--good);
+    box-shadow:0 0 18px rgba(143,211,167,.45);
+}
+
+.point.bad{
+    background:var(--bad);
+    box-shadow:0 0 18px rgba(228,147,115,.45);
+}
+
+.point.new{
+    width:28px;
+    height:28px;
+    background:#f1c27a;
+    box-shadow:0 0 38px rgba(244,190,98,.78);
+    z-index:8;
+}
+
+.point:hover,
+.point.active{
+    transform:translate(-50%,-50%) scale(1.45);
+    z-index:12;
+}
+
+.legend-chart{
+    position:absolute;
+    left:24px;
+    bottom:18px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    color:#d8c7ac;
+    font-size:12px;
+}
+
+.legend-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+}
+
+.legend-dot::before{
+    content:"";
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    display:inline-block;
+}
+
+.legend-dot.good::before{background:var(--good)}
+.legend-dot.bad::before{background:var(--bad)}
+.legend-dot.new::before{background:#f1c27a}
+
+.metrics{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.metrics h3{
+    font-family:Georgia,serif;
+    font-size:27px;
+    font-weight:500;
+    margin-bottom:14px;
+}
+
+.metric{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:14px 0;
+}
+
+.metric:first-of-type{
+    border-top:0;
+}
+
+.metric small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.metric strong{
+    display:block;
+    color:#fff1d0;
+    font-size:24px;
+    margin-top:4px;
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.table-box{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:26px;
+    overflow:hidden;
+    background:rgba(0,0,0,.18);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:12px 14px;
+    border-bottom:1px solid rgba(255,255,255,.075);
+    text-align:left;
+    font-size:13px;
+}
+
+th{
+    color:var(--gold2);
+    background:rgba(255,205,120,.055);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+td{
+    color:#ded4c3;
+}
+
+.status{
+    display:inline-flex;
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:11px;
+    border:1px solid rgba(255,255,255,.16);
+}
+
+.status.good{
+    color:var(--good);
+    background:rgba(143,211,167,.08);
+}
+
+.status.bad{
+    color:var(--bad);
+    background:rgba(228,147,115,.08);
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{
+        display:block;
+    }
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{
+        padding:30px 18px;
+    }
+
+    .simulator{
+        grid-template-columns:1fr;
+    }
+
+    .info{
+        min-height:auto;
+    }
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{
+        display:block;
+    }
+
+    .controls{
+        margin-top:18px;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .chart-wrap{
+        grid-template-columns:1fr;
+    }
+
+    .chart{
+        min-height:360px;
+    }
+
+    .sup-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .case-title{
+        font-size:23px;
+    }
+
+    .info h3{
+        font-size:30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • Supervisionado</div>
+
+        <h1>Quando exemplos corrigidos viram previsão.</h1>
+
+        <p class="lead">
+            Aprendizado supervisionado usa dados históricos com respostas conhecidas.
+            O modelo observa exemplos, aprende padrões e estima a resposta para novos casos.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Identificar padrões em eventos passados para estimar comportamentos e resultados futuros.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                O sistema aprende com exemplos onde a resposta correta já é conhecida.
+                Depois, usa esse aprendizado para classificar ou estimar casos novos.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                exemplos + gabarito → padrão → previsão
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Classificação Supervisionada</h2>
+                <p>
+                    Escolha um cenário para ver como exemplos históricos rotulados ajudam o modelo
+                    a estimar risco, probabilidade ou classe de um novo caso.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('credito', this)">Crédito</button>
+                <button onclick="setScenario('fraude', this)">Fraude</button>
+                <button onclick="setScenario('churn', this)">Churn</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="sup-space">
+
+                <div class="case-box">
+                    <div class="label">Novo caso para previsão</div>
+                    <div class="case-title" id="caseTitle"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Exemplos</strong>
+                        <p>Casos históricos com resposta conhecida.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Rótulo</strong>
+                        <p>O gabarito indica o resultado real passado.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Padrão</strong>
+                        <p>O modelo aprende relações entre variáveis.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Previsão</strong>
+                        <p>Um novo caso recebe probabilidade estimada.</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrap">
+                    <div class="chart" id="chart">
+                        <div class="zone-good"></div>
+                        <div class="zone-bad"></div>
+                        <div class="axis x"></div>
+                        <div class="axis y"></div>
+                        <div class="boundary"></div>
+
+                        <div class="axis-label label-y" id="yLabel"></div>
+                        <div class="axis-label label-x" id="xLabel"></div>
+
+                        <div class="legend-chart">
+                            <span class="legend-dot good" id="goodLegend"></span>
+                            <span class="legend-dot bad" id="badLegend"></span>
+                            <span class="legend-dot new">Novo caso</span>
+                        </div>
+                    </div>
+
+                    <aside class="metrics">
+                        <h3>Previsão</h3>
+
+                        <div class="metric">
+                            <small id="probLabel"></small>
+                            <strong id="probValue"></strong>
+                            <div class="bar"><div class="fill" id="probBar"></div></div>
+                        </div>
+
+                        <div class="metric">
+                            <small>classe estimada</small>
+                            <strong id="classValue"></strong>
+                        </div>
+
+                        <div class="metric">
+                            <small>interpretação</small>
+                            <p id="interpretation" style="margin-top:8px;color:#ded4c3;line-height:1.45;font-size:13px"></p>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="table-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Caso</th>
+                                <th>Variável 1</th>
+                                <th>Variável 2</th>
+                                <th>Resposta real</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="legend">
+                    A fronteira de decisão é ilustrativa. Em modelos reais, o padrão pode ser aprendido
+                    por regressão logística, árvores, random forest, gradient boosting, redes neurais ou outros algoritmos.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>Aprendizado Supervisionado</h3>
+                <p>
+                    O modelo aprende a partir de exemplos rotulados: entradas acompanhadas de uma resposta correta.
+                    Depois, tenta generalizar esse padrão para casos ainda não observados.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        aprender com o passado para estimar a resposta de novos casos.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">classificação</span>
+                    <span class="badge">probabilidade</span>
+                    <span class="badge">rótulo</span>
+                    <span class="badge">score</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    credito:{
+        title:"Cliente com renda média, dívida alta e histórico recente de atraso.",
+        xLabel:"maior dívida",
+        yLabel:"maior renda",
+        goodLegend:"Não atrasou",
+        badLegend:"Atrasou",
+        probLabel:"probabilidade de inadimplência",
+        prob:72,
+        classValue:"Risco elevado",
+        interpretation:"O novo caso está próximo de clientes históricos com dívida alta e atraso observado. O modelo estima maior probabilidade de inadimplência.",
+        table:[
+            ["João","dívida baixa","renda alta","Não atrasou","good",28,27],
+            ["Ana","dívida média","renda alta","Não atrasou","good",42,22],
+            ["Bruno","dívida alta","renda média","Atrasou","bad",68,49],
+            ["Maria","dívida alta","renda baixa","Atrasou","bad",78,69],
+            ["Paula","dívida baixa","renda média","Não atrasou","good",34,47],
+            ["Carlos","dívida média","renda baixa","Atrasou","bad",58,73]
+        ],
+        newPoint:{x:70,y:58}
+    },
+
+    fraude:{
+        title:"Transação com valor alto, horário incomum e divergência de localidade.",
+        xLabel:"maior valor",
+        yLabel:"maior anomalia",
+        goodLegend:"Legítima",
+        badLegend:"Fraude",
+        probLabel:"probabilidade de fraude",
+        prob:81,
+        classValue:"Alerta crítico",
+        interpretation:"O novo caso está próximo de transações históricas marcadas como fraude, combinando valor elevado e comportamento anômalo.",
+        table:[
+            ["T01","valor baixo","anomalia baixa","Legítima","good",24,72],
+            ["T02","valor médio","anomalia baixa","Legítima","good",42,64],
+            ["T03","valor alto","anomalia alta","Fraude","bad",76,28],
+            ["T04","valor alto","anomalia média","Fraude","bad",70,38],
+            ["T05","valor baixo","anomalia média","Legítima","good",32,50],
+            ["T06","valor médio","anomalia alta","Fraude","bad",58,30]
+        ],
+        newPoint:{x:78,y:31}
+    },
+
+    churn:{
+        title:"Cliente com queda de uso, aumento de reclamações e baixa interação recente.",
+        xLabel:"menor engajamento",
+        yLabel:"mais reclamações",
+        goodLegend:"Permaneceu",
+        badLegend:"Cancelou",
+        probLabel:"probabilidade de churn",
+        prob:68,
+        classValue:"Risco de saída",
+        interpretation:"O novo cliente se aproxima de perfis históricos que reduziram uso e aumentaram reclamações antes de cancelar.",
+        table:[
+            ["C01","uso alto","reclamação baixa","Permaneceu","good",26,68],
+            ["C02","uso médio","reclamação baixa","Permaneceu","good",40,60],
+            ["C03","uso baixo","reclamação alta","Cancelou","bad",74,30],
+            ["C04","uso baixo","reclamação média","Cancelou","bad",68,42],
+            ["C05","uso médio","reclamação média","Permaneceu","good",46,50],
+            ["C06","uso baixo","reclamação alta","Cancelou","bad",80,26]
+        ],
+        newPoint:{x:70,y:36}
+    }
+};
+
+const caseTitle = document.getElementById("caseTitle");
+const chart = document.getElementById("chart");
+const tableBody = document.getElementById("tableBody");
+const xLabel = document.getElementById("xLabel");
+const yLabel = document.getElementById("yLabel");
+const goodLegend = document.getElementById("goodLegend");
+const badLegend = document.getElementById("badLegend");
+const probLabel = document.getElementById("probLabel");
+const probValue = document.getElementById("probValue");
+const probBar = document.getElementById("probBar");
+const classValue = document.getElementById("classValue");
+const interpretation = document.getElementById("interpretation");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const s = scenarios[name];
+
+    caseTitle.innerText = s.title;
+    xLabel.innerText = s.xLabel;
+    yLabel.innerText = s.yLabel;
+    goodLegend.innerText = s.goodLegend;
+    badLegend.innerText = s.badLegend;
+    probLabel.innerText = s.probLabel;
+    probValue.innerText = `${s.prob}%`;
+    probBar.style.width = `${s.prob}%`;
+    classValue.innerText = s.classValue;
+    interpretation.innerText = s.interpretation;
+
+    renderChart(s);
+    renderTable(s);
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${name === "credito" ? "Previsão de inadimplência" : name === "fraude" ? "Detecção de fraude" : "Previsão de churn"}</h3>
+        <p>
+            O modelo observa exemplos históricos com respostas conhecidas e aprende uma separação aproximada
+            entre padrões associados a cada resultado.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                O novo caso é avaliado com base na semelhança com padrões históricos e recebe
+                uma probabilidade estimada para orientar a decisão.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">dados rotulados</span>
+            <span class="badge">padrão</span>
+            <span class="badge">fronteira</span>
+            <span class="badge">probabilidade</span>
+        </div>
+    `;
+}
+
+function renderChart(s){
+    [...chart.querySelectorAll(".point")].forEach(el=>el.remove());
+
+    s.table.forEach(row=>{
+        const point = document.createElement("div");
+        point.className = `point ${row[4]}`;
+        point.style.left = `${row[5]}%`;
+        point.style.top = `${row[6]}%`;
+        point.title = `${row[0]} — ${row[3]}`;
+        point.onclick = () => selectHistorical(row);
+        chart.appendChild(point);
+    });
+
+    const newPoint = document.createElement("div");
+    newPoint.className = "point new active";
+    newPoint.style.left = `${s.newPoint.x}%`;
+    newPoint.style.top = `${s.newPoint.y}%`;
+    newPoint.onclick = () => showNewCase(s);
+    chart.appendChild(newPoint);
+}
+
+function renderTable(s){
+    tableBody.innerHTML = "";
+
+    s.table.forEach(row=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${row[0]}</td>
+            <td>${row[1]}</td>
+            <td>${row[2]}</td>
+            <td><span class="status ${row[4]}">${row[3]}</span></td>
+        `;
+        tableBody.appendChild(tr);
+    });
+}
+
+function selectHistorical(row){
+    document.querySelectorAll(".point").forEach(p=>p.classList.remove("active"));
+
+    info.innerHTML = `
+        <div class="info-tag">Exemplo histórico</div>
+        <h3>${row[0]}</h3>
+        <p>
+            Este é um caso usado no aprendizado porque possui entrada observada e resposta real conhecida.
+        </p>
+
+        <div class="explain">
+            <p>
+                <strong>Variáveis:</strong><br>
+                ${row[1]} • ${row[2]}
+            </p>
+            <p>
+                <strong>Resposta real:</strong><br>
+                ${row[3]}
+            </p>
+            <p>
+                <strong>Uso no modelo:</strong><br>
+                O algoritmo usa exemplos como este para aprender padrões que diferenciam os grupos.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">entrada</span>
+            <span class="badge">rótulo</span>
+            <span class="badge">gabarito</span>
+            <span class="badge">aprendizado</span>
+        </div>
+    `;
+}
+
+function showNewCase(s){
+    info.innerHTML = `
+        <div class="info-tag">Novo caso</div>
+        <h3>${s.classValue}</h3>
+        <p>${s.title}</p>
+
+        <div class="explain">
+            <p>
+                <strong>${s.probLabel}:</strong><br>
+                ${s.prob}%
+            </p>
+            <p>
+                <strong>Interpretação:</strong><br>
+                ${s.interpretation}
+            </p>
+            <p>
+                <strong>Uso decisório:</strong><br>
+                A previsão não substitui a decisão; ela organiza um sinal probabilístico para apoiar critérios, cortes e políticas.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">novo caso</span>
+            <span class="badge">score</span>
+            <span class="badge">probabilidade</span>
+            <span class="badge">decisão</span>
+        </div>
+    `;
+}
+
+setScenario("credito", document.querySelector("button"));
+</script>
+
+</body>
+</html>
