@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simulação de GANs | Veropred Analytics</title>
+
+<style>
+:root{
+    --bg:#050505;
+    --gold:#c8944f;
+    --gold2:#f1c27a;
+    --text:#f4efe7;
+    --muted:#b8aa96;
+    --border:rgba(229,178,100,.22);
+    --good:#8fd3a7;
+    --bad:#e49373;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 68% 48%, rgba(200,148,79,.14), transparent 34%),
+        radial-gradient(circle at 18% 16%, rgba(255,210,130,.06), transparent 26%),
+        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
+
+.page{
+    width:100%;
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:minmax(420px,.82fr) minmax(620px,1.18fr);
+}
+
+.sidebar{
+    padding:42px 44px;
+    border-right:1px solid var(--border);
+    background:linear-gradient(180deg, rgba(17,12,8,.92), rgba(5,5,5,.96));
+    backdrop-filter:blur(20px);
+}
+
+.back{
+    display:inline-flex;
+    margin-bottom:42px;
+    color:var(--gold2);
+    border:1px solid rgba(255,211,142,.25);
+    border-radius:999px;
+    padding:10px 16px;
+    text-decoration:none;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+.back:hover{
+    background:rgba(255,205,120,.08);
+    transform:translateY(-2px);
+}
+
+.kicker{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,5vw,68px);
+    line-height:.95;
+    font-weight:500;
+    margin-bottom:20px;
+}
+
+.lead{
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.58;
+    margin-bottom:34px;
+}
+
+.block{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding:22px 0;
+}
+
+.block h3{
+    color:var(--gold2);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    margin-bottom:10px;
+}
+
+.block p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.formula{
+    font-family:Georgia,serif;
+    color:#ffe3aa;
+    font-size:26px;
+    margin-top:8px;
+}
+
+.main{
+    position:relative;
+    padding:42px;
+    overflow:hidden;
+}
+
+.main::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 45%, black, transparent 76%);
+    pointer-events:none;
+}
+
+.sim-header{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    margin-bottom:24px;
+}
+
+.sim-header h2{
+    font-family:Georgia,serif;
+    font-size:38px;
+    font-weight:500;
+}
+
+.sim-header p{
+    color:var(--muted);
+    margin-top:8px;
+    max-width:640px;
+    line-height:1.55;
+}
+
+.controls{
+    position:relative;
+    z-index:2;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:1px solid rgba(255,211,142,.24);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:10px 14px;
+    cursor:pointer;
+    font-size:13px;
+    transition:.25s ease;
+}
+
+button:hover,
+button.active{
+    background:rgba(255,205,120,.18);
+    border-color:rgba(255,218,145,.55);
+    color:white;
+}
+
+.simulator{
+    position:relative;
+    z-index:2;
+    display:grid;
+    grid-template-columns:1fr 320px;
+    gap:22px;
+    align-items:stretch;
+}
+
+.gan-space{
+    position:relative;
+    min-height:720px;
+    border:1px solid var(--border);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 52% 44%, rgba(200,148,79,.13), transparent 42%),
+        rgba(255,255,255,.035);
+    overflow:hidden;
+    box-shadow:0 30px 90px rgba(0,0,0,.34);
+    padding:28px;
+}
+
+.prompt-box{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(5,5,5,.36);
+    border-radius:26px;
+    padding:22px;
+    backdrop-filter:blur(10px);
+    margin-bottom:18px;
+}
+
+.label{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.prompt{
+    font-family:Georgia,serif;
+    font-size:28px;
+    line-height:1.18;
+    color:#fff1d0;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin:18px 0;
+}
+
+.step{
+    border:1px solid rgba(255,211,142,.18);
+    background:rgba(255,205,120,.045);
+    border-radius:18px;
+    padding:14px;
+    min-height:104px;
+    transition:.3s ease;
+}
+
+.step.active{
+    background:rgba(255,205,120,.13);
+    border-color:rgba(255,218,145,.58);
+    box-shadow:0 0 44px rgba(244,190,98,.20);
+}
+
+.step small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+}
+
+.step strong{
+    display:block;
+    font-size:14px;
+    color:#fff;
+    margin-bottom:7px;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:11.5px;
+    line-height:1.4;
+}
+
+.competition{
+    display:grid;
+    grid-template-columns:1fr 90px 1fr;
+    gap:16px;
+    margin-top:18px;
+    align-items:stretch;
+}
+
+.actor{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:28px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+    min-height:360px;
+}
+
+.actor h3{
+    font-family:Georgia,serif;
+    font-size:30px;
+    font-weight:500;
+    margin-bottom:10px;
+}
+
+.actor p{
+    color:#ded4c3;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.fake-image{
+    position:relative;
+    height:230px;
+    margin:18px 0;
+    border-radius:24px;
+    border:1px solid rgba(255,211,142,.16);
+    background:rgba(0,0,0,.26);
+    overflow:hidden;
+}
+
+.fake-face,
+.fake-product,
+.fake-doc{
+    position:absolute;
+    inset:18px;
+    border-radius:22px;
+    transition:.6s ease;
+}
+
+.fake-face{
+    background:
+        radial-gradient(circle at 38% 36%, rgba(255,220,160,.85), transparent 8%),
+        radial-gradient(circle at 62% 36%, rgba(255,220,160,.85), transparent 8%),
+        radial-gradient(ellipse at 50% 62%, rgba(120,74,40,.85), transparent 12%),
+        radial-gradient(ellipse at 50% 50%, rgba(241,194,122,.65), transparent 42%);
+}
+
+.fake-product{
+    background:
+        radial-gradient(ellipse at 50% 58%, rgba(241,194,122,.78), transparent 30%),
+        linear-gradient(145deg, transparent 37%, rgba(255,235,185,.45) 38% 44%, transparent 45%),
+        radial-gradient(circle at 50% 46%, rgba(66,38,18,.92), transparent 24%);
+}
+
+.fake-doc{
+    background:
+        linear-gradient(90deg, rgba(241,194,122,.35) 0 2%, transparent 2% 100%),
+        repeating-linear-gradient(180deg, rgba(255,230,180,.25) 0 4px, transparent 4px 18px),
+        linear-gradient(145deg, rgba(255,255,255,.08), rgba(120,70,32,.18));
+}
+
+.quality-low{
+    filter:blur(12px) contrast(.75);
+    opacity:.55;
+    transform:scale(.88) rotate(-4deg);
+}
+
+.quality-mid{
+    filter:blur(5px) contrast(.95);
+    opacity:.76;
+    transform:scale(.96) rotate(-1deg);
+}
+
+.quality-high{
+    filter:blur(0) contrast(1.12);
+    opacity:1;
+    transform:scale(1);
+}
+
+.fake-noise{
+    position:absolute;
+    inset:0;
+    opacity:.45;
+    background:
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.20), transparent 10%),
+        radial-gradient(circle at 80% 32%, rgba(241,194,122,.18), transparent 11%),
+        radial-gradient(circle at 34% 82%, rgba(255,255,255,.12), transparent 8%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.045) 0 2px, transparent 2px 7px);
+    transition:.6s ease;
+}
+
+.fake-image.high .fake-noise{opacity:.10}
+.fake-image.mid .fake-noise{opacity:.28}
+
+.verdict{
+    border-top:1px solid rgba(255,220,160,.13);
+    padding-top:16px;
+    margin-top:12px;
+}
+
+.verdict small{
+    color:#9f927f;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+}
+
+.verdict strong{
+    display:block;
+    font-size:24px;
+    margin-top:4px;
+    color:#fff1d0;
+}
+
+.bar{
+    margin-top:10px;
+    height:10px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+}
+
+.fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg, rgba(200,148,79,.45), rgba(241,194,122,.95));
+    transition:.6s ease;
+}
+
+.vs{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#f1c27a;
+    font-family:Georgia,serif;
+    font-size:30px;
+    opacity:.92;
+}
+
+.rounds{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:18px;
+}
+
+.round{
+    border:1px solid rgba(255,211,142,.14);
+    border-radius:18px;
+    background:rgba(255,205,120,.045);
+    padding:14px;
+    transition:.25s ease;
+    cursor:pointer;
+}
+
+.round.active{
+    border-color:rgba(255,218,145,.58);
+    background:rgba(255,205,120,.13);
+    box-shadow:0 0 34px rgba(244,190,98,.18);
+}
+
+.round small{
+    display:block;
+    color:var(--gold2);
+    font-size:10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.round p{
+    color:#d9cdbc;
+    font-size:12.5px;
+    line-height:1.45;
+}
+
+.feedback-box{
+    margin-top:18px;
+    border:1px solid rgba(255,211,142,.18);
+    border-radius:26px;
+    padding:22px;
+    background:linear-gradient(180deg, rgba(17,12,8,.72), rgba(5,5,5,.82));
+}
+
+.feedback-box p{
+    color:#ded4c3;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.info{
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:26px;
+    background:linear-gradient(180deg, rgba(17,12,8,.86), rgba(5,5,5,.92));
+    box-shadow:0 30px 90px rgba(0,0,0,.30);
+    min-height:720px;
+}
+
+.info-tag{
+    color:var(--gold2);
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.info h3{
+    font-family:Georgia,serif;
+    font-size:34px;
+    font-weight:500;
+    margin-bottom:12px;
+}
+
+.info p{
+    color:#ded4c3;
+    line-height:1.6;
+    font-size:15px;
+    margin-bottom:20px;
+}
+
+.explain{
+    margin-top:22px;
+    padding-top:20px;
+    border-top:1px solid rgba(255,220,160,.13);
+}
+
+.explain strong{
+    color:var(--gold2);
+}
+
+.badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+}
+
+.badge{
+    border:1px solid rgba(255,211,142,.25);
+    background:rgba(255,205,120,.07);
+    color:#f4d59d;
+    border-radius:999px;
+    padding:7px 10px;
+    font-size:12px;
+}
+
+.legend{
+    margin-top:16px;
+    color:#9f927f;
+    font-size:12px;
+    line-height:1.5;
+}
+
+@media(max-width:1050px){
+    .page{display:block}
+
+    .sidebar{
+        border-right:0;
+        border-bottom:1px solid var(--border);
+        padding:34px 24px;
+    }
+
+    .main{padding:30px 18px}
+
+    .simulator{grid-template-columns:1fr}
+
+    .info{min-height:auto}
+}
+
+@media(max-width:760px){
+    h1{font-size:42px}
+
+    .sim-header{display:block}
+
+    .controls{margin-top:18px}
+
+    .pipeline{grid-template-columns:1fr 1fr}
+
+    .competition{
+        grid-template-columns:1fr;
+    }
+
+    .vs{
+        padding:4px;
+    }
+
+    .rounds{
+        grid-template-columns:1fr;
+    }
+
+    .gan-space{
+        padding:20px;
+        border-radius:26px;
+    }
+
+    .prompt{font-size:23px}
+
+    .info h3{font-size:30px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <aside class="sidebar">
+        <a class="back" href="../ia_nucleo.html">← Voltar ao Atlas</a>
+
+        <div class="kicker">Simulação Cognitiva • GANs</div>
+
+        <h1>Quando competição gera realismo.</h1>
+
+        <p class="lead">
+            GANs combinam duas redes em disputa: uma tenta gerar exemplos sintéticos convincentes,
+            enquanto a outra tenta detectar se aquilo é real ou falso.
+        </p>
+
+        <div class="block">
+            <h3>Função cognitiva</h3>
+            <p>
+                Gerar exemplos sintéticos cada vez mais convincentes por meio de competição e feedback.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Intuição</h3>
+            <p>
+                Como um falsificador tentando enganar um especialista em autenticação.
+                A cada falha, o gerador melhora.
+            </p>
+        </div>
+
+        <div class="block">
+            <h3>Forma conceitual</h3>
+            <div class="formula">
+                gerador → discriminador → feedback → melhoria
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="sim-header">
+            <div>
+                <h2>Competição Adversarial</h2>
+                <p>
+                    Escolha um cenário e avance os ciclos de treinamento. A simulação mostra como
+                    o gerador melhora quando tenta enganar o discriminador.
+                </p>
+            </div>
+
+            <div class="controls">
+                <button class="active" onclick="setScenario('faces', this)">Rostos</button>
+                <button onclick="setScenario('produto', this)">Produto</button>
+                <button onclick="setScenario('documento', this)">Documento</button>
+            </div>
+        </div>
+
+        <div class="simulator">
+
+            <section class="gan-space">
+
+                <div class="prompt-box">
+                    <div class="label">Objetivo generativo</div>
+                    <div class="prompt" id="prompt"></div>
+                </div>
+
+                <div class="pipeline">
+                    <div class="step active">
+                        <small>Etapa 1</small>
+                        <strong>Gerar</strong>
+                        <p>O gerador cria uma amostra sintética.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 2</small>
+                        <strong>Detectar</strong>
+                        <p>O discriminador tenta reconhecer falsidade.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 3</small>
+                        <strong>Feedback</strong>
+                        <p>O erro vira sinal de melhoria.</p>
+                    </div>
+
+                    <div class="step active">
+                        <small>Etapa 4</small>
+                        <strong>Realismo</strong>
+                        <p>A amostra fica mais convincente.</p>
+                    </div>
+                </div>
+
+                <div class="competition">
+
+                    <div class="actor">
+                        <h3>Gerador</h3>
+                        <p>Produz uma amostra sintética tentando parecer real.</p>
+
+                        <div class="fake-image low" id="fakeImage">
+                            <div class="fake-noise"></div>
+                            <div class="fake-face quality-low" id="fakeShape"></div>
+                        </div>
+
+                        <div class="verdict">
+                            <small>realismo percebido</small>
+                            <strong id="realismValue">28%</strong>
+                            <div class="bar"><div class="fill" id="realismBar" style="width:28%"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="vs">↔</div>
+
+                    <div class="actor">
+                        <h3>Discriminador</h3>
+                        <p>Avalia se a amostra parece real ou sintética.</p>
+
+                        <div class="verdict" style="margin-top:28px">
+                            <small>chance de detectar falso</small>
+                            <strong id="detectValue">92%</strong>
+                            <div class="bar"><div class="fill" id="detectBar" style="width:92%"></div></div>
+                        </div>
+
+                        <div class="verdict">
+                            <small>veredito</small>
+                            <strong id="verdictText">Falso evidente</strong>
+                        </div>
+
+                        <div class="verdict">
+                            <small>sinal enviado ao gerador</small>
+                            <strong id="feedbackSignal">Melhorar textura e coerência</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="rounds">
+                    <div class="round active" onclick="setRound(1)">
+                        <small>ciclo 1</small>
+                        <p>Amostra ainda grosseira. O discriminador identifica facilmente a falsidade.</p>
+                    </div>
+
+                    <div class="round" onclick="setRound(2)">
+                        <small>ciclo 2</small>
+                        <p>O gerador melhora textura, proporção e coerência visual.</p>
+                    </div>
+
+                    <div class="round" onclick="setRound(3)">
+                        <small>ciclo 3</small>
+                        <p>A amostra se torna mais convincente e difícil de distinguir.</p>
+                    </div>
+                </div>
+
+                <div class="feedback-box">
+                    <div class="label">Leitura do ciclo</div>
+                    <p id="cycleText">
+                        No início, a amostra sintética possui falhas visíveis. O discriminador detecta falsidade com alta confiança e fornece um sinal de correção.
+                    </p>
+                </div>
+
+                <div class="legend">
+                    Em uma GAN real, gerador e discriminador são redes neurais treinadas em competição.
+                    O equilíbrio ideal ocorre quando a amostra sintética se torna difícil de diferenciar da real.
+                </div>
+
+            </section>
+
+            <aside class="info" id="info">
+                <div class="info-tag">Conceito ativo</div>
+                <h3>GANs</h3>
+                <p>
+                    Generative Adversarial Networks usam competição entre dois modelos.
+                    O gerador cria exemplos sintéticos; o discriminador tenta separar real de falso.
+                </p>
+
+                <div class="explain">
+                    <p>
+                        <strong>Ideia central:</strong><br>
+                        a qualidade melhora porque um modelo tenta enganar e o outro tenta detectar.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">gerador</span>
+                    <span class="badge">discriminador</span>
+                    <span class="badge">feedback</span>
+                    <span class="badge">realismo</span>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</div>
+
+<script>
+const scenarios = {
+    faces:{
+        prompt:"Gerar rostos humanos sintéticos convincentes.",
+        shape:"fake-face",
+        object:"rosto sintético",
+        detail:"O gerador tenta produzir um rosto que pareça humano, enquanto o discriminador procura falhas em textura, proporção e simetria."
+    },
+    produto:{
+        prompt:"Gerar imagens sintéticas de produtos premium.",
+        shape:"fake-product",
+        object:"produto sintético",
+        detail:"O gerador tenta criar uma imagem de produto com iluminação e volume plausíveis; o discriminador procura incoerências de forma, reflexo e acabamento."
+    },
+    documento:{
+        prompt:"Gerar documentos sintéticos com aparência realista.",
+        shape:"fake-doc",
+        object:"documento sintético",
+        detail:"O gerador tenta imitar estrutura visual de documentos; o discriminador procura padrões artificiais, alinhamento estranho e textura inconsistente."
+    }
+};
+
+const rounds = {
+    1:{
+        realism:28,
+        detect:92,
+        quality:"quality-low",
+        imageClass:"low",
+        verdict:"Falso evidente",
+        feedback:"Melhorar textura e coerência",
+        text:"No início, a amostra sintética possui falhas visíveis. O discriminador detecta falsidade com alta confiança e fornece um sinal de correção."
+    },
+    2:{
+        realism:62,
+        detect:55,
+        quality:"quality-mid",
+        imageClass:"mid",
+        verdict:"Falso provável",
+        feedback:"Refinar detalhes e consistência",
+        text:"Depois de alguns ciclos, o gerador aprende a corrigir falhas grosseiras. A amostra melhora, mas ainda apresenta sinais detectáveis."
+    },
+    3:{
+        realism:88,
+        detect:24,
+        quality:"quality-high",
+        imageClass:"high",
+        verdict:"Difícil distinguir",
+        feedback:"Amostra convincente",
+        text:"Com feedback adversarial acumulado, o gerador produz uma amostra mais realista. O discriminador já não detecta falsidade com alta confiança."
+    }
+};
+
+let currentScenario = scenarios.faces;
+let currentRound = 1;
+
+const promptEl = document.getElementById("prompt");
+const fakeImage = document.getElementById("fakeImage");
+const fakeShape = document.getElementById("fakeShape");
+const realismValue = document.getElementById("realismValue");
+const realismBar = document.getElementById("realismBar");
+const detectValue = document.getElementById("detectValue");
+const detectBar = document.getElementById("detectBar");
+const verdictText = document.getElementById("verdictText");
+const feedbackSignal = document.getElementById("feedbackSignal");
+const cycleText = document.getElementById("cycleText");
+const info = document.getElementById("info");
+
+function setScenario(name, btn){
+    document.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+
+    currentScenario = scenarios[name];
+    promptEl.innerText = currentScenario.prompt;
+
+    setRound(currentRound);
+
+    info.innerHTML = `
+        <div class="info-tag">Cenário ativo</div>
+        <h3>${currentScenario.object}</h3>
+        <p>${currentScenario.detail}</p>
+
+        <div class="explain">
+            <p>
+                <strong>Leitura:</strong><br>
+                GANs aprendem por disputa. O gerador melhora porque recebe sinais indiretos
+                sobre por que sua amostra ainda parece falsa.
+            </p>
+        </div>
+
+        <div class="badges">
+            <span class="badge">amostra sintética</span>
+            <span class="badge">detecção</span>
+            <span class="badge">competição</span>
+            <span class="badge">melhoria</span>
+        </div>
+    `;
+}
+
+function setRound(round){
+    currentRound = round;
+    const r = rounds[round];
+
+    document.querySelectorAll(".round").forEach((el,index)=>{
+        el.classList.toggle("active", index + 1 === round);
+    });
+
+    fakeShape.className = `${currentScenario.shape} ${r.quality}`;
+    fakeImage.className = `fake-image ${r.imageClass}`;
+
+    realismValue.innerText = `${r.realism}%`;
+    realismBar.style.width = `${r.realism}%`;
+
+    detectValue.innerText = `${r.detect}%`;
+    detectBar.style.width = `${r.detect}%`;
+
+    verdictText.innerText = r.verdict;
+    feedbackSignal.innerText = r.feedback;
+    cycleText.innerText = r.text;
+}
+
+setScenario("faces", document.querySelector("button"));
+setRound(1);
+</script>
+
+</body>
+</html>
