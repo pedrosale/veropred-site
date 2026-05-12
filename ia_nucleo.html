@@ -423,8 +423,11 @@ h1{
 
         <h1>Inteligência artificial como sistema de capacidades emergentes.</h1>
 
-        <p class="lead">
-            Selecione cada capacidade para detalhar.        </p>
+<p class="lead">
+    Selecione cada capacidade para detalhar.<br><br>
+
+    As conexões neurais destacadas representam capacidades cognitivas artificialmente relacionadas.
+</p>
 
 <div class="brain" id="brain">
     <svg class="cognitive-svg" id="cognitiveSvg"></svg>
@@ -784,13 +787,7 @@ function selectModule(id){
         </div>
 
 ${m.relacoes ? `
-<div class="section">
-    <h3>Ativação Cognitiva</h3>
 
-    <p>
-        As conexões neurais representam capacidades cognitivas artificialmente relacionadas.
-    </p>
-</div>
 ` : ""}
 
         ${m.simuladores ? `
