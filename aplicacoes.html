@@ -81,6 +81,7 @@ body{
     max-width:780px;
 }
 
+
 .cases-grid{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -229,6 +230,105 @@ body{
     color:#888;
     font-size:13px;
     letter-spacing:.18em;
+}
+
+.sim-section{
+    grid-column:1 / -1;
+    margin:46px 0 6px;
+    padding:34px;
+    border:1px solid rgba(198,146,43,.22);
+    border-radius:30px;
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 34%),
+        rgba(255,255,255,.025);
+}
+
+.sim-section .case-tag{
+    margin-bottom:12px;
+}
+
+.sim-section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    line-height:1;
+    margin-bottom:14px;
+}
+
+.sim-section p{
+    color:#cfc6b7;
+    font-size:17px;
+    line-height:1.55;
+    max-width:760px;
+}
+
+.sim-grid{
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+    margin-bottom:24px;
+}
+
+.sim-card{
+    display:block;
+    min-height:270px;
+    padding:24px;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.22);
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.78));
+    color:#f6efe3;
+    text-decoration:none;
+    transition:.28s ease;
+}
+
+.sim-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(198,146,43,.58);
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.16), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.82));
+}
+
+.sim-card small{
+    display:block;
+    color:#c6922b;
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+}
+
+.sim-card h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:29px;
+    line-height:1.02;
+    margin-bottom:12px;
+}
+
+.sim-card p{
+    color:#d9d0c3;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.sim-card span{
+    display:inline-flex;
+    margin-top:18px;
+    color:#c6922b;
+    font-size:13px;
+    font-weight:700;
+}
+
+@media(max-width:900px){
+    .sim-grid{
+        grid-template-columns:1fr;
+    }
+
+    .sim-section h2{
+        font-size:36px;
+    }
 }
 
 @media(max-width:900px){
@@ -411,6 +511,125 @@ body{
         </span>
     </div>
 </a>
+
+<div class="sim-section">
+    <div class="case-tag">IA • SIMULAÇÕES • ARQUITETURAS COGNITIVAS</div>
+
+    <h2>Explorações Cognitivas Interativas</h2>
+
+    <p>
+Arquiteturas cognitivas artificiais relacionadas a memória, atenção, geração, alinhamento, adaptação e sistemas híbridos modernos.
+    </p>
+</div>
+
+<div class="sim-grid">
+
+    <a class="sim-card" href="ia_xperience/simulador_embeddings.html">
+        <small>ASSOCIAÇÃO • EMBEDDINGS</small>
+        <h3>Significado como geometria.</h3>
+        <p>Como textos, imagens e conceitos podem ser representados por proximidade em espaços vetoriais.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rag.html">
+        <small>MEMÓRIA • RAG</small>
+        <h3>Conhecimento recuperado antes da resposta.</h3>
+        <p>Como sistemas de IA buscam contexto externo para responder com mais rastreabilidade.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_attention.html">
+        <small>ATENÇÃO • TRANSFORMERS</small>
+        <h3>Nem toda informação importa igualmente.</h3>
+        <p>Como mecanismos de atenção selecionam dependências relevantes dentro do contexto.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_supervisionado.html">
+        <small>PREVISÃO • SUPERVISIONADO</small>
+        <h3>Aprender com exemplos corrigidos.</h3>
+        <p>Como modelos estimam classes, probabilidades e valores a partir de dados históricos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_autoregressivo.html">
+        <small>SEQUÊNCIA • AUTOREGRESSIVO</small>
+        <h3>Geração passo a passo.</h3>
+        <p>Como respostas são construídas progressivamente, token por token, a partir do histórico anterior.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_clustering.html">
+        <small>DESCOBERTA • CLUSTERING</small>
+        <h3>Grupos formados por semelhança.</h3>
+        <p>Como padrões ocultos aparecem quando dados semelhantes são aproximados sem rótulos prévios.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_semi_supervisionado.html">
+        <small>POUCOS RÓTULOS • SEMI-SUPERVISIONADO</small>
+        <h3>Aprender quando o gabarito é escasso.</h3>
+        <p>Como poucos exemplos rotulados podem orientar o aprendizado sobre grandes volumes de dados brutos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_self_supervised.html">
+        <small>AUTO-SUPERVISÃO • PRÉ-TREINAMENTO</small>
+        <h3>O próprio dado cria o desafio.</h3>
+        <p>Como modelos aprendem escondendo partes da informação e tentando reconstruí-las.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_diffusion.html">
+        <small>IMAGINAÇÃO • DIFFUSION</small>
+        <h3>Imagem emergindo do ruído.</h3>
+        <p>Como modelos generativos removem ruído progressivamente até formar uma nova cena coerente.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_gans.html">
+        <small>IMAGINAÇÃO • GANS</small>
+        <h3>Criação por competição.</h3>
+        <p>Como gerador e discriminador competem até produzir imagens sintéticas mais convincentes.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rl.html">
+        <small>ADAPTAÇÃO • REINFORCEMENT LEARNING</small>
+        <h3>Aprender por consequência.</h3>
+        <p>Como agentes melhoram decisões por tentativa, erro, recompensa e punição.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rlhf.html">
+        <small>ALINHAMENTO • RLHF</small>
+        <h3>Preferência humana como sinal.</h3>
+        <p>Como feedback humano ajuda modelos a produzir respostas mais úteis, claras e aceitáveis.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_finetuning.html">
+        <small>ESPECIALIZAÇÃO • FINE-TUNING</small>
+        <h3>Um modelo geral adaptado ao domínio.</h3>
+        <p>Como modelos podem ser ajustados para linguagem, regras e tarefas específicas.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_agentes.html">
+        <small>PLANEJAMENTO • AGENTES</small>
+        <h3>Da resposta à execução.</h3>
+        <p>Como agentes organizam tarefas, usam ferramentas, revisam saídas e coordenam workflows.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_sistemas_hibridos.html">
+        <small>ORQUESTRAÇÃO • SISTEMAS HÍBRIDOS</small>
+        <h3>A IA moderna como composição.</h3>
+        <p>Como memória, atenção, geração, agentes, alinhamento e especialização funcionam juntos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+</div>
 
         <a class="case-card" href="ia.html">
             <img src="assets/posts/post4/imagem1.png" alt="IA e decisão estruturada">
