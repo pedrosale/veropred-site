@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Veropred AI Lab | Fábrica Cognitiva</title>
+<title>Veropred AI Lab | Pipeline Inferencial</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -170,7 +170,7 @@ button:hover{
     transform:translateY(-2px);
 }
 
-/* FÁBRICA */
+/* PIPELINE */
 
 .factory-line{
     margin-top:36px;
@@ -556,22 +556,22 @@ button:hover{
 <main class="page">
 
     <div class="topbar">
-        <div class="brand">VEROPRED • AI LAB • FÁBRICA COGNITIVA</div>
+        <div class="brand">VEROPRED • AI LAB • PIPELINE INFERENCIAL</div>
     </div>
 
     <section class="hero">
         <div>
             <div class="kicker">Inferência observável</div>
-            <h1>Arquitetura inferencial observável.</h1>
+            <h1>Pipeline inferencial observável.</h1>
             <p class="lead">
-                Linguagem → representação vetorial → recuperação contextual → inferência probabilística → reconstrução textual.
+                Texto → vetorização → recuperação contextual → inferência probabilística → reconstrução textual.
             </p>
         </div>
 
         <div class="lab-panel">
-            <h2>Entrada inicial</h2>
+            <h2>Entrada textual</h2>
             <p>
-                Tokenização • Embeddings • Busca semântica • Attention • Inferência probabilística
+                Tokenização • Representação vetorial • Busca semântica • Atenção contextual • Inferência probabilística
             </p>
 
             <div class="question-box">
@@ -588,12 +588,12 @@ button:hover{
     <section class="factory-line">
         <div class="factory-head">
             <div>
-                <div class="kicker">Linha industrial cognitiva</div>
-                <h2>Texto → Tokens → Vetores → Contexto → Inferência → Texto.</h2>
+                <div class="kicker">Pipeline inferencial</div>
+                <h2>Texto → Tokens → Vetores → Contexto → Probabilidade → Texto</h2>
             </div>
 
             <p>
-                Pipeline inferencial em tempo real.
+                Estados inferenciais observáveis.
             </p>
         </div>
 
@@ -615,8 +615,8 @@ button:hover{
             <div class="belt-arrow">→</div>
 
             <div class="belt-stage" id="belt-vector">
-                <small>Embedding</small>
-                <strong>Representação vetorial</strong>
+                <small>Vetorização</small>
+                <strong>Espaço vetorial</strong>
                 <code>[0.42, -0.18, 0.77, 0.09, ...]</code>
             </div>
 
@@ -632,7 +632,7 @@ button:hover{
 
             <div class="belt-stage" id="belt-context">
                 <small>Contexto</small>
-                <strong>Janela contextual</strong>
+                <strong>Contexto recuperado</strong>
                 <code>pergunta + score.html + raroc.html + simulador.html</code>
             </div>
         </div>
@@ -642,25 +642,25 @@ button:hover{
         <div class="pipeline" id="pipeline"></div>
 
         <aside class="trace-panel">
-            <h3>Inferential trace</h3>
+            <h3>Rastreamento inferencial</h3>
             <div class="trace-log" id="traceLog">
                 <div class="log-item">
-                    Aguardando entrada inicial.
+                    Aguardando entrada textual.
                 </div>
             </div>
         </aside>
     </section>
 
     <section class="result" id="result">
-        <h2>Resultado inferencial</h2>
+        <h2>Inferência consolidada</h2>
 
         <div class="result-grid">
             <div class="result-card">
-                <small>Estrutura de resposta</small>
+                <small>Estrutura inferida</small>
                 <div class="metric"><span>Área dominante</span><b>Risco de crédito</b></div>
                 <div class="metric"><span>Decisão em jogo</span><b>aprovação × inadimplência</b></div>
                 <div class="metric"><span>Contexto dominante</span><b>score / cutoff / RAROC</b></div>
-                <div class="metric"><span>Forma de saída</span><b>resposta executiva</b></div>
+                <div class="metric"><span>Tipo de resposta</span><b>resposta executiva</b></div>
             </div>
 
             <div class="result-card">
@@ -672,11 +672,14 @@ button:hover{
             </div>
 
             <div class="result-card symbolic-output">
-                <small>Reconstrução final em texto</small>
-                <p>
-                    A decisão central não é apenas reduzir inadimplência. É redesenhar a política de crédito para equilibrar aprovação,
-                    risco, margem e capital. A arquitetura resultante prioriza segmentação de risco, ajuste dinâmico de cutoff, simulação de perda esperada, leitura de RAROC e governança de exceções.
-                </p>
+                <small>Estrutura de decisão recuperada</small>
+                <ul>
+                    <li>Segmentação dinâmica de risco</li>
+                    <li>Ajuste adaptativo de cutoff</li>
+                    <li>Simulação de perda esperada</li>
+                    <li>Leitura de retorno ajustado ao capital</li>
+                    <li>Governança de exceções</li>
+                </ul>
             </div>
         </div>
     </section>
@@ -688,58 +691,58 @@ const steps = [
     {
         id:"entrada",
         tag:"01 • TEXTO",
-        title:"Entrada inicial",
+        title:"Entrada textual",
         text:"Sequência textual ainda não vetorizada.",
-        log:"Texto recebido como sequência simbólica."
+        log:"Sequência textual indexada."
     },
     {
         id:"tokens",
         tag:"02 • TOKENS",
         title:"Tokenização",
         text:"Fragmentação textual em tokens indexados.",
-        log:"Tokens simulados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
+        log:"Tokens identificados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
     },
     {
-        id:"embedding",
+        id:"vetorizacao",
         tag:"03 • VETORES",
-        title:"Embedding",
+        title:"Vetorização",
         text:"Projeção vetorial em espaço semântico.",
-        log:"Vetor semântico simulado: [0.42, -0.18, 0.77, 0.09, ...]."
+        log:"Representação vetorial gerada: [0.42, -0.18, 0.77, 0.09, ...]."
     },
     {
         id:"busca",
         tag:"04 • SIMILARIDADE",
         title:"Busca semântica",
         text:"Busca contextual por proximidade vetorial.",
-        log:"Similaridade por cosseno simulada: score.html = 0.87; raroc.html = 0.82."
+        log:"Proximidade vetorial calculada: score.html = 0.87; raroc.html = 0.82."
     },
     {
         id:"contexto",
         tag:"05 • CONTEXTO",
-        title:"Janela contextual",
+        title:"Contexto recuperado",
         text:"Expansão contextual via recuperação semântica.",
-        log:"Contexto aumentado: pergunta + score.html + raroc.html + simulador.html."
+        log:"Contexto recuperado: pergunta + score.html + raroc.html + simulador.html."
     },
     {
-        id:"attention",
-        tag:"06 • ATTENTION",
-        title:"Pesos contextuais",
+        id:"atencao",
+        tag:"06 • ATENÇÃO",
+        title:"Atenção contextual",
         text:"Redistribuição probabilística de atenção contextual.",
-        log:"Pesos simulados: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
+        log:"Redistribuição contextual: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
     },
     {
         id:"probabilidade",
         tag:"07 • PROBABILIDADE",
-        title:"Próximo token",
+        title:"Distribuição probabilística",
         text:"Distribuição probabilística do próximo token.",
-        log:"P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
+        log:"Probabilidades estimadas: P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
     },
     {
         id:"reconstrucao",
         tag:"08 • TEXTO",
         title:"Reconstrução",
         text:"Reconstrução textual probabilística.",
-        log:"Reconstrução simbólica concluída: resposta executiva consolidada."
+        log:"Reconstrução textual concluída: resposta executiva consolidada."
     }
 ];
 
@@ -790,7 +793,7 @@ function resetPipeline(){
     result.classList.remove("show");
     resetFactoryLine();
 
-    traceLog.innerHTML = `<div class="log-item">Fábrica aguardando entrada simbólica.</div>`;
+    traceLog.innerHTML = `<div class="log-item">Aguardando entrada textual.</div>`;
 
     document.querySelectorAll(".step").forEach(step=>{
         step.classList.remove("active","done");
@@ -805,7 +808,7 @@ function runPipeline(){
     document.querySelector("#belt-text code").textContent = "“" + q + "”";
 
     traceLog.innerHTML = `
-        <div class="log-item"><b>Entrada simbólica recebida:</b><br>${q}</div>
+        <div class="log-item"><b>Entrada textual recebida:</b><br>${q}</div>
     `;
 
     steps.forEach((s, index)=>{
