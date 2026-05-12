@@ -1,386 +1,1632 @@
+daqui em diante vou usar esse esquema aqui do projeto, e seguiremos um passo por vez.
+# 1. SUMÁRIO
+
+## Problema central
+
+A Veropred não deve construir apenas um chatbot. O projeto correto é criar uma **camada cognitiva transparente**, onde o usuário vê a pergunta atravessar módulos inspirados no Atlas Cognitivo da IA: associação, memória, atenção, planejamento, geração, validação, alinhamento e resposta final.
+
+O valor não está em “ter um LLM próprio” no sentido de treinar um modelo do zero. O valor está em criar uma **arquitetura proprietária de inferência assistida**, com identidade Veropred, rastreabilidade, fontes, pipeline visual e capacidade consultiva.
+
+## Interpretação da situação
+
+A ideia é transformar o Atlas em produto operacional.
+
+Hoje o Atlas explica conceitos.
+O próximo projeto deve demonstrar esses conceitos funcionando em tempo real.
+
+O usuário digita uma pergunta e observa a “fábrica cognitiva” operar:
+
+```text
+Pergunta
+↓
+Interpretação
+↓
+Embeddings
+↓
+RAG / Memória
+↓
+Atenção ao contexto
+↓
+Planejamento da resposta
+↓
+Geração pelo LLM
+↓
+Validação / alinhamento
+↓
+Resposta final com fontes e próximo passo
+```
+
+Isso posiciona a Veropred como uma consultoria que não vende IA como mágica, mas como **arquitetura de decisão observável**.
+
+## Tese principal
+
+O produto deve ser concebido como:
+
+```text
+Veropred AI Lab
+```
+
+ou, em versão mais conceitual:
+
+```text
+Veropred Cognitive Pipeline
+```
+
+Não é um substituto do ChatGPT.
+É uma experiência proprietária que usa LLMs, RAG, agentes e visualização para mostrar como uma resposta é construída com método.
+
+A OpenAI já oferece infraestrutura oficial para construção de agentes, frontends agentic com ChatKit e desenvolvimento via Agents SDK/Agent Builder; isso confirma que a direção técnica do projeto é compatível com a evolução atual das plataformas de IA. ([OpenAI][1])
+
+## Direcionamento recomendado
+
+Começar com um **MVP híbrido e transparente**, não com fine-tuning nem modelo próprio hospedado.
+
+Arquitetura recomendada:
+
+```text
+Frontend:
+HTML/CSS/JS premium no site Veropred
+
+Backend:
+FastAPI
+
+LLM:
+OpenAI API no MVP
+
+Embeddings:
+OpenAI embeddings ou sentence-transformers
+
+RAG:
+LanceDB local no protótipo
+
+Logs:
+JSON estruturado no MVP
+
+Produção:
+Supabase/PostgreSQL + Qdrant ou Supabase Vector
+```
+
+A plataforma da OpenAI possui recursos oficiais de vector stores/file search úteis para RAG e recuperação de arquivos, o que permite começar sem construir toda a camada vetorial do zero. ([Plataforma OpenAI][2])
+
+---
+
+# 2. DETALHAMENTO MODULAR
+
+## 2.1 Conceito do produto
+
+## Nome recomendado
+
+```text
+Veropred AI Lab
+```
+
+Subtítulo:
+
+```text
+Pipeline cognitivo transparente para análise, decisão e IA aplicada.
+```
+
+Frase institucional:
+
+```text
+A resposta não aparece magicamente. Ela é construída por uma sequência observável de capacidades cognitivas artificiais.
+```
+
+## Proposta de valor
+
+O usuário faz uma pergunta sobre decisão, risco, crédito, IA ou estratégia.
+O sistema responde, mas também mostra:
+
+```text
+quais módulos foram acionados;
+qual contexto foi recuperado;
+quais fontes sustentaram a resposta;
+qual foi a estrutura lógica usada;
+qual recomendação operacional foi produzida;
+qual próximo passo faz sentido.
+```
+
+O diferencial não é só a resposta.
+É a **rastreabilidade do processo de inferência**.
+
+---
+
+## 2.2 Experiência visual desejada
+
+A interface deve parecer uma fábrica cognitiva premium, não um chat comum.
+
+## Estrutura da tela
+
+```text
+[Entrada do usuário]
+
+Digite sua pergunta ou cenário de decisão.
+
+------------------------------------------------
+
+[Pipeline visual]
+
+1. Interpretação
+2. Associação
+3. Memória
+4. Atenção
+5. Planejamento
+6. Geração
+7. Validação
+8. Resposta
+
+------------------------------------------------
+
+[Painel lateral]
+
+Etapa atual
+Status
+Tempo
+Contexto recuperado
+Fontes
+Confiança operacional
+
+------------------------------------------------
+
+[Resposta final]
+
+Resposta executiva
+Critérios
+Recomendação
+Próximo passo
+Links internos
+```
+
+## Comportamento visual
+
+Cada etapa acende em sequência:
+
+```text
+cinza → dourado suave → concluído
+```
+
+Cada card mostra uma frase curta:
+
+```text
+“Convertendo a pergunta em representação semântica.”
+“Buscando contexto Veropred relacionado.”
+“Selecionando os trechos mais relevantes.”
+“Estruturando resposta executiva.”
+“Validando aderência ao contexto recuperado.”
+```
+
+O usuário deve sentir que está vendo a pergunta atravessar uma máquina cognitiva.
+
+---
+
+## 2.3 Módulos do pipeline
+
+## Módulo 1 — Interpretação da pergunta
+
+Objetivo:
+
+```text
+Entender o que o usuário realmente está pedindo.
+```
+
+Entrada:
+
+```text
+Pergunta original do usuário.
+```
+
+Saída:
+
+```json
+{
+  "intencao": "avaliar cenário de crédito",
+  "dominio": "risco de crédito",
+  "tipo_resposta": "executiva",
+  "decisao_em_jogo": "reduzir inadimplência sem perder aprovação",
+  "nivel_complexidade": "alto"
+}
+```
+
+Função no Atlas:
+
+```text
+Planejamento inicial + decisão sob incerteza.
+```
+
+---
+
+## Módulo 2 — Associação / Embeddings
+
+Objetivo:
+
+```text
+Transformar a pergunta em vetor semântico.
+```
+
+Função:
+
+```text
+Aproximar a pergunta de conteúdos Veropred semanticamente relacionados.
+```
+
+Exemplo visual:
+
+```text
+Pergunta aproximada de:
+- cutoff
+- PD
+- aprovação
+- perda esperada
+- RAROC
+- política de crédito
+```
+
+Função no Atlas:
+
+```text
+Associação.
+```
+
+---
+
+## Módulo 3 — Memória / RAG
+
+Objetivo:
+
+```text
+Recuperar trechos relevantes do site, aplicações, Atlas, simuladores e textos da Veropred.
+```
+
+Entrada:
+
+```text
+Embedding da pergunta.
+```
+
+Saída:
+
+```json
+{
+  "fontes_recuperadas": [
+    "score.html",
+    "raroc.html",
+    "ia_nucleo.html",
+    "simulador.html"
+  ],
+  "trechos": [
+    "Score sem decisão é só informação...",
+    "RAROC mede decisão econômica ajustada ao risco..."
+  ]
+}
+```
+
+Função no Atlas:
+
+```text
+Memória.
+```
+
+---
+
+## Módulo 4 — Atenção / Seleção de contexto
+
+Objetivo:
+
+```text
+Filtrar o que realmente importa entre os trechos recuperados.
+```
+
+Problema resolvido:
+
+```text
+RAG bruto recupera contexto demais. O sistema precisa priorizar.
+```
+
+Saída:
+
+```json
+{
+  "contexto_prioritario": [
+    "cutoff",
+    "PD",
+    "aprovação",
+    "perda esperada",
+    "retorno ajustado ao risco"
+  ],
+  "contexto_descartado": [
+    "conteúdo genérico de IA sem relação direta"
+  ]
+}
+```
+
+Função no Atlas:
+
+```text
+Atenção.
+```
+
+---
+
+## Módulo 5 — Planejamento da resposta
+
+Objetivo:
+
+```text
+Definir a arquitetura da resposta antes da geração.
+```
+
+Exemplo:
+
+```json
+{
+  "estrutura_resposta": [
+    "diagnóstico",
+    "decisão em jogo",
+    "critérios necessários",
+    "arquitetura recomendada",
+    "riscos",
+    "próximo passo"
+  ]
+}
+```
+
+Função no Atlas:
+
+```text
+Agentes / Planejamento.
+```
+
+---
+
+## Módulo 6 — Geração autoregressiva
+
+Objetivo:
+
+```text
+Gerar a resposta final com base no plano e no contexto recuperado.
+```
+
+LLM base:
+
+```text
+OpenAI API no MVP.
+```
+
+Motivo:
+
+```text
+Melhor qualidade inicial, menor complexidade de infraestrutura e menor tempo até o primeiro produto funcional.
+```
+
+Função no Atlas:
+
+```text
+Sequência / Autoregressivo.
+```
+
+---
+
+## Módulo 7 — Validação / Alinhamento
+
+Objetivo:
+
+```text
+Checar se a resposta está aderente ao contexto e ao posicionamento Veropred.
+```
+
+Critérios:
+
+```text
+não inventar fontes;
+não prometer resultado garantido;
+não soar genérico;
+não fugir da arquitetura de decisão;
+não vender IA como mágica;
+não responder como chatbot comum.
+```
+
+Saída:
+
+```json
+{
+  "validacao": "aprovada",
+  "ajustes": [
+    "remover promessa excessiva",
+    "reforçar critério decisório",
+    "incluir próximo passo"
+  ]
+}
+```
+
+Função no Atlas:
+
+```text
+RLHF / Alinhamento.
+```
+
+---
+
+## Módulo 8 — Resposta final + próxima ação
+
+Objetivo:
+
+```text
+Entregar resposta executiva e direcionar o usuário dentro do ecossistema Veropred.
+```
+
+Exemplo de próxima ação:
+
+```text
+- Explorar simulador de crédito
+- Ler aplicação sobre RAROC
+- Explorar Atlas Cognitivo
+- Enviar cenário para avaliação
+```
+
+Função no Atlas:
+
+```text
+Sistema Híbrido.
+```
+
+---
+
+# 2.4 Arquitetura técnica recomendada
+
+## MVP mínimo
+
+```text
+GitHub Pages
+↓
+Frontend HTML/CSS/JS
+↓
+FastAPI no Render
+↓
+OpenAI API
+↓
+LanceDB local ou arquivo vetorial simples
+↓
+Logs JSON
+```
+
+## Fluxo técnico
+
+```text
+1. Usuário envia pergunta no frontend
+2. Frontend chama /pipeline no backend
+3. Backend cria trace_id
+4. Backend executa cada etapa
+5. Cada etapa gera um log estruturado
+6. Backend retorna eventos ou JSON completo
+7. Frontend anima os cards conforme os eventos
+8. Resposta final aparece
+```
+
+## Endpoints mínimos
+
+```text
+POST /pipeline
+GET /pipeline/{trace_id}
+GET /health
+```
+
+## Payload de entrada
+
+```json
+{
+  "question": "Como a Veropred ajudaria uma fintech a reduzir inadimplência sem perder aprovação?",
+  "mode": "executivo",
+  "show_trace": true
+}
+```
+
+## Payload de saída
+
+```json
+{
+  "trace_id": "vp_2026_001",
+  "answer": "Resposta final...",
+  "next_actions": [
+    {
+      "label": "Explorar simulador de crédito",
+      "url": "simulador.html"
+    }
+  ],
+  "pipeline": [
+    {
+      "step": "Interpretação",
+      "status": "done",
+      "summary": "Pergunta classificada como cenário de risco de crédito.",
+      "time_ms": 180
+    },
+    {
+      "step": "Memória / RAG",
+      "status": "done",
+      "summary": "4 fontes Veropred recuperadas.",
+      "sources": ["score.html", "raroc.html"],
+      "time_ms": 620
+    }
+  ]
+}
+```
+
+---
+
+# 2.5 Estratégia de dados
+
+## Base inicial
+
+Conteúdo mínimo para ingestão:
+
+```text
+index.html
+aplicacoes.html
+ia_nucleo.html
+raroc.html
+score.html
+modelos.html
+riscop.html
+ia.html
+aluc_ia.html
+simulador.html
+engenharia_prompts.html
+todos os simuladores de ia_xperience
+```
+
+## Estrutura dos documentos
+
+Cada documento deve virar blocos:
+
+```json
+{
+  "id": "score_001",
+  "url": "score.html",
+  "titulo": "O modelo não é o problema",
+  "tipo": "post",
+  "tema": ["score", "decisão", "crédito"],
+  "conteudo": "Score sem decisão é só informação...",
+  "embedding": [...]
+}
+```
+
+## Tamanho dos chunks
+
+Recomendação:
+
+```text
+400 a 800 tokens por chunk
+```
+
+Com overlap:
+
+```text
+80 a 120 tokens
+```
+
+## Metadados obrigatórios
+
+```text
+url
+titulo
+tipo
+tema
+data_ingestao
+versao
+origem
+prioridade
+```
+
+---
+
+# 2.6 Stack recomendada
+
+## Fase 1 — MVP visual funcional
+
+```text
+Frontend:
+HTML/CSS/JS puro
+
+Backend:
+FastAPI
+
+LLM:
+OpenAI API
+
+Embeddings:
+OpenAI embeddings
+
+Vector store:
+LanceDB
+
+Logs:
+JSON em arquivo ou SQLite
+
+Deploy:
+GitHub Pages + Render
+```
+
+## Fase 2 — MVP robusto
+
+```text
+Frontend:
+HTML/CSS/JS ou Vercel
+
+Backend:
+FastAPI
+
+Vector DB:
+Supabase Vector ou Qdrant Cloud
+
+Banco:
+Supabase PostgreSQL
+
+Logs:
+tabela pipeline_runs + pipeline_steps
+
+Deploy:
+Google Cloud Run ou Render Pro
+```
+
+## Fase 3 — produto institucional
+
+```text
+LLM:
+OpenAI + fallback Claude/Gemini
+
+RAG:
+Qdrant/Supabase Vector
+
+Observabilidade:
+logs persistentes, avaliações, métricas
+
+Segurança:
+rate limit, autenticação, proteção de chave
+
+Painel interno:
+avaliação humana das respostas
+
+Memória:
+histórico de sessão e preferências
+```
+
+---
+
+# 2.7 Estrutura visual da interface
+
+## Blocos principais
+
+```text
+1. Hero
+Veropred AI Lab
+
+2. Campo de pergunta
+"Descreva uma decisão, cenário ou dúvida estratégica"
+
+3. Pipeline cognitivo
+Cards animados das capacidades do Atlas
+
+4. Painel de rastreabilidade
+Fontes, etapas, tempo e confiança
+
+5. Resposta final
+Texto executivo
+
+6. Próximas ações
+Links para simulador, Atlas, aplicações ou contato
+```
+
+## Etapas visuais recomendadas
+
+```text
+01 Interpretação
+02 Associação
+03 Memória
+04 Atenção
+05 Planejamento
+06 Geração
+07 Validação
+08 Resposta
+```
+
+## Copy de cada etapa
+
+```text
+Interpretação
+Identificando domínio, intenção e decisão em jogo.
+
+Associação
+Convertendo a pergunta em representação semântica.
+
+Memória
+Buscando conteúdos Veropred relacionados.
+
+Atenção
+Selecionando os trechos mais relevantes.
+
+Planejamento
+Organizando a arquitetura da resposta.
+
+Geração
+Construindo resposta executiva com base no contexto.
+
+Validação
+Checando aderência, clareza e rastreabilidade.
+
+Resposta
+Consolidando resposta final e próximo passo.
+```
+
+---
+
+# 2.8 Decisão sobre “LLM próprio”
+
+## Não recomendado no início
+
+Treinar um modelo do zero não é necessário.
+
+O que deve ser proprietário:
+
+```text
+pipeline
+interface
+ontologia
+prompts
+RAG
+logs
+curadoria
+método
+experiência visual
+base Veropred
+```
+
+## Possível depois
+
+Fine-tuning pode entrar quando houver:
+
+```text
+centenas ou milhares de pares pergunta-resposta;
+estilo Veropred consolidado;
+critérios de avaliação;
+casos recorrentes;
+necessidade real de redução de custo ou padronização.
+```
+
+## Formulação correta
+
+```text
+A Veropred AI não começa como um LLM treinado do zero.
+Ela começa como uma arquitetura cognitiva proprietária sobre LLMs existentes.
+```
+
+---
+
+# 3. MATRIZ DE RISCOS
+
+| Risco                                          | Impacto | Probabilidade | Mitigação                                                     | Sinal de alerta                                     |
+| ---------------------------------------------- | ------: | ------------: | ------------------------------------------------------------- | --------------------------------------------------- |
+| Expor chave de API no frontend                 |    Alto |         Médio | Todas as chamadas devem passar pelo backend                   | API key aparecendo no JS público                    |
+| RAG recuperar conteúdo irrelevante             |    Alto |          Alto | Chunking por tema, metadados e reranking                      | Respostas citam páginas sem relação                 |
+| Interface virar “efeito visual” sem substância |    Alto |         Médio | Cada etapa deve ter output real registrado                    | Cards acendem sem evidência do processamento        |
+| Resposta parecer genérica                      |    Alto |         Médio | Prompt Veropred + contexto obrigatório + validação            | Respostas poderiam estar em qualquer site           |
+| Custo de API crescer                           |   Médio |         Médio | Limite por sessão, cache, modelos menores para etapas simples | Muitos testes geram custo sem controle              |
+| Latência alta                                  |   Médio |          Alto | Pipeline assíncrono, streaming de etapas, cache de embeddings | Usuário espera sem feedback visual                  |
+| Alucinação com autoridade Veropred             |    Alto |         Médio | Resposta deve distinguir contexto recuperado de inferência    | Resposta afirma algo não presente nas fontes        |
+| Dependência excessiva de um provedor           |   Médio |         Médio | Abstrair camada LLM para OpenAI/Claude/Gemini/local           | Trocar modelo quebra sistema                        |
+| Dados desatualizados                           |   Médio |          Alto | Processo de reingestão do site a cada alteração relevante     | Site muda, RAG responde versão antiga               |
+| Falta de governança de logs                    |   Médio |         Médio | Definir política de retenção e anonimização                   | Logs armazenam dados sensíveis sem controle         |
+| Complexidade técnica excessiva no MVP          |    Alto |         Médio | Começar com pipeline linear e logs JSON                       | Projeto trava antes de ter demo funcional           |
+| Usuário interpretar “confiança” como garantia  |    Alto |         Médio | Usar “aderência ao contexto”, não “certeza”                   | Visitante acha que score é verdade absoluta         |
+| Risco reputacional por resposta ruim           |    Alto |         Médio | Limitar escopo inicial a perguntas sobre Veropred             | Sistema responde temas jurídicos/financeiros amplos |
+| Falha de adoção                                |   Médio |         Médio | Focar em experiência visual e perguntas exemplo               | Usuário entra e não sabe o que perguntar            |
+| Falta de manutenção                            |   Médio |          Alto | Script simples de ingestão + documentação                     | Cada novo post exige ajuste manual complexo         |
+
+---
+
+# 4. ENTREGA FINAL
+
+## 4.1 Especificação executiva do projeto
+
+## Veropred AI Lab
+
+### Definição
+
+Veropred AI Lab é uma interface cognitiva transparente que permite ao usuário submeter perguntas ou cenários de decisão e acompanhar, em tempo real, a construção da resposta por múltiplas capacidades artificiais inspiradas no Atlas Cognitivo da IA.
+
+### Objetivo
+
+Transformar o site Veropred em uma experiência ativa de inferência assistida, onde o usuário não apenas recebe uma resposta, mas observa o processo de construção da resposta com rastreabilidade, fontes e lógica decisória.
+
+### Promessa
+
+```text
+Da pergunta à resposta, com método visível.
+```
+
+### Posicionamento
+
+```text
+Não é um chatbot genérico.
+É uma fábrica cognitiva de decisão, risco e IA aplicada.
+```
+
+---
+
+## 4.2 Escopo do MVP
+
+## Incluído
+
+```text
+Interface visual premium
+Campo de pergunta
+Pipeline com 8 etapas
+Backend FastAPI
+Chamada a LLM
+RAG sobre conteúdo Veropred
+Logs estruturados por etapa
+Resposta final executiva
+Fontes recuperadas
+Próximas ações
+```
+
+## Excluído inicialmente
+
+```text
+Fine-tuning
+LLM próprio hospedado
+Login de usuários
+Memória persistente longa
+Painel administrativo complexo
+Multiagentes reais
+Cobrança
+Avaliação humana sofisticada
+```
+
+---
+
+## 4.3 Pipeline operacional do MVP
+
+```text
+1. Usuário envia pergunta
+2. Backend cria trace_id
+3. Sistema interpreta intenção
+4. Sistema gera embedding
+5. Sistema busca conteúdos Veropred
+6. Sistema seleciona contexto
+7. Sistema monta plano de resposta
+8. LLM gera resposta
+9. Sistema valida aderência
+10. Frontend exibe resposta, fontes e próximas ações
+```
+
+---
+
+## 4.4 Estrutura de arquivos sugerida
+
+```text
+veropred-ai-lab/
+│
+├── frontend/
+│   ├── veropred_ai_lab.html
+│   ├── veropred_ai_lab.css
+│   └── veropred_ai_lab.js
+│
+├── backend/
+│   ├── main.py
+│   ├── pipeline.py
+│   ├── rag.py
+│   ├── prompts.py
+│   ├── validators.py
+│   ├── schemas.py
+│   └── config.py
+│
+├── data/
+│   ├── raw_site/
+│   ├── chunks/
+│   ├── vector_store/
+│   └── logs/
+│
+├── scripts/
+│   ├── ingest_site.py
+│   ├── build_embeddings.py
+│   └── test_pipeline.py
+│
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## 4.5 Modelo de log por etapa
+
+```json
+{
+  "trace_id": "vp_lab_001",
+  "step_id": 3,
+  "step_name": "Memória / RAG",
+  "status": "completed",
+  "input_summary": "Pergunta sobre redução de inadimplência em fintech.",
+  "output_summary": "Foram recuperados conteúdos sobre score, cutoff, RAROC e decisão de crédito.",
+  "sources": [
+    {
+      "title": "O modelo não é o problema",
+      "url": "score.html"
+    },
+    {
+      "title": "ROI não mede valor. RAROC mede decisão.",
+      "url": "raroc.html"
+    }
+  ],
+  "time_ms": 640,
+  "confidence_label": "alta aderência ao contexto"
+}
+```
+
+---
+
+## 4.6 Prompt sistêmico base
+
+```text
+Você é a Veropred AI, uma camada cognitiva especializada em arquitetura de decisão, risco, crédito, modelagem e IA aplicada.
+
+Sua função é responder com base no contexto Veropred fornecido, conectando dados, modelos, sinais e critérios de decisão.
+
+Regras:
+- Não responda como chatbot genérico.
+- Não invente fontes.
+- Não prometa resultados garantidos.
+- Não trate IA como mágica.
+- Sempre conecte a resposta a decisão, critério, risco, governança ou execução.
+- Quando o contexto for insuficiente, diga claramente o limite.
+- Priorize linguagem executiva, precisa e operacional.
+- Sempre que possível, recomende um próximo passo dentro do ecossistema Veropred.
+```
+
+---
+
+## 4.7 Prompt de geração final
+
+```text
+Pergunta do usuário:
+{question}
+
+Interpretação da demanda:
+{intent_analysis}
+
+Contexto Veropred recuperado:
+{retrieved_context}
+
+Plano da resposta:
+{answer_plan}
+
+Gere uma resposta executiva com:
+1. diagnóstico objetivo;
+2. decisão em jogo;
+3. critérios relevantes;
+4. recomendação prática;
+5. riscos ou limites;
+6. próximo passo sugerido.
+
+A resposta deve soar como Veropred:
+- estratégica;
+- técnica;
+- premium;
+- objetiva;
+- orientada à decisão.
+```
+
+---
+
+## 4.8 Critérios de aceite do MVP
+
+O MVP estará aceitável quando:
+
+```text
+1. Usuário consegue enviar uma pergunta.
+2. Pipeline visual acende etapa por etapa.
+3. Sistema recupera pelo menos 2 fontes Veropred relevantes.
+4. Resposta final usa contexto recuperado.
+5. Etapas exibem logs compreensíveis.
+6. Nenhuma API key aparece no frontend.
+7. O sistema sugere próximo passo interno.
+8. O tempo total fica abaixo de 12 segundos.
+9. A resposta não soa genérica.
+10. A experiência parece parte natural do site Veropred.
+```
+
+---
+
+## 4.9 Roadmap recomendado
+
+## Semana 1 — Protótipo visual
+
+```text
+Criar página HTML/CSS/JS
+Criar pipeline animado fake
+Criar exemplos de perguntas
+Criar resposta simulada
+Validar experiência visual
+```
+
+Objetivo:
+
+```text
+Provar a interface da fábrica cognitiva.
+```
+
+## Semana 2 — Backend mínimo
+
+```text
+Criar FastAPI
+Criar endpoint /pipeline
+Criar logs JSON
+Conectar OpenAI API
+Retornar resposta real
+```
+
+Objetivo:
+
+```text
+Transformar demo visual em sistema funcional.
+```
+
+## Semana 3 — RAG Veropred
+
+```text
+Extrair conteúdo do site
+Criar chunks
+Gerar embeddings
+Criar LanceDB
+Buscar fontes relevantes
+Incluir fontes na resposta
+```
+
+Objetivo:
+
+```text
+Fazer a Veropred AI responder com base no próprio ecossistema.
+```
+
+## Semana 4 — Validação e acabamento
+
+```text
+Adicionar validação de resposta
+Adicionar próximas ações
+Melhorar UX
+Testar perguntas ruins
+Testar mobile
+Publicar MVP restrito
+```
+
+Objetivo:
+
+```text
+Publicar primeira versão funcional e defensável.
+```
+
+---
+
+## 4.10 Decisão final
+
+O projeto deve avançar como:
+
+```text
+Veropred AI Lab — Pipeline Cognitivo Transparente
+```
+
+com MVP baseado em:
+
+```text
+Frontend visual no site
++
+FastAPI
++
+OpenAI API
++
+RAG Veropred
++
+Logs de pipeline
+```
+
+A primeira versão deve priorizar:
+
+```text
+transparência visual
++
+resposta executiva
++
+rastreabilidade
++
+coerência com o Atlas
+```
+
+Não priorizar:
+
+```text
+treinar LLM próprio
+fine-tuning
+multiagentes complexos
+infra pesada
+```
+
+A tese de produto é forte:
+
+```text
+A Veropred AI não compete com o ChatGPT.
+Ela mostra como uma resposta orientada à decisão é construída por uma arquitetura cognitiva observável.
+```
+
+[1]: https://openai.com/api/?utm_source=chatgpt.com "API Platform"
+[2]: https://platform.openai.com/docs/api-reference/vector-stores-file-batches?_clear=true&lang=node.js&utm_source=chatgpt.com "Vector store file batches | OpenAI API Reference"
+
+
+passo 1 concluído: veropred_ai_lab.html criado
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Aplicações reais de decisão | Veropred Analytics</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Veropred AI Lab | Pipeline Inferencial</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+    --line:rgba(216,176,106,.24);
+    --gold:#d8b06a;
+    --gold2:#f1c77e;
+    --copper:#c9783a;
+    --text:#f6efe3;
+    --muted:#b9aa96;
 }
 
 body{
-    background:#050505;
-    color:#f6efe3;
-    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(201,120,58,.18), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(216,176,106,.11), transparent 34%),
+        linear-gradient(135deg,#050505,#100b08 58%,#050505);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
     overflow-x:hidden;
 }
 
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:46px 46px;
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 78%);
+}
+
 .page{
-    max-width:1180px;
+    position:relative;
+    z-index:1;
+    width:min(1180px, calc(100% - 36px));
     margin:0 auto;
-    padding:72px 24px 120px;
+    padding:44px 0 90px;
 }
 
-.btn-back{
-    display:inline-flex;
-    align-items:center;
-    margin-bottom:56px;
-    border:1px solid rgba(198,146,43,.35);
-    border-radius:999px;
-    padding:10px 18px;
-    color:#c6922b;
-    text-decoration:none;
-    font-weight:600;
-    background:rgba(255,255,255,.03);
-    transition:.2s ease;
+.topbar{
+    display:flex;
+    justify-content:center;
+    margin-bottom:62px;
 }
 
-.btn-back:hover{
-    background:rgba(198,146,43,.10);
-    transform:translateY(-2px);
+.brand{
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold2);
+    font-size:12px;
 }
 
 .hero{
-    margin-bottom:72px;
-    border-bottom:1px solid rgba(198,146,43,.22);
-    padding-bottom:54px;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:42px;
+    align-items:center;
+    margin-bottom:48px;
 }
 
 .kicker{
-    color:#c6922b;
-    font-size:12px;
-    letter-spacing:.24em;
-    text-transform:uppercase;
-    margin-bottom:18px;
-}
-
-.hero h1{
-    font-family:'Cormorant Garamond',serif;
-    font-size:72px;
-    line-height:.95;
-    font-weight:600;
-    max-width:880px;
-    margin-bottom:28px;
-}
-
-.hero h1 span{
-    color:#c6922b;
-}
-
-.hero p{
-    color:#cfc6b7;
-    font-size:21px;
-    line-height:1.65;
-    max-width:780px;
-}
-
-.cases-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:34px;
-}
-
-.case-card{
-    position:relative;
-    display:block;
-    min-height:520px;
-    overflow:hidden;
-    border-radius:30px;
-    border:1px solid rgba(198,146,43,.24);
-    background:#0b0b0b;
-    text-decoration:none;
-    color:#f6efe3;
-    box-shadow:0 30px 90px rgba(0,0,0,.45);
-    transition:.35s ease;
-}
-
-.case-card:hover{
-    transform:translateY(-8px);
-    border-color:rgba(198,146,43,.62);
-    box-shadow:0 40px 120px rgba(0,0,0,.65);
-}
-
-.case-card img{
-    position:absolute;
-    inset:-10px;
-    width:calc(100% + 20px);
-    height:calc(100% + 20px);
-    object-fit:cover;
-    opacity:.48;
-    filter:blur(2px);
-    transition:.45s ease;
-}
-
-.case-card:hover img{
-    transform:scale(1.03);
-    opacity:.52;
-    filter:blur(1.5px);
-}
-
-.case-card::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.38),
-            rgba(0,0,0,.90)
-        ),
-        radial-gradient(
-            circle at 30% 20%,
-            rgba(198,146,43,.12),
-            transparent 42%
-        );
-    z-index:1;
-}
-
-.case-content{
-    position:absolute;
-    z-index:2;
-    left:30px;
-    right:30px;
-    top:50%;
-    transform:translateY(-50%);
-}
-
-.case-tag{
-    color:#c6922b;
-    font-size:11px;
-    letter-spacing:.18em;
-    text-transform:uppercase;
-    margin-bottom:14px;
-}
-
-.case-content h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:40px;
-    line-height:1.02;
-    font-weight:600;
-    margin-bottom:18px;
-    text-shadow:0 2px 18px rgba(0,0,0,.65);
-}
-
-.case-content p{
-    color:#f2ece2;
-    font-size:16px;
-    line-height:1.55;
-    max-width:480px;
-}
-
-.case-link{
-    display:inline-flex;
-    margin-top:22px;
-    color:#c6922b;
-    font-size:14px;
-    font-weight:700;
-    letter-spacing:.04em;
-}
-
-.case-card.no-image{
-    background:
-        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.85));
-}
-
-.case-card.no-image::after{
-    background:
-        linear-gradient(
-            180deg,
-            rgba(0,0,0,.15),
-            rgba(0,0,0,.88)
-        );
-}
-
-.mini-formula{
-    font-family:'Cormorant Garamond',serif;
-    font-size:34px;
-    color:#c6922b;
-    margin-bottom:22px;
-    opacity:.95;
-    letter-spacing:.02em;
-}
-
-.featured{
-    grid-column:1 / -1;
-    min-height:560px;
-}
-
-.featured .case-content{
-    max-width:620px;
-}
-
-.featured .case-content h2{
-    font-size:54px;
-}
-
-.footer{
-    margin-top:90px;
-    padding-top:40px;
-    border-top:1px solid rgba(198,146,43,.18);
-    text-align:center;
-    color:#888;
-    font-size:13px;
-    letter-spacing:.18em;
-}
-
-.sim-section{
-    grid-column:1 / -1;
-    margin:28px 0 6px;
-    padding:34px;
-    border:1px solid rgba(198,146,43,.22);
-    border-radius:30px;
-    background:
-        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 34%),
-        rgba(255,255,255,.025);
-}
-
-.sim-section .case-tag{
-    margin-bottom:12px;
-}
-
-.sim-section h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:44px;
-    line-height:1;
-    margin-bottom:14px;
-}
-
-.sim-section p{
-    color:#cfc6b7;
-    font-size:17px;
-    line-height:1.55;
-    max-width:760px;
-}
-
-.sim-grid{
-    grid-column:1 / -1;
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:18px;
-    margin-bottom:24px;
-}
-
-.sim-card{
-    display:block;
-    min-height:250px;
-    padding:24px;
-    border-radius:24px;
-    border:1px solid rgba(198,146,43,.22);
-    background:
-        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
-        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.78));
-    color:#f6efe3;
-    text-decoration:none;
-    transition:.28s ease;
-}
-
-.sim-card:hover{
-    transform:translateY(-6px);
-    border-color:rgba(198,146,43,.58);
-    background:
-        radial-gradient(circle at top left, rgba(198,146,43,.16), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.82));
-}
-
-.sim-card small{
-    display:block;
-    color:#c6922b;
-    font-size:10px;
+    color:var(--gold);
     letter-spacing:.16em;
     text-transform:uppercase;
+    font-size:12px;
+    margin-bottom:18px;
+}
+
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,6vw,74px);
+    line-height:.95;
+    letter-spacing:-.055em;
+    font-weight:500;
+    margin-bottom:22px;
+}
+
+.lead{
+    color:#d8cebe;
+    font-size:18px;
+    line-height:1.58;
+    max-width:720px;
+}
+
+.lab-panel{
+    border:1px solid var(--line);
+    border-radius:34px;
+    padding:26px;
+    background:
+        radial-gradient(circle at top left, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.045);
+    box-shadow:0 30px 90px rgba(0,0,0,.42);
+}
+
+.lab-panel h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:30px;
     margin-bottom:12px;
 }
 
-.sim-card h3{
-    font-family:'Cormorant Garamond',serif;
-    font-size:29px;
-    line-height:1.02;
-    margin-bottom:12px;
+.lab-panel p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
 }
 
-.sim-card p{
-    color:#d9d0c3;
-    font-size:14px;
+.question-box{
+    margin-top:22px;
+    display:grid;
+    gap:14px;
+}
+
+textarea{
+    width:100%;
+    min-height:118px;
+    resize:vertical;
+    border:1px solid rgba(216,176,106,.28);
+    border-radius:22px;
+    background:rgba(0,0,0,.34);
+    color:var(--text);
+    padding:18px;
+    outline:none;
     line-height:1.5;
 }
 
-.sim-card span{
-    display:inline-flex;
-    margin-top:18px;
-    color:#c6922b;
+textarea:focus{
+    border-color:rgba(241,199,126,.62);
+    box-shadow:0 0 0 4px rgba(216,176,106,.10);
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:0;
+    border-radius:999px;
+    padding:14px 18px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.primary{
+    color:#1b1009;
+    background:linear-gradient(135deg,#f1c77e,#c9783a);
+}
+
+.secondary{
+    color:var(--gold);
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(216,176,106,.30);
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+/* PIPELINE ÚNICO */
+
+.pipeline-section{
+    border:1px solid var(--line);
+    border-radius:34px;
+    padding:30px;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(216,176,106,.12), transparent 34%),
+        rgba(255,255,255,.04);
+    box-shadow:0 24px 70px rgba(0,0,0,.30);
+}
+
+.pipeline-head{
+    display:grid;
+    grid-template-columns:1fr minmax(260px,420px);
+    gap:24px;
+    align-items:end;
+    margin-bottom:30px;
+}
+
+.pipeline-head h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:34px;
+    line-height:1;
+}
+
+.pipeline-head p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
+}
+
+.pipeline-wrap{
+    display:grid;
+    grid-template-columns:1fr 380px;
+    gap:24px;
+    align-items:start;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+}
+
+.step{
+    min-height:196px;
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:26px;
+    padding:20px;
+    background:
+        radial-gradient(circle at top left, rgba(216,176,106,.08), transparent 42%),
+        rgba(255,255,255,.035);
+    opacity:.45;
+    transition:.35s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.step::after{
+    content:"";
+    position:absolute;
+    inset:auto -40px -70px auto;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(216,176,106,.16), transparent 68%);
+}
+
+.step.active{
+    opacity:1;
+    transform:translateY(-5px);
+    border-color:rgba(241,199,126,.62);
+    box-shadow:0 0 46px rgba(216,176,106,.22);
+}
+
+.step.done{
+    opacity:.92;
+    border-color:rgba(216,176,106,.38);
+}
+
+.step small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:14px;
+    position:relative;
+    z-index:1;
+}
+
+.step h3{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:23px;
+    line-height:1.05;
+    margin-bottom:12px;
+    position:relative;
+    z-index:1;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:13.5px;
+    line-height:1.5;
+    position:relative;
+    z-index:1;
+}
+
+.step code{
+    display:block;
+    margin-top:12px;
+    color:#e7d8c2;
+    font-size:12px;
+    line-height:1.45;
+    white-space:normal;
+    position:relative;
+    z-index:1;
+}
+
+.status{
+    margin-top:14px;
+    color:#8f806a;
+    font-size:12px;
+    position:relative;
+    z-index:1;
+}
+
+.step.active .status{
+    color:var(--gold2);
+}
+
+.trace-panel{
+    border:1px solid var(--line);
+    border-radius:28px;
+    background:rgba(255,255,255,.045);
+    padding:22px;
+    position:sticky;
+    top:24px;
+}
+
+.trace-panel h3{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:28px;
+    margin-bottom:14px;
+}
+
+.trace-log{
+    display:grid;
+    gap:10px;
+    max-height:420px;
+    overflow-y:auto;
+    padding-right:4px;
+}
+
+.log-item{
+    border:1px solid rgba(216,176,106,.14);
+    border-radius:16px;
+    padding:12px;
+    background:rgba(0,0,0,.20);
+    color:#d8cebe;
     font-size:13px;
+    line-height:1.45;
+}
+
+.log-item b{
+    color:var(--gold);
+}
+
+/* RESULTADO */
+
+.result{
+    margin-top:34px;
+    border:1px solid rgba(216,176,106,.25);
+    border-radius:30px;
+    padding:30px;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.05);
+    display:none;
+}
+
+.result.show{
+    display:block;
+    animation:fadeUp .45s ease both;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.result h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:36px;
+    margin-bottom:18px;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.result-card{
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:22px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.result-card small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:12px;
+}
+
+.result-card p,
+.result-card li{
+    color:#ddd3c4;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.result-card ul{
+    padding-left:18px;
+    display:grid;
+    gap:8px;
+}
+
+.metric{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    border-bottom:1px solid rgba(216,176,106,.12);
+    padding:10px 0;
+    color:#ddd3c4;
+    font-size:14px;
+}
+
+.metric b{
+    color:var(--gold2);
     font-weight:700;
 }
 
-@media(max-width:900px){
-    .sim-grid{
+.symbolic-output{
+    grid-column:1 / -1;
+}
+
+@media(max-width:980px){
+    .hero,
+    .pipeline-head,
+    .pipeline-wrap,
+    .result-grid{
         grid-template-columns:1fr;
     }
 
-    .sim-section h2{
-        font-size:36px;
+    .pipeline{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .trace-panel{
+        position:relative;
+        top:auto;
+    }
+
+    .symbolic-output{
+        grid-column:auto;
     }
 }
 
-@media(max-width:900px){
-    .cases-grid{
+@media(max-width:620px){
+    .topbar{
+        justify-content:flex-start;
+    }
+
+    .pipeline{
         grid-template-columns:1fr;
     }
 
-    .hero h1{
-        font-size:56px;
-    }
-
-    .case-card,
-    .featured{
-        min-height:460px;
-    }
-
-    .featured .case-content h2{
-        font-size:42px;
-    }
-}
-
-@media(max-width:560px){
     .page{
-        padding:52px 18px 90px;
+        width:min(100% - 28px,1180px);
+        padding-top:28px;
     }
 
-    .hero h1{
-        font-size:46px;
-    }
-
-    .hero p{
-        font-size:18px;
-    }
-
-    .case-card,
-    .featured{
-        min-height:420px;
-        border-radius:24px;
-    }
-
-.case-content{
-    left:22px;
-    right:22px;
-    top:50%;
-    transform:translateY(-50%);
-}
-
-    .case-content h2{
-        font-size:34px;
-    }
-
-    .featured .case-content h2{
-        font-size:36px;
+    h1{
+        font-size:44px;
     }
 }
 </style>
@@ -390,296 +1636,238 @@ body{
 
 <main class="page">
 
-    <a href="index.html" class="btn-back">← Voltar ao site</a>
+    <div class="topbar">
+        <div class="brand">VEROPRED • AI LAB • PIPELINE INFERENCIAL</div>
+    </div>
 
     <section class="hero">
-        <div class="kicker">VEROPRED ANALYTICS • APLICAÇÕES REAIS</div>
 
-        <h1>
-            Leituras aplicadas sobre <span>decisão</span>, risco, IA e capital.
-        </h1>
 
-        <p>
-            Uma coleção de teses executivas sobre como dados, modelos e inteligência artificial
-            só geram valor quando são conectados a critério, contexto, estrutura e decisão.
-        </p>
+        <div class="lab-panel">
+            <h2>Entrada textual</h2>
+            <p>
+                Tokenização • Representação vetorial • Busca semântica • Atenção contextual • Inferência probabilística
+            </p>
+
+            <div class="question-box">
+                <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
+
+                <div class="actions">
+                    <button class="primary" onclick="runPipeline()">Executar</button>
+                    <button class="secondary" onclick="resetPipeline()">Reiniciar</button>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="cases-grid">
-
-        <a class="case-card featured" href="raroc.html">
-            <img src="assets/posts/post0/imagem1.png" alt="Decisão econômica, capital e risco">
-            <div class="case-content">
-                <div class="case-tag">DECISÃO ECONÔMICA • CAPITAL • RISCO</div>
-                <h2>ROI não mede valor. RAROC mede decisão.</h2>
-                <p>
-                    Retorno positivo não garante criação de valor. A decisão econômica real começa
-                    quando retorno, risco, custo de capital e cutoff são tratados no mesmo sistema.
-                </p>
-                <span class="case-link">Ler análise →</span>
+    <section class="pipeline-section">
+        <div class="pipeline-head">
+            <div>
+                <div class="kicker">Pipeline inferencial</div>
+                <h2>Estados observáveis da transformação.</h2>
             </div>
-        </a>
-		
-		<a class="case-card" href="riscosintegrados.html">
-    <img src="assets/posts/post5/imagem1.png" alt="Gestão integrada de riscos">
-    <div class="case-content">
-        <div class="case-tag">RISCO INTEGRADO • PROPAGAÇÃO • GOVERNANÇA</div>
-        <h2>Riscos não quebram empresas por categoria.</h2>
-        <p>
-            Quebram por propagação. A gestão integrada conecta crédito,
-            operacional, liquidez, tecnologia, jurídico, imagem e decisão.
-        </p>
-        <span class="case-link">Ler análise →</span>
-    </div>
-</a>
 
-        <a class="case-card" href="modelos.html">
-            <img src="assets/posts/post1/imagem1.png" alt="Modelos e arquitetura da decisão">
-            <div class="case-content">
-                <div class="case-tag">CIÊNCIA DE DADOS • IA • DECISÃO</div>
-                <h2>Modelos não tomam decisões.</h2>
-                <p>
-                    Dados mostram. Modelos estimam. Mas decisões melhores exigem método,
-                    contexto e profundidade analítica.
-                </p>
-                <span class="case-link">Ler análise →</span>
-            </div>
-        </a>
 
-        <a class="case-card" href="riscop.html">
-            <img src="assets/posts/post2/imagem1.png" alt="Risco operacional e eventos de cauda">
-            <div class="case-content">
-                <div class="case-tag">RISCO OPERACIONAL • CAUDA • INCERTEZA</div>
-                <h2>Risco operacional não aparece no dashboard.</h2>
-                <p>
-                    A média pode esconder o que realmente importa: eventos raros,
-                    perdas assimétricas e impactos que redefinem o resultado.
-                </p>
-                <span class="case-link">Ler análise →</span>
-            </div>
-        </a>
-
-        <a class="case-card" href="expsust.html">
-            <img src="assets/posts/novo_post/imagem1.png" alt="Expansão e sustentabilidade">
-            <div class="case-content">
-                <div class="case-tag">EXPANSÃO • SUSTENTABILIDADE • CAPITAL</div>
-                <h2>Expansão vs sustentabilidade é a pergunta errada.</h2>
-                <p>
-                    Crescer e proteger não são lados opostos. A questão real é como alocar capital
-                    sob incerteza com critério e consistência.
-                </p>
-                <span class="case-link">Ler análise →</span>
-            </div>
-        </a>
-
-        <a class="case-card" href="score.html">
-            <img src="assets/posts/post3/imagem1.png" alt="Score, regra e decisão">
-            <div class="case-content">
-                <div class="case-tag">SCORE • REGRA • SISTEMA</div>
-                <h2>O modelo não é o problema.</h2>
-                <p>
-                    Score sem decisão é só informação. Quando a decisão falha,
-                    o erro costuma estar antes ou depois do modelo.
-                </p>
-                <span class="case-link">Ler análise →</span>
-            </div>
-        </a>
-		
-		<a class="case-card no-image" href="ia_nucleo.html">
-    <div class="case-content">
-
-        <div class="case-tag">
-            IA • COGNIÇÃO • DECISÃO SOB INCERTEZA
         </div>
 
-        <div class="mini-formula">
-            Atlas Cognitivo da IA
-        </div>
+        <section class="pipeline-wrap">
+            <div class="pipeline" id="pipeline"></div>
 
-        <h2>
-            Inteligência artificial como sistema de capacidades emergentes.
-        </h2>
-
-        <p>
-            Um mapa interativo das capacidades cognitivas artificiais que conectam memória,
-            atenção, previsão, geração, alinhamento e decisão sob incerteza.
-        </p>
-
-        <span class="case-link">
-            Explorar atlas →
-        </span>
-    </div>
-</a>
-
-<div class="sim-section">
-    <div class="case-tag">IA • SIMULAÇÕES • ARQUITETURAS COGNITIVAS</div>
-
-    <h2>Explorações Cognitivas Interativas</h2>
-
-    <p>
-        Simulações independentes sobre os mecanismos que sustentam sistemas modernos de IA:
-        associação, memória, atenção, geração, adaptação, alinhamento, especialização e orquestração.
-    </p>
-</div>
-
-<div class="sim-grid">
-
-    <a class="sim-card" href="ia_xperience/simulador_embeddings.html">
-        <small>ASSOCIAÇÃO • EMBEDDINGS</small>
-        <h3>Significado como geometria.</h3>
-        <p>Como textos, imagens e conceitos podem ser representados por proximidade em espaços vetoriais.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_rag.html">
-        <small>MEMÓRIA • RAG</small>
-        <h3>Conhecimento recuperado antes da resposta.</h3>
-        <p>Como sistemas de IA buscam contexto externo para responder com mais rastreabilidade.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_attention.html">
-        <small>ATENÇÃO • TRANSFORMERS</small>
-        <h3>Nem toda informação importa igualmente.</h3>
-        <p>Como mecanismos de atenção selecionam dependências relevantes dentro do contexto.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_supervisionado.html">
-        <small>PREVISÃO • SUPERVISIONADO</small>
-        <h3>Aprender com exemplos corrigidos.</h3>
-        <p>Como modelos estimam classes, probabilidades e valores a partir de dados históricos.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_autoregressivo.html">
-        <small>SEQUÊNCIA • AUTOREGRESSIVO</small>
-        <h3>Geração passo a passo.</h3>
-        <p>Como respostas são construídas progressivamente, token por token, a partir do histórico anterior.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_clustering.html">
-        <small>DESCOBERTA • CLUSTERING</small>
-        <h3>Grupos formados por semelhança.</h3>
-        <p>Como padrões ocultos aparecem quando dados semelhantes são aproximados sem rótulos prévios.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_semi_supervisionado.html">
-        <small>POUCOS RÓTULOS • SEMI-SUPERVISIONADO</small>
-        <h3>Aprender quando o gabarito é escasso.</h3>
-        <p>Como poucos exemplos rotulados podem orientar o aprendizado sobre grandes volumes de dados brutos.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_self_supervised.html">
-        <small>AUTO-SUPERVISÃO • PRÉ-TREINAMENTO</small>
-        <h3>O próprio dado cria o desafio.</h3>
-        <p>Como modelos aprendem escondendo partes da informação e tentando reconstruí-las.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_diffusion.html">
-        <small>IMAGINAÇÃO • DIFFUSION</small>
-        <h3>Imagem emergindo do ruído.</h3>
-        <p>Como modelos generativos removem ruído progressivamente até formar uma nova cena coerente.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_gans.html">
-        <small>IMAGINAÇÃO • GANS</small>
-        <h3>Criação por competição.</h3>
-        <p>Como gerador e discriminador competem até produzir imagens sintéticas mais convincentes.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_rl.html">
-        <small>ADAPTAÇÃO • REINFORCEMENT LEARNING</small>
-        <h3>Aprender por consequência.</h3>
-        <p>Como agentes melhoram decisões por tentativa, erro, recompensa e punição.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_rlhf.html">
-        <small>ALINHAMENTO • RLHF</small>
-        <h3>Preferência humana como sinal.</h3>
-        <p>Como feedback humano ajuda modelos a produzir respostas mais úteis, claras e aceitáveis.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_finetuning.html">
-        <small>ESPECIALIZAÇÃO • FINE-TUNING</small>
-        <h3>Um modelo geral adaptado ao domínio.</h3>
-        <p>Como modelos podem ser ajustados para linguagem, regras e tarefas específicas.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_agentes.html">
-        <small>PLANEJAMENTO • AGENTES</small>
-        <h3>Da resposta à execução.</h3>
-        <p>Como agentes organizam tarefas, usam ferramentas, revisam saídas e coordenam workflows.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-    <a class="sim-card" href="ia_xperience/simulador_sistemas_hibridos.html">
-        <small>ORQUESTRAÇÃO • SISTEMAS HÍBRIDOS</small>
-        <h3>A IA moderna como composição.</h3>
-        <p>Como memória, atenção, geração, agentes, alinhamento e especialização funcionam juntos.</p>
-        <span>Explorar simulação →</span>
-    </a>
-
-</div>
-
-        <a class="case-card" href="ia.html">
-            <img src="assets/posts/post4/imagem1.png" alt="IA e decisão estruturada">
-            <div class="case-content">
-                <div class="case-tag">IA • DECISÃO • ESTRUTURA</div>
-                <h2>IA não resolve problema mal definido.</h2>
-                <p>
-                    Sem clareza de objetivo, decisão e regras, a IA apenas processa ruído,
-                    automatiza confusão e amplifica erro em escala.
-                </p>
-                <span class="case-link">Ler análise →</span>
-            </div>
-        </a>
-
-<a class="case-card no-image" href="aluc_ia.html">
-
-    <div class="case-content">
-
-        <div class="case-tag">
-            IA GENERATIVA • PROBABILIDADE • VERDADE
-        </div>
-
-        <div class="mini-formula">
-            P(tokenₜ₊₁ | contexto)
-        </div>
-
-        <h2>
-            A IA não verifica o mundo.
-        </h2>
-
-        <p>
-            Alucinação não é um bug periférico.
-            É uma consequência estrutural da matemática que faz modelos generativos parecerem inteligentes.
-        </p>
-
-        <span class="case-link">
-            Ler análise →
-        </span>
-
-    </div>
-
-</a>
-		
+            <aside class="trace-panel">
+                <h3>Rastreamento inferencial</h3>
+                <div class="trace-log" id="traceLog">
+                    <div class="log-item">
+                        Aguardando entrada textual.
+                    </div>
+                </div>
+            </aside>
+        </section>
     </section>
 
-    <div class="footer">
-        VEROPRED ANALYTICS • DADOS • MODELAGEM • CONTEXTO • DECISÃO
-    </div>
+    <section class="result" id="result">
+        <h2>Inferência consolidada</h2>
+
+        <div class="result-grid">
+            <div class="result-card">
+                <small>Estrutura inferida</small>
+                <div class="metric"><span>Área dominante</span><b>Risco de crédito</b></div>
+                <div class="metric"><span>Decisão em jogo</span><b>aprovação × inadimplência</b></div>
+                <div class="metric"><span>Contexto dominante</span><b>score / cutoff / RAROC</b></div>
+                <div class="metric"><span>Tipo de resposta</span><b>resposta executiva</b></div>
+            </div>
+
+            <div class="result-card">
+                <small>Similaridades</small>
+                <div class="metric"><span>score.html</span><b>0.87</b></div>
+                <div class="metric"><span>raroc.html</span><b>0.82</b></div>
+                <div class="metric"><span>simulador.html</span><b>0.78</b></div>
+                <div class="metric"><span>ia_nucleo.html</span><b>0.64</b></div>
+            </div>
+
+            <div class="result-card symbolic-output">
+                <small>Estrutura de decisão recuperada</small>
+                <ul>
+                    <li>Segmentação dinâmica de risco</li>
+                    <li>Ajuste adaptativo de cutoff</li>
+                    <li>Simulação de perda esperada</li>
+                    <li>Leitura de retorno ajustado ao capital</li>
+                    <li>Governança de exceções</li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
 </main>
 
+<script>
+const steps = [
+    {
+        id:"entrada",
+        tag:"01 • TEXTO",
+        title:"Entrada textual",
+        text:"Sequência textual ainda não vetorizada.",
+        code:"“reduzir inadimplência sem perder aprovação”",
+        log:"Sequência textual indexada."
+    },
+    {
+        id:"tokens",
+        tag:"02 • TOKENS",
+        title:"Tokenização",
+        text:"Fragmentação textual em tokens indexados.",
+        code:"[reduzir] [inadimplência] [aprovação] → [1842, 9921, 441]",
+        log:"Tokens identificados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
+    },
+    {
+        id:"vetorizacao",
+        tag:"03 • VETORES",
+        title:"Vetorização",
+        text:"Projeção vetorial em espaço semântico.",
+        code:"[0.42, -0.18, 0.77, 0.09, ...]",
+        log:"Representação vetorial gerada: [0.42, -0.18, 0.77, 0.09, ...]."
+    },
+    {
+        id:"busca",
+        tag:"04 • BUSCA",
+        title:"Busca semântica",
+        text:"Busca contextual por proximidade vetorial.",
+        code:"cos(θ) = 0.87 • score.html ≈ pergunta",
+        log:"Proximidade vetorial calculada: score.html = 0.87; raroc.html = 0.82."
+    },
+    {
+        id:"contexto",
+        tag:"05 • CONTEXTO",
+        title:"Contexto recuperado",
+        text:"Expansão contextual via recuperação semântica.",
+        code:"pergunta + score.html + raroc.html + simulador.html",
+        log:"Contexto recuperado: pergunta + score.html + raroc.html + simulador.html."
+    },
+    {
+        id:"atencao",
+        tag:"06 • ATENÇÃO",
+        title:"Atenção contextual",
+        text:"Redistribuição probabilística de relevância contextual.",
+        code:"cutoff 0.31 • aprovação 0.26 • inadimplência 0.24 • capital 0.19",
+        log:"Redistribuição contextual: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
+    },
+    {
+        id:"probabilidade",
+        tag:"07 • PROBABILIDADE",
+        title:"Distribuição probabilística",
+        text:"Estimativa condicionada das próximas unidades de saída.",
+        code:"P('política')=0.34 • P('cutoff')=0.27 • P('risco')=0.21",
+        log:"Probabilidades estimadas: P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
+    },
+    {
+        id:"reconstrucao",
+        tag:"08 • TEXTO",
+        title:"Reconstrução textual",
+        text:"Reconstrução final em linguagem natural.",
+        code:"resposta executiva consolidada",
+        log:"Reconstrução textual concluída: resposta executiva consolidada."
+    }
+];
+
+const pipeline = document.getElementById("pipeline");
+const traceLog = document.getElementById("traceLog");
+const result = document.getElementById("result");
+
+function buildPipeline(){
+    pipeline.innerHTML = steps.map(s => `
+        <div class="step" id="step-${s.id}">
+            <small>${s.tag}</small>
+            <h3>${s.title}</h3>
+            <p>${s.text}</p>
+            <code>${s.code}</code>
+            <div class="status">Aguardando</div>
+        </div>
+    `).join("");
+}
+
+function addLog(text){
+    const div = document.createElement("div");
+    div.className = "log-item";
+    div.innerHTML = text;
+    traceLog.appendChild(div);
+    traceLog.scrollTop = traceLog.scrollHeight;
+}
+
+function resetPipeline(){
+    result.classList.remove("show");
+
+    traceLog.innerHTML = `<div class="log-item">Aguardando entrada textual.</div>`;
+
+    document.querySelectorAll(".step").forEach(step=>{
+        step.classList.remove("active","done");
+        step.querySelector(".status").textContent = "Aguardando";
+    });
+}
+
+function runPipeline(){
+    resetPipeline();
+
+    const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
+
+    document.querySelector("#step-entrada code").textContent = "“" + q + "”";
+
+    traceLog.innerHTML = `
+        <div class="log-item"><b>Entrada textual recebida:</b><br>${q}</div>
+    `;
+
+    steps.forEach((s, index)=>{
+        setTimeout(()=>{
+            const el = document.getElementById("step-" + s.id);
+
+            document.querySelectorAll(".step").forEach(step=>{
+                step.classList.remove("active");
+            });
+
+            el.classList.add("active");
+            el.querySelector(".status").textContent = "Processando";
+
+            addLog(`<b>${s.title}</b><br>${s.log}`);
+
+            setTimeout(()=>{
+                el.classList.remove("active");
+                el.classList.add("done");
+                el.querySelector(".status").textContent = "Concluído";
+            }, 650);
+
+            if(index === steps.length - 1){
+                setTimeout(()=>{
+                    result.classList.add("show");
+                    result.scrollIntoView({behavior:"smooth", block:"start"});
+                }, 1100);
+            }
+        }, index * 950);
+    });
+}
+
+buildPipeline();
+</script>
+
 </body>
 </html>
+
+link https://pedrosale.github.io/veropred-site/veropred_ai_lab.html funciona bem, 
+
+e agora, próximo passo?
