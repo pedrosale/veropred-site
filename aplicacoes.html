@@ -321,6 +321,25 @@ body{
     font-weight:700;
 }
 
+.sim-section{
+    display:block;
+    text-decoration:none;
+    color:#f6efe3;
+    transition:
+    transform .3s ease,
+    border-color .3s ease,
+    background .3s ease;
+}
+
+
+.sim-section:hover{
+    transform:translateY(-4px);
+    border-color:rgba(198,146,43,.52);
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.16), transparent 34%),
+        rgba(255,255,255,.03);
+}
+
 @media(max-width:900px){
     .sim-grid{
         grid-template-columns:1fr;
@@ -486,33 +505,9 @@ body{
             </div>
         </a>
 		
-		<a class="case-card no-image" href="ia_nucleo.html">
-    <div class="case-content">
 
-        <div class="case-tag">
-            IA • COGNIÇÃO • DECISÃO SOB INCERTEZA
-        </div>
 
-        <div class="mini-formula">
-            Atlas Cognitivo da IA
-        </div>
-
-        <h2>
-            Inteligência artificial como sistema de capacidades emergentes.
-        </h2>
-
-        <p>
-            Um mapa interativo das capacidades cognitivas artificiais que conectam memória,
-            atenção, previsão, geração, alinhamento e decisão sob incerteza.
-        </p>
-
-        <span class="case-link">
-            Explorar atlas →
-        </span>
-    </div>
-</a>
-
-<div class="sim-section">
+<a class="sim-section" href="ia_nucleo.html">
     <div class="case-tag">IA • SIMULAÇÕES • ARQUITETURAS COGNITIVAS</div>
 
     <h2>Explorações Cognitivas Interativas</h2>
@@ -520,7 +515,10 @@ body{
     <p>
 Arquiteturas cognitivas artificiais relacionadas a memória, atenção, geração, alinhamento, adaptação e sistemas híbridos modernos.
     </p>
-</div>
+	 <span class="case-link">
+        Explorar atlas cognitivo →
+    </span>
+</a>
 
 <div class="sim-grid">
 
