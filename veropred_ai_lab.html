@@ -562,18 +562,16 @@ button:hover{
     <section class="hero">
         <div>
             <div class="kicker">Inferência observável</div>
-            <h1>Da linguagem à geometria. Da geometria à resposta.</h1>
+            <h1>Laboratório de IA Veropred. Arquitetura inferencial observável.</h1>
             <p class="lead">
-                Uma simulação visual de como texto humano é convertido em estruturas numéricas,
-                processado em espaços vetoriais e reconstruído como linguagem executiva.
+                Linguagem → representação vetorial → recuperação contextual → inferência probabilística → reconstrução textual.
             </p>
         </div>
 
         <div class="lab-panel">
-            <h2>Entrada simbólica</h2>
+            <h2>Entrada inicial</h2>
             <p>
-                A pergunta entra como linguagem humana. A fábrica converte símbolos em tokens,
-                vetores, similaridades, distribuições e estados representacionais.
+                Tokenização • Embeddings • Busca semântica • Attention • Inferência probabilística
             </p>
 
             <div class="question-box">
@@ -591,12 +589,11 @@ button:hover{
         <div class="factory-head">
             <div>
                 <div class="kicker">Linha industrial cognitiva</div>
-                <h2>Conversão simbólica → processamento matemático → reconstrução simbólica.</h2>
+                <h2>Texto → Tokens → Vetores → Contexto → Inferência → Texto.</h2>
             </div>
 
             <p>
-                A simulação separa o processo em estados observáveis: texto, tokens, vetores,
-                busca semântica, contexto recuperado, inferência probabilística e resposta final.
+                Pipeline inferencial em tempo real.
             </p>
         </div>
 
@@ -619,7 +616,7 @@ button:hover{
 
             <div class="belt-stage" id="belt-vector">
                 <small>Embedding</small>
-                <strong>Vetor latente</strong>
+                <strong>Representação vetorial</strong>
                 <code>[0.42, -0.18, 0.77, 0.09, ...]</code>
             </div>
 
@@ -635,7 +632,7 @@ button:hover{
 
             <div class="belt-stage" id="belt-context">
                 <small>Contexto</small>
-                <strong>Estado aumentado</strong>
+                <strong>Janela contextual</strong>
                 <code>pergunta + score.html + raroc.html + simulador.html</code>
             </div>
         </div>
@@ -645,21 +642,21 @@ button:hover{
         <div class="pipeline" id="pipeline"></div>
 
         <aside class="trace-panel">
-            <h3>Trace da fábrica</h3>
+            <h3>Inferential trace</h3>
             <div class="trace-log" id="traceLog">
                 <div class="log-item">
-                    Fábrica aguardando entrada simbólica.
+                    Fábrica aguardando entrada inicial.
                 </div>
             </div>
         </aside>
     </section>
 
     <section class="result" id="result">
-        <h2>Estado representacional consolidado</h2>
+        <h2>Resultado inferencial</h2>
 
         <div class="result-grid">
             <div class="result-card">
-                <small>Domínio inferido</small>
+                <small>Estrutura de resposta</small>
                 <div class="metric"><span>Área dominante</span><b>Risco de crédito</b></div>
                 <div class="metric"><span>Decisão em jogo</span><b>aprovação × inadimplência</b></div>
                 <div class="metric"><span>Contexto dominante</span><b>score / cutoff / RAROC</b></div>
@@ -667,7 +664,7 @@ button:hover{
             </div>
 
             <div class="result-card">
-                <small>Similaridades simuladas</small>
+                <small>Similaridades</small>
                 <div class="metric"><span>score.html</span><b>0.87</b></div>
                 <div class="metric"><span>raroc.html</span><b>0.82</b></div>
                 <div class="metric"><span>simulador.html</span><b>0.78</b></div>
@@ -675,11 +672,10 @@ button:hover{
             </div>
 
             <div class="result-card symbolic-output">
-                <small>Reconstrução simbólica</small>
+                <small>Reconstrução final em texto</small>
                 <p>
                     A decisão central não é apenas reduzir inadimplência. É redesenhar a política de crédito para equilibrar aprovação,
-                    risco, margem e capital. A inferência aponta para uma arquitetura baseada em segmentação de risco, ajuste de cutoff,
-                    simulação de perda esperada, leitura de RAROC e governança de exceções.
+                    risco, margem e capital. A arquitetura resultante prioriza segmentação de risco, ajuste dinâmico de cutoff, simulação de perda esperada, leitura de RAROC e governança de exceções.
                 </p>
             </div>
         </div>
@@ -692,57 +688,57 @@ const steps = [
     {
         id:"entrada",
         tag:"01 • TEXTO",
-        title:"Entrada simbólica",
-        text:"A pergunta ainda existe como linguagem humana, antes da conversão matemática.",
+        title:"Entrada inicial",
+        text:"Sequência textual ainda não vetorizada.",
         log:"Texto recebido como sequência simbólica."
     },
     {
         id:"tokens",
         tag:"02 • TOKENS",
         title:"Tokenização",
-        text:"O texto é quebrado em unidades menores e convertido em identificadores numéricos.",
+        text:"Fragmentação textual em tokens indexados.",
         log:"Tokens simulados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
     },
     {
         id:"embedding",
         tag:"03 • VETORES",
         title:"Embedding",
-        text:"Os tokens são projetados em um espaço vetorial de alta dimensão.",
+        text:"Projeção vetorial em espaço semântico.",
         log:"Vetor semântico simulado: [0.42, -0.18, 0.77, 0.09, ...]."
     },
     {
         id:"busca",
         tag:"04 • SIMILARIDADE",
         title:"Busca semântica",
-        text:"O vetor da pergunta é comparado com vetores da base por proximidade matemática.",
+        text:"Busca contextual por proximidade vetorial.",
         log:"Similaridade por cosseno simulada: score.html = 0.87; raroc.html = 0.82."
     },
     {
         id:"contexto",
         tag:"05 • CONTEXTO",
-        title:"Estado aumentado",
-        text:"A pergunta é combinada com os trechos semanticamente mais próximos.",
+        title:"Janela contextual",
+        text:"Expansão contextual via recuperação semântica.",
         log:"Contexto aumentado: pergunta + score.html + raroc.html + simulador.html."
     },
     {
         id:"attention",
         tag:"06 • ATTENTION",
         title:"Pesos contextuais",
-        text:"O sistema redistribui relevância entre tokens, trechos e dependências contextuais.",
+        text:"Redistribuição probabilística de atenção contextual.",
         log:"Pesos simulados: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
     },
     {
         id:"probabilidade",
         tag:"07 • PROBABILIDADE",
         title:"Próximo token",
-        text:"A saída emerge como distribuição de probabilidade condicionada ao contexto.",
+        text:"Distribuição probabilística do próximo token.",
         log:"P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
     },
     {
         id:"reconstrucao",
         tag:"08 • TEXTO",
         title:"Reconstrução",
-        text:"Tokens prováveis são convertidos novamente em linguagem humana.",
+        text:"Reconstrução textual probabilística.",
         log:"Reconstrução simbólica concluída: resposta executiva consolidada."
     }
 ];
