@@ -1,10 +1,9 @@
-<!-- arquivo: veropred_ai_lab.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Veropred AI Lab | Pipeline Cognitivo Transparente</title>
+<title>Veropred AI Lab | Fábrica Cognitiva</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -46,35 +45,17 @@ body::before{
     z-index:1;
     width:min(1180px, calc(100% - 36px));
     margin:0 auto;
-    padding:42px 0 90px;
+    padding:44px 0 90px;
 }
 
 .topbar{
     display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:18px;
-    margin-bottom:64px;
-}
-
-.back{
-    color:var(--gold);
-    border:1px solid rgba(216,176,106,.28);
-    border-radius:999px;
-    padding:10px 16px;
-    text-decoration:none;
-    background:rgba(255,255,255,.035);
-    font-size:14px;
-    transition:.25s ease;
-}
-
-.back:hover{
-    background:rgba(216,176,106,.08);
-    transform:translateY(-2px);
+    justify-content:center;
+    margin-bottom:62px;
 }
 
 .brand{
-    letter-spacing:.18em;
+    letter-spacing:.22em;
     text-transform:uppercase;
     color:var(--gold2);
     font-size:12px;
@@ -85,7 +66,7 @@ body::before{
     grid-template-columns:1.05fr .95fr;
     gap:42px;
     align-items:center;
-    margin-bottom:52px;
+    margin-bottom:42px;
 }
 
 .kicker{
@@ -189,7 +170,7 @@ button:hover{
     transform:translateY(-2px);
 }
 
-/* LINHA INDUSTRIAL */
+/* FÁBRICA */
 
 .factory-line{
     margin-top:36px;
@@ -231,7 +212,7 @@ button:hover{
 }
 
 .belt-stage{
-    min-height:158px;
+    min-height:168px;
     border:1px solid rgba(216,176,106,.18);
     border-radius:22px;
     padding:18px;
@@ -297,7 +278,7 @@ button:hover{
     font-size:22px;
 }
 
-/* PIPELINE */
+/* ESTADOS */
 
 .pipeline-wrap{
     margin-top:48px;
@@ -314,7 +295,7 @@ button:hover{
 }
 
 .step{
-    min-height:190px;
+    min-height:196px;
     border:1px solid rgba(216,176,106,.18);
     border-radius:26px;
     padding:20px;
@@ -428,7 +409,9 @@ button:hover{
     color:var(--gold);
 }
 
-.answer{
+/* RESULTADO */
+
+.result{
     margin-top:34px;
     border:1px solid rgba(216,176,106,.25);
     border-radius:30px;
@@ -439,7 +422,7 @@ button:hover{
     display:none;
 }
 
-.answer.show{
+.result.show{
     display:block;
     animation:fadeUp .45s ease both;
 }
@@ -449,71 +432,78 @@ button:hover{
     to{opacity:1;transform:translateY(0)}
 }
 
-.answer h2{
+.result h2{
     font-family:Georgia,serif;
     font-weight:500;
     font-size:36px;
     margin-bottom:18px;
 }
 
-.answer-grid{
+.result-grid{
     display:grid;
-    grid-template-columns:1.2fr .8fr;
+    grid-template-columns:1fr 1fr;
     gap:22px;
 }
 
-.answer p,
-.answer li{
+.result-card{
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:22px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.result-card small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:12px;
+}
+
+.result-card p,
+.result-card li{
     color:#ddd3c4;
     line-height:1.62;
     font-size:15px;
 }
 
-.answer ul{
+.result-card ul{
     padding-left:18px;
     display:grid;
     gap:8px;
 }
 
-.sources{
-    border-left:1px solid rgba(216,176,106,.22);
-    padding-left:22px;
-}
-
-.source{
-    display:block;
-    border:1px solid rgba(216,176,106,.18);
-    border-radius:16px;
-    padding:12px;
-    margin-bottom:10px;
-    color:var(--gold);
-    text-decoration:none;
-    background:rgba(0,0,0,.22);
-    font-size:13px;
-}
-
-.next-actions{
+.metric{
     display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:22px;
+    justify-content:space-between;
+    gap:12px;
+    border-bottom:1px solid rgba(216,176,106,.12);
+    padding:10px 0;
+    color:#ddd3c4;
+    font-size:14px;
 }
 
-.next-actions a{
-    color:#1b1009;
-    background:linear-gradient(135deg,#f1c77e,#c9783a);
-    padding:12px 15px;
-    border-radius:999px;
-    font-weight:800;
-    text-decoration:none;
-    font-size:13px;
+.metric b{
+    color:var(--gold2);
+    font-weight:700;
+}
+
+.symbolic-output{
+    grid-column:1 / -1;
+}
+
+.symbolic-output p{
+    color:#e3d8c8;
+    font-size:16px;
+    line-height:1.7;
 }
 
 @media(max-width:980px){
     .hero,
     .pipeline-wrap,
-    .answer-grid,
-    .factory-head{
+    .factory-head,
+    .result-grid{
         grid-template-columns:1fr;
     }
 
@@ -534,12 +524,15 @@ button:hover{
         position:relative;
         top:auto;
     }
+
+    .symbolic-output{
+        grid-column:auto;
+    }
 }
 
 @media(max-width:620px){
     .topbar{
-        align-items:flex-start;
-        flex-direction:column;
+        justify-content:flex-start;
     }
 
     .pipeline{
@@ -563,33 +556,32 @@ button:hover{
 <main class="page">
 
     <div class="topbar">
-        <a href="index.html" class="back">← Voltar ao site</a>
-        <div class="brand">VEROPRED • AI LAB</div>
+        <div class="brand">VEROPRED • AI LAB • FÁBRICA COGNITIVA</div>
     </div>
 
     <section class="hero">
         <div>
-            <div class="kicker">Pipeline Cognitivo Transparente</div>
-            <h1>A resposta como processo observável.</h1>
+            <div class="kicker">Inferência observável</div>
+            <h1>Da linguagem à geometria. Da geometria à resposta.</h1>
             <p class="lead">
-                Uma experiência visual para demonstrar como uma pergunta atravessa associação,
-                memória, atenção, planejamento, geração e validação antes de se transformar em uma resposta executiva.
+                Uma simulação visual de como texto humano é convertido em estruturas numéricas,
+                processado em espaços vetoriais e reconstruído como linguagem executiva.
             </p>
         </div>
 
         <div class="lab-panel">
-            <h2>Faça uma pergunta à Veropred AI</h2>
+            <h2>Entrada simbólica</h2>
             <p>
-                Este primeiro MVP simula o funcionamento do pipeline. A próxima etapa conecta backend,
-                RAG, LLM e logs reais.
+                A pergunta entra como linguagem humana. A fábrica converte símbolos em tokens,
+                vetores, similaridades, distribuições e estados representacionais.
             </p>
 
             <div class="question-box">
                 <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
 
                 <div class="actions">
-                    <button class="primary" onclick="runPipeline()">Executar pipeline</button>
-                    <button class="secondary" onclick="resetPipeline()">Limpar</button>
+                    <button class="primary" onclick="runPipeline()">Iniciar transformação</button>
+                    <button class="secondary" onclick="resetPipeline()">Reiniciar fábrica</button>
                 </div>
             </div>
         </div>
@@ -598,12 +590,13 @@ button:hover{
     <section class="factory-line">
         <div class="factory-head">
             <div>
-                <div class="kicker">Linha Industrial Cognitiva</div>
-                <h2>Da linguagem ao contexto recuperado.</h2>
+                <div class="kicker">Linha industrial cognitiva</div>
+                <h2>Conversão simbólica → processamento matemático → reconstrução simbólica.</h2>
             </div>
 
             <p>
-                A pergunta é transformada em sinais matemáticos, comparada semanticamente com a base Veropred e convertida em contexto útil para resposta.
+                A simulação separa o processo em estados observáveis: texto, tokens, vetores,
+                busca semântica, contexto recuperado, inferência probabilística e resposta final.
             </p>
         </div>
 
@@ -618,22 +611,22 @@ button:hover{
 
             <div class="belt-stage" id="belt-tokens">
                 <small>Tokenização</small>
-                <strong>Tokens</strong>
-                <code>[reduzir] [inadimplência] [aprovação]</code>
+                <strong>Tokens / IDs</strong>
+                <code>[reduzir] [inadimplência] [aprovação]<br>[1842, 9921, 441]</code>
             </div>
 
             <div class="belt-arrow">→</div>
 
             <div class="belt-stage" id="belt-vector">
                 <small>Embedding</small>
-                <strong>Vetor</strong>
+                <strong>Vetor latente</strong>
                 <code>[0.42, -0.18, 0.77, 0.09, ...]</code>
             </div>
 
             <div class="belt-arrow">→</div>
 
             <div class="belt-stage" id="belt-cosine">
-                <small>Busca Semântica</small>
+                <small>Busca semântica</small>
                 <strong>Similaridade</strong>
                 <code>cos(θ) = 0.87<br>score.html ≈ pergunta</code>
             </div>
@@ -642,8 +635,8 @@ button:hover{
 
             <div class="belt-stage" id="belt-context">
                 <small>Contexto</small>
-                <strong>RAG</strong>
-                <code>score.html + raroc.html + simulador.html</code>
+                <strong>Estado aumentado</strong>
+                <code>pergunta + score.html + raroc.html + simulador.html</code>
             </div>
         </div>
     </section>
@@ -652,48 +645,42 @@ button:hover{
         <div class="pipeline" id="pipeline"></div>
 
         <aside class="trace-panel">
-            <h3>Trace cognitivo</h3>
+            <h3>Trace da fábrica</h3>
             <div class="trace-log" id="traceLog">
                 <div class="log-item">
-                    Pipeline aguardando pergunta.
+                    Fábrica aguardando entrada simbólica.
                 </div>
             </div>
         </aside>
     </section>
 
-    <section class="answer" id="answer">
-        <h2>Resposta executiva consolidada</h2>
+    <section class="result" id="result">
+        <h2>Estado representacional consolidado</h2>
 
-        <div class="answer-grid">
-            <div>
-                <p>
-                    A decisão central não é apenas reduzir inadimplência. É redesenhar a política de crédito para equilibrar aprovação, risco, margem e capital.
-                </p>
-
-                <br>
-
-                <ul>
-                    <li>Separar clientes por faixas de risco, retorno e comportamento esperado.</li>
-                    <li>Transformar score em regra operacional: cutoff, limite, preço e revisão.</li>
-                    <li>Simular impacto em aprovação, perda esperada, RAROC e capital econômico.</li>
-                    <li>Monitorar estabilidade, safra, drift e deterioração de carteira.</li>
-                    <li>Definir governança de exceções para não perder oportunidades boas por regra rígida demais.</li>
-                </ul>
-
-                <div class="next-actions">
-                    <a href="simulador.html">Explorar simulador de crédito →</a>
-                    <a href="raroc.html">Ler sobre RAROC →</a>
-                    <a href="ia_nucleo.html">Abrir Atlas Cognitivo →</a>
-                </div>
+        <div class="result-grid">
+            <div class="result-card">
+                <small>Domínio inferido</small>
+                <div class="metric"><span>Área dominante</span><b>Risco de crédito</b></div>
+                <div class="metric"><span>Decisão em jogo</span><b>aprovação × inadimplência</b></div>
+                <div class="metric"><span>Contexto dominante</span><b>score / cutoff / RAROC</b></div>
+                <div class="metric"><span>Forma de saída</span><b>resposta executiva</b></div>
             </div>
 
-            <div class="sources">
-                <p><b>Fontes simuladas recuperadas</b></p>
-                <br>
-                <a class="source" href="score.html">score.html — Score, regra e decisão</a>
-                <a class="source" href="raroc.html">raroc.html — RAROC e decisão econômica</a>
-                <a class="source" href="simulador.html">simulador.html — Simulação executiva de crédito</a>
-                <a class="source" href="ia_nucleo.html">ia_nucleo.html — Atlas Cognitivo da IA</a>
+            <div class="result-card">
+                <small>Similaridades simuladas</small>
+                <div class="metric"><span>score.html</span><b>0.87</b></div>
+                <div class="metric"><span>raroc.html</span><b>0.82</b></div>
+                <div class="metric"><span>simulador.html</span><b>0.78</b></div>
+                <div class="metric"><span>ia_nucleo.html</span><b>0.64</b></div>
+            </div>
+
+            <div class="result-card symbolic-output">
+                <small>Reconstrução simbólica</small>
+                <p>
+                    A decisão central não é apenas reduzir inadimplência. É redesenhar a política de crédito para equilibrar aprovação,
+                    risco, margem e capital. A inferência aponta para uma arquitetura baseada em segmentação de risco, ajuste de cutoff,
+                    simulação de perda esperada, leitura de RAROC e governança de exceções.
+                </p>
             </div>
         </div>
     </section>
@@ -703,66 +690,66 @@ button:hover{
 <script>
 const steps = [
     {
-        id:"interpretacao",
-        tag:"01 • INTERPRETAÇÃO",
-        title:"Interpretação",
-        text:"Identificando domínio, intenção, decisão em jogo e tipo de resposta esperada.",
-        log:"Pergunta classificada como cenário de decisão em risco de crédito."
+        id:"entrada",
+        tag:"01 • TEXTO",
+        title:"Entrada simbólica",
+        text:"A pergunta ainda existe como linguagem humana, antes da conversão matemática.",
+        log:"Texto recebido como sequência simbólica."
     },
     {
-        id:"associacao",
-        tag:"02 • ASSOCIAÇÃO",
-        title:"Embeddings",
-        text:"Convertendo a pergunta em representação semântica para aproximar conceitos relacionados.",
-        log:"Texto tokenizado e convertido em vetor semântico: [0.42, -0.18, 0.77, ...]."
+        id:"tokens",
+        tag:"02 • TOKENS",
+        title:"Tokenização",
+        text:"O texto é quebrado em unidades menores e convertido em identificadores numéricos.",
+        log:"Tokens simulados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
     },
     {
-        id:"memoria",
-        tag:"03 • MEMÓRIA",
-        title:"RAG",
-        text:"Buscando conteúdos Veropred relacionados ao cenário apresentado.",
-        log:"Busca semântica simulada por similaridade: score.html = 0.87; raroc.html = 0.82; simulador.html = 0.78."
+        id:"embedding",
+        tag:"03 • VETORES",
+        title:"Embedding",
+        text:"Os tokens são projetados em um espaço vetorial de alta dimensão.",
+        log:"Vetor semântico simulado: [0.42, -0.18, 0.77, 0.09, ...]."
     },
     {
-        id:"atencao",
-        tag:"04 • ATENÇÃO",
-        title:"Seleção de contexto",
-        text:"Priorizando os trechos mais relevantes para evitar excesso de informação.",
-        log:"Contexto priorizado: política de crédito, risco-retorno, aprovação e capital econômico."
+        id:"busca",
+        tag:"04 • SIMILARIDADE",
+        title:"Busca semântica",
+        text:"O vetor da pergunta é comparado com vetores da base por proximidade matemática.",
+        log:"Similaridade por cosseno simulada: score.html = 0.87; raroc.html = 0.82."
     },
     {
-        id:"planejamento",
-        tag:"05 • PLANEJAMENTO",
-        title:"Arquitetura da resposta",
-        text:"Organizando diagnóstico, critérios, recomendação, riscos e próximo passo.",
-        log:"Estrutura definida: decisão central → critérios → arquitetura → próximos passos."
+        id:"contexto",
+        tag:"05 • CONTEXTO",
+        title:"Estado aumentado",
+        text:"A pergunta é combinada com os trechos semanticamente mais próximos.",
+        log:"Contexto aumentado: pergunta + score.html + raroc.html + simulador.html."
     },
     {
-        id:"geracao",
-        tag:"06 • GERAÇÃO",
-        title:"Resposta",
-        text:"Construindo resposta executiva a partir do plano e do contexto recuperado.",
-        log:"Resposta gerada em linguagem executiva orientada à decisão."
+        id:"attention",
+        tag:"06 • ATTENTION",
+        title:"Pesos contextuais",
+        text:"O sistema redistribui relevância entre tokens, trechos e dependências contextuais.",
+        log:"Pesos simulados: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
     },
     {
-        id:"validacao",
-        tag:"07 • VALIDAÇÃO",
-        title:"Alinhamento",
-        text:"Checando aderência ao contexto, clareza e compatibilidade com o posicionamento Veropred.",
-        log:"Validação simulada concluída: resposta aderente, objetiva e sem promessa excessiva."
+        id:"probabilidade",
+        tag:"07 • PROBABILIDADE",
+        title:"Próximo token",
+        text:"A saída emerge como distribuição de probabilidade condicionada ao contexto.",
+        log:"P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
     },
     {
-        id:"final",
-        tag:"08 • CONSOLIDAÇÃO",
-        title:"Entrega final",
-        text:"Consolidando resposta, fontes consultadas e ações recomendadas.",
-        log:"Resposta final pronta com fontes simuladas e próximos passos internos."
+        id:"reconstrucao",
+        tag:"08 • TEXTO",
+        title:"Reconstrução",
+        text:"Tokens prováveis são convertidos novamente em linguagem humana.",
+        log:"Reconstrução simbólica concluída: resposta executiva consolidada."
     }
 ];
 
 const pipeline = document.getElementById("pipeline");
 const traceLog = document.getElementById("traceLog");
-const answer = document.getElementById("answer");
+const result = document.getElementById("result");
 
 function buildPipeline(){
     pipeline.innerHTML = steps.map(s => `
@@ -804,10 +791,10 @@ function activateFactoryStage(index){
 }
 
 function resetPipeline(){
-    answer.classList.remove("show");
+    result.classList.remove("show");
     resetFactoryLine();
 
-    traceLog.innerHTML = `<div class="log-item">Pipeline aguardando pergunta.</div>`;
+    traceLog.innerHTML = `<div class="log-item">Fábrica aguardando entrada simbólica.</div>`;
 
     document.querySelectorAll(".step").forEach(step=>{
         step.classList.remove("active","done");
@@ -819,11 +806,10 @@ function runPipeline(){
     resetPipeline();
 
     const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
-
     document.querySelector("#belt-text code").textContent = "“" + q + "”";
 
     traceLog.innerHTML = `
-        <div class="log-item"><b>Pergunta recebida:</b><br>${q}</div>
+        <div class="log-item"><b>Entrada simbólica recebida:</b><br>${q}</div>
     `;
 
     steps.forEach((s, index)=>{
@@ -851,8 +837,8 @@ function runPipeline(){
 
             if(index === steps.length - 1){
                 setTimeout(()=>{
-                    answer.classList.add("show");
-                    answer.scrollIntoView({behavior:"smooth", block:"start"});
+                    result.classList.add("show");
+                    result.scrollIntoView({behavior:"smooth", block:"start"});
                 }, 1100);
             }
         }, index * 950);
