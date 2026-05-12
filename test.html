@@ -1,962 +1,685 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Atlas Cognitivo da IA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aplicações reais de decisão | Veropred Analytics</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-.topbar{
-    position:fixed;
-    top:22px;
-left:28px;
-    z-index:20;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
-
-.back-home{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-
-    padding:10px 14px;
-
-    border:1px solid rgba(255,211,142,.16);
-    border-radius:999px;
-
-    background:rgba(0,0,0,.34);
-    backdrop-filter:blur(12px);
-
-    color:#f1d3a0;
-    text-decoration:none;
-
-    font-size:13px;
-    letter-spacing:.03em;
-
-    transition:.25s ease;
-}
-
-.back-home:hover{
-    border-color:rgba(255,218,145,.42);
-    background:rgba(255,205,120,.08);
-    color:white;
-
-    transform:translateY(-1px);
-}
-:root{
-    --bg:#050505;
-    --gold:#c8944f;
-    --gold2:#f1c27a;
-    --text:#f4efe7;
-    --muted:#b8aa96;
-    --border:rgba(229,178,100,.22);
-}
-
-*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-    min-height:100vh;
-    background:
-        radial-gradient(circle at 38% 54%, rgba(200,148,79,.16), transparent 34%),
-        radial-gradient(circle at 18% 18%, rgba(255,210,130,.06), transparent 26%),
-        linear-gradient(135deg,#030303,#0b0805 55%,#020202);
-    color:var(--text);
-    font-family:Inter,Segoe UI,Arial,sans-serif;
-    overflow:hidden;
-}
-
-canvas{
-    position:fixed;
-    inset:0;
-    z-index:0;
+    background:#050505;
+    color:#f6efe3;
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
 }
 
 .page{
-    position:relative;
-    z-index:2;
-    width:100vw;
-    height:100vh;
-    display:grid;
-    grid-template-columns:minmax(680px,1fr) minmax(520px,620px);
+    max-width:1180px;
+    margin:0 auto;
+    padding:72px 24px 120px;
+}
+
+.btn-back{
+    display:inline-flex;
+    align-items:center;
+    margin-bottom:56px;
+    border:1px solid rgba(198,146,43,.35);
+    border-radius:999px;
+    padding:10px 18px;
+    color:#c6922b;
+    text-decoration:none;
+    font-weight:600;
+    background:rgba(255,255,255,.03);
+    transition:.2s ease;
+}
+
+.btn-back:hover{
+    background:rgba(198,146,43,.10);
+    transform:translateY(-2px);
 }
 
 .hero{
-    position:relative;
-    padding:28px 44px 34px;
-    overflow:hidden;
-    display:grid;
-    grid-template-rows:auto 1fr;
+    margin-bottom:72px;
+    border-bottom:1px solid rgba(198,146,43,.22);
+    padding-bottom:54px;
 }
 
-.brand{
-    letter-spacing:.16em;
+.kicker{
+    color:#c6922b;
+    font-size:12px;
+    letter-spacing:.24em;
     text-transform:uppercase;
-    color:var(--gold2);
-    font-size:12px;
-    margin-bottom:14px;
+    margin-bottom:18px;
 }
 
-h1{
-    font-family:Georgia,serif;
-    font-size:clamp(34px,3.4vw,52px);
-    line-height:1.02;
-    max-width:560px;
-    font-weight:500;
-}
-
-.lead{
-    max-width:540px;
-    margin-top:16px;
-    color:var(--muted);
-    font-size:15.5px;
-    line-height:1.45;
-    opacity:.92;
-}
-
-.brain{
-    position:absolute;
-    left:56%;
-    top:66%;
-    transform:translate(-50%,-50%);
-    width:min(48vw,580px);
-    height:min(48vw,580px);
-    border-radius:50%;
-    pointer-events:none;
-}
-
-.core{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    width:190px;
-    height:190px;
-    border-radius:50%;
-    background:
-        radial-gradient(circle, rgba(255,214,139,.45), rgba(200,148,79,.14) 42%, transparent 72%);
-    border:1px solid rgba(255,211,142,.34);
-    box-shadow:0 0 80px rgba(220,159,78,.34), inset 0 0 40px rgba(255,211,142,.18);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:28px;
-    animation:pulse 4s ease-in-out infinite;
-    pointer-events:auto;
-}
-
-.core span{
-    font-family:Georgia,serif;
-    font-size:19px;
-    color:#fff3d9;
-    letter-spacing:.04em;
-    line-height:1.1;
-}
-
-@keyframes pulse{
-    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.9}
-    50%{transform:translate(-50%,-50%) scale(1.045);opacity:1}
-}
-
-.node{
-    position:absolute;
-    width:100px;
-    height:100px;
-    border-radius:50%;
-    border:1px solid var(--border);
-    background:radial-gradient(circle, rgba(238,188,105,.28), rgba(70,44,18,.34) 45%, rgba(10,8,6,.62));
-    box-shadow:0 0 38px rgba(206,143,63,.24);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:12px;
-    color:#ffe6b8;
-    font-size:12px;
+.hero h1{
+    font-family:'Cormorant Garamond',serif;
+    font-size:72px;
+    line-height:.95;
     font-weight:600;
-    letter-spacing:.04em;
-    cursor:pointer;
-    pointer-events:auto;
+    max-width:880px;
+    margin-bottom:28px;
+}
+
+.hero h1 span{
+    color:#c6922b;
+}
+
+.hero p{
+    color:#cfc6b7;
+    font-size:21px;
+    line-height:1.65;
+    max-width:780px;
+}
+
+.cases-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:34px;
+}
+
+.case-card{
+    position:relative;
+    display:block;
+    min-height:520px;
+    overflow:hidden;
+    border-radius:30px;
+    border:1px solid rgba(198,146,43,.24);
+    background:#0b0b0b;
+    text-decoration:none;
+    color:#f6efe3;
+    box-shadow:0 30px 90px rgba(0,0,0,.45);
     transition:.35s ease;
 }
 
-.node.related{
-    transform:scale(1.06);
-    box-shadow:0 0 46px rgba(244,190,98,.34);
-    border-color:rgba(255,218,145,.48);
-    color:#fff3d9;
+.case-card:hover{
+    transform:translateY(-8px);
+    border-color:rgba(198,146,43,.62);
+    box-shadow:0 40px 120px rgba(0,0,0,.65);
 }
 
-.node.dimmed{
-    opacity:.18;
-    filter:saturate(.6);
+.case-card img{
+    position:absolute;
+    inset:-10px;
+    width:calc(100% + 20px);
+    height:calc(100% + 20px);
+    object-fit:cover;
+    opacity:.48;
+    filter:blur(2px);
+    transition:.45s ease;
 }
 
-.cognitive-svg{
+.case-card:hover img{
+    transform:scale(1.03);
+    opacity:.52;
+    filter:blur(1.5px);
+}
+
+.case-card::after{
+    content:"";
     position:absolute;
     inset:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.38),
+            rgba(0,0,0,.90)
+        ),
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(198,146,43,.12),
+            transparent 42%
+        );
     z-index:1;
 }
 
-.cognitive-line{
-    stroke:rgba(241,194,122,.55);
-    stroke-width:1.4;
-    fill:none;
-    stroke-dasharray:6 8;
-    filter:drop-shadow(0 0 8px rgba(241,194,122,.55));
-    animation:flowLine 2.4s linear infinite;
+.case-content{
+    position:absolute;
+    z-index:2;
+    left:30px;
+    right:30px;
+    top:50%;
+    transform:translateY(-50%);
 }
 
-@keyframes flowLine{
-    from{stroke-dashoffset:80}
-    to{stroke-dashoffset:0}
-}
-
-.flow-list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.flow-item{
-    border:1px solid rgba(255,211,142,.18);
-    background:rgba(255,205,120,.055);
-    border-radius:16px;
-    padding:11px 13px;
-    color:#f4d59d;
-    font-size:13px;
-}
-
-.flow-arrow{
-    color:#8f806a;
-    font-size:14px;
-    padding-left:12px;
-}
-.core{
-    backdrop-filter:blur(12px);
-}
-
-.node{
-    backdrop-filter:blur(8px);
-}
-
-.node:hover{
-    z-index:10;
-}
-
-.node:hover,
-.node.active{
-    transform:scale(1.12);
-    box-shadow:0 0 68px rgba(244,190,98,.55);
-    border-color:rgba(255,218,145,.72);
-    color:white;
-}
-
-.node small{
-    display:block;
-    margin-top:5px;
-    color:var(--muted);
-    font-size:9px;
-    font-weight:400;
-}
-
-.sim-links{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.sim-link{
-    display:inline-flex;
-    color:#f4d59d;
-    border:1px solid rgba(255,211,142,.25);
-    border-radius:999px;
-    padding:10px 14px;
-    text-decoration:none;
-    transition:.25s ease;
-    font-size:13px;
-}
-
-.sim-link:hover{
-    background:rgba(255,205,120,.08);
-    border-color:rgba(255,218,145,.55);
-    color:white;
-}
-
-.panel{
-    height:100vh;
-    background:linear-gradient(180deg, rgba(17,12,8,.9), rgba(5,5,5,.94));
-    border-left:1px solid var(--border);
-    backdrop-filter:blur(20px);
-    padding:42px 44px;
-    overflow-y:auto;
-    box-shadow:-30px 0 80px rgba(0,0,0,.35);
-}
-
-.panel-tag{
-    color:var(--gold2);
+.case-tag{
+    color:#c6922b;
     font-size:11px;
     letter-spacing:.18em;
     text-transform:uppercase;
     margin-bottom:14px;
 }
 
-.panel h2{
-    font-family:Georgia,serif;
-    font-size:42px;
-    font-weight:500;
-    margin-bottom:10px;
+.case-content h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:40px;
+    line-height:1.02;
+    font-weight:600;
+    margin-bottom:18px;
+    text-shadow:0 2px 18px rgba(0,0,0,.65);
 }
 
-.subtitle{
-    color:var(--muted);
+.case-content p{
+    color:#f2ece2;
+    font-size:16px;
     line-height:1.55;
-    margin-bottom:28px;
+    max-width:480px;
+}
+
+.case-link{
+    display:inline-flex;
+    margin-top:22px;
+    color:#c6922b;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.04em;
+}
+
+.case-card.no-image{
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.85));
+}
+
+.case-card.no-image::after{
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.88)
+        );
+}
+
+.mini-formula{
+    font-family:'Cormorant Garamond',serif;
+    font-size:34px;
+    color:#c6922b;
+    margin-bottom:22px;
+    opacity:.95;
+    letter-spacing:.02em;
+}
+
+.featured{
+    grid-column:1 / -1;
+    min-height:560px;
+}
+
+.featured .case-content{
+    max-width:620px;
+}
+
+.featured .case-content h2{
+    font-size:54px;
+}
+
+.footer{
+    margin-top:90px;
+    padding-top:40px;
+    border-top:1px solid rgba(198,146,43,.18);
+    text-align:center;
+    color:#888;
+    font-size:13px;
+    letter-spacing:.18em;
+}
+
+.sim-section{
+    grid-column:1 / -1;
+    margin:28px 0 6px;
+    padding:34px;
+    border:1px solid rgba(198,146,43,.22);
+    border-radius:30px;
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 34%),
+        rgba(255,255,255,.025);
+}
+
+.sim-section .case-tag{
+    margin-bottom:12px;
+}
+
+.sim-section h2{
+    font-family:'Cormorant Garamond',serif;
+    font-size:44px;
+    line-height:1;
+    margin-bottom:14px;
+}
+
+.sim-section p{
+    color:#cfc6b7;
     font-size:17px;
+    line-height:1.55;
+    max-width:760px;
 }
 
-.section{
-    border-top:1px solid rgba(255,220,160,.13);
-    padding:20px 0;
+.sim-grid{
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+    margin-bottom:24px;
 }
 
-.section h3{
-    color:var(--gold2);
-    font-size:12px;
+.sim-card{
+    display:block;
+    min-height:250px;
+    padding:24px;
+    border-radius:24px;
+    border:1px solid rgba(198,146,43,.22);
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.10), transparent 38%),
+        linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.78));
+    color:#f6efe3;
+    text-decoration:none;
+    transition:.28s ease;
+}
+
+.sim-card:hover{
+    transform:translateY(-6px);
+    border-color:rgba(198,146,43,.58);
+    background:
+        radial-gradient(circle at top left, rgba(198,146,43,.16), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.82));
+}
+
+.sim-card small{
+    display:block;
+    color:#c6922b;
+    font-size:10px;
+    letter-spacing:.16em;
     text-transform:uppercase;
-    letter-spacing:.14em;
-    margin-bottom:10px;
+    margin-bottom:12px;
 }
 
-.section p{
-    color:#ded4c3;
-    line-height:1.62;
-    font-size:15.5px;
+.sim-card h3{
+    font-family:'Cormorant Garamond',serif;
+    font-size:29px;
+    line-height:1.02;
+    margin-bottom:12px;
 }
 
-.badges{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-}
-
-.badge{
-    border:1px solid rgba(255,211,142,.25);
-    background:rgba(255,205,120,.07);
-    color:#f4d59d;
-    border-radius:999px;
-    padding:7px 10px;
-    font-size:12px;
-}
-
-.footer-note{
-    margin-top:28px;
-    color:#8f806a;
-    font-size:12px;
+.sim-card p{
+    color:#d9d0c3;
+    font-size:14px;
     line-height:1.5;
 }
 
-@media(max-width:1100px){
-    body{overflow:auto}
+.sim-card span{
+    display:inline-flex;
+    margin-top:18px;
+    color:#c6922b;
+    font-size:13px;
+    font-weight:700;
+}
 
-    .page{
-        display:block;
-        height:auto;
-        width:100%;
+@media(max-width:900px){
+    .sim-grid{
+        grid-template-columns:1fr;
     }
 
-    .hero{
-        min-height:880px;
-        height:auto;
-        padding:28px 20px;
-        overflow:hidden;
-    }
-
-    h1{
-        font-size:clamp(34px,9vw,48px);
-        max-width:100%;
-    }
-
-    .lead{
-        max-width:100%;
-        font-size:15px;
-        line-height:1.45;
-    }
-
-    .brain{
-        position:relative;
-        left:50%;
-        top:auto;
-        margin-top:70px;
-        transform:translateX(-50%);
-        width:92vw;
-        height:92vw;
-        max-width:680px;
-        max-height:680px;
-    }
-
-    .panel{
-        height:auto;
-        border-left:0;
-        border-top:1px solid var(--border);
-        padding:36px 24px;
+    .sim-section h2{
+        font-size:36px;
     }
 }
 
-@media(max-width:680px){
-    .hero{
-        min-height:720px;
-        padding:24px 18px;
+@media(max-width:900px){
+    .cases-grid{
+        grid-template-columns:1fr;
     }
 
-    .brain{
-        width:96vw;
-        height:96vw;
-        margin-top:48px;
-        transform:translateX(-50%) scale(.82);
-        transform-origin:center;
+    .hero h1{
+        font-size:56px;
     }
 
-    .node{
-        width:78px;
-        height:78px;
-        font-size:9.5px;
-        padding:8px;
+    .case-card,
+    .featured{
+        min-height:460px;
     }
 
-    .node small{
-        font-size:8px;
+    .featured .case-content h2{
+        font-size:42px;
+    }
+}
+
+@media(max-width:560px){
+    .page{
+        padding:52px 18px 90px;
     }
 
-    .core{
-        width:128px;
-        height:128px;
-        padding:18px;
+    .hero h1{
+        font-size:46px;
     }
 
-    .core span{
-        font-size:13px;
-        line-height:1.1;
+    .hero p{
+        font-size:18px;
     }
 
-    .panel h2{
+    .case-card,
+    .featured{
+        min-height:420px;
+        border-radius:24px;
+    }
+
+.case-content{
+    left:22px;
+    right:22px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+    .case-content h2{
         font-size:34px;
+    }
+
+    .featured .case-content h2{
+        font-size:36px;
     }
 }
 </style>
-
 </head>
 
 <body>
-<nav class="topbar">
-    <a href="index.html" class="back-home">
-        ← Voltar para Veropred
-    </a>
-</nav>
-<canvas id="network"></canvas>
 
-<div class="page">
-    <main class="hero">
-        <div class="brand">VEROPRED • ATLAS COGNITIVO DA IA</div>
+<main class="page">
 
-        <h1>Inteligência artificial como sistema de capacidades emergentes.</h1>
+    <a href="index.html" class="btn-back">← Voltar ao site</a>
 
-        <p class="lead">
-            Selecione cada capacidade para detalhar.        </p>
+    <section class="hero">
+        <div class="kicker">VEROPRED ANALYTICS • APLICAÇÕES REAIS</div>
 
-<div class="brain" id="brain">
-    <svg class="cognitive-svg" id="cognitiveSvg"></svg>
+        <h1>
+            Leituras aplicadas sobre <span>decisão</span>, risco, IA e capital.
+        </h1>
 
-    <div class="core">
-        <span>DECISÃO<br>SOB INCERTEZA</span>
+        <p>
+            Uma coleção de teses executivas sobre como dados, modelos e inteligência artificial
+            só geram valor quando são conectados a critério, contexto, estrutura e decisão.
+        </p>
+    </section>
+
+    <section class="cases-grid">
+
+        <a class="case-card featured" href="raroc.html">
+            <img src="assets/posts/post0/imagem1.png" alt="Decisão econômica, capital e risco">
+            <div class="case-content">
+                <div class="case-tag">DECISÃO ECONÔMICA • CAPITAL • RISCO</div>
+                <h2>ROI não mede valor. RAROC mede decisão.</h2>
+                <p>
+                    Retorno positivo não garante criação de valor. A decisão econômica real começa
+                    quando retorno, risco, custo de capital e cutoff são tratados no mesmo sistema.
+                </p>
+                <span class="case-link">Ler análise →</span>
+            </div>
+        </a>
+		
+		<a class="case-card" href="riscosintegrados.html">
+    <img src="assets/posts/post5/imagem1.png" alt="Gestão integrada de riscos">
+    <div class="case-content">
+        <div class="case-tag">RISCO INTEGRADO • PROPAGAÇÃO • GOVERNANÇA</div>
+        <h2>Riscos não quebram empresas por categoria.</h2>
+        <p>
+            Quebram por propagação. A gestão integrada conecta crédito,
+            operacional, liquidez, tecnologia, jurídico, imagem e decisão.
+        </p>
+        <span class="case-link">Ler análise →</span>
     </div>
-</div>
-    </main>
+</a>
 
-    <aside class="panel" id="panel">
-        <div class="panel-tag"></div>
-        <h2>Atlas Cognitivo da IA</h2>
+        <a class="case-card" href="modelos.html">
+            <img src="assets/posts/post1/imagem1.png" alt="Modelos e arquitetura da decisão">
+            <div class="case-content">
+                <div class="case-tag">CIÊNCIA DE DADOS • IA • DECISÃO</div>
+                <h2>Modelos não tomam decisões.</h2>
+                <p>
+                    Dados mostram. Modelos estimam. Mas decisões melhores exigem método,
+                    contexto e profundidade analítica.
+                </p>
+                <span class="case-link">Ler análise →</span>
+            </div>
+        </a>
 
-        <p class="subtitle">
-Uma exploração das arquiteturas cognitivas artificiais utilizadas para ampliar contexto, reduzir incerteza e orientar ação sob complexidade.
+        <a class="case-card" href="riscop.html">
+            <img src="assets/posts/post2/imagem1.png" alt="Risco operacional e eventos de cauda">
+            <div class="case-content">
+                <div class="case-tag">RISCO OPERACIONAL • CAUDA • INCERTEZA</div>
+                <h2>Risco operacional não aparece no dashboard.</h2>
+                <p>
+                    A média pode esconder o que realmente importa: eventos raros,
+                    perdas assimétricas e impactos que redefinem o resultado.
+                </p>
+                <span class="case-link">Ler análise →</span>
+            </div>
+        </a>
+
+        <a class="case-card" href="expsust.html">
+            <img src="assets/posts/novo_post/imagem1.png" alt="Expansão e sustentabilidade">
+            <div class="case-content">
+                <div class="case-tag">EXPANSÃO • SUSTENTABILIDADE • CAPITAL</div>
+                <h2>Expansão vs sustentabilidade é a pergunta errada.</h2>
+                <p>
+                    Crescer e proteger não são lados opostos. A questão real é como alocar capital
+                    sob incerteza com critério e consistência.
+                </p>
+                <span class="case-link">Ler análise →</span>
+            </div>
+        </a>
+
+        <a class="case-card" href="score.html">
+            <img src="assets/posts/post3/imagem1.png" alt="Score, regra e decisão">
+            <div class="case-content">
+                <div class="case-tag">SCORE • REGRA • SISTEMA</div>
+                <h2>O modelo não é o problema.</h2>
+                <p>
+                    Score sem decisão é só informação. Quando a decisão falha,
+                    o erro costuma estar antes ou depois do modelo.
+                </p>
+                <span class="case-link">Ler análise →</span>
+            </div>
+        </a>
+		
+		<a class="case-card no-image" href="ia_nucleo.html">
+    <div class="case-content">
+
+        <div class="case-tag">
+            IA • COGNIÇÃO • DECISÃO SOB INCERTEZA
+        </div>
+
+        <div class="mini-formula">
+            Atlas Cognitivo da IA
+        </div>
+
+        <h2>
+            Inteligência artificial como sistema de capacidades emergentes.
+        </h2>
+
+        <p>
+            Um mapa interativo das capacidades cognitivas artificiais que conectam memória,
+            atenção, previsão, geração, alinhamento e decisão sob incerteza.
         </p>
 
-        <div class="section">
-<h3>Perspectiva</h3>
-<p>
-    Uma visão de IA centrada em capacidades cognitivas artificiais.
-</p>
-        </div>
+        <span class="case-link">
+            Explorar atlas →
+        </span>
+    </div>
+</a>
 
-        <div class="section">
-<h3>Exploração Cognitiva</h3>
-<p>
-Uma exploração das capacidades cognitivas artificiais utilizadas para representar contexto, reduzir ambiguidade e orientar ação inteligente.</p>
-        </div>
-    </aside>
-</div>
+<div class="sim-section">
+    <div class="case-tag">IA • SIMULAÇÕES • ARQUITETURAS COGNITIVAS</div>
 
-<script>
-const modules = [
-{
-id:"memoria",
-label:"Memória",
-tech:"RAG",
-relacoes:["associacao","atencao","planejamento"],
-simuladores:[
-    {label:"Explorar RAG", url:"ia_xperience/simulador_rag.html"}
-],
-x:50,
-y:14,
-title:"Memória",
-subtitle:"Recuperação contextual e persistência informacional.",
-funcao:"Recuperar informações relevantes para ampliar o contexto decisório.",
-problema:"Modelos possuem janela de contexto limitada e não conseguem carregar todo o conhecimento necessário em cada resposta.",
-tecnicas:["RAG","Bancos vetoriais","Busca semântica","Memória contextual","Embeddings"],
-analogia:"Como consultar livros, normas e documentos antes de responder.",
-exemplo:"Um funcionário pergunta sobre política de reembolso internacional. O sistema busca a regra correta em documentos internos, envia os trechos relevantes ao LLM e gera uma resposta contextualizada."
-},
-
-{
-id:"associacao",
-label:"Associação",
-tech:"Embeddings",
-relacoes:["memoria","atencao"],
-simuladores:[
-    {label:"Explorar Embeddings", url:"ia_xperience/simulador_embeddings.html"}
-],
-x:76,
-y:24,
-title:"Associação",
-subtitle:"Transformação de significado em proximidade matemática.",
-funcao:"Aproximar conceitos semelhantes e afastar conceitos diferentes em espaços vetoriais.",
-problema:"Computadores não entendem significado diretamente; precisam converter textos, imagens e eventos em representações numéricas comparáveis.",
-tecnicas:["Embeddings","Aprendizado contrastivo","Espaços latentes","Recomendação","Busca semântica"],
-analogia:"Como aproximar ideias com significados parecidos, mesmo usando palavras diferentes.",
-exemplo:"Uma empresa transforma contratos, e-mails e normas em vetores. Quando alguém busca 'política de férias', o sistema encontra trechos semanticamente próximos mesmo sem palavras idênticas."
-},
-
-{
-id:"atencao",
-label:"Atenção",
-tech:"Transformers",
-relacoes:["memoria","sequencia","hibrido"],
-simuladores:[
-    {label:"Explorar Attention", url:"ia_xperience/simulador_attention.html"}
-],
-x:84,
-y:48,
-title:"Atenção",
-subtitle:"Seleção dinâmica de relevância contextual.",
-funcao:"Identificar quais partes da informação devem receber mais peso em cada momento.",
-problema:"Em sequências longas, nem tudo importa igualmente. O sistema precisa conectar elementos distantes e selecionar dependências relevantes.",
-tecnicas:["Transformers","Self-attention","Context window","LLMs","Modelagem sequencial"],
-analogia:"Como focar continuamente nas partes mais relevantes de uma informação para compreender corretamente o contexto.",
-exemplo:"Na frase 'o troféu não coube na mala porque ela era pequena', o modelo precisa entender que 'ela' se refere à mala, não ao troféu."
-},
-
-{
-id:"previsao",
-label:"Previsão",
-tech:"Supervisionado",
-relacoes:["semi","descoberta","hibrido"],
-simuladores:[
-    {label:"Explorar Supervisionado", url:"ia_xperience/simulador_supervisionado.html"}
-],
-x:73,
-y:72,
-title:"Previsão",
-subtitle:"Aprender padrões a partir de exemplos corrigidos.",
-funcao:"Estimar classes, probabilidades ou valores futuros com base em dados históricos.",
-problema:"Organizações precisam antecipar risco, fraude, inadimplência, demanda, churn e eventos relevantes antes que eles aconteçam.",
-tecnicas:["Aprendizado supervisionado","Classificação","Regressão","Séries temporais","Modelos de score"],
-analogia:"Como identificar padrões em eventos passados para estimar comportamentos e resultados futuros.",
-exemplo:"Um banco usa dados históricos de clientes para estimar a probabilidade de inadimplência de novos proponentes."
-},
-
-{
-id:"sequencia",
-label:"Sequência",
-tech:"Autoregressivo",
-relacoes:["atencao","alinhamento","hibrido"],
-simuladores:[
-    {label:"Explorar Autoregressivo", url:"ia_xperience/simulador_autoregressivo.html"}
-],
-x:50,
-y:84,
-title:"Aprendizado Autoregressivo",
-subtitle:"Geração passo a passo baseada no histórico anterior.",
-funcao:"Prever o próximo token, palavra, frame ou evento a partir do contexto acumulado.",
-problema:"Textos e conversas são sequenciais. A resposta precisa nascer progressivamente, mantendo coerência com tudo que veio antes.",
-tecnicas:["Modelos autoregressivos","LLMs","Next-token prediction","Modelagem de linguagem"],
-analogia:"Como escrever uma frase olhando sempre para o que já foi dito antes, escolhendo a próxima parte mais provável.",
-exemplo:"Ao responder uma pergunta, o ChatGPT prevê um token, adiciona ao contexto, prevê o próximo e repete o processo até formar a resposta inteira."
-},
-
-{
-id:"descoberta",
-label:"Descoberta",
-tech:"Clustering",
-relacoes:["previsao","semi","hibrido"],
-simuladores:[
-    {label:"Explorar Clustering", url:"ia_xperience/simulador_clustering.html"}
-],
-x:26,
-y:72,
-title:"Descoberta de Estrutura",
-subtitle:"Encontrar padrões ocultos sem respostas corretas.",
-funcao:"Identificar grupos, anomalias e estruturas escondidas nos dados.",
-problema:"Muitas bases não possuem rótulos. Ainda assim, podem conter segmentos, comportamentos e padrões relevantes.",
-tecnicas:["Aprendizado não supervisionado","Clustering","Redução dimensional","Detecção de anomalias","Segmentação"],
-analogia:"Como agrupar elementos apenas pela semelhança entre eles.",
-exemplo:"Uma varejista analisa milhões de clientes e encontra grupos: alto ticket, compradores promocionais, clientes em risco de abandono e perfis recorrentes."
-},
-
-{
-id:"semi",
-label:"Poucos Rótulos",
-tech:"Semi-supervisionado",
-relacoes:["previsao","auto"],
-simuladores:[
-    {label:"Explorar Semi-supervisionado", url:"ia_xperience/simulador_semi_supervisionado.html"}
-],
-x:16,
-y:48,
-title:"Aprendizado Semi-Supervisionado",
-subtitle:"Aprender com poucos exemplos rotulados e muitos dados sem rótulo.",
-funcao:"Expandir aprendizado quando o custo humano de rotular tudo é alto.",
-problema:"Em muitos domínios, como medicina e jurídico, há poucos exemplos revisados por especialistas e muitos dados brutos disponíveis.",
-tecnicas:["Semi-supervised learning","Pseudo-labeling","Propagação de rótulos","Confiança de previsão"],
-analogia:"Como aprender uma língua com poucas frases traduzidas e muitos textos soltos.",
-exemplo:"Um hospital possui poucos exames com diagnóstico confirmado e milhões sem revisão. A IA aprende com os rotulados e usa previsões confiáveis para explorar o restante."
-},
-
-{
-id:"auto",
-label:"Auto-supervisão",
-tech:"LLMs",
-relacoes:["sequencia","atencao"],
-simuladores:[
-    {label:"Explorar Auto-supervisão", url:"ia_xperience/simulador_self_supervised.html"}
-],
-x:24,
-y:24,
-title:"Aprendizado Auto-Supervisionado",
-subtitle:"O próprio dado cria o gabarito.",
-funcao:"Aprender padrões escondendo partes dos dados e tentando reconstruí-las.",
-problema:"Rotular manualmente bilhões de exemplos seria inviável. A IA precisa extrair supervisão da própria estrutura dos dados.",
-tecnicas:["Self-supervised learning","Masked prediction","Next-token prediction","Pré-treinamento de LLMs"],
-analogia:"Como um quebra-cabeça em que a própria imagem fornece a dica.",
-exemplo:"Um LLM lê bilhões de textos e aprende prevendo palavras ou tokens ausentes, absorvendo sintaxe, relações semânticas e padrões culturais."
-},
-
-{
-id:"imaginacao",
-label:"Imaginação",
-tech:"Diffusion / GANs",
-relacoes:["auto","hibrido"],
-simuladores:[
-    {label:"Explorar Diffusion", url:"ia_xperience/simulador_diffusion.html"},
-    {label:"Explorar GANs", url:"ia_xperience/simulador_gans.html"}
-],
-x:12,
-y:14,
-title:"Imaginação",
-subtitle:"Geração de novas possibilidades a partir de padrões aprendidos.",
-funcao:"Criar imagens, textos, vídeos, sons ou cenários sintéticos coerentes.",
-problema:"Sistemas inteligentes não apenas classificam o mundo; também simulam possibilidades e produzem novas configurações.",
-tecnicas:["Diffusion models","GANs","Geração multimodal","Modelos generativos"],
-analogia:"Como restaurar uma pintura borrada ou imaginar uma cena antes inexistente.",
-exemplo:"Ao pedir 'um samurai cyberpunk na chuva', um modelo de diffusion começa com ruído e remove esse ruído gradualmente até a imagem emergir."
-},
-
-{
-id:"adaptacao",
-label:"Adaptação",
-tech:"RL",
-relacoes:["alinhamento","planejamento"],
-simuladores:[
-    {label:"Explorar RL", url:"ia_xperience/simulador_rl.html"}
-],
-x:88,
-y:14,
-title:"Adaptação",
-subtitle:"Aprender comportamento por recompensa e punição.",
-funcao:"Melhorar ações com base no retorno recebido do ambiente.",
-problema:"Alguns problemas não possuem gabarito fixo; exigem tentativa, erro, consequência e otimização de estratégia.",
-tecnicas:["Reinforcement Learning","Políticas de ação","Recompensas","Ambientes simulados","Otimização sequencial"],
-analogia:"Como alguém aprendendo a tomar decisões melhores após acumular experiência, erros e acertos ao longo do tempo.",
-exemplo:"Um robô em armazém aprende a pegar caixas, evitar colisões e otimizar rotas. Entregou corretamente: +20. Bateu: -10."
-},
-
-{
-id:"alinhamento",
-label:"Alinhamento",
-tech:"RLHF",
-relacoes:["sequencia","adaptacao","planejamento"],
-simuladores:[
-    {label:"Explorar RLHF", url:"ia_xperience/simulador_rlhf.html"}
-],
-x:88,
-y:82,
-title:"Alinhamento",
-subtitle:"Ajustar comportamento a preferências humanas.",
-funcao:"Ensinar o modelo a produzir respostas mais úteis, claras, seguras e aceitáveis.",
-problema:"Um modelo pode gerar respostas estatisticamente prováveis, mas não necessariamente úteis, adequadas ou alinhadas ao julgamento humano.",
-tecnicas:["RLHF","Feedback humano","Modelos de recompensa","Preferência humana","Alinhamento"],
-analogia:"Como aproximar o comportamento do sistema das preferências e expectativas humanas.",
-exemplo:"Ao receber feedback humano contínuo sobre clareza, utilidade e adequação, o modelo ajusta gradualmente seu comportamento para produzir respostas mais alinhadas às expectativas humanas."
-},
-
-{
-id:"especializacao",
-label:"Especialização",
-tech:"Fine-tuning",
-relacoes:["memoria","hibrido"],
-simuladores:[
-    {label:"Explorar Fine-tuning", url:"ia_xperience/simulador_finetuning.html"}
-],
-x:12,
-y:82,
-title:"Especialização",
-subtitle:"Adaptar um modelo geral a um domínio específico.",
-funcao:"Transferir capacidade geral para contextos técnicos, regulatórios ou corporativos.",
-problema:"Modelos gerais sabem muito, mas podem não dominar linguagem, regras e nuances de um domínio específico.",
-tecnicas:["Fine-tuning","Domain adaptation","Instruction tuning","Modelos especializados"],
-analogia:"Como um médico generalista fazendo residência.",
-exemplo:"Uma seguradora adapta um LLM com apólices, sinistros, regulação e linguagem técnica para melhorar respostas no domínio de seguros."
-},
-
-{
-id:"planejamento",
-label:"Planejamento",
-tech:"Agentes",
-relacoes:["memoria","alinhamento","hibrido"],
-simuladores:[
-    {label:"Explorar Agentes", url:"ia_xperience/simulador_agentes.html"}
-],
-x:50,
-y:4,
-title:"Planejamento",
-subtitle:"Organizar ação, ferramentas e execução iterativa.",
-funcao:"Transformar intenção em sequência de ações coordenadas.",
-problema:"Responder texto é diferente de executar tarefas. Sistemas úteis precisam planejar, chamar ferramentas, revisar saídas e iterar.",
-tecnicas:["Agentes de IA","Tool calling","Workflows","Orquestração","Multiagentes"],
-analogia:"Como um centro de comando que divide objetivos complexos em múltiplas etapas executáveis, coordena especialistas e ajusta estratégias continuamente.",
-exemplo:"Um agente busca documentos, outro resume, outro analisa risco e outro gera um relatório executivo automaticamente."
-},
-
-{
-id:"hibrido",
-label:"Sistema Híbrido",
-tech:"Orquestração",
-relacoes:["memoria","associacao","atencao","sequencia","planejamento","alinhamento"],
-simuladores:[
-    {label:"Explorar Sistemas Híbridos", url:"ia_xperience/simulador_sistemas_hibridos.html"}
-],
-x:50,
-y:94,
-title:"Sistemas Híbridos",
-subtitle:"A IA moderna como ecossistema combinado.",
-funcao:"Integrar múltiplas capacidades cognitivas artificiais em um único sistema operacional.",
-problema:"Nenhuma técnica isolada resolve tudo. Sistemas modernos combinam memória, atenção, geração, alinhamento, busca, agentes e especialização.",
-tecnicas:["LLMs","RAG","Embeddings","RLHF","Agentes","Fine-tuning","Memória contextual"],
-analogia:"Como um organismo funcional composto por múltiplos sistemas interdependentes.",
-exemplo:"Um chatbot corporativo usa embeddings para busca, RAG para recuperar documentos, LLM autoregressivo para responder, agentes para executar tarefas e fine-tuning para linguagem jurídica."
-}
-];
-
-const brain = document.getElementById("brain");
-const panel = document.getElementById("panel");
-
-modules.forEach(m=>{
-    const node=document.createElement("div");
-    node.className="node";
-    node.dataset.id=m.id;
-node.style.left=`calc(${m.x}% - 50px)`;
-node.style.top=`calc(${m.y}% - 50px)`;
-    node.innerHTML=`<div>${m.label}<small>${m.tech}</small></div>`;
-    node.onclick=()=>selectModule(m.id);
-    brain.appendChild(node);
-});
-function selectModule(id){
-    const m=modules.find(x=>x.id===id);
-
-    document.querySelectorAll(".node").forEach(n=>{
-        n.classList.remove("active","related","dimmed");
-
-        if(n.dataset.id===id){
-            n.classList.add("active");
-        }else if(m.relacoes && m.relacoes.includes(n.dataset.id)){
-            n.classList.add("related");
-        }else{
-            n.classList.add("dimmed");
-        }
-    });
-
-    drawCognitiveLines(m);
-
-    panel.innerHTML=`
-        <div class="panel-tag">Região Cognitiva</div>
-        <h2>${m.title}</h2>
-        <p class="subtitle">${m.subtitle}</p>
-
-        <div class="section">
-            <h3>Função cognitiva</h3>
-            <p>${m.funcao}</p>
-        </div>
-
-        <div class="section">
-            <h3>Limitação computacional</h3>
-            <p>${m.problema}</p>
-        </div>
-
-        <div class="section">
-            <h3>Analogia</h3>
-            <p>${m.analogia}</p>
-        </div>
-
-        <div class="section">
-            <h3>Exemplo</h3>
-            <p>${m.exemplo}</p>
-        </div>
-
-${m.relacoes ? `
-<div class="section">
-    <h3>Ativação Cognitiva</h3>
+    <h2>Explorações Cognitivas Interativas</h2>
 
     <p>
-        As conexões neurais representam capacidades cognitivas artificialmente relacionadas.
+        Simulações independentes sobre os mecanismos que sustentam sistemas modernos de IA:
+        associação, memória, atenção, geração, adaptação, alinhamento, especialização e orquestração.
     </p>
 </div>
-` : ""}
 
-        ${m.simuladores ? `
-        <div class="section">
-            <h3>Simulação Interativa</h3>
+<div class="sim-grid">
 
-            <div class="sim-links">
-                ${m.simuladores.map(s=>`
-                    <a class="sim-link" href="${s.url}">
-                        ${s.label} →
-                    </a>
-                `).join("")}
+    <a class="sim-card" href="ia_xperience/simulador_embeddings.html">
+        <small>ASSOCIAÇÃO • EMBEDDINGS</small>
+        <h3>Significado como geometria.</h3>
+        <p>Como textos, imagens e conceitos podem ser representados por proximidade em espaços vetoriais.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rag.html">
+        <small>MEMÓRIA • RAG</small>
+        <h3>Conhecimento recuperado antes da resposta.</h3>
+        <p>Como sistemas de IA buscam contexto externo para responder com mais rastreabilidade.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_attention.html">
+        <small>ATENÇÃO • TRANSFORMERS</small>
+        <h3>Nem toda informação importa igualmente.</h3>
+        <p>Como mecanismos de atenção selecionam dependências relevantes dentro do contexto.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_supervisionado.html">
+        <small>PREVISÃO • SUPERVISIONADO</small>
+        <h3>Aprender com exemplos corrigidos.</h3>
+        <p>Como modelos estimam classes, probabilidades e valores a partir de dados históricos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_autoregressivo.html">
+        <small>SEQUÊNCIA • AUTOREGRESSIVO</small>
+        <h3>Geração passo a passo.</h3>
+        <p>Como respostas são construídas progressivamente, token por token, a partir do histórico anterior.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_clustering.html">
+        <small>DESCOBERTA • CLUSTERING</small>
+        <h3>Grupos formados por semelhança.</h3>
+        <p>Como padrões ocultos aparecem quando dados semelhantes são aproximados sem rótulos prévios.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_semi_supervisionado.html">
+        <small>POUCOS RÓTULOS • SEMI-SUPERVISIONADO</small>
+        <h3>Aprender quando o gabarito é escasso.</h3>
+        <p>Como poucos exemplos rotulados podem orientar o aprendizado sobre grandes volumes de dados brutos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_self_supervised.html">
+        <small>AUTO-SUPERVISÃO • PRÉ-TREINAMENTO</small>
+        <h3>O próprio dado cria o desafio.</h3>
+        <p>Como modelos aprendem escondendo partes da informação e tentando reconstruí-las.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_diffusion.html">
+        <small>IMAGINAÇÃO • DIFFUSION</small>
+        <h3>Imagem emergindo do ruído.</h3>
+        <p>Como modelos generativos removem ruído progressivamente até formar uma nova cena coerente.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_gans.html">
+        <small>IMAGINAÇÃO • GANS</small>
+        <h3>Criação por competição.</h3>
+        <p>Como gerador e discriminador competem até produzir imagens sintéticas mais convincentes.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rl.html">
+        <small>ADAPTAÇÃO • REINFORCEMENT LEARNING</small>
+        <h3>Aprender por consequência.</h3>
+        <p>Como agentes melhoram decisões por tentativa, erro, recompensa e punição.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_rlhf.html">
+        <small>ALINHAMENTO • RLHF</small>
+        <h3>Preferência humana como sinal.</h3>
+        <p>Como feedback humano ajuda modelos a produzir respostas mais úteis, claras e aceitáveis.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_finetuning.html">
+        <small>ESPECIALIZAÇÃO • FINE-TUNING</small>
+        <h3>Um modelo geral adaptado ao domínio.</h3>
+        <p>Como modelos podem ser ajustados para linguagem, regras e tarefas específicas.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_agentes.html">
+        <small>PLANEJAMENTO • AGENTES</small>
+        <h3>Da resposta à execução.</h3>
+        <p>Como agentes organizam tarefas, usam ferramentas, revisam saídas e coordenam workflows.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+    <a class="sim-card" href="ia_xperience/simulador_sistemas_hibridos.html">
+        <small>ORQUESTRAÇÃO • SISTEMAS HÍBRIDOS</small>
+        <h3>A IA moderna como composição.</h3>
+        <p>Como memória, atenção, geração, agentes, alinhamento e especialização funcionam juntos.</p>
+        <span>Explorar simulação →</span>
+    </a>
+
+</div>
+
+        <a class="case-card" href="ia.html">
+            <img src="assets/posts/post4/imagem1.png" alt="IA e decisão estruturada">
+            <div class="case-content">
+                <div class="case-tag">IA • DECISÃO • ESTRUTURA</div>
+                <h2>IA não resolve problema mal definido.</h2>
+                <p>
+                    Sem clareza de objetivo, decisão e regras, a IA apenas processa ruído,
+                    automatiza confusão e amplifica erro em escala.
+                </p>
+                <span class="case-link">Ler análise →</span>
             </div>
+        </a>
+
+<a class="case-card no-image" href="aluc_ia.html">
+
+    <div class="case-content">
+
+        <div class="case-tag">
+            IA GENERATIVA • PROBABILIDADE • VERDADE
         </div>
-        ` : ""}
 
-        <div class="section">
-            <h3>Arquiteturas Relacionadas</h3>
-
-            <div class="badges">
-                ${m.tecnicas.map(t=>`<span class="badge">${t}</span>`).join("")}
-            </div>
+        <div class="mini-formula">
+            P(tokenₜ₊₁ | contexto)
         </div>
-    `;
-}
 
-function drawCognitiveLines(m){
-    const svg=document.getElementById("cognitiveSvg");
-    svg.innerHTML="";
+        <h2>
+            A IA não verifica o mundo.
+        </h2>
 
-    if(!m.relacoes) return;
+        <p>
+            Alucinação não é um bug periférico.
+            É uma consequência estrutural da matemática que faz modelos generativos parecerem inteligentes.
+        </p>
 
-    const source=document.querySelector(`.node[data-id="${m.id}"]`);
-    const brainRect=brain.getBoundingClientRect();
-    const sourceRect=source.getBoundingClientRect();
+        <span class="case-link">
+            Ler análise →
+        </span>
 
-    const x1=sourceRect.left + sourceRect.width/2 - brainRect.left;
-    const y1=sourceRect.top + sourceRect.height/2 - brainRect.top;
+    </div>
 
-    m.relacoes.forEach(relId=>{
-        const target=document.querySelector(`.node[data-id="${relId}"]`);
-        if(!target) return;
+</a>
+		
+    </section>
 
-        const targetRect=target.getBoundingClientRect();
+    <div class="footer">
+        VEROPRED ANALYTICS • DADOS • MODELAGEM • CONTEXTO • DECISÃO
+    </div>
 
-        const x2=targetRect.left + targetRect.width/2 - brainRect.left;
-        const y2=targetRect.top + targetRect.height/2 - brainRect.top;
+</main>
 
-        const midX=(x1+x2)/2;
-        const midY=(y1+y2)/2 - 38;
-
-        const path=document.createElementNS("http://www.w3.org/2000/svg","path");
-        path.setAttribute("class","cognitive-line");
-        path.setAttribute("d",`M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`);
-
-        svg.appendChild(path);
-    });
-}
-/* Canvas neural background */
-const canvas=document.getElementById("network");
-const ctx=canvas.getContext("2d");
-let W,H,particles=[];
-
-function resize(){
-    W=canvas.width=window.innerWidth;
-    H=canvas.height=window.innerHeight;
-}
-window.addEventListener("resize",resize);
-resize();
-
-window.addEventListener("resize",()=>{
-    const active=document.querySelector(".node.active");
-    if(active){
-        const m=modules.find(x=>x.id===active.dataset.id);
-        drawCognitiveLines(m);
-    }
-});
-
-for(let i=0;i<130;i++){
-    particles.push({
-        x:Math.random()*W,
-        y:Math.random()*H,
-        vx:(Math.random()-.5)*.25,
-        vy:(Math.random()-.5)*.25,
-        r:Math.random()*1.7+.6
-    });
-}
-
-function animate(){
-    ctx.clearRect(0,0,W,H);
-
-    particles.forEach(p=>{
-        p.x+=p.vx;
-        p.y+=p.vy;
-        if(p.x<0||p.x>W)p.vx*=-1;
-        if(p.y<0||p.y>H)p.vy*=-1;
-    });
-
-    for(let i=0;i<particles.length;i++){
-        for(let j=i+1;j<particles.length;j++){
-            const a=particles[i], b=particles[j];
-            const dx=a.x-b.x, dy=a.y-b.y;
-            const d=Math.sqrt(dx*dx+dy*dy);
-            if(d<130){
-                ctx.strokeStyle=`rgba(216,162,82,${(1-d/130)*.18})`;
-                ctx.lineWidth=.7;
-                ctx.beginPath();
-                ctx.moveTo(a.x,a.y);
-                ctx.lineTo(b.x,b.y);
-                ctx.stroke();
-            }
-        }
-    }
-
-    particles.forEach(p=>{
-        ctx.fillStyle="rgba(242,195,116,.52)";
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-    });
-
-    requestAnimationFrame(animate);
-}
-
-animate();
-</script>
 </body>
 </html>
