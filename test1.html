@@ -1,159 +1,815 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anatomia da Decisão: Como a IA Pensa</title>
-    <style>
-        :root {
-            --bg: #0a0a0c;
-            --card: #16161a;
-            --accent: #d4af37;
-            --text: #e0e0e6;
-            --muted: #94949e;
-            --border: rgba(212, 175, 55, 0.2);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veropred AI Lab | Pipeline Inferencial</title>
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', -apple-system, sans-serif;
-            margin: 0;
-            line-height: 1.6;
-        }
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
 
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+:root{
+    --line:rgba(216,176,106,.24);
+    --gold:#d8b06a;
+    --gold2:#f1c77e;
+    --copper:#c9783a;
+    --text:#f6efe3;
+    --muted:#b9aa96;
+}
 
-        header { height: 80vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        
-        h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 20px; color: var(--accent); }
-        .hero-p { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin: 0 auto; }
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 18% 12%, rgba(201,120,58,.18), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(216,176,106,.11), transparent 34%),
+        linear-gradient(135deg,#050505,#100b08 58%,#050505);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    overflow-x:hidden;
+}
 
-        /* A Esteira de Decisão */
-        .pipeline { position: relative; margin: 50px 0; border-left: 2px solid var(--border); padding-left: 30px; }
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size:46px 46px;
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 78%);
+}
 
-        .step { margin-bottom: 60px; position: relative; }
-        .step::before { 
-            content: ''; position: absolute; left: -41px; top: 0; 
-            width: 20px; height: 20px; background: var(--bg); 
-            border: 2px solid var(--accent); border-radius: 50%; 
-        }
+.page{
+    position:relative;
+    z-index:1;
+    width:min(1180px, calc(100% - 36px));
+    margin:0 auto;
+    padding:44px 0 90px;
+}
 
-        .step-title { font-size: 1.5rem; color: var(--accent); margin-bottom: 10px; display: block; }
-        
-        .card-group { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px; }
-        
-        .family-card { 
-            background: var(--card); border: 1px solid var(--border); 
-            padding: 15px; border-radius: 12px; cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
-        }
+.topbar{
+    display:flex;
+    justify-content:center;
+    margin-bottom:62px;
+}
 
-        .family-card:hover { border-color: var(--accent); transform: translateX(5px); }
-        .family-card b { color: #fff; display: block; margin-bottom: 5px; }
-        .family-card p { font-size: 0.9rem; color: var(--muted); margin: 0; display: none; }
-        
-        .family-card.active p { display: block; }
+.brand{
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold2);
+    font-size:12px;
+}
 
-        .decision-box { 
-            background: rgba(212, 175, 55, 0.05); border: 1px solid var(--accent);
-            padding: 25px; border-radius: 20px; margin-top: 40px;
-        }
+.hero{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:42px;
+    align-items:center;
+    margin-bottom:48px;
+}
 
-        footer { text-align: center; padding: 40px; color: var(--muted); font-size: 0.8rem; }
+.kicker{
+    color:var(--gold);
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-size:12px;
+    margin-bottom:18px;
+}
 
-        @media (min-width: 768px) {
-            .card-group { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+h1{
+    font-family:Georgia,serif;
+    font-size:clamp(42px,6vw,74px);
+    line-height:.95;
+    letter-spacing:-.055em;
+    font-weight:500;
+    margin-bottom:22px;
+}
+
+.lead{
+    color:#d8cebe;
+    font-size:18px;
+    line-height:1.58;
+    max-width:720px;
+}
+
+.lab-panel{
+    border:1px solid var(--line);
+    border-radius:34px;
+    padding:26px;
+    background:
+        radial-gradient(circle at top left, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.045);
+    box-shadow:0 30px 90px rgba(0,0,0,.42);
+}
+
+.lab-panel h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:30px;
+    margin-bottom:12px;
+}
+
+.lab-panel p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
+}
+
+.question-box{
+    margin-top:22px;
+    display:grid;
+    gap:14px;
+}
+
+textarea{
+    width:100%;
+    min-height:118px;
+    resize:vertical;
+    border:1px solid rgba(216,176,106,.28);
+    border-radius:22px;
+    background:rgba(0,0,0,.34);
+    color:var(--text);
+    padding:18px;
+    outline:none;
+    line-height:1.5;
+}
+
+textarea:focus{
+    border-color:rgba(241,199,126,.62);
+    box-shadow:0 0 0 4px rgba(216,176,106,.10);
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:0;
+    border-radius:999px;
+    padding:14px 18px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.25s ease;
+}
+
+.primary{
+    color:#1b1009;
+    background:linear-gradient(135deg,#f1c77e,#c9783a);
+}
+
+.secondary{
+    color:var(--gold);
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(216,176,106,.30);
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+/* PIPELINE ÚNICO */
+
+.pipeline-section{
+    border:1px solid var(--line);
+    border-radius:34px;
+    padding:30px;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(216,176,106,.12), transparent 34%),
+        rgba(255,255,255,.04);
+    box-shadow:0 24px 70px rgba(0,0,0,.30);
+}
+
+.pipeline-head{
+    display:grid;
+    grid-template-columns:1fr minmax(260px,420px);
+    gap:24px;
+    align-items:end;
+    margin-bottom:30px;
+}
+
+.pipeline-head h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:34px;
+    line-height:1;
+}
+
+.pipeline-head p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
+}
+
+.pipeline-wrap{
+    display:grid;
+    grid-template-columns:1fr 380px;
+    gap:24px;
+    align-items:start;
+}
+
+.pipeline{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:16px;
+}
+
+.step{
+    min-height:196px;
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:26px;
+    padding:20px;
+    background:
+        radial-gradient(circle at top left, rgba(216,176,106,.08), transparent 42%),
+        rgba(255,255,255,.035);
+    opacity:.45;
+    transition:.35s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.step::after{
+    content:"";
+    position:absolute;
+    inset:auto -40px -70px auto;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(216,176,106,.16), transparent 68%);
+}
+
+.step.active{
+    opacity:1;
+    transform:translateY(-5px);
+    border-color:rgba(241,199,126,.62);
+    box-shadow:0 0 46px rgba(216,176,106,.22);
+}
+
+.step.done{
+    opacity:.92;
+    border-color:rgba(216,176,106,.38);
+}
+
+.step small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:14px;
+    position:relative;
+    z-index:1;
+}
+
+.step h3{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:23px;
+    line-height:1.05;
+    margin-bottom:12px;
+    position:relative;
+    z-index:1;
+}
+
+.step p{
+    color:var(--muted);
+    font-size:13.5px;
+    line-height:1.5;
+    position:relative;
+    z-index:1;
+}
+
+.step code{
+    display:block;
+    margin-top:12px;
+    color:#e7d8c2;
+    font-size:12px;
+    line-height:1.45;
+    white-space:normal;
+    position:relative;
+    z-index:1;
+}
+
+.status{
+    margin-top:14px;
+    color:#8f806a;
+    font-size:12px;
+    position:relative;
+    z-index:1;
+}
+
+.step.active .status{
+    color:var(--gold2);
+}
+
+.trace-panel{
+    border:1px solid var(--line);
+    border-radius:28px;
+    background:rgba(255,255,255,.045);
+    padding:22px;
+    position:sticky;
+    top:24px;
+}
+
+.trace-panel h3{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:28px;
+    margin-bottom:14px;
+}
+
+.trace-log{
+    display:grid;
+    gap:10px;
+    max-height:420px;
+    overflow-y:auto;
+    padding-right:4px;
+}
+
+.log-item{
+    border:1px solid rgba(216,176,106,.14);
+    border-radius:16px;
+    padding:12px;
+    background:rgba(0,0,0,.20);
+    color:#d8cebe;
+    font-size:13px;
+    line-height:1.45;
+}
+
+.log-item b{
+    color:var(--gold);
+}
+
+/* RESULTADO */
+
+.result{
+    margin-top:34px;
+    border:1px solid rgba(216,176,106,.25);
+    border-radius:30px;
+    padding:30px;
+    background:
+        radial-gradient(circle at 18% 18%, rgba(216,176,106,.12), transparent 38%),
+        rgba(255,255,255,.05);
+    display:none;
+}
+
+.result.show{
+    display:block;
+    animation:fadeUp .45s ease both;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.result h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:36px;
+    margin-bottom:18px;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.result-card{
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:22px;
+    padding:20px;
+    background:rgba(0,0,0,.20);
+}
+
+.result-card small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:12px;
+}
+
+.result-card p,
+.result-card li{
+    color:#ddd3c4;
+    line-height:1.62;
+    font-size:15px;
+}
+
+.result-card ul{
+    padding-left:18px;
+    display:grid;
+    gap:8px;
+}
+
+.metric{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    border-bottom:1px solid rgba(216,176,106,.12);
+    padding:10px 0;
+    color:#ddd3c4;
+    font-size:14px;
+}
+
+.metric b{
+    color:var(--gold2);
+    font-weight:700;
+}
+
+.symbolic-output{
+    grid-column:1 / -1;
+}
+
+@media(max-width:980px){
+    .hero,
+    .pipeline-head,
+    .pipeline-wrap,
+    .result-grid{
+        grid-template-columns:1fr;
+    }
+
+    .pipeline{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .trace-panel{
+        position:relative;
+        top:auto;
+    }
+
+    .symbolic-output{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:620px){
+    .topbar{
+        justify-content:flex-start;
+    }
+
+    .pipeline{
+        grid-template-columns:1fr;
+    }
+
+    .page{
+        width:min(100% - 28px,1180px);
+        padding-top:28px;
+    }
+
+    h1{
+        font-size:44px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-<div class="container">
-    <header>
-        <h1>Como a IA Realmente Decide?</h1>
-        <p class="hero-p">Não é mágica, é uma arquitetura de transformação de dados em escolhas prováveis.</p>
-    </header>
+<main class="page">
 
-    <div class="pipeline">
-        <section class="step">
-            <span class="step-title">1. Percepção e Ingestão</span>
-            <p>O dado bruto (texto, imagem ou som) é quebrado em partes processáveis.</p>
-            <div class="card-group">
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Tokenização</b>
-                    <p>Transforma frases em unidades numéricas que o modelo entende.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Redes Neurais Convolucionais</b>
-                    <p>Especiais para "enxergar" padrões em pixels e imagens.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="step">
-            <span class="step-title">2. Representação (Significado)</span>
-            <p>A IA coloca os dados em um mapa matemático onde conceitos parecidos ficam próximos.</p>
-            <div class="card-group">
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Embeddings</b>
-                    <p>Vetores que dão "endereços" para o sentido das palavras.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Aprendizado Contrastivo</b>
-                    <p>Ensina a IA o que é "parecido" e o que é "diferente".</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="step">
-            <span class="step-title">3. O Processamento Central</span>
-            <p>Aqui as grandes famílias calculam a probabilidade do que deve vir a seguir.</p>
-            <div class="card-group">
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Transformers (Atenção)</b>
-                    <p>A técnica que permite à IA focar no que é importante no contexto.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Mixture of Experts (MoE)</b>
-                    <p>Ativa apenas os "neurônios" especialistas para aquela tarefa.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>RLHF</b>
-                    <p>Refinamento por feedback humano para alinhar a resposta ao que desejamos.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>RAG</b>
-                    <p>Consulta em documentos externos antes de gerar a resposta final.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="step">
-            <span class="step-title">4. Escolha e Ação</span>
-            <p>A técnica vira uma utilidade real de negócio.</p>
-            <div class="card-group">
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Agentes Autônomos</b>
-                    <p>Sistemas que planejam e executam ações em ferramentas externas.</p>
-                </div>
-                <div class="family-card" onclick="this.classList.toggle('active')">
-                    <b>Modelos Probabilísticos</b>
-                    <p>Estimam o risco e a confiança antes de bater o martelo.</p>
-                </div>
-            </div>
-        </section>
+    <div class="topbar">
+        <div class="brand">VEROPRED • AI LAB • PIPELINE INFERENCIAL</div>
     </div>
 
-    <section class="decision-box">
-        <h3>Técnica vs. Decisão</h3>
-        <p>Lembre-se: A <b>Técnica</b> é o motor que calcula que existe 95% de chance de um cliente ser bom pagador. A <b>Decisão</b> é a regra de negócio que define que, acima de 90%, o crédito está aprovado.</p>
+    <section class="hero">
+
+
+        <div class="lab-panel">
+            <h2>Entrada textual</h2>
+            <p>
+                Tokenização • Representação vetorial • Busca semântica • Atenção contextual • Inferência probabilística
+            </p>
+
+            <div class="question-box">
+                <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
+
+                <div class="actions">
+                    <button class="primary" onclick="runPipeline()">Executar</button>
+                    <button class="secondary" onclick="resetPipeline()">Reiniciar</button>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <footer>
-        <p>Arquitetura de Decisão Artificial • 2026</p>
-    </footer>
-</div>
+<section class="pipeline-section">
+
+    <div class="pipeline-head">
+        <div>
+            <div class="kicker">Pipeline inferencial</div>
+            <h2>Estados observáveis da transformação.</h2>
+        </div>
+    </div>
+
+    <section class="pipeline-wrap">
+
+        <div class="pipeline" id="pipeline"></div>
+
+        <aside class="trace-panel">
+
+            <div class="trace-log" id="traceLog">
+                <div class="log-item">
+                    Aguardando entrada textual.
+                </div>
+            </div>
+
+        </aside>
+
+    </section>
+
+</section>
+
+<section class="result" id="result">
+    <h2>Inferência consolidada</h2>
+    <div class="result-grid" id="dynamicResult"></div>
+</section>
+
+</main>
+
+<script>
+const steps = [
+    {
+        id:"entrada",
+        tag:"01 • TEXTO",
+        title:"Entrada textual",
+        text:"Sequência textual ainda não vetorizada.",
+        code:"“reduzir inadimplência sem perder aprovação”",
+        log:"Sequência textual indexada."
+    },
+    {
+        id:"tokens",
+        tag:"02 • TOKENS",
+        title:"Tokenização",
+        text:"Fragmentação textual em tokens indexados.",
+        code:"[reduzir] [inadimplência] [aprovação] → [1842, 9921, 441]",
+        log:"Tokens identificados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
+    },
+    {
+        id:"vetorizacao",
+        tag:"03 • VETORES",
+        title:"Vetorização",
+        text:"Projeção vetorial em espaço semântico.",
+        code:"[0.42, -0.18, 0.77, 0.09, ...]",
+        log:"Representação vetorial gerada: [0.42, -0.18, 0.77, 0.09, ...]."
+    },
+    {
+        id:"busca",
+        tag:"04 • BUSCA",
+        title:"Busca semântica",
+        text:"Busca contextual por proximidade vetorial.",
+        code:"cos(θ) = 0.87 • score.html ≈ pergunta",
+        log:"Proximidade vetorial calculada: score.html = 0.87; raroc.html = 0.82."
+    },
+    {
+        id:"contexto",
+        tag:"05 • CONTEXTO",
+        title:"Contexto recuperado",
+        text:"Expansão contextual via recuperação semântica.",
+        code:"pergunta + score.html + raroc.html + simulador.html",
+        log:"Contexto recuperado: pergunta + score.html + raroc.html + simulador.html."
+    },
+    {
+        id:"atencao",
+        tag:"06 • ATENÇÃO",
+        title:"Atenção contextual",
+        text:"Redistribuição probabilística de relevância contextual.",
+        code:"cutoff 0.31 • aprovação 0.26 • inadimplência 0.24 • capital 0.19",
+        log:"Redistribuição contextual: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
+    },
+    {
+        id:"probabilidade",
+        tag:"07 • PROBABILIDADE",
+        title:"Distribuição probabilística",
+        text:"Estimativa condicionada das próximas unidades de saída.",
+        code:"P('política')=0.34 • P('cutoff')=0.27 • P('risco')=0.21",
+        log:"Probabilidades estimadas: P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
+    },
+    {
+        id:"reconstrucao",
+        tag:"08 • TEXTO",
+        title:"Reconstrução textual",
+        text:"Reconstrução final em linguagem natural.",
+        code:"resposta executiva consolidada",
+        log:"Reconstrução textual concluída: resposta executiva consolidada."
+    }
+];
+
+const pipeline = document.getElementById("pipeline");
+const traceLog = document.getElementById("traceLog");
+const result = document.getElementById("result");
+
+function buildPipeline(){
+    pipeline.innerHTML = steps.map(s => `
+        <div class="step" id="step-${s.id}">
+            <small>${s.tag}</small>
+            <h3>${s.title}</h3>
+            <p>${s.text}</p>
+            <code>${s.code}</code>
+            <div class="status">Aguardando</div>
+        </div>
+    `).join("");
+}
+
+function addLog(text){
+    const div = document.createElement("div");
+    div.className = "log-item";
+    div.innerHTML = text;
+    traceLog.appendChild(div);
+    traceLog.scrollTop = traceLog.scrollHeight;
+}
+
+function resetPipeline(){
+    result.classList.remove("show");
+
+    traceLog.innerHTML = `<div class="log-item">Aguardando entrada textual.</div>`;
+
+    document.querySelectorAll(".step").forEach(step=>{
+        step.classList.remove("active","done");
+        step.querySelector(".status").textContent = "Aguardando";
+    });
+}
+
+function analyzeQuestion(q){
+    const text = q.toLowerCase();
+
+    const profiles = [
+        {
+            area:"Risco de crédito",
+            decisao:"aprovação × inadimplência",
+            contexto:"score / cutoff / RAROC",
+            tipo:"resposta executiva",
+            keywords:["crédito","inadimplência","aprovação","score","cutoff","limite","pd","raroc"],
+            fontes:[
+                ["score.html","0.87"],
+                ["raroc.html","0.82"],
+                ["simulador.html","0.78"],
+                ["modelos.html","0.69"]
+            ],
+            estrutura:[
+                "Segmentação dinâmica de risco",
+                "Ajuste adaptativo de cutoff",
+                "Simulação de perda esperada",
+                "Leitura de retorno ajustado ao capital",
+                "Governança de exceções"
+            ]
+        },
+        {
+            area:"IA aplicada",
+            decisao:"automação × controle",
+            contexto:"RAG / agentes / alucinação",
+            tipo:"resposta técnico-executiva",
+            keywords:["ia","rag","agente","agentes","llm","alucinação","documento","automação","prompt"],
+            fontes:[
+                ["ia_nucleo.html","0.88"],
+                ["aluc_ia.html","0.84"],
+                ["ia.html","0.79"],
+                ["engenharia_prompts.html","0.73"]
+            ],
+            estrutura:[
+                "Definição do caso de uso",
+                "Recuperação contextual com RAG",
+                "Validação de fontes",
+                "Critérios de aceitação da resposta",
+                "Governança de uso e revisão humana"
+            ]
+        },
+        {
+            area:"Risco operacional",
+            decisao:"evento raro × capital",
+            contexto:"cauda / severidade / stress",
+            tipo:"resposta analítica",
+            keywords:["risco operacional","perda","evento","cauda","stress","capital","var","severidade"],
+            fontes:[
+                ["riscop.html","0.86"],
+                ["riscosintegrados.html","0.81"],
+                ["modelos.html","0.70"],
+                ["index.html","0.62"]
+            ],
+            estrutura:[
+                "Identificação de eventos críticos",
+                "Modelagem de frequência e severidade",
+                "Leitura de cauda e cenários extremos",
+                "Estimativa de capital econômico",
+                "Governança de limites e resposta"
+            ]
+        },
+        {
+            area:"Estratégia de decisão",
+            decisao:"priorização × execução",
+            contexto:"critério / trade-off / governança",
+            tipo:"resposta estratégica",
+            keywords:["estratégia","decisão","priorização","governança","execução","trade-off","crescimento","sustentabilidade"],
+            fontes:[
+                ["modelos.html","0.80"],
+                ["expsust.html","0.78"],
+                ["riscosintegrados.html","0.72"],
+                ["index.html","0.69"]
+            ],
+            estrutura:[
+                "Formulação da decisão central",
+                "Separação entre sintoma e causa",
+                "Definição de critérios de escolha",
+                "Análise de trade-offs",
+                "Governança da execução"
+            ]
+        }
+    ];
+
+    let best = profiles[0];
+    let bestScore = -1;
+
+    profiles.forEach(profile=>{
+        let score = 0;
+        profile.keywords.forEach(k=>{
+            if(text.includes(k)) score++;
+        });
+
+        if(score > bestScore){
+            bestScore = score;
+            best = profile;
+        }
+    });
+
+    return best;
+}
+
+function renderDynamicResult(analysis){
+    const box = document.getElementById("dynamicResult");
+
+    box.innerHTML = `
+        <div class="result-card">
+            <small>Estrutura inferida</small>
+            <div class="metric"><span>Área dominante</span><b>${analysis.area}</b></div>
+            <div class="metric"><span>Decisão em jogo</span><b>${analysis.decisao}</b></div>
+            <div class="metric"><span>Contexto dominante</span><b>${analysis.contexto}</b></div>
+            <div class="metric"><span>Tipo de resposta</span><b>${analysis.tipo}</b></div>
+        </div>
+
+        <div class="result-card">
+            <small>Similaridades</small>
+            ${analysis.fontes.map(f=>`
+                <div class="metric"><span>${f[0]}</span><b>${f[1]}</b></div>
+            `).join("")}
+        </div>
+
+        <div class="result-card symbolic-output">
+            <small>Estrutura de decisão recuperada</small>
+            <ul>
+                ${analysis.estrutura.map(item=>`<li>${item}</li>`).join("")}
+            </ul>
+        </div>
+    `;
+}
+
+function runPipeline(){
+    resetPipeline();
+
+    const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
+	const analysis = analyzeQuestion(q);
+renderDynamicResult(analysis);
+
+    document.querySelector("#step-entrada code").textContent = "“" + q + "”";
+
+    traceLog.innerHTML = `
+        <div class="log-item"><b>Entrada textual recebida:</b><br>${q}</div>
+    `;
+
+    steps.forEach((s, index)=>{
+        setTimeout(()=>{
+            const el = document.getElementById("step-" + s.id);
+
+            document.querySelectorAll(".step").forEach(step=>{
+                step.classList.remove("active");
+            });
+
+            el.classList.add("active");
+            el.querySelector(".status").textContent = "Processando";
+
+            addLog(`<b>${s.title}</b><br>${s.log}`);
+
+            setTimeout(()=>{
+                el.classList.remove("active");
+                el.classList.add("done");
+                el.querySelector(".status").textContent = "Concluído";
+            }, 650);
+
+            if(index === steps.length - 1){
+                setTimeout(()=>{
+                    result.classList.add("show");
+                    result.scrollIntoView({behavior:"smooth", block:"start"});
+                }, 1100);
+            }
+        }, index * 950);
+    });
+}
+
+buildPipeline();
+</script>
 
 </body>
 </html>
