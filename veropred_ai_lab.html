@@ -1,3 +1,4 @@
+<!-- arquivo: veropred_ai_lab.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,8 +10,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-    --bg:#050505;
-    --panel:rgba(255,255,255,.055);
     --line:rgba(216,176,106,.24);
     --gold:#d8b06a;
     --gold2:#f1c77e;
@@ -189,6 +188,116 @@ button{
 button:hover{
     transform:translateY(-2px);
 }
+
+/* LINHA INDUSTRIAL */
+
+.factory-line{
+    margin-top:36px;
+    border:1px solid var(--line);
+    border-radius:34px;
+    padding:28px;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(216,176,106,.12), transparent 34%),
+        rgba(255,255,255,.04);
+    box-shadow:0 24px 70px rgba(0,0,0,.30);
+}
+
+.factory-head{
+    display:grid;
+    grid-template-columns:1fr minmax(260px,440px);
+    gap:24px;
+    align-items:end;
+    margin-bottom:26px;
+}
+
+.factory-head h2{
+    font-family:Georgia,serif;
+    font-weight:500;
+    font-size:34px;
+    line-height:1;
+}
+
+.factory-head p{
+    color:var(--muted);
+    line-height:1.55;
+    font-size:15px;
+}
+
+.conveyor{
+    display:grid;
+    grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+    gap:10px;
+    align-items:center;
+}
+
+.belt-stage{
+    min-height:158px;
+    border:1px solid rgba(216,176,106,.18);
+    border-radius:22px;
+    padding:18px;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(0,0,0,.22));
+    opacity:.34;
+    transition:.35s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.belt-stage::after{
+    content:"";
+    position:absolute;
+    inset:auto -40px -60px auto;
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(216,176,106,.16), transparent 68%);
+}
+
+.belt-stage.active{
+    opacity:1;
+    transform:translateY(-4px);
+    border-color:rgba(241,199,126,.62);
+    box-shadow:0 0 40px rgba(216,176,106,.22);
+}
+
+.belt-stage small{
+    display:block;
+    color:var(--gold);
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    font-size:10px;
+    margin-bottom:10px;
+    position:relative;
+    z-index:1;
+}
+
+.belt-stage strong{
+    display:block;
+    font-family:Georgia,serif;
+    font-size:22px;
+    font-weight:500;
+    margin-bottom:12px;
+    position:relative;
+    z-index:1;
+}
+
+.belt-stage code{
+    display:block;
+    color:#e7d8c2;
+    font-size:12px;
+    line-height:1.45;
+    white-space:normal;
+    position:relative;
+    z-index:1;
+}
+
+.belt-arrow{
+    color:var(--gold);
+    opacity:.55;
+    font-size:22px;
+}
+
+/* PIPELINE */
 
 .pipeline-wrap{
     margin-top:48px;
@@ -403,12 +512,22 @@ button:hover{
 @media(max-width:980px){
     .hero,
     .pipeline-wrap,
-    .answer-grid{
+    .answer-grid,
+    .factory-head{
         grid-template-columns:1fr;
     }
 
     .pipeline{
         grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .conveyor{
+        grid-template-columns:1fr;
+    }
+
+    .belt-arrow{
+        transform:rotate(90deg);
+        text-align:center;
     }
 
     .trace-panel{
@@ -472,6 +591,59 @@ button:hover{
                     <button class="primary" onclick="runPipeline()">Executar pipeline</button>
                     <button class="secondary" onclick="resetPipeline()">Limpar</button>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="factory-line">
+        <div class="factory-head">
+            <div>
+                <div class="kicker">Linha Industrial Cognitiva</div>
+                <h2>Da linguagem ao contexto recuperado.</h2>
+            </div>
+
+            <p>
+                A pergunta é transformada em sinais matemáticos, comparada semanticamente com a base Veropred e convertida em contexto útil para resposta.
+            </p>
+        </div>
+
+        <div class="conveyor">
+            <div class="belt-stage" id="belt-text">
+                <small>Entrada</small>
+                <strong>Texto</strong>
+                <code>“reduzir inadimplência sem perder aprovação”</code>
+            </div>
+
+            <div class="belt-arrow">→</div>
+
+            <div class="belt-stage" id="belt-tokens">
+                <small>Tokenização</small>
+                <strong>Tokens</strong>
+                <code>[reduzir] [inadimplência] [aprovação]</code>
+            </div>
+
+            <div class="belt-arrow">→</div>
+
+            <div class="belt-stage" id="belt-vector">
+                <small>Embedding</small>
+                <strong>Vetor</strong>
+                <code>[0.42, -0.18, 0.77, 0.09, ...]</code>
+            </div>
+
+            <div class="belt-arrow">→</div>
+
+            <div class="belt-stage" id="belt-cosine">
+                <small>Busca Semântica</small>
+                <strong>Similaridade</strong>
+                <code>cos(θ) = 0.87<br>score.html ≈ pergunta</code>
+            </div>
+
+            <div class="belt-arrow">→</div>
+
+            <div class="belt-stage" id="belt-context">
+                <small>Contexto</small>
+                <strong>RAG</strong>
+                <code>score.html + raroc.html + simulador.html</code>
             </div>
         </div>
     </section>
@@ -542,14 +714,14 @@ const steps = [
         tag:"02 • ASSOCIAÇÃO",
         title:"Embeddings",
         text:"Convertendo a pergunta em representação semântica para aproximar conceitos relacionados.",
-        log:"Conceitos aproximados: inadimplência, aprovação, cutoff, PD, perda esperada e RAROC."
+        log:"Texto tokenizado e convertido em vetor semântico: [0.42, -0.18, 0.77, ...]."
     },
     {
         id:"memoria",
         tag:"03 • MEMÓRIA",
         title:"RAG",
         text:"Buscando conteúdos Veropred relacionados ao cenário apresentado.",
-        log:"Fontes simuladas recuperadas: score.html, raroc.html, simulador.html e ia_nucleo.html."
+        log:"Busca semântica simulada por similaridade: score.html = 0.87; raroc.html = 0.82; simulador.html = 0.78."
     },
     {
         id:"atencao",
@@ -611,9 +783,32 @@ function addLog(text){
     traceLog.scrollTop = traceLog.scrollHeight;
 }
 
+function resetFactoryLine(){
+    document.querySelectorAll(".belt-stage").forEach(el=>{
+        el.classList.remove("active");
+    });
+}
+
+function activateFactoryStage(index){
+    const ids = [
+        "belt-text",
+        "belt-tokens",
+        "belt-vector",
+        "belt-cosine",
+        "belt-context"
+    ];
+
+    if(ids[index]){
+        document.getElementById(ids[index]).classList.add("active");
+    }
+}
+
 function resetPipeline(){
     answer.classList.remove("show");
+    resetFactoryLine();
+
     traceLog.innerHTML = `<div class="log-item">Pipeline aguardando pergunta.</div>`;
+
     document.querySelectorAll(".step").forEach(step=>{
         step.classList.remove("active","done");
         step.querySelector(".status").textContent = "Aguardando";
@@ -624,6 +819,9 @@ function runPipeline(){
     resetPipeline();
 
     const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
+
+    document.querySelector("#belt-text code").textContent = "“" + q + "”";
+
     traceLog.innerHTML = `
         <div class="log-item"><b>Pergunta recebida:</b><br>${q}</div>
     `;
@@ -638,6 +836,10 @@ function runPipeline(){
 
             el.classList.add("active");
             el.querySelector(".status").textContent = "Processando";
+
+            if(index < 5){
+                activateFactoryStage(index);
+            }
 
             addLog(`<b>${s.title}</b><br>${s.log}`);
 
