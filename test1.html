@@ -1,814 +1,744 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Veropred AI Lab | Pipeline Inferencial</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ranking de Tênis</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
-    --line:rgba(216,176,106,.24);
-    --gold:#d8b06a;
-    --gold2:#f1c77e;
-    --copper:#c9783a;
-    --text:#f6efe3;
-    --muted:#b9aa96;
+:root {
+    --bg: #0d0f12;
+    --panel: #151922;
+    --panel-2: #1d2330;
+    --text: #f4f4f5;
+    --muted: #a1a1aa;
+    --gold: #d6a85f;
+    --green: #22c55e;
+    --red: #ef4444;
+    --line: rgba(255,255,255,.09);
 }
 
-body{
-    min-height:100vh;
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
     background:
-        radial-gradient(circle at 18% 12%, rgba(201,120,58,.18), transparent 32%),
-        radial-gradient(circle at 80% 20%, rgba(216,176,106,.11), transparent 34%),
-        linear-gradient(135deg,#050505,#100b08 58%,#050505);
-    color:var(--text);
-    font-family:Inter,Segoe UI,Arial,sans-serif;
-    overflow-x:hidden;
+        radial-gradient(circle at top, rgba(214,168,95,.16), transparent 32%),
+        var(--bg);
+    color: var(--text);
 }
 
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-    background-size:46px 46px;
-    mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 78%);
+.app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 18px 60px;
 }
 
-.page{
-    position:relative;
-    z-index:1;
-    width:min(1180px, calc(100% - 36px));
-    margin:0 auto;
-    padding:44px 0 90px;
+header { margin-bottom: 28px; }
+
+h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -1px;
 }
 
-.topbar{
-    display:flex;
-    justify-content:center;
-    margin-bottom:62px;
+.subtitle {
+    color: var(--muted);
+    margin-top: 8px;
+    max-width: 760px;
 }
 
-.brand{
-    letter-spacing:.22em;
-    text-transform:uppercase;
-    color:var(--gold2);
-    font-size:12px;
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
 }
 
-.hero{
-    display:grid;
-    grid-template-columns:1.05fr .95fr;
-    gap:42px;
-    align-items:center;
-    margin-bottom:48px;
-}
-
-.kicker{
-    color:var(--gold);
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    font-size:12px;
-    margin-bottom:18px;
-}
-
-h1{
-    font-family:Georgia,serif;
-    font-size:clamp(42px,6vw,74px);
-    line-height:.95;
-    letter-spacing:-.055em;
-    font-weight:500;
-    margin-bottom:22px;
-}
-
-.lead{
-    color:#d8cebe;
-    font-size:18px;
-    line-height:1.58;
-    max-width:720px;
-}
-
-.lab-panel{
-    border:1px solid var(--line);
-    border-radius:34px;
-    padding:26px;
-    background:
-        radial-gradient(circle at top left, rgba(216,176,106,.12), transparent 38%),
-        rgba(255,255,255,.045);
-    box-shadow:0 30px 90px rgba(0,0,0,.42);
-}
-
-.lab-panel h2{
-    font-family:Georgia,serif;
-    font-weight:500;
-    font-size:30px;
-    margin-bottom:12px;
-}
-
-.lab-panel p{
-    color:var(--muted);
-    line-height:1.55;
-    font-size:15px;
-}
-
-.question-box{
-    margin-top:22px;
-    display:grid;
-    gap:14px;
-}
-
-textarea{
-    width:100%;
-    min-height:118px;
-    resize:vertical;
-    border:1px solid rgba(216,176,106,.28);
-    border-radius:22px;
-    background:rgba(0,0,0,.34);
-    color:var(--text);
-    padding:18px;
-    outline:none;
-    line-height:1.5;
-}
-
-textarea:focus{
-    border-color:rgba(241,199,126,.62);
-    box-shadow:0 0 0 4px rgba(216,176,106,.10);
-}
-
-.actions{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
-}
-
-button{
-    border:0;
-    border-radius:999px;
-    padding:14px 18px;
-    font-weight:800;
-    cursor:pointer;
-    transition:.25s ease;
-}
-
-.primary{
-    color:#1b1009;
-    background:linear-gradient(135deg,#f1c77e,#c9783a);
-}
-
-.secondary{
-    color:var(--gold);
-    background:rgba(255,255,255,.045);
-    border:1px solid rgba(216,176,106,.30);
-}
-
-button:hover{
-    transform:translateY(-2px);
-}
-
-/* PIPELINE ÚNICO */
-
-.pipeline-section{
-    border:1px solid var(--line);
-    border-radius:34px;
-    padding:30px;
-    background:
-        radial-gradient(circle at 12% 16%, rgba(216,176,106,.12), transparent 34%),
-        rgba(255,255,255,.04);
-    box-shadow:0 24px 70px rgba(0,0,0,.30);
-}
-
-.pipeline-head{
-    display:grid;
-    grid-template-columns:1fr minmax(260px,420px);
-    gap:24px;
-    align-items:end;
-    margin-bottom:30px;
-}
-
-.pipeline-head h2{
-    font-family:Georgia,serif;
-    font-weight:500;
-    font-size:34px;
-    line-height:1;
-}
-
-.pipeline-head p{
-    color:var(--muted);
-    line-height:1.55;
-    font-size:15px;
-}
-
-.pipeline-wrap{
-    display:grid;
-    grid-template-columns:1fr 380px;
-    gap:24px;
-    align-items:start;
-}
-
-.pipeline{
-    display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
-    gap:16px;
-}
-
-.step{
-    min-height:196px;
-    border:1px solid rgba(216,176,106,.18);
-    border-radius:26px;
-    padding:20px;
-    background:
-        radial-gradient(circle at top left, rgba(216,176,106,.08), transparent 42%),
-        rgba(255,255,255,.035);
-    opacity:.45;
-    transition:.35s ease;
-    position:relative;
-    overflow:hidden;
-}
-
-.step::after{
-    content:"";
-    position:absolute;
-    inset:auto -40px -70px auto;
-    width:150px;
-    height:150px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(216,176,106,.16), transparent 68%);
-}
-
-.step.active{
-    opacity:1;
-    transform:translateY(-5px);
-    border-color:rgba(241,199,126,.62);
-    box-shadow:0 0 46px rgba(216,176,106,.22);
-}
-
-.step.done{
-    opacity:.92;
-    border-color:rgba(216,176,106,.38);
-}
-
-.step small{
-    display:block;
-    color:var(--gold);
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    font-size:10px;
-    margin-bottom:14px;
-    position:relative;
-    z-index:1;
-}
-
-.step h3{
-    font-family:Georgia,serif;
-    font-weight:500;
-    font-size:23px;
-    line-height:1.05;
-    margin-bottom:12px;
-    position:relative;
-    z-index:1;
-}
-
-.step p{
-    color:var(--muted);
-    font-size:13.5px;
-    line-height:1.5;
-    position:relative;
-    z-index:1;
-}
-
-.step code{
-    display:block;
-    margin-top:12px;
-    color:#e7d8c2;
-    font-size:12px;
-    line-height:1.45;
-    white-space:normal;
-    position:relative;
-    z-index:1;
-}
-
-.status{
-    margin-top:14px;
-    color:#8f806a;
-    font-size:12px;
-    position:relative;
-    z-index:1;
-}
-
-.step.active .status{
-    color:var(--gold2);
-}
-
-.trace-panel{
-    border:1px solid var(--line);
-    border-radius:28px;
-    background:rgba(255,255,255,.045);
-    padding:22px;
-    position:sticky;
-    top:24px;
-}
-
-.trace-panel h3{
-    font-family:Georgia,serif;
-    font-weight:500;
-    font-size:28px;
-    margin-bottom:14px;
-}
-
-.trace-log{
-    display:grid;
-    gap:10px;
-    max-height:420px;
-    overflow-y:auto;
-    padding-right:4px;
-}
-
-.log-item{
-    border:1px solid rgba(216,176,106,.14);
-    border-radius:16px;
-    padding:12px;
-    background:rgba(0,0,0,.20);
-    color:#d8cebe;
-    font-size:13px;
-    line-height:1.45;
-}
-
-.log-item b{
-    color:var(--gold);
-}
-
-/* RESULTADO */
-
-.result{
-    margin-top:34px;
-    border:1px solid rgba(216,176,106,.25);
-    border-radius:30px;
-    padding:30px;
-    background:
-        radial-gradient(circle at 18% 18%, rgba(216,176,106,.12), transparent 38%),
-        rgba(255,255,255,.05);
-    display:none;
-}
-
-.result.show{
-    display:block;
-    animation:fadeUp .45s ease both;
-}
-
-@keyframes fadeUp{
-    from{opacity:0;transform:translateY(12px)}
-    to{opacity:1;transform:translateY(0)}
-}
-
-.result h2{
-    font-family:Georgia,serif;
-    font-weight:500;
-    font-size:36px;
-    margin-bottom:18px;
-}
-
-.result-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:22px;
-}
-
-.result-card{
-    border:1px solid rgba(216,176,106,.18);
-    border-radius:22px;
-    padding:20px;
-    background:rgba(0,0,0,.20);
-}
-
-.result-card small{
-    display:block;
-    color:var(--gold);
-    letter-spacing:.13em;
-    text-transform:uppercase;
-    font-size:10px;
-    margin-bottom:12px;
-}
-
-.result-card p,
-.result-card li{
-    color:#ddd3c4;
-    line-height:1.62;
-    font-size:15px;
-}
-
-.result-card ul{
-    padding-left:18px;
-    display:grid;
-    gap:8px;
-}
-
-.metric{
-    display:flex;
-    justify-content:space-between;
-    gap:12px;
-    border-bottom:1px solid rgba(216,176,106,.12);
-    padding:10px 0;
-    color:#ddd3c4;
-    font-size:14px;
-}
-
-.metric b{
-    color:var(--gold2);
-    font-weight:700;
-}
-
-.symbolic-output{
-    grid-column:1 / -1;
-}
-
-@media(max-width:980px){
-    .hero,
-    .pipeline-head,
-    .pipeline-wrap,
-    .result-grid{
-        grid-template-columns:1fr;
-    }
-
-    .pipeline{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .trace-panel{
-        position:relative;
-        top:auto;
-    }
-
-    .symbolic-output{
-        grid-column:auto;
+@media (min-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
-@media(max-width:620px){
-    .topbar{
-        justify-content:flex-start;
-    }
+.card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.35);
+}
 
-    .pipeline{
-        grid-template-columns:1fr;
-    }
+.card h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+}
 
-    .page{
-        width:min(100% - 28px,1180px);
-        padding-top:28px;
-    }
+label {
+    display: block;
+    margin: 12px 0 6px;
+    color: var(--muted);
+    font-size: 13px;
+}
 
-    h1{
-        font-size:44px;
-    }
+input, select, button {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    padding: 12px;
+    background: #0f131b;
+    color: var(--text);
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+    background: linear-gradient(135deg, #c99648, #f0c879);
+    color: #111;
+    font-weight: 700;
+    border: none;
+    margin-top: 14px;
+}
+
+button.secondary {
+    background: #252b38;
+    color: var(--text);
+    border: 1px solid var(--line);
+}
+
+button.danger {
+    background: rgba(239,68,68,.16);
+    color: #fecaca;
+    border: 1px solid rgba(239,68,68,.35);
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 820px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+}
+
+th {
+    color: var(--gold);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+td:first-child, th:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: var(--panel);
+    z-index: 2;
+}
+
+.rank {
+    color: var(--gold);
+    font-weight: 800;
+}
+
+.history,
+.players-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.match,
+.player-pill {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.match {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+}
+
+.match small,
+.player-pill,
+.status {
+    color: var(--muted);
+}
+
+.match button {
+    width: auto;
+    margin: 0;
+    padding: 8px 10px;
+}
+
+.status {
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: rgba(214,168,95,.12);
+    color: var(--gold);
+    border: 1px solid rgba(214,168,95,.25);
+}
+
+.check-cell input {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    accent-color: var(--gold);
+}
+
+.availability-table th {
+    white-space: nowrap;
+}
+
+.availability-table td:first-child,
+.availability-table th:first-child {
+    min-width: 180px;
 }
 </style>
 </head>
 
 <body>
+<div class="app">
+    <header>
+        <span class="badge">Ranking interno · Todos contra todos</span>
+        <h1>Ranking de Jogos de Tênis</h1>
+        <p class="subtitle">
+            Ranking, histórico de partidas e disponibilidade dos participantes para as quartas-feiras de 2026.
+        </p>
+    </header>
 
-<main class="page">
+    <div class="grid">
+        <main class="card">
+            <h2>1. Lançar resultado</h2>
 
-    <div class="topbar">
-        <div class="brand">VEROPRED • AI LAB • PIPELINE INFERENCIAL</div>
-    </div>
+            <label>Confronto</label>
+            <select id="matchSelect"></select>
 
-    <section class="hero">
-
-
-        <div class="lab-panel">
-            <h2>Entrada textual</h2>
-            <p>
-                Tokenização • Representação vetorial • Busca semântica • Atenção contextual • Inferência probabilística
-            </p>
-
-            <div class="question-box">
-                <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
-
-                <div class="actions">
-                    <button class="primary" onclick="runPipeline()">Executar</button>
-                    <button class="secondary" onclick="resetPipeline()">Reiniciar</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                    <label>Games do Jogador A</label>
+                    <input id="scoreA" type="number" min="0" placeholder="0" />
                 </div>
-            </div>
-        </div>
-    </section>
-
-<section class="pipeline-section">
-
-    <div class="pipeline-head">
-        <div>
-            <div class="kicker">Pipeline inferencial</div>
-            <h2>Estados observáveis da transformação.</h2>
-        </div>
-    </div>
-
-    <section class="pipeline-wrap">
-
-        <div class="pipeline" id="pipeline"></div>
-
-        <aside class="trace-panel">
-
-            <div class="trace-log" id="traceLog">
-                <div class="log-item">
-                    Aguardando entrada textual.
+                <div>
+                    <label>Games do Jogador B</label>
+                    <input id="scoreB" type="number" min="0" placeholder="0" />
                 </div>
             </div>
 
-        </aside>
+            <button onclick="saveMatch()">Salvar resultado</button>
+            <div class="status" id="matchStatus"></div>
+        </main>
 
+        <section class="card">
+            <h2>2. Ações do torneio</h2>
+            <button class="secondary" onclick="generateSchedule()">Gerar confrontos</button>
+            <button class="danger" onclick="resetAll()">Resetar tudo</button>
+            <div class="status">
+                Os dados são salvos no Firebase e sincronizados entre usuários.
+            </div>
+        </section>
+    </div>
+
+    <section class="card" style="margin-top:18px;">
+        <h2>3. Ranking atualizado</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Jogador</th>
+                        <th>Jogos</th>
+                        <th>Vitórias</th>
+                        <th>Derrotas</th>
+                        <th>Games Vencidos</th>
+                        <th>Games Sofridos</th>
+                        <th>Saldo</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingBody"></tbody>
+            </table>
+        </div>
     </section>
 
-</section>
+    <section class="card" style="margin-top:18px;">
+        <h2>4. Disponibilidade nas quartas-feiras</h2>
+        <div class="status">
+            Todos começam marcados como disponíveis. Cada participante pode desmarcar a data em que não puder jogar.
+        </div>
+        <div class="table-wrap" style="margin-top:14px;">
+            <table class="availability-table">
+                <thead id="availabilityHead"></thead>
+                <tbody id="availabilityBody"></tbody>
+            </table>
+        </div>
+    </section>
 
-<section class="result" id="result">
-    <h2>Inferência consolidada</h2>
-    <div class="result-grid" id="dynamicResult"></div>
-</section>
+    <section class="card" style="margin-top:18px;">
+        <h2>5. Histórico de jogos</h2>
+        <div class="history" id="history"></div>
+    </section>
 
-</main>
+    <section class="card" style="margin-top:18px;">
+        <h2>6. Participantes</h2>
 
-<script>
-const steps = [
-    {
-        id:"entrada",
-        tag:"01 • TEXTO",
-        title:"Entrada textual",
-        text:"Sequência textual ainda não vetorizada.",
-        code:"“reduzir inadimplência sem perder aprovação”",
-        log:"Sequência textual indexada."
-    },
-    {
-        id:"tokens",
-        tag:"02 • TOKENS",
-        title:"Tokenização",
-        text:"Fragmentação textual em tokens indexados.",
-        code:"[reduzir] [inadimplência] [aprovação] → [1842, 9921, 441]",
-        log:"Tokens identificados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
-    },
-    {
-        id:"vetorizacao",
-        tag:"03 • VETORES",
-        title:"Vetorização",
-        text:"Projeção vetorial em espaço semântico.",
-        code:"[0.42, -0.18, 0.77, 0.09, ...]",
-        log:"Representação vetorial gerada: [0.42, -0.18, 0.77, 0.09, ...]."
-    },
-    {
-        id:"busca",
-        tag:"04 • BUSCA",
-        title:"Busca semântica",
-        text:"Busca contextual por proximidade vetorial.",
-        code:"cos(θ) = 0.87 • score.html ≈ pergunta",
-        log:"Proximidade vetorial calculada: score.html = 0.87; raroc.html = 0.82."
-    },
-    {
-        id:"contexto",
-        tag:"05 • CONTEXTO",
-        title:"Contexto recuperado",
-        text:"Expansão contextual via recuperação semântica.",
-        code:"pergunta + score.html + raroc.html + simulador.html",
-        log:"Contexto recuperado: pergunta + score.html + raroc.html + simulador.html."
-    },
-    {
-        id:"atencao",
-        tag:"06 • ATENÇÃO",
-        title:"Atenção contextual",
-        text:"Redistribuição probabilística de relevância contextual.",
-        code:"cutoff 0.31 • aprovação 0.26 • inadimplência 0.24 • capital 0.19",
-        log:"Redistribuição contextual: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
-    },
-    {
-        id:"probabilidade",
-        tag:"07 • PROBABILIDADE",
-        title:"Distribuição probabilística",
-        text:"Estimativa condicionada das próximas unidades de saída.",
-        code:"P('política')=0.34 • P('cutoff')=0.27 • P('risco')=0.21",
-        log:"Probabilidades estimadas: P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
-    },
-    {
-        id:"reconstrucao",
-        tag:"08 • TEXTO",
-        title:"Reconstrução textual",
-        text:"Reconstrução final em linguagem natural.",
-        code:"resposta executiva consolidada",
-        log:"Reconstrução textual concluída: resposta executiva consolidada."
+        <label>Nome do jogador</label>
+        <input id="playerName" placeholder="Ex: Pedro" />
+        <button onclick="addPlayer()">Adicionar jogador</button>
+
+        <div class="status" id="playersStatus"></div>
+        <div class="players-list" id="playersList"></div>
+    </section>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    onSnapshot
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "COLE_SUA_API_KEY_AQUI",
+    authDomain: "ranking-tenis-75f0d.firebaseapp.com",
+    projectId: "ranking-tenis-75f0d",
+    storageBucket: "ranking-tenis-75f0d.firebasestorage.app",
+    messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID_AQUI",
+    appId: "COLE_SEU_APP_ID_AQUI",
+    measurementId: "COLE_SEU_MEASUREMENT_ID_AQUI"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const rankingRef = doc(db, "tennisRanking", "main");
+
+let state = {
+    players: [],
+    schedule: [],
+    matches: [],
+    availability: {}
+};
+
+let firebaseLoaded = false;
+
+function getWednesdaysFromJune2026() {
+    const dates = [];
+    const start = new Date(2026, 5, 1);
+    const end = new Date(2026, 11, 31);
+
+    const current = new Date(start);
+
+    while (current.getDay() !== 3) {
+        current.setDate(current.getDate() + 1);
     }
-];
 
-const pipeline = document.getElementById("pipeline");
-const traceLog = document.getElementById("traceLog");
-const result = document.getElementById("result");
+    while (current <= end) {
+        dates.push(current.toISOString().split("T")[0]);
+        current.setDate(current.getDate() + 7);
+    }
 
-function buildPipeline(){
-    pipeline.innerHTML = steps.map(s => `
-        <div class="step" id="step-${s.id}">
-            <small>${s.tag}</small>
-            <h3>${s.title}</h3>
-            <p>${s.text}</p>
-            <code>${s.code}</code>
-            <div class="status">Aguardando</div>
+    return dates;
+}
+
+const wednesdays2026 = getWednesdaysFromJune2026();
+
+function formatDateBR(dateString) {
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}`;
+}
+
+function normalizeState() {
+    if (!state.players) state.players = [];
+    if (!state.schedule) state.schedule = [];
+    if (!state.matches) state.matches = [];
+    if (!state.availability) state.availability = {};
+
+    state.players.forEach(player => {
+        if (!state.availability[player]) {
+            state.availability[player] = {};
+        }
+
+        wednesdays2026.forEach(date => {
+            if (state.availability[player][date] === undefined) {
+                state.availability[player][date] = true;
+            }
+        });
+    });
+
+    Object.keys(state.availability).forEach(player => {
+        if (!state.players.includes(player)) {
+            delete state.availability[player];
+        }
+    });
+}
+
+async function saveState() {
+    normalizeState();
+    await setDoc(rankingRef, state, { merge: true });
+}
+
+onSnapshot(rankingRef, async (snapshot) => {
+    if (snapshot.exists()) {
+        state = snapshot.data();
+        normalizeState();
+    } else {
+        normalizeState();
+        await saveState();
+    }
+
+    firebaseLoaded = true;
+    render();
+});
+
+window.addPlayer = async function () {
+    const input = document.getElementById("playerName");
+    const name = input.value.trim();
+
+    if (!name) return alert("Informe o nome do jogador.");
+    if (state.players.length >= 8) return alert("O limite é de 8 participantes.");
+    if (state.players.includes(name)) return alert("Este jogador já foi cadastrado.");
+
+    state.players.push(name);
+    state.availability[name] = {};
+
+    wednesdays2026.forEach(date => {
+        state.availability[name][date] = true;
+    });
+
+    input.value = "";
+    await saveState();
+};
+
+window.generateSchedule = async function () {
+    if (state.players.length !== 8) {
+        return alert("Cadastre exatamente 8 jogadores antes de gerar os confrontos.");
+    }
+
+    const schedule = [];
+
+    for (let i = 0; i < state.players.length; i++) {
+        for (let j = i + 1; j < state.players.length; j++) {
+            schedule.push({
+                id: `${state.players[i]}__vs__${state.players[j]}`,
+                playerA: state.players[i],
+                playerB: state.players[j]
+            });
+        }
+    }
+
+    state.schedule = schedule;
+    await saveState();
+};
+
+window.saveMatch = async function () {
+    const matchId = document.getElementById("matchSelect").value;
+    const scoreA = Number(document.getElementById("scoreA").value);
+    const scoreB = Number(document.getElementById("scoreB").value);
+
+    if (!matchId) return alert("Selecione um confronto.");
+    if (scoreA === scoreB) return alert("Tênis não permite empate no resultado final.");
+    if (scoreA < 0 || scoreB < 0) return alert("Os games não podem ser negativos.");
+
+    const selected = state.schedule.find(m => m.id === matchId);
+    if (!selected) return alert("Confronto inválido.");
+
+    const alreadyPlayed = state.matches.some(m => m.id === matchId);
+    if (alreadyPlayed) return alert("Este confronto já foi lançado.");
+
+    state.matches.push({
+        id: selected.id,
+        playerA: selected.playerA,
+        playerB: selected.playerB,
+        scoreA,
+        scoreB,
+        winner: scoreA > scoreB ? selected.playerA : selected.playerB,
+        loser: scoreA > scoreB ? selected.playerB : selected.playerA,
+        createdAt: new Date().toISOString()
+    });
+
+    document.getElementById("scoreA").value = "";
+    document.getElementById("scoreB").value = "";
+
+    await saveState();
+};
+
+window.deleteMatch = async function (id) {
+    if (!confirm("Excluir este resultado?")) return;
+    state.matches = state.matches.filter(m => m.id !== id);
+    await saveState();
+};
+
+window.toggleAvailability = async function (player, date, checked) {
+    if (!state.availability[player]) {
+        state.availability[player] = {};
+    }
+
+    state.availability[player][date] = checked;
+    await saveState();
+};
+
+function calculateRanking() {
+    const table = {};
+
+    state.players.forEach(player => {
+        table[player] = {
+            player,
+            jogos: 0,
+            vitorias: 0,
+            derrotas: 0,
+            gamesVencidos: 0,
+            gamesSofridos: 0,
+            saldo: 0,
+            pontos: 0
+        };
+    });
+
+    state.matches.forEach(match => {
+        const A = table[match.playerA];
+        const B = table[match.playerB];
+
+        if (!A || !B) return;
+
+        A.jogos++;
+        B.jogos++;
+
+        A.gamesVencidos += match.scoreA;
+        A.gamesSofridos += match.scoreB;
+
+        B.gamesVencidos += match.scoreB;
+        B.gamesSofridos += match.scoreA;
+
+        if (match.scoreA > match.scoreB) {
+            A.vitorias++;
+            B.derrotas++;
+            A.pontos += 10;
+            B.pontos += 6;
+        } else {
+            B.vitorias++;
+            A.derrotas++;
+            B.pontos += 10;
+            A.pontos += 6;
+        }
+
+        A.pontos += match.scoreA;
+        B.pontos += match.scoreB;
+    });
+
+    Object.values(table).forEach(p => {
+        p.saldo = p.gamesVencidos - p.gamesSofridos;
+    });
+
+    return sortRanking(Object.values(table));
+}
+
+function sortRanking(players) {
+    return players.sort((a, b) => {
+        if (b.pontos !== a.pontos) return b.pontos - a.pontos;
+
+        const direct = directConfrontation(a.player, b.player);
+        if (direct) return direct;
+
+        if (b.saldo !== a.saldo) return b.saldo - a.saldo;
+        if (b.vitorias !== a.vitorias) return b.vitorias - a.vitorias;
+
+        return a.player.localeCompare(b.player);
+    });
+}
+
+function directConfrontation(playerA, playerB) {
+    const match = state.matches.find(m =>
+        (m.playerA === playerA && m.playerB === playerB) ||
+        (m.playerA === playerB && m.playerB === playerA)
+    );
+
+    if (!match) return 0;
+
+    if (match.winner === playerA) return -1;
+    if (match.winner === playerB) return 1;
+
+    return 0;
+}
+
+function renderPlayers() {
+    const list = document.getElementById("playersList");
+    const status = document.getElementById("playersStatus");
+
+    status.innerHTML = `${state.players.length}/8 jogadores cadastrados`;
+
+    if (!state.players.length) {
+        list.innerHTML = `<div class="status">Nenhum participante cadastrado ainda.</div>`;
+        return;
+    }
+
+    list.innerHTML = state.players
+        .map(p => `<div class="player-pill">${p}</div>`)
+        .join("");
+}
+
+function renderMatchSelect() {
+    const select = document.getElementById("matchSelect");
+
+    const playedIds = new Set(state.matches.map(m => m.id));
+    const pending = state.schedule.filter(m => !playedIds.has(m.id));
+
+    if (!state.schedule.length) {
+        select.innerHTML = `<option value="">Gere os confrontos primeiro</option>`;
+        return;
+    }
+
+    if (!pending.length) {
+        select.innerHTML = `<option value="">Todos os jogos foram lançados</option>`;
+        return;
+    }
+
+    select.innerHTML = pending.map(m =>
+        `<option value="${m.id}">${m.playerA} x ${m.playerB}</option>`
+    ).join("");
+}
+
+function renderRanking() {
+    const body = document.getElementById("rankingBody");
+    const ranking = calculateRanking();
+
+    if (!ranking.length) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="9">Nenhum jogador cadastrado ainda.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = ranking.map((p, i) => `
+        <tr>
+            <td class="rank">${i + 1}</td>
+            <td><strong>${p.player}</strong></td>
+            <td>${p.jogos}</td>
+            <td>${p.vitorias}</td>
+            <td>${p.derrotas}</td>
+            <td>${p.gamesVencidos}</td>
+            <td>${p.gamesSofridos}</td>
+            <td>${p.saldo}</td>
+            <td><strong>${p.pontos}</strong></td>
+        </tr>
+    `).join("");
+}
+
+function renderAvailability() {
+    const head = document.getElementById("availabilityHead");
+    const body = document.getElementById("availabilityBody");
+
+    head.innerHTML = `
+        <tr>
+            <th>Participante</th>
+            ${wednesdays2026.map(date => `<th>${formatDateBR(date)}</th>`).join("")}
+        </tr>
+    `;
+
+    if (!state.players.length) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="${wednesdays2026.length + 1}">
+                    Cadastre participantes para montar a tabela de disponibilidade.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    body.innerHTML = state.players.map(player => `
+        <tr>
+            <td><strong>${player}</strong></td>
+            ${wednesdays2026.map(date => {
+                const checked = state.availability?.[player]?.[date] !== false;
+                return `
+                    <td class="check-cell">
+                        <input 
+                            type="checkbox"
+                            ${checked ? "checked" : ""}
+                            onchange="toggleAvailability('${player}', '${date}', this.checked)"
+                        />
+                    </td>
+                `;
+            }).join("")}
+        </tr>
+    `).join("");
+}
+
+function renderHistory() {
+    const history = document.getElementById("history");
+
+    if (!state.matches.length) {
+        history.innerHTML = `<div class="status">Nenhum jogo lançado ainda.</div>`;
+        return;
+    }
+
+    history.innerHTML = state.matches.map(m => `
+        <div class="match">
+            <div>
+                <strong>${m.playerA} ${m.scoreA} x ${m.scoreB} ${m.playerB}</strong><br>
+                <small>Vencedor: ${m.winner}</small>
+            </div>
+            <button class="danger" onclick="deleteMatch('${m.id}')">Excluir</button>
         </div>
     `).join("");
 }
 
-function addLog(text){
-    const div = document.createElement("div");
-    div.className = "log-item";
-    div.innerHTML = text;
-    traceLog.appendChild(div);
-    traceLog.scrollTop = traceLog.scrollHeight;
+function renderStatus() {
+    const totalGames = state.players.length === 8 ? 28 : 0;
+    const played = state.matches.length;
+    const pending = totalGames - played;
+
+    document.getElementById("matchStatus").innerHTML =
+        state.players.length === 8
+        ? `Jogos lançados: ${played}/28 · Pendentes: ${pending}`
+        : `Cadastre 8 jogadores para iniciar o torneio.`;
 }
 
-function resetPipeline(){
-    result.classList.remove("show");
+window.resetAll = async function () {
+    if (!confirm("Tem certeza que deseja apagar todos os dados?")) return;
 
-    traceLog.innerHTML = `<div class="log-item">Aguardando entrada textual.</div>`;
+    state = {
+        players: [],
+        schedule: [],
+        matches: [],
+        availability: {}
+    };
 
-    document.querySelectorAll(".step").forEach(step=>{
-        step.classList.remove("active","done");
-        step.querySelector(".status").textContent = "Aguardando";
-    });
+    await saveState();
+};
+
+function render() {
+    if (!firebaseLoaded) return;
+
+    normalizeState();
+    renderMatchSelect();
+    renderRanking();
+    renderAvailability();
+    renderHistory();
+    renderPlayers();
+    renderStatus();
 }
-
-function analyzeQuestion(q){
-    const text = q.toLowerCase();
-
-    const profiles = [
-        {
-            area:"Risco de crédito",
-            decisao:"aprovação × inadimplência",
-            contexto:"score / cutoff / RAROC",
-            tipo:"resposta executiva",
-            keywords:["crédito","inadimplência","aprovação","score","cutoff","limite","pd","raroc"],
-            fontes:[
-                ["score.html","0.87"],
-                ["raroc.html","0.82"],
-                ["simulador.html","0.78"],
-                ["modelos.html","0.69"]
-            ],
-            estrutura:[
-                "Segmentação dinâmica de risco",
-                "Ajuste adaptativo de cutoff",
-                "Simulação de perda esperada",
-                "Leitura de retorno ajustado ao capital",
-                "Governança de exceções"
-            ]
-        },
-        {
-            area:"IA aplicada",
-            decisao:"automação × controle",
-            contexto:"RAG / agentes / alucinação",
-            tipo:"resposta técnico-executiva",
-            keywords:["ia","rag","agente","agentes","llm","alucinação","documento","automação","prompt"],
-            fontes:[
-                ["ia_nucleo.html","0.88"],
-                ["aluc_ia.html","0.84"],
-                ["ia.html","0.79"],
-                ["engenharia_prompts.html","0.73"]
-            ],
-            estrutura:[
-                "Definição do caso de uso",
-                "Recuperação contextual com RAG",
-                "Validação de fontes",
-                "Critérios de aceitação da resposta",
-                "Governança de uso e revisão humana"
-            ]
-        },
-        {
-            area:"Risco operacional",
-            decisao:"evento raro × capital",
-            contexto:"cauda / severidade / stress",
-            tipo:"resposta analítica",
-            keywords:["risco operacional","perda","evento","cauda","stress","capital","var","severidade"],
-            fontes:[
-                ["riscop.html","0.86"],
-                ["riscosintegrados.html","0.81"],
-                ["modelos.html","0.70"],
-                ["index.html","0.62"]
-            ],
-            estrutura:[
-                "Identificação de eventos críticos",
-                "Modelagem de frequência e severidade",
-                "Leitura de cauda e cenários extremos",
-                "Estimativa de capital econômico",
-                "Governança de limites e resposta"
-            ]
-        },
-        {
-            area:"Estratégia de decisão",
-            decisao:"priorização × execução",
-            contexto:"critério / trade-off / governança",
-            tipo:"resposta estratégica",
-            keywords:["estratégia","decisão","priorização","governança","execução","trade-off","crescimento","sustentabilidade"],
-            fontes:[
-                ["modelos.html","0.80"],
-                ["expsust.html","0.78"],
-                ["riscosintegrados.html","0.72"],
-                ["index.html","0.69"]
-            ],
-            estrutura:[
-                "Formulação da decisão central",
-                "Separação entre sintoma e causa",
-                "Definição de critérios de escolha",
-                "Análise de trade-offs",
-                "Governança da execução"
-            ]
-        }
-    ];
-
-    let best = profiles[0];
-    let bestScore = -1;
-
-    profiles.forEach(profile=>{
-        let score = 0;
-        profile.keywords.forEach(k=>{
-            if(text.includes(k)) score++;
-        });
-
-        if(score > bestScore){
-            bestScore = score;
-            best = profile;
-        }
-    });
-
-    return best;
-}
-
-function renderDynamicResult(analysis){
-    const box = document.getElementById("dynamicResult");
-
-    box.innerHTML = `
-        <div class="result-card">
-            <small>Estrutura inferida</small>
-            <div class="metric"><span>Área dominante</span><b>${analysis.area}</b></div>
-            <div class="metric"><span>Decisão em jogo</span><b>${analysis.decisao}</b></div>
-            <div class="metric"><span>Contexto dominante</span><b>${analysis.contexto}</b></div>
-            <div class="metric"><span>Tipo de resposta</span><b>${analysis.tipo}</b></div>
-        </div>
-
-        <div class="result-card">
-            <small>Similaridades</small>
-            ${analysis.fontes.map(f=>`
-                <div class="metric"><span>${f[0]}</span><b>${f[1]}</b></div>
-            `).join("")}
-        </div>
-
-        <div class="result-card symbolic-output">
-            <small>Estrutura de decisão recuperada</small>
-            <ul>
-                ${analysis.estrutura.map(item=>`<li>${item}</li>`).join("")}
-            </ul>
-        </div>
-    `;
-}
-
-function runPipeline(){
-    resetPipeline();
-
-    const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
-	const analysis = analyzeQuestion(q);
-renderDynamicResult(analysis);
-
-    document.querySelector("#step-entrada code").textContent = "“" + q + "”";
-
-    traceLog.innerHTML = `
-        <div class="log-item"><b>Entrada textual recebida:</b><br>${q}</div>
-    `;
-
-    steps.forEach((s, index)=>{
-        setTimeout(()=>{
-            const el = document.getElementById("step-" + s.id);
-
-            document.querySelectorAll(".step").forEach(step=>{
-                step.classList.remove("active");
-            });
-
-            el.classList.add("active");
-            el.querySelector(".status").textContent = "Processando";
-
-            addLog(`<b>${s.title}</b><br>${s.log}`);
-
-            setTimeout(()=>{
-                el.classList.remove("active");
-                el.classList.add("done");
-                el.querySelector(".status").textContent = "Concluído";
-            }, 650);
-
-            if(index === steps.length - 1){
-                setTimeout(()=>{
-                    result.classList.add("show");
-                    result.scrollIntoView({behavior:"smooth", block:"start"});
-                }, 1100);
-            }
-        }, index * 950);
-    });
-}
-
-buildPipeline();
 </script>
 
 </body>
