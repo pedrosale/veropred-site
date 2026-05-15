@@ -20,29 +20,53 @@
 }
 
 :root{
-    --line:rgba(216,176,106,.24);
+
+    /* 60% BASE */
+
+    --bg:#050505;
+    --bg-soft:#0b0b0b;
+    --panel:#101010;
+
+    /* 30% MAINFRAME */
+
+    --green:#8fe8a6;
+    --green-soft:#74c98e;
+    --green-light:#b8ffd0;
+
+    /* 10% VEROPRED */
+
     --gold:#d8b06a;
-    --gold2:#f1c77e;
-    --text:#f6efe3;
-    --muted:#b9aa96;
+    --gold-light:#f1c77e;
+    --copper:#c9783a;
+
+    /* TEXT */
+
+    --text:#f3ede3;
+    --muted:#a89d8c;
+
+    /* LINES */
+
+    --line:rgba(216,176,106,.16);
 }
 
 body{
+
     min-height:100vh;
 
     background:
-        radial-gradient(circle at 18% 12%, rgba(201,120,58,.14), transparent 32%),
-        radial-gradient(circle at 80% 20%, rgba(216,176,106,.08), transparent 34%),
-        linear-gradient(135deg,#050505,#0d0d0d 58%,#050505);
+        radial-gradient(circle at 20% 10%, rgba(201,120,58,.10), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(216,176,106,.05), transparent 34%),
+        linear-gradient(135deg,var(--bg),var(--bg-soft));
 
     color:var(--text);
 
-    font-family:Inter,Segoe UI,Arial,sans-serif;
+    font-family:Inter,Segoe UI,sans-serif;
 
     overflow-x:hidden;
 }
 
 body::before{
+
     content:"";
 
     position:fixed;
@@ -52,15 +76,16 @@ body::before{
     pointer-events:none;
 
     background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
 
-    background-size:46px 46px;
+    background-size:44px 44px;
 
-    mask-image:linear-gradient(to bottom, rgba(0,0,0,.75), transparent 78%);
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,.7), transparent 85%);
 }
 
 .page{
+
     position:relative;
 
     z-index:1;
@@ -69,28 +94,39 @@ body::before{
 
     margin:0 auto;
 
-    padding:44px 0 90px;
+    padding:44px 0 100px;
 }
 
+/* =========================
+   TOPBAR
+========================= */
+
 .topbar{
+
     display:flex;
 
     justify-content:center;
 
-    margin-bottom:62px;
+    margin-bottom:60px;
 }
 
 .brand{
+
+    color:var(--gold-light);
+
     letter-spacing:.22em;
 
     text-transform:uppercase;
 
-    color:var(--gold2);
-
     font-size:12px;
 }
 
+/* =========================
+   HERO
+========================= */
+
 .hero{
+
     display:grid;
 
     grid-template-columns:1.05fr .95fr;
@@ -99,27 +135,29 @@ body::before{
 
     align-items:center;
 
-    margin-bottom:48px;
+    margin-bottom:52px;
 }
 
 .kicker{
+
     color:var(--gold);
 
     letter-spacing:.16em;
 
     text-transform:uppercase;
 
-    font-size:12px;
+    font-size:11px;
 
     margin-bottom:18px;
 }
 
 h1{
+
     font-family:Georgia,serif;
 
-    font-size:clamp(42px,6vw,74px);
+    font-size:clamp(42px,6vw,72px);
 
-    line-height:.95;
+    line-height:.94;
 
     letter-spacing:-.055em;
 
@@ -129,30 +167,38 @@ h1{
 }
 
 .lead{
-    color:#d8cebe;
+
+    color:#d4c8b7;
 
     font-size:18px;
 
-    line-height:1.58;
+    line-height:1.62;
 
     max-width:720px;
 }
 
+/* =========================
+   INPUT PANEL
+========================= */
+
 .lab-panel{
+
     border:1px solid var(--line);
 
-    border-radius:30px;
+    border-radius:22px;
 
-    padding:26px;
+    padding:28px;
 
     background:
-        radial-gradient(circle at top left, rgba(216,176,106,.10), transparent 38%),
-        rgba(255,255,255,.03);
+        radial-gradient(circle at top left, rgba(216,176,106,.05), transparent 40%),
+        rgba(255,255,255,.025);
 
-    box-shadow:0 30px 90px rgba(0,0,0,.32);
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.28);
 }
 
 .lab-panel h2{
+
     font-family:Georgia,serif;
 
     font-weight:500;
@@ -163,14 +209,16 @@ h1{
 }
 
 .lab-panel p{
+
     color:var(--muted);
 
-    line-height:1.55;
+    line-height:1.6;
 
     font-size:15px;
 }
 
 .question-box{
+
     margin-top:22px;
 
     display:grid;
@@ -179,15 +227,16 @@ h1{
 }
 
 textarea{
+
     width:100%;
 
     min-height:118px;
 
     resize:vertical;
 
-    border:1px solid rgba(216,176,106,.20);
+    border:1px solid rgba(216,176,106,.12);
 
-    border-radius:18px;
+    border-radius:14px;
 
     background:rgba(0,0,0,.28);
 
@@ -197,16 +246,20 @@ textarea{
 
     outline:none;
 
-    line-height:1.5;
+    line-height:1.55;
+
+    font-family:Inter,sans-serif;
 }
 
 textarea:focus{
-    border-color:rgba(241,199,126,.42);
 
-    box-shadow:0 0 0 4px rgba(216,176,106,.06);
+    border-color:rgba(216,176,106,.32);
+
+    box-shadow:0 0 0 4px rgba(216,176,106,.05);
 }
 
 .actions{
+
     display:flex;
 
     gap:12px;
@@ -215,13 +268,14 @@ textarea:focus{
 }
 
 button{
+
     border:0;
 
     border-radius:999px;
 
     padding:14px 18px;
 
-    font-weight:800;
+    font-weight:700;
 
     cursor:pointer;
 
@@ -229,54 +283,57 @@ button{
 }
 
 .primary{
+
     color:#1b1009;
 
-    background:linear-gradient(135deg,#f1c77e,#c9783a);
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--copper)
+    );
 }
 
 .secondary{
+
     color:var(--gold);
 
-    background:rgba(255,255,255,.03);
+    background:rgba(255,255,255,.025);
 
-    border:1px solid rgba(216,176,106,.20);
+    border:1px solid rgba(216,176,106,.14);
 }
 
 button:hover{
+
     transform:translateY(-1px);
 }
 
 /* =========================
-   PIPELINE
+   PIPELINE SECTION
 ========================= */
 
 .pipeline-section{
+
     border:1px solid var(--line);
 
-    border-radius:30px;
+    border-radius:24px;
 
     padding:30px;
 
     background:
-        radial-gradient(circle at 12% 16%, rgba(216,176,106,.08), transparent 34%),
-        rgba(255,255,255,.03);
+        radial-gradient(circle at 12% 16%, rgba(216,176,106,.04), transparent 34%),
+        rgba(255,255,255,.02);
 
-    box-shadow:0 24px 70px rgba(0,0,0,.24);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.22);
 }
 
 .pipeline-head{
-    display:grid;
-
-    grid-template-columns:1fr;
-
-    gap:24px;
-
-    align-items:end;
 
     margin-bottom:30px;
 }
 
 .pipeline-head h2{
+
     font-family:Georgia,serif;
 
     font-weight:500;
@@ -287,6 +344,7 @@ button:hover{
 }
 
 .pipeline-wrap{
+
     display:grid;
 
     grid-template-columns:1fr 380px;
@@ -296,7 +354,12 @@ button:hover{
     align-items:start;
 }
 
+/* =========================
+   PIPELINE GRID
+========================= */
+
 .pipeline{
+
     display:grid;
 
     grid-template-columns:repeat(4,minmax(0,1fr));
@@ -305,10 +368,11 @@ button:hover{
 }
 
 /* =========================
-   MAINFRAME CORPORATIVO
+   MAINFRAME BLOCKS
 ========================= */
 
 .step{
+
     min-height:220px;
 
     border-radius:2px;
@@ -322,20 +386,18 @@ button:hover{
     background:
         linear-gradient(
             180deg,
-            rgba(143,232,166,.035),
-            rgba(0,0,0,.06)
+            rgba(143,232,166,.02),
+            rgba(0,0,0,.05)
         ),
-        #041009;
+        #08110c;
 
-    border:1px solid rgba(143,232,166,.18);
+    border:1px solid rgba(143,232,166,.10);
 
-    color:#8fe8a6;
+    color:var(--green);
 
     font-family:
         "IBM Plex Mono",
-        "SFMono-Regular",
         Consolas,
-        "Liberation Mono",
         monospace;
 
     letter-spacing:.015em;
@@ -345,51 +407,51 @@ button:hover{
     transition:
         opacity .35s ease,
         border-color .35s ease,
-        box-shadow .35s ease,
-        transform .35s ease;
+        transform .35s ease,
+        box-shadow .35s ease;
 
     box-shadow:
-        inset 0 0 18px rgba(143,232,166,.06);
+        inset 0 0 16px rgba(143,232,166,.03);
 }
 
 .step::before{
+
     content:"";
 
     position:absolute;
 
     inset:8px;
 
-    border:1px solid rgba(143,232,166,.08);
+    border:1px solid rgba(143,232,166,.05);
 
     pointer-events:none;
 }
 
-.step::after{
-    display:none;
-}
-
 .step.active{
+
     opacity:1;
 
     transform:translateY(-1px);
 
-    border-color:rgba(143,232,166,.42);
+    border-color:rgba(143,232,166,.24);
 
     box-shadow:
-        inset 0 0 22px rgba(143,232,166,.08),
-        0 0 24px rgba(143,232,166,.06);
+        inset 0 0 20px rgba(143,232,166,.04),
+        0 0 22px rgba(143,232,166,.03);
 }
 
 .step.done{
+
     opacity:.88;
 
-    border-color:rgba(143,232,166,.24);
+    border-color:rgba(143,232,166,.16);
 }
 
 .step small{
+
     display:block;
 
-    color:#74c98e;
+    color:var(--green-soft);
 
     letter-spacing:.14em;
 
@@ -398,19 +460,17 @@ button:hover{
     font-size:10px;
 
     margin-bottom:16px;
-
-    position:relative;
-
-    z-index:1;
 }
 
 .step small::before{
+
     content:"> ";
 
-    opacity:.7;
+    opacity:.6;
 }
 
 .step h3{
+
     font-family:
         "IBM Plex Mono",
         Consolas,
@@ -418,21 +478,17 @@ button:hover{
 
     font-weight:600;
 
-    font-size:17px;
+    font-size:16px;
 
-    line-height:1.2;
+    line-height:1.25;
 
     margin-bottom:14px;
 
     padding-bottom:10px;
 
-    border-bottom:1px solid rgba(143,232,166,.10);
+    border-bottom:1px solid rgba(216,176,106,.10);
 
-    position:relative;
-
-    z-index:1;
-
-    color:#b8ffd0;
+    color:var(--gold);
 
     text-transform:uppercase;
 
@@ -440,51 +496,42 @@ button:hover{
 }
 
 .step p{
-    color:rgba(196,255,216,.78);
 
-    font-size:12.5px;
+    color:rgba(196,255,216,.72);
 
-    line-height:1.6;
+    font-size:12px;
 
-    position:relative;
-
-    z-index:1;
+    line-height:1.65;
 }
 
 .step code{
+
     display:block;
 
     margin-top:14px;
 
-    color:#b8ffd0;
+    color:var(--green-light);
 
-    font-size:11.5px;
+    font-size:11px;
 
-    line-height:1.5;
+    line-height:1.55;
 
     white-space:normal;
 
-    position:relative;
+    background:rgba(143,232,166,.02);
 
-    z-index:1;
-
-    background:rgba(143,232,166,.035);
-
-    border:1px solid rgba(143,232,166,.10);
+    border:1px solid rgba(143,232,166,.08);
 
     padding:10px 12px;
 }
 
 .status{
+
     margin-top:14px;
 
     color:rgba(143,232,166,.45);
 
     font-size:10px;
-
-    position:relative;
-
-    z-index:1;
 
     text-transform:uppercase;
 
@@ -492,13 +539,15 @@ button:hover{
 }
 
 .status::before{
+
     content:"STATUS: ";
 
     opacity:.7;
 }
 
 .step.active .status{
-    color:#b8ffd0;
+
+    color:var(--green-light);
 }
 
 /* =========================
@@ -506,17 +555,18 @@ button:hover{
 ========================= */
 
 .trace-panel{
-    border:1px solid rgba(143,232,166,.16);
+
+    border:1px solid rgba(143,232,166,.10);
 
     border-radius:2px;
 
     background:
         linear-gradient(
             180deg,
-            rgba(143,232,166,.025),
+            rgba(143,232,166,.015),
             rgba(0,0,0,.04)
         ),
-        #041009;
+        #08110c;
 
     padding:22px;
 
@@ -529,21 +579,13 @@ button:hover{
         Consolas,
         monospace;
 
-    color:#8fe8a6;
+    color:var(--green);
 
     box-shadow:
-        inset 0 0 18px rgba(143,232,166,.05);
-}
-
-.trace-panel::after{
-    display:none;
+        inset 0 0 16px rgba(143,232,166,.03);
 }
 
 .trace-panel h3{
-    font-family:
-        "IBM Plex Mono",
-        Consolas,
-        monospace;
 
     font-weight:600;
 
@@ -553,20 +595,17 @@ button:hover{
 
     padding-bottom:10px;
 
-    border-bottom:1px solid rgba(143,232,166,.10);
+    border-bottom:1px solid rgba(216,176,106,.10);
 
     text-transform:uppercase;
 
-    color:#b8ffd0;
+    color:var(--gold);
 
     letter-spacing:.04em;
-
-    position:relative;
-
-    z-index:1;
 }
 
 .trace-log{
+
     display:grid;
 
     gap:10px;
@@ -574,73 +613,73 @@ button:hover{
     max-height:420px;
 
     overflow-y:auto;
-
-    padding-right:4px;
-
-    position:relative;
-
-    z-index:1;
 }
 
 .log-item{
-    border:1px solid rgba(143,232,166,.08);
+
+    border:1px solid rgba(143,232,166,.06);
 
     border-radius:2px;
 
     padding:12px;
 
-    background:rgba(143,232,166,.025);
+    background:rgba(143,232,166,.015);
 
-    color:rgba(196,255,216,.78);
+    color:rgba(196,255,216,.72);
 
-    font-size:11.5px;
+    font-size:11px;
 
-    line-height:1.55;
+    line-height:1.6;
 }
 
 .log-item b{
-    color:#b8ffd0;
+
+    color:var(--gold-light);
 }
 
 /* =========================
-   RESULTADO
+   RESULT
 ========================= */
 
 .result{
+
     margin-top:34px;
 
-    border:1px solid rgba(216,176,106,.18);
+    border:1px solid rgba(216,176,106,.14);
 
-    border-radius:30px;
+    border-radius:24px;
 
     padding:30px;
 
     background:
-        radial-gradient(circle at 18% 18%, rgba(216,176,106,.08), transparent 38%),
-        rgba(255,255,255,.03);
+        radial-gradient(circle at 18% 18%, rgba(216,176,106,.04), transparent 38%),
+        rgba(255,255,255,.02);
 
     display:none;
 }
 
 .result.show{
+
     display:block;
 
     animation:fadeUp .45s ease both;
 }
 
 @keyframes fadeUp{
+
     from{
         opacity:0;
-        transform:translateY(12px)
+        transform:translateY(12px);
     }
 
     to{
         opacity:1;
-        transform:translateY(0)
+        transform:translateY(0);
     }
 }
 
 .result h2{
+
     font-family:Georgia,serif;
 
     font-weight:500;
@@ -651,6 +690,7 @@ button:hover{
 }
 
 .result-grid{
+
     display:grid;
 
     grid-template-columns:1fr 1fr;
@@ -659,9 +699,10 @@ button:hover{
 }
 
 .result-card{
-    border:1px solid rgba(216,176,106,.14);
 
-    border-radius:20px;
+    border:1px solid rgba(216,176,106,.10);
+
+    border-radius:18px;
 
     padding:20px;
 
@@ -669,6 +710,7 @@ button:hover{
 }
 
 .result-card small{
+
     display:block;
 
     color:var(--gold);
@@ -682,31 +724,15 @@ button:hover{
     margin-bottom:12px;
 }
 
-.result-card p,
-.result-card li{
-    color:#ddd3c4;
-
-    line-height:1.62;
-
-    font-size:15px;
-}
-
-.result-card ul{
-    padding-left:18px;
-
-    display:grid;
-
-    gap:8px;
-}
-
 .metric{
+
     display:flex;
 
     justify-content:space-between;
 
     gap:12px;
 
-    border-bottom:1px solid rgba(216,176,106,.08);
+    border-bottom:1px solid rgba(216,176,106,.06);
 
     padding:10px 0;
 
@@ -716,53 +742,70 @@ button:hover{
 }
 
 .metric b{
-    color:var(--gold2);
 
-    font-weight:700;
+    color:var(--gold-light);
 }
 
 .symbolic-output{
+
     grid-column:1 / -1;
 }
+
+.symbolic-output ul{
+
+    padding-left:18px;
+
+    display:grid;
+
+    gap:8px;
+
+    color:#ddd3c4;
+
+    line-height:1.6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media(max-width:980px){
 
     .hero,
     .pipeline-wrap,
     .result-grid{
+
         grid-template-columns:1fr;
     }
 
     .pipeline{
+
         grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
     .trace-panel{
-        position:relative;
-        top:auto;
-    }
 
-    .symbolic-output{
-        grid-column:auto;
+        position:relative;
+
+        top:auto;
     }
 }
 
 @media(max-width:620px){
 
-    .topbar{
-        justify-content:flex-start;
-    }
-
     .pipeline{
+
         grid-template-columns:1fr;
     }
 
     .page{
+
         width:min(100% - 28px,1180px);
+
         padding-top:28px;
     }
 
     h1{
+
         font-size:44px;
     }
 }
@@ -783,6 +826,7 @@ button:hover{
     <section class="hero">
 
         <div>
+
             <div class="kicker">
                 Inferência observável
             </div>
@@ -794,6 +838,7 @@ button:hover{
             <p class="lead">
                 Texto → vetorização → recuperação contextual → inferência probabilística → reconstrução textual.
             </p>
+
         </div>
 
         <div class="lab-panel">
@@ -811,6 +856,7 @@ button:hover{
                 <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
 
                 <div class="actions">
+
                     <button class="primary" onclick="runPipeline()">
                         Executar
                     </button>
@@ -818,6 +864,7 @@ button:hover{
                     <button class="secondary" onclick="resetPipeline()">
                         Reiniciar
                     </button>
+
                 </div>
 
             </div>
@@ -829,7 +876,9 @@ button:hover{
     <section class="pipeline-section">
 
         <div class="pipeline-head">
+
             <div>
+
                 <div class="kicker">
                     Pipeline inferencial
                 </div>
@@ -837,7 +886,9 @@ button:hover{
                 <h2>
                     Estados observáveis da transformação.
                 </h2>
+
             </div>
+
         </div>
 
         <section class="pipeline-wrap">
@@ -851,9 +902,11 @@ button:hover{
                 </h3>
 
                 <div class="trace-log" id="traceLog">
+
                     <div class="log-item">
                         Aguardando entrada textual.
                     </div>
+
                 </div>
 
             </aside>
@@ -862,7 +915,281 @@ button:hover{
 
     </section>
 
+    <section class="result" id="result">
+
+        <h2>
+            Inferência consolidada
+        </h2>
+
+        <div class="result-grid">
+
+            <div class="result-card">
+
+                <small>
+                    Estrutura inferida
+                </small>
+
+                <div class="metric">
+                    <span>Área dominante</span>
+                    <b>Risco de crédito</b>
+                </div>
+
+                <div class="metric">
+                    <span>Decisão em jogo</span>
+                    <b>aprovação × inadimplência</b>
+                </div>
+
+                <div class="metric">
+                    <span>Contexto dominante</span>
+                    <b>score / cutoff / RAROC</b>
+                </div>
+
+            </div>
+
+            <div class="result-card">
+
+                <small>
+                    Similaridades
+                </small>
+
+                <div class="metric">
+                    <span>score.html</span>
+                    <b>0.87</b>
+                </div>
+
+                <div class="metric">
+                    <span>raroc.html</span>
+                    <b>0.82</b>
+                </div>
+
+                <div class="metric">
+                    <span>simulador.html</span>
+                    <b>0.78</b>
+                </div>
+
+            </div>
+
+            <div class="result-card symbolic-output">
+
+                <small>
+                    Estrutura de decisão recuperada
+                </small>
+
+                <ul>
+                    <li>Segmentação dinâmica de risco</li>
+                    <li>Ajuste adaptativo de cutoff</li>
+                    <li>Simulação de perda esperada</li>
+                    <li>Leitura de retorno ajustado ao capital</li>
+                    <li>Governança de exceções</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </section>
+
 </main>
+
+<script>
+
+const steps = [
+
+    {
+        id:"entrada",
+        tag:"01 • TEXTO",
+        title:"Entrada textual",
+        text:"Sequência textual ainda não vetorizada.",
+        code:"“reduzir inadimplência sem perder aprovação”",
+        log:"Sequência textual indexada."
+    },
+
+    {
+        id:"tokens",
+        tag:"02 • TOKENS",
+        title:"Tokenização",
+        text:"Fragmentação textual em tokens indexados.",
+        code:"[reduzir] [inadimplência] [aprovação] → [1842, 9921, 441]",
+        log:"Tokens identificados."
+    },
+
+    {
+        id:"vetorizacao",
+        tag:"03 • VETORES",
+        title:"Vetorização",
+        text:"Projeção vetorial em espaço semântico.",
+        code:"[0.42, -0.18, 0.77, 0.09, ...]",
+        log:"Representação vetorial gerada."
+    },
+
+    {
+        id:"busca",
+        tag:"04 • BUSCA",
+        title:"Busca semântica",
+        text:"Busca contextual por proximidade vetorial.",
+        code:"score.html ≈ pergunta",
+        log:"Proximidade vetorial calculada."
+    },
+
+    {
+        id:"contexto",
+        tag:"05 • CONTEXTO",
+        title:"Contexto recuperado",
+        text:"Expansão contextual via recuperação semântica.",
+        code:"pergunta + score + raroc",
+        log:"Contexto recuperado."
+    },
+
+    {
+        id:"atencao",
+        tag:"06 • ATENÇÃO",
+        title:"Atenção contextual",
+        text:"Redistribuição probabilística contextual.",
+        code:"cutoff • aprovação • capital",
+        log:"Relevância contextual distribuída."
+    },
+
+    {
+        id:"probabilidade",
+        tag:"07 • PROBABILIDADE",
+        title:"Distribuição probabilística",
+        text:"Estimativa condicionada da saída.",
+        code:"P(política)=0.34",
+        log:"Probabilidades estimadas."
+    },
+
+    {
+        id:"reconstrucao",
+        tag:"08 • TEXTO",
+        title:"Reconstrução textual",
+        text:"Reconstrução final em linguagem natural.",
+        code:"resposta executiva consolidada",
+        log:"Reconstrução concluída."
+    }
+];
+
+const pipeline = document.getElementById("pipeline");
+const traceLog = document.getElementById("traceLog");
+const result = document.getElementById("result");
+
+function buildPipeline(){
+
+    pipeline.innerHTML = steps.map(s => `
+
+        <div class="step" id="step-${s.id}">
+
+            <small>${s.tag}</small>
+
+            <h3>${s.title}</h3>
+
+            <p>${s.text}</p>
+
+            <code>${s.code}</code>
+
+            <div class="status">
+                Aguardando
+            </div>
+
+        </div>
+
+    `).join("");
+}
+
+function addLog(text){
+
+    const div = document.createElement("div");
+
+    div.className = "log-item";
+
+    div.innerHTML = text;
+
+    traceLog.appendChild(div);
+
+    traceLog.scrollTop = traceLog.scrollHeight;
+}
+
+function resetPipeline(){
+
+    result.classList.remove("show");
+
+    traceLog.innerHTML = `
+        <div class="log-item">
+            Aguardando entrada textual.
+        </div>
+    `;
+
+    document.querySelectorAll(".step").forEach(step=>{
+
+        step.classList.remove("active","done");
+
+        step.querySelector(".status").textContent = "Aguardando";
+    });
+}
+
+function runPipeline(){
+
+    resetPipeline();
+
+    const q = document.getElementById("question").value.trim();
+
+    document.querySelector("#step-entrada code").textContent = "“" + q + "”";
+
+    traceLog.innerHTML = `
+        <div class="log-item">
+            <b>Entrada textual recebida:</b><br>${q}
+        </div>
+    `;
+
+    steps.forEach((s,index)=>{
+
+        setTimeout(()=>{
+
+            const el = document.getElementById("step-" + s.id);
+
+            document.querySelectorAll(".step").forEach(step=>{
+
+                step.classList.remove("active");
+            });
+
+            el.classList.add("active");
+
+            el.querySelector(".status").textContent = "Processando";
+
+            addLog(`
+                <b>${s.title}</b><br>${s.log}
+            `);
+
+            setTimeout(()=>{
+
+                el.classList.remove("active");
+
+                el.classList.add("done");
+
+                el.querySelector(".status").textContent = "Concluído";
+
+            },650);
+
+            if(index === steps.length - 1){
+
+                setTimeout(()=>{
+
+                    result.classList.add("show");
+
+                    result.scrollIntoView({
+                        behavior:"smooth",
+                        block:"start"
+                    });
+
+                },1100);
+            }
+
+        }, index * 900);
+    });
+}
+
+buildPipeline();
+
+</script>
 
 </body>
 </html>
