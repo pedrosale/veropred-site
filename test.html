@@ -3,813 +3,543 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Veropred AI Lab | Pipeline Inferencial</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-
-    /* 60% BASE */
-
-    --bg:#050505;
-    --bg-soft:#0b0b0b;
-    --panel:#101010;
-
-    /* 30% MAINFRAME */
-
-    --green:#8fe8a6;
-    --green-soft:#74c98e;
-    --green-light:#b8ffd0;
-
-    /* 10% VEROPRED */
-
-    --gold:#d8b06a;
-    --gold-light:#f1c77e;
-    --copper:#c9783a;
-
-    /* TEXT */
-
-    --text:#f3ede3;
-    --muted:#a89d8c;
-
-    /* LINES */
-
-    --line:rgba(216,176,106,.16);
+    --bg:#050708;
+    --panel:#0b0f11;
+    --panel2:#101619;
+    --line:rgba(132,160,166,.22);
+    --line2:rgba(99,255,190,.20);
+    --text:#e8f0ee;
+    --muted:#91a1a0;
+    --soft:#b7c6c2;
+    --green:#64ffbf;
+    --green2:#9dffd8;
+    --cyan:#7fd8ff;
+    --steel:#4d5f63;
+    --graphite:#151b1e;
 }
 
 body{
-
     min-height:100vh;
-
     background:
-        radial-gradient(circle at 20% 10%, rgba(201,120,58,.10), transparent 32%),
-        radial-gradient(circle at 80% 20%, rgba(216,176,106,.05), transparent 34%),
-        linear-gradient(135deg,var(--bg),var(--bg-soft));
-
+        radial-gradient(circle at 18% 12%, rgba(100,255,191,.10), transparent 30%),
+        radial-gradient(circle at 80% 18%, rgba(127,216,255,.08), transparent 34%),
+        radial-gradient(circle at 50% 90%, rgba(75,95,99,.22), transparent 42%),
+        linear-gradient(135deg,#030405,#0a0f11 56%,#050708);
     color:var(--text);
-
-    font-family:Inter,Segoe UI,sans-serif;
-
+    font-family:"IBM Plex Mono","SFMono-Regular","Consolas","Courier New",monospace;
     overflow-x:hidden;
 }
 
 body::before{
-
     content:"";
-
     position:fixed;
-
     inset:0;
-
     pointer-events:none;
-
     background-image:
-        linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+        linear-gradient(rgba(100,255,191,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,255,191,.035) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:linear-gradient(to bottom, rgba(0,0,0,.88), transparent 82%);
+}
 
-    background-size:44px 44px;
-
-    mask-image:linear-gradient(to bottom, rgba(0,0,0,.7), transparent 85%);
+body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,.025) 0px,
+            rgba(255,255,255,.025) 1px,
+            transparent 2px,
+            transparent 5px
+        );
+    opacity:.28;
+    mix-blend-mode:screen;
 }
 
 .page{
-
     position:relative;
-
     z-index:1;
-
     width:min(1180px, calc(100% - 36px));
-
     margin:0 auto;
-
-    padding:44px 0 100px;
+    padding:44px 0 90px;
 }
 
-/* =========================
-   TOPBAR
-========================= */
-
 .topbar{
-
     display:flex;
-
     justify-content:center;
-
-    margin-bottom:60px;
+    margin-bottom:62px;
 }
 
 .brand{
-
-    color:var(--gold-light);
-
-    letter-spacing:.22em;
-
+    letter-spacing:.26em;
     text-transform:uppercase;
-
-    font-size:12px;
+    color:var(--green2);
+    font-size:11px;
+    text-shadow:0 0 18px rgba(100,255,191,.28);
 }
 
-/* =========================
-   HERO
-========================= */
-
 .hero{
-
     display:grid;
-
     grid-template-columns:1.05fr .95fr;
-
     gap:42px;
-
     align-items:center;
-
-    margin-bottom:52px;
+    margin-bottom:48px;
 }
 
 .kicker{
-
-    color:var(--gold);
-
-    letter-spacing:.16em;
-
+    color:var(--green);
+    letter-spacing:.18em;
     text-transform:uppercase;
-
     font-size:11px;
-
     margin-bottom:18px;
 }
 
 h1{
-
-    font-family:Georgia,serif;
-
-    font-size:clamp(42px,6vw,72px);
-
-    line-height:.94;
-
-    letter-spacing:-.055em;
-
+    font-family:"IBM Plex Mono","Consolas","Courier New",monospace;
+    font-size:clamp(40px,5.5vw,70px);
+    line-height:.95;
+    letter-spacing:-.065em;
     font-weight:500;
-
     margin-bottom:22px;
+    text-transform:uppercase;
 }
 
 .lead{
-
-    color:#d4c8b7;
-
-    font-size:18px;
-
-    line-height:1.62;
-
+    color:#c6d2cf;
+    font-size:17px;
+    line-height:1.68;
     max-width:720px;
 }
 
-/* =========================
-   INPUT PANEL
-========================= */
-
 .lab-panel{
-
     border:1px solid var(--line);
-
-    border-radius:22px;
-
-    padding:28px;
-
+    border-radius:26px;
+    padding:26px;
     background:
-        radial-gradient(circle at top left, rgba(216,176,106,.05), transparent 40%),
-        rgba(255,255,255,.025);
-
+        linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        radial-gradient(circle at top left, rgba(100,255,191,.12), transparent 42%),
+        rgba(8,12,14,.82);
     box-shadow:
-        0 20px 70px rgba(0,0,0,.28);
+        0 30px 90px rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(255,255,255,.025);
+    backdrop-filter:blur(12px);
 }
 
 .lab-panel h2{
-
-    font-family:Georgia,serif;
-
     font-weight:500;
-
-    font-size:30px;
-
+    font-size:27px;
     margin-bottom:12px;
+    letter-spacing:-.04em;
+    text-transform:uppercase;
 }
 
 .lab-panel p{
-
     color:var(--muted);
-
-    line-height:1.6;
-
-    font-size:15px;
+    line-height:1.55;
+    font-size:14px;
 }
 
 .question-box{
-
     margin-top:22px;
-
     display:grid;
-
     gap:14px;
 }
 
 textarea{
-
     width:100%;
-
     min-height:118px;
-
     resize:vertical;
-
-    border:1px solid rgba(216,176,106,.12);
-
-    border-radius:14px;
-
-    background:rgba(0,0,0,.28);
-
-    color:var(--text);
-
+    border:1px solid rgba(100,255,191,.24);
+    border-radius:18px;
+    background:
+        linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.24));
+    color:var(--green2);
     padding:18px;
-
     outline:none;
-
-    line-height:1.55;
-
-    font-family:Inter,sans-serif;
+    line-height:1.5;
+    font-family:inherit;
+    box-shadow:inset 0 0 28px rgba(100,255,191,.035);
 }
 
 textarea:focus{
-
-    border-color:rgba(216,176,106,.32);
-
-    box-shadow:0 0 0 4px rgba(216,176,106,.05);
+    border-color:rgba(100,255,191,.62);
+    box-shadow:
+        0 0 0 4px rgba(100,255,191,.08),
+        inset 0 0 34px rgba(100,255,191,.045);
 }
 
 .actions{
-
     display:flex;
-
     gap:12px;
-
     flex-wrap:wrap;
 }
 
 button{
-
     border:0;
-
     border-radius:999px;
-
     padding:14px 18px;
-
-    font-weight:700;
-
+    font-weight:800;
     cursor:pointer;
-
     transition:.25s ease;
+    font-family:inherit;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-size:11px;
 }
 
 .primary{
-
-    color:#1b1009;
-
-    background:linear-gradient(
-        135deg,
-        var(--gold-light),
-        var(--copper)
-    );
+    color:#04100d;
+    background:linear-gradient(135deg,#9dffd8,#64ffbf);
+    box-shadow:0 0 32px rgba(100,255,191,.16);
 }
 
 .secondary{
-
-    color:var(--gold);
-
-    background:rgba(255,255,255,.025);
-
-    border:1px solid rgba(216,176,106,.14);
+    color:var(--green);
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(100,255,191,.26);
 }
 
 button:hover{
-
-    transform:translateY(-1px);
+    transform:translateY(-2px);
 }
 
-/* =========================
-   PIPELINE SECTION
-========================= */
+/* PIPELINE */
 
 .pipeline-section{
-
     border:1px solid var(--line);
-
-    border-radius:24px;
-
+    border-radius:30px;
     padding:30px;
-
     background:
-        radial-gradient(circle at 12% 16%, rgba(216,176,106,.04), transparent 34%),
-        rgba(255,255,255,.02);
-
+        radial-gradient(circle at 12% 16%, rgba(100,255,191,.08), transparent 34%),
+        linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        rgba(8,12,14,.78);
     box-shadow:
-        0 20px 60px rgba(0,0,0,.22);
+        0 24px 80px rgba(0,0,0,.44),
+        inset 0 0 0 1px rgba(255,255,255,.025);
 }
 
 .pipeline-head{
-
+    display:grid;
+    grid-template-columns:1fr minmax(260px,420px);
+    gap:24px;
+    align-items:end;
     margin-bottom:30px;
 }
 
 .pipeline-head h2{
-
-    font-family:Georgia,serif;
-
     font-weight:500;
-
-    font-size:34px;
-
+    font-size:32px;
     line-height:1;
+    letter-spacing:-.045em;
+    text-transform:uppercase;
 }
 
 .pipeline-wrap{
-
     display:grid;
-
     grid-template-columns:1fr 380px;
-
     gap:24px;
-
     align-items:start;
 }
 
-/* =========================
-   PIPELINE GRID
-========================= */
-
 .pipeline{
-
     display:grid;
-
     grid-template-columns:repeat(4,minmax(0,1fr));
-
-    gap:18px;
+    gap:16px;
 }
 
-/* =========================
-   MAINFRAME BLOCKS
-========================= */
-
 .step{
-
-    min-height:220px;
-
-    border-radius:2px;
-
-    padding:18px;
-
-    position:relative;
-
-    overflow:hidden;
-
+    min-height:196px;
+    border:1px solid rgba(132,160,166,.20);
+    border-radius:22px;
+    padding:20px;
     background:
-        linear-gradient(
-            180deg,
-            rgba(143,232,166,.02),
-            rgba(0,0,0,.05)
-        ),
-        #08110c;
-
-    border:1px solid rgba(143,232,166,.10);
-
-    color:var(--green);
-
-    font-family:
-        "IBM Plex Mono",
-        Consolas,
-        monospace;
-
-    letter-spacing:.015em;
-
-    opacity:.55;
-
-    transition:
-        opacity .35s ease,
-        border-color .35s ease,
-        transform .35s ease,
-        box-shadow .35s ease;
-
-    box-shadow:
-        inset 0 0 16px rgba(143,232,166,.03);
+        linear-gradient(145deg, rgba(255,255,255,.04), rgba(255,255,255,.012)),
+        radial-gradient(circle at top left, rgba(100,255,191,.055), transparent 44%),
+        rgba(5,8,9,.62);
+    opacity:.44;
+    transition:.35s ease;
+    position:relative;
+    overflow:hidden;
 }
 
 .step::before{
-
     content:"";
-
     position:absolute;
+    inset:0;
+    background:
+        linear-gradient(90deg, transparent, rgba(100,255,191,.045), transparent);
+    transform:translateX(-120%);
+    opacity:0;
+}
 
-    inset:8px;
+.step.active::before{
+    animation:sweep 1.2s ease infinite;
+    opacity:1;
+}
 
-    border:1px solid rgba(143,232,166,.05);
+@keyframes sweep{
+    to{transform:translateX(120%)}
+}
 
-    pointer-events:none;
+.step::after{
+    content:"";
+    position:absolute;
+    right:16px;
+    bottom:16px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(100,255,191,.32);
+    box-shadow:0 0 18px rgba(100,255,191,.55);
 }
 
 .step.active{
-
     opacity:1;
-
-    transform:translateY(-1px);
-
-    border-color:rgba(143,232,166,.24);
-
+    transform:translateY(-5px);
+    border-color:rgba(100,255,191,.58);
     box-shadow:
-        inset 0 0 20px rgba(143,232,166,.04),
-        0 0 22px rgba(143,232,166,.03);
+        0 0 46px rgba(100,255,191,.13),
+        inset 0 0 30px rgba(100,255,191,.04);
 }
 
 .step.done{
-
-    opacity:.88;
-
-    border-color:rgba(143,232,166,.16);
+    opacity:.9;
+    border-color:rgba(100,255,191,.30);
 }
 
 .step small{
-
     display:block;
-
-    color:var(--green-soft);
-
+    color:var(--green);
     letter-spacing:.14em;
-
     text-transform:uppercase;
-
     font-size:10px;
-
-    margin-bottom:16px;
-}
-
-.step small::before{
-
-    content:"> ";
-
-    opacity:.6;
+    margin-bottom:14px;
+    position:relative;
+    z-index:1;
 }
 
 .step h3{
-
-    font-family:
-        "IBM Plex Mono",
-        Consolas,
-        monospace;
-
-    font-weight:600;
-
-    font-size:16px;
-
-    line-height:1.25;
-
-    margin-bottom:14px;
-
-    padding-bottom:10px;
-
-    border-bottom:1px solid rgba(216,176,106,.10);
-
-    color:var(--gold);
-
+    font-weight:500;
+    font-size:21px;
+    line-height:1.08;
+    margin-bottom:12px;
+    position:relative;
+    z-index:1;
     text-transform:uppercase;
-
-    letter-spacing:.03em;
+    letter-spacing:-.04em;
 }
 
 .step p{
-
-    color:rgba(196,255,216,.72);
-
-    font-size:12px;
-
-    line-height:1.65;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+    position:relative;
+    z-index:1;
 }
 
 .step code{
-
     display:block;
-
-    margin-top:14px;
-
-    color:var(--green-light);
-
-    font-size:11px;
-
-    line-height:1.55;
-
+    margin-top:12px;
+    color:#d5fff0;
+    font-size:11.5px;
+    line-height:1.45;
     white-space:normal;
-
-    background:rgba(143,232,166,.02);
-
-    border:1px solid rgba(143,232,166,.08);
-
-    padding:10px 12px;
+    position:relative;
+    z-index:1;
 }
 
 .status{
-
     margin-top:14px;
-
-    color:rgba(143,232,166,.45);
-
-    font-size:10px;
-
+    color:#687979;
+    font-size:11px;
+    position:relative;
+    z-index:1;
     text-transform:uppercase;
-
-    letter-spacing:.12em;
-}
-
-.status::before{
-
-    content:"STATUS: ";
-
-    opacity:.7;
+    letter-spacing:.08em;
 }
 
 .step.active .status{
-
-    color:var(--green-light);
+    color:var(--green2);
 }
 
-/* =========================
-   TRACE PANEL
-========================= */
-
 .trace-panel{
-
-    border:1px solid rgba(143,232,166,.10);
-
-    border-radius:2px;
-
+    border:1px solid var(--line);
+    border-radius:24px;
     background:
-        linear-gradient(
-            180deg,
-            rgba(143,232,166,.015),
-            rgba(0,0,0,.04)
-        ),
-        #08110c;
-
+        linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015)),
+        rgba(5,8,9,.72);
     padding:22px;
-
     position:sticky;
-
     top:24px;
-
-    font-family:
-        "IBM Plex Mono",
-        Consolas,
-        monospace;
-
-    color:var(--green);
-
-    box-shadow:
-        inset 0 0 16px rgba(143,232,166,.03);
+    box-shadow:inset 0 0 36px rgba(100,255,191,.035);
 }
 
 .trace-panel h3{
-
-    font-weight:600;
-
-    font-size:18px;
-
-    margin-bottom:16px;
-
-    padding-bottom:10px;
-
-    border-bottom:1px solid rgba(216,176,106,.10);
-
+    font-weight:500;
+    font-size:25px;
+    margin-bottom:14px;
     text-transform:uppercase;
-
-    color:var(--gold);
-
-    letter-spacing:.04em;
+    letter-spacing:-.04em;
 }
 
 .trace-log{
-
     display:grid;
-
     gap:10px;
-
     max-height:420px;
-
     overflow-y:auto;
+    padding-right:4px;
 }
 
 .log-item{
-
-    border:1px solid rgba(143,232,166,.06);
-
-    border-radius:2px;
-
+    border:1px solid rgba(100,255,191,.14);
+    border-radius:14px;
     padding:12px;
-
-    background:rgba(143,232,166,.015);
-
-    color:rgba(196,255,216,.72);
-
-    font-size:11px;
-
-    line-height:1.6;
+    background:rgba(0,0,0,.24);
+    color:#c7d8d4;
+    font-size:12.5px;
+    line-height:1.48;
 }
 
 .log-item b{
-
-    color:var(--gold-light);
+    color:var(--green);
 }
 
-/* =========================
-   RESULT
-========================= */
+/* RESULTADO */
 
 .result{
-
     margin-top:34px;
-
-    border:1px solid rgba(216,176,106,.14);
-
-    border-radius:24px;
-
+    border:1px solid rgba(100,255,191,.24);
+    border-radius:28px;
     padding:30px;
-
     background:
-        radial-gradient(circle at 18% 18%, rgba(216,176,106,.04), transparent 38%),
-        rgba(255,255,255,.02);
-
+        radial-gradient(circle at 18% 18%, rgba(100,255,191,.08), transparent 38%),
+        linear-gradient(145deg, rgba(255,255,255,.05), rgba(255,255,255,.018)),
+        rgba(5,8,9,.78);
     display:none;
+    box-shadow:0 24px 80px rgba(0,0,0,.42);
 }
 
 .result.show{
-
     display:block;
-
     animation:fadeUp .45s ease both;
 }
 
 @keyframes fadeUp{
-
-    from{
-        opacity:0;
-        transform:translateY(12px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    from{opacity:0;transform:translateY(12px)}
+    to{opacity:1;transform:translateY(0)}
 }
 
 .result h2{
-
-    font-family:Georgia,serif;
-
     font-weight:500;
-
-    font-size:36px;
-
+    font-size:34px;
     margin-bottom:18px;
+    text-transform:uppercase;
+    letter-spacing:-.045em;
 }
 
 .result-grid{
-
     display:grid;
-
     grid-template-columns:1fr 1fr;
-
     gap:22px;
 }
 
 .result-card{
-
-    border:1px solid rgba(216,176,106,.10);
-
-    border-radius:18px;
-
+    border:1px solid rgba(132,160,166,.20);
+    border-radius:20px;
     padding:20px;
-
-    background:rgba(0,0,0,.16);
+    background:rgba(0,0,0,.22);
 }
 
 .result-card small{
-
     display:block;
-
-    color:var(--gold);
-
+    color:var(--green);
     letter-spacing:.13em;
-
     text-transform:uppercase;
-
     font-size:10px;
-
     margin-bottom:12px;
 }
 
-.metric{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:12px;
-
-    border-bottom:1px solid rgba(216,176,106,.06);
-
-    padding:10px 0;
-
-    color:#ddd3c4;
-
+.result-card p,
+.result-card li{
+    color:#d4dfdc;
+    line-height:1.62;
     font-size:14px;
 }
 
-.metric b{
+.result-card ul{
+    padding-left:18px;
+    display:grid;
+    gap:8px;
+}
 
-    color:var(--gold-light);
+.metric{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    border-bottom:1px solid rgba(100,255,191,.12);
+    padding:10px 0;
+    color:#d4dfdc;
+    font-size:13px;
+}
+
+.metric b{
+    color:var(--green2);
+    font-weight:700;
 }
 
 .symbolic-output{
-
     grid-column:1 / -1;
 }
 
-.symbolic-output ul{
-
-    padding-left:18px;
-
-    display:grid;
-
-    gap:8px;
-
-    color:#ddd3c4;
-
-    line-height:1.6;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
 @media(max-width:980px){
-
     .hero,
+    .pipeline-head,
     .pipeline-wrap,
     .result-grid{
-
         grid-template-columns:1fr;
     }
 
     .pipeline{
-
         grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
     .trace-panel{
-
         position:relative;
-
         top:auto;
+    }
+
+    .symbolic-output{
+        grid-column:auto;
     }
 }
 
 @media(max-width:620px){
+    .topbar{
+        justify-content:flex-start;
+    }
 
     .pipeline{
-
         grid-template-columns:1fr;
     }
 
     .page{
-
         width:min(100% - 28px,1180px);
-
         padding-top:28px;
     }
 
     h1{
-
-        font-size:44px;
+        font-size:38px;
     }
 }
-
 </style>
 </head>
 
@@ -818,163 +548,79 @@ button:hover{
 <main class="page">
 
     <div class="topbar">
-        <div class="brand">
-            VEROPRED • AI LAB • PIPELINE INFERENCIAL
-        </div>
+        <div class="brand">VEROPRED • AI LAB • PIPELINE INFERENCIAL</div>
     </div>
 
     <section class="hero">
-
         <div>
-
-            <div class="kicker">
-                Inferência observável
-            </div>
-
-            <h1>
-                Pipeline inferencial observável.
-            </h1>
-
+            <div class="kicker">Inferência observável</div>
+            <h1>Pipeline inferencial observável.</h1>
             <p class="lead">
                 Texto → vetorização → recuperação contextual → inferência probabilística → reconstrução textual.
             </p>
-
         </div>
 
         <div class="lab-panel">
-
-            <h2>
-                Entrada textual
-            </h2>
-
+            <h2>Entrada textual</h2>
             <p>
                 Tokenização • Representação vetorial • Busca semântica • Atenção contextual • Inferência probabilística
             </p>
 
             <div class="question-box">
-
                 <textarea id="question">Como a Veropred poderia ajudar uma fintech a reduzir inadimplência sem perder aprovação?</textarea>
 
                 <div class="actions">
-
-                    <button class="primary" onclick="runPipeline()">
-                        Executar
-                    </button>
-
-                    <button class="secondary" onclick="resetPipeline()">
-                        Reiniciar
-                    </button>
-
+                    <button class="primary" onclick="runPipeline()">Executar</button>
+                    <button class="secondary" onclick="resetPipeline()">Reiniciar</button>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
     <section class="pipeline-section">
-
         <div class="pipeline-head">
-
             <div>
-
-                <div class="kicker">
-                    Pipeline inferencial
-                </div>
-
-                <h2>
-                    Estados observáveis da transformação.
-                </h2>
-
+                <div class="kicker">Pipeline inferencial</div>
+                <h2>Estados observáveis da transformação.</h2>
             </div>
-
         </div>
 
         <section class="pipeline-wrap">
-
             <div class="pipeline" id="pipeline"></div>
 
             <aside class="trace-panel">
-
-                <h3>
-                    Rastreamento inferencial
-                </h3>
-
+                <h3>Rastreamento inferencial</h3>
                 <div class="trace-log" id="traceLog">
-
                     <div class="log-item">
                         Aguardando entrada textual.
                     </div>
-
                 </div>
-
             </aside>
-
         </section>
-
     </section>
 
     <section class="result" id="result">
-
-        <h2>
-            Inferência consolidada
-        </h2>
+        <h2>Inferência consolidada</h2>
 
         <div class="result-grid">
-
             <div class="result-card">
-
-                <small>
-                    Estrutura inferida
-                </small>
-
-                <div class="metric">
-                    <span>Área dominante</span>
-                    <b>Risco de crédito</b>
-                </div>
-
-                <div class="metric">
-                    <span>Decisão em jogo</span>
-                    <b>aprovação × inadimplência</b>
-                </div>
-
-                <div class="metric">
-                    <span>Contexto dominante</span>
-                    <b>score / cutoff / RAROC</b>
-                </div>
-
+                <small>Estrutura inferida</small>
+                <div class="metric"><span>Área dominante</span><b>Risco de crédito</b></div>
+                <div class="metric"><span>Decisão em jogo</span><b>aprovação × inadimplência</b></div>
+                <div class="metric"><span>Contexto dominante</span><b>score / cutoff / RAROC</b></div>
+                <div class="metric"><span>Tipo de resposta</span><b>resposta executiva</b></div>
             </div>
 
             <div class="result-card">
-
-                <small>
-                    Similaridades
-                </small>
-
-                <div class="metric">
-                    <span>score.html</span>
-                    <b>0.87</b>
-                </div>
-
-                <div class="metric">
-                    <span>raroc.html</span>
-                    <b>0.82</b>
-                </div>
-
-                <div class="metric">
-                    <span>simulador.html</span>
-                    <b>0.78</b>
-                </div>
-
+                <small>Similaridades</small>
+                <div class="metric"><span>score.html</span><b>0.87</b></div>
+                <div class="metric"><span>raroc.html</span><b>0.82</b></div>
+                <div class="metric"><span>simulador.html</span><b>0.78</b></div>
+                <div class="metric"><span>ia_nucleo.html</span><b>0.64</b></div>
             </div>
 
             <div class="result-card symbolic-output">
-
-                <small>
-                    Estrutura de decisão recuperada
-                </small>
-
+                <small>Estrutura de decisão recuperada</small>
                 <ul>
                     <li>Segmentação dinâmica de risco</li>
                     <li>Ajuste adaptativo de cutoff</li>
@@ -982,19 +628,14 @@ button:hover{
                     <li>Leitura de retorno ajustado ao capital</li>
                     <li>Governança de exceções</li>
                 </ul>
-
             </div>
-
         </div>
-
     </section>
 
 </main>
 
 <script>
-
 const steps = [
-
     {
         id:"entrada",
         tag:"01 • TEXTO",
@@ -1003,68 +644,61 @@ const steps = [
         code:"“reduzir inadimplência sem perder aprovação”",
         log:"Sequência textual indexada."
     },
-
     {
         id:"tokens",
         tag:"02 • TOKENS",
         title:"Tokenização",
         text:"Fragmentação textual em tokens indexados.",
         code:"[reduzir] [inadimplência] [aprovação] → [1842, 9921, 441]",
-        log:"Tokens identificados."
+        log:"Tokens identificados: [reduzir] [inadimplência] [aprovação] → IDs [1842, 9921, 441]."
     },
-
     {
         id:"vetorizacao",
         tag:"03 • VETORES",
         title:"Vetorização",
         text:"Projeção vetorial em espaço semântico.",
         code:"[0.42, -0.18, 0.77, 0.09, ...]",
-        log:"Representação vetorial gerada."
+        log:"Representação vetorial gerada: [0.42, -0.18, 0.77, 0.09, ...]."
     },
-
     {
         id:"busca",
         tag:"04 • BUSCA",
         title:"Busca semântica",
         text:"Busca contextual por proximidade vetorial.",
-        code:"score.html ≈ pergunta",
-        log:"Proximidade vetorial calculada."
+        code:"cos(θ) = 0.87 • score.html ≈ pergunta",
+        log:"Proximidade vetorial calculada: score.html = 0.87; raroc.html = 0.82."
     },
-
     {
         id:"contexto",
         tag:"05 • CONTEXTO",
         title:"Contexto recuperado",
         text:"Expansão contextual via recuperação semântica.",
-        code:"pergunta + score + raroc",
-        log:"Contexto recuperado."
+        code:"pergunta + score.html + raroc.html + simulador.html",
+        log:"Contexto recuperado: pergunta + score.html + raroc.html + simulador.html."
     },
-
     {
         id:"atencao",
         tag:"06 • ATENÇÃO",
         title:"Atenção contextual",
-        text:"Redistribuição probabilística contextual.",
-        code:"cutoff • aprovação • capital",
-        log:"Relevância contextual distribuída."
+        text:"Redistribuição probabilística de relevância contextual.",
+        code:"cutoff 0.31 • aprovação 0.26 • inadimplência 0.24 • capital 0.19",
+        log:"Redistribuição contextual: cutoff 0.31; aprovação 0.26; inadimplência 0.24; capital 0.19."
     },
-
     {
         id:"probabilidade",
         tag:"07 • PROBABILIDADE",
         title:"Distribuição probabilística",
-        text:"Estimativa condicionada da saída.",
-        code:"P(política)=0.34",
-        log:"Probabilidades estimadas."
+        text:"Estimativa condicionada das próximas unidades de saída.",
+        code:"P('política')=0.34 • P('cutoff')=0.27 • P('risco')=0.21",
+        log:"Probabilidades estimadas: P('política')=0.34; P('cutoff')=0.27; P('risco')=0.21."
     },
-
     {
         id:"reconstrucao",
         tag:"08 • TEXTO",
         title:"Reconstrução textual",
         text:"Reconstrução final em linguagem natural.",
         code:"resposta executiva consolidada",
-        log:"Reconstrução concluída."
+        log:"Reconstrução textual concluída: resposta executiva consolidada."
     }
 ];
 
@@ -1073,122 +707,77 @@ const traceLog = document.getElementById("traceLog");
 const result = document.getElementById("result");
 
 function buildPipeline(){
-
     pipeline.innerHTML = steps.map(s => `
-
         <div class="step" id="step-${s.id}">
-
             <small>${s.tag}</small>
-
             <h3>${s.title}</h3>
-
             <p>${s.text}</p>
-
             <code>${s.code}</code>
-
-            <div class="status">
-                Aguardando
-            </div>
-
+            <div class="status">Aguardando</div>
         </div>
-
     `).join("");
 }
 
 function addLog(text){
-
     const div = document.createElement("div");
-
     div.className = "log-item";
-
     div.innerHTML = text;
-
     traceLog.appendChild(div);
-
     traceLog.scrollTop = traceLog.scrollHeight;
 }
 
 function resetPipeline(){
-
     result.classList.remove("show");
 
-    traceLog.innerHTML = `
-        <div class="log-item">
-            Aguardando entrada textual.
-        </div>
-    `;
+    traceLog.innerHTML = `<div class="log-item">Aguardando entrada textual.</div>`;
 
     document.querySelectorAll(".step").forEach(step=>{
-
         step.classList.remove("active","done");
-
         step.querySelector(".status").textContent = "Aguardando";
     });
 }
 
 function runPipeline(){
-
     resetPipeline();
 
-    const q = document.getElementById("question").value.trim();
+    const q = document.getElementById("question").value.trim() || "Pergunta sem conteúdo.";
 
     document.querySelector("#step-entrada code").textContent = "“" + q + "”";
 
     traceLog.innerHTML = `
-        <div class="log-item">
-            <b>Entrada textual recebida:</b><br>${q}
-        </div>
+        <div class="log-item"><b>Entrada textual recebida:</b><br>${q}</div>
     `;
 
-    steps.forEach((s,index)=>{
-
+    steps.forEach((s, index)=>{
         setTimeout(()=>{
-
             const el = document.getElementById("step-" + s.id);
 
             document.querySelectorAll(".step").forEach(step=>{
-
                 step.classList.remove("active");
             });
 
             el.classList.add("active");
-
             el.querySelector(".status").textContent = "Processando";
 
-            addLog(`
-                <b>${s.title}</b><br>${s.log}
-            `);
+            addLog(`<b>${s.title}</b><br>${s.log}`);
 
             setTimeout(()=>{
-
                 el.classList.remove("active");
-
                 el.classList.add("done");
-
                 el.querySelector(".status").textContent = "Concluído";
-
-            },650);
+            }, 650);
 
             if(index === steps.length - 1){
-
                 setTimeout(()=>{
-
                     result.classList.add("show");
-
-                    result.scrollIntoView({
-                        behavior:"smooth",
-                        block:"start"
-                    });
-
-                },1100);
+                    result.scrollIntoView({behavior:"smooth", block:"start"});
+                }, 1100);
             }
-
-        }, index * 900);
+        }, index * 950);
     });
 }
 
 buildPipeline();
-
 </script>
 
 </body>
